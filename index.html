@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#c0392b" />
+  <meta name="description" content="Salford's Hongkongers CIC - 支援在 Salford 的香港人社群" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="SHK CIC" />
+  <title>Salford Hongkongers CIC</title>
+<style>
+/* ===== RESET & BASE ===== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --red: #c0392b;
+  --red-dark: #96281b;
+  --red-light: #f9ebea;
+  --gold: #d4ac0d;
+  --dark: #1a1a2e;
+  --text: #2c3e50;
+  --text-light: #7f8c8d;
+  --bg: #f5f6fa;
+  --white: #ffffff;
+  --card-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  --radius: 14px;
+  --radius-sm: 8px;
+  --header-h: 64px;
+  --bottom-nav-h: 68px;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang HK',
+               'Hiragino Sans GB', 'Noto Sans HK', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ===== HEADER ===== */
+.header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: var(--header-h);
+  background: linear-gradient(135deg, var(--red) 0%, var(--red-dark) 100%);
+  z-index: 100;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  padding: 0 16px;
+}
+.logo-area {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.logo-circle {
+  width: 42px; height: 42px;
+  background: var(--gold);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800;
+  font-size: 13px;
+  color: var(--dark);
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+  border: 2px solid rgba(255,255,255,0.3);
+}
+.site-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--white);
+  line-height: 1.2;
+}
+.site-subtitle {
+  font-size: 11px;
+  color: rgba(255,255,255,0.75);
+}
+.menu-btn { display: none; }
+
+/* ===== DESKTOP NAV ===== */
+.nav { display: none; }
+
+/* ===== MAIN ===== */
+.main {
+  margin-top: var(--header-h);
+  margin-bottom: var(--bottom-nav-h);
+  padding: 16px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ===== PAGES ===== */
+.page { display: none; }
+.page.active { display: block; animation: fadeIn 0.3s ease; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.page-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--dark);
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 3px solid var(--red);
+}
+
+/* ===== HERO ===== */
+.hero {
+  background: linear-gradient(135deg, var(--red) 0%, var(--red-dark) 100%);
+  border-radius: var(--radius);
+  padding: 32px 20px;
+  text-align: center;
+  margin-bottom: 16px;
+  color: white;
+}
+.hero-badge { font-size: 32px; margin-bottom: 12px; }
+.hero-title { font-size: 24px; font-weight: 800; line-height: 1.3; margin-bottom: 10px; }
+.hero-subtitle { font-size: 14px; opacity: 0.9; margin-bottom: 20px; line-height: 1.5; }
+
+.btn-primary {
+  background: var(--gold);
+  color: var(--dark);
+  border: none;
+  padding: 12px 24px;
+  border-radius: 50px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+
+/* ===== STATS ===== */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.stat-card {
+  background: var(--white);
+  border-radius: var(--radius-sm);
+  padding: 16px 8px;
+  text-align: center;
+  box-shadow: var(--card-shadow);
+}
+.stat-num { font-size: 22px; font-weight: 800; color: var(--red); }
+.stat-label { font-size: 11px; color: var(--text-light); margin-top: 4px; }
+
+/* ===== CARDS ===== */
+.section-card, .news-card, .form-card, .contact-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: var(--card-shadow);
+}
+.section-title { font-size: 16px; font-weight: 700; color: var(--dark); margin-bottom: 14px; }
+
+/* ===== SERVICE GRID ===== */
+.service-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+.service-item {
+  text-align: center;
+  padding: 12px 8px;
+  background: var(--red-light);
+  border-radius: var(--radius-sm);
+}
+.service-icon { font-size: 24px; margin-bottom: 6px; }
+.service-name { font-size: 12px; font-weight: 600; color: var(--dark); }
+
+/* ===== NEWS ===== */
+.news-item { padding: 12px 0; border-bottom: 1px solid #f0f0f0; }
+.news-item:last-child { border-bottom: none; }
+.news-date { font-size: 11px; color: var(--text-light); margin-bottom: 4px; }
+.news-text { font-size: 14px; line-height: 1.5; }
+
+/* ===== ABOUT ===== */
+.body-text { font-size: 14px; line-height: 1.7; color: var(--text); margin-bottom: 10px; }
+.mission-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.mission-list li {
+  font-size: 14px; line-height: 1.5;
+  padding: 8px 12px;
+  background: var(--red-light);
+  border-radius: var(--radius-sm);
+}
+.activity-list { display: flex; flex-direction: column; gap: 8px; }
+.activity-item {
+  font-size: 14px;
+  padding: 10px 12px;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--red);
+}
+
+/* ===== EVENTS ===== */
+.event-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 18px;
+  margin-bottom: 14px;
+  box-shadow: var(--card-shadow);
+  position: relative;
+  overflow: hidden;
+}
+.event-card.upcoming { border: 2px solid var(--red); }
+.event-badge {
+  position: absolute; top: 12px; right: 12px;
+  background: var(--red); color: white;
+  font-size: 11px; font-weight: 700;
+  padding: 3px 10px; border-radius: 50px;
+}
+.event-header { display: flex; gap: 14px; margin-bottom: 12px; align-items: flex-start; }
+.event-date-box {
+  background: var(--red); color: white;
+  border-radius: var(--radius-sm);
+  padding: 8px 12px; text-align: center;
+  min-width: 56px; flex-shrink: 0;
+}
+.event-month { font-size: 11px; font-weight: 600; letter-spacing: 1px; }
+.event-day   { font-size: 18px; font-weight: 800; margin-top: 2px; }
+.event-info { flex: 1; }
+.event-title { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+.event-detail { font-size: 12px; color: var(--text-light); margin-bottom: 3px; }
+.event-desc { font-size: 13px; color: var(--text); line-height: 1.6; margin-bottom: 14px; }
+.btn-register {
+  width: 100%; background: var(--red); color: white; border: none;
+  padding: 12px; border-radius: 50px; font-size: 14px; font-weight: 700;
+  cursor: pointer; transition: background 0.2s, transform 0.2s;
+}
+.btn-register:hover { background: var(--red-dark); transform: translateY(-1px); }
+.events-note { font-size: 12px; color: var(--text-light); text-align: center; margin-top: 8px; line-height: 1.6; }
+
+/* ===== FORM ===== */
+.form-intro { font-size: 14px; color: var(--text-light); margin-bottom: 20px; line-height: 1.6; }
+.form-group { margin-bottom: 16px; }
+.form-label { display: block; font-size: 13px; font-weight: 600; color: var(--dark); margin-bottom: 6px; }
+.form-input {
+  width: 100%; padding: 12px 14px;
+  border: 1.5px solid #e0e0e0; border-radius: var(--radius-sm);
+  font-size: 14px; color: var(--text); background: var(--white);
+  transition: border-color 0.2s; font-family: inherit;
+}
+.form-input:focus { outline: none; border-color: var(--red); box-shadow: 0 0 0 3px rgba(192,57,43,0.1); }
+.form-textarea { height: 90px; resize: vertical; }
+.radio-group { display: flex; flex-direction: column; gap: 8px; }
+.radio-label { display: flex; align-items: center; gap: 8px; font-size: 14px; cursor: pointer; }
+.radio-label input { accent-color: var(--red); }
+.checkbox-label {
+  display: flex; align-items: flex-start; gap: 10px;
+  font-size: 13px; color: var(--text-light); cursor: pointer; line-height: 1.5;
+}
+.checkbox-label input { margin-top: 2px; accent-color: var(--red); flex-shrink: 0; }
+.btn-submit {
+  width: 100%;
+  background: linear-gradient(135deg, var(--red) 0%, var(--red-dark) 100%);
+  color: white; border: none; padding: 14px; border-radius: 50px;
+  font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 8px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.btn-submit:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(192,57,43,0.35); }
+.success-msg { text-align: center; padding: 30px 20px; }
+.success-icon { font-size: 52px; margin-bottom: 16px; }
+.success-msg h3 { font-size: 22px; font-weight: 700; color: var(--dark); margin-bottom: 12px; }
+.success-msg p { font-size: 14px; color: var(--text-light); margin-bottom: 8px; line-height: 1.6; }
+.success-msg .btn-primary { margin-top: 16px; background: var(--red); color: white; }
+.hidden { display: none !important; }
+
+/* ===== CONTACT ===== */
+.contact-card { display: flex; flex-direction: column; gap: 0; padding: 0; overflow: hidden; }
+.contact-item { display: flex; align-items: center; gap: 16px; padding: 16px 20px; border-bottom: 1px solid #f0f0f0; }
+.contact-item:last-child { border-bottom: none; }
+.contact-icon { font-size: 24px; flex-shrink: 0; }
+.contact-label { font-size: 11px; color: var(--text-light); margin-bottom: 3px; }
+.contact-value { font-size: 14px; font-weight: 500; color: var(--dark); text-decoration: none; }
+a.contact-value:hover { color: var(--red); }
+.social-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+.social-btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 12px; border-radius: var(--radius-sm);
+  font-size: 14px; font-weight: 700; color: white; text-decoration: none;
+  transition: opacity 0.2s;
+}
+.social-btn:hover { opacity: 0.85; }
+.social-btn.facebook { background: #1877f2; }
+.social-btn.instagram { background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+.social-handle { text-align: center; font-size: 13px; color: var(--text-light); }
+.venue-list { display: flex; flex-direction: column; gap: 8px; }
+.venue-item { font-size: 13px; color: var(--text); padding: 8px 12px; background: var(--bg); border-radius: var(--radius-sm); line-height: 1.5; }
+
+/* ===== BOTTOM NAV ===== */
+.bottom-nav {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  height: var(--bottom-nav-h);
+  background: var(--white);
+  display: flex;
+  border-top: 1px solid #e8e8e8;
+  box-shadow: 0 -4px 16px rgba(0,0,0,0.08);
+  z-index: 100;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.bottom-btn {
+  flex: 1; background: none; border: none;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 3px; cursor: pointer; color: var(--text-light);
+  transition: color 0.2s; padding: 8px 4px;
+}
+.bottom-btn.active { color: var(--red); }
+.bottom-icon { font-size: 20px; line-height: 1; }
+.bottom-label { font-size: 10px; font-weight: 600; }
+
+/* ===== INSTALL BANNER ===== */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== DESKTOP ===== */
+@media (min-width: 768px) {
+  .bottom-nav { display: none; }
+  .menu-btn { display: none; }
+  .nav {
+    display: flex; justify-content: center;
+    background: var(--white); border-bottom: 1px solid #e8e8e8;
+    position: fixed; top: var(--header-h); left: 0; right: 0;
+    z-index: 99; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+  .nav ul { list-style: none; display: flex; gap: 4px; padding: 8px 16px; }
+  .nav-link {
+    text-decoration: none; color: var(--text-light);
+    font-size: 14px; font-weight: 600;
+    padding: 8px 14px; border-radius: 50px; transition: all 0.2s;
+  }
+  .nav-link:hover, .nav-link.active { color: var(--red); background: var(--red-light); }
+  .main {
+    margin-top: calc(var(--header-h) + 54px);
+    margin-bottom: 24px; padding: 24px; max-width: 720px;
+  }
+  .hero-title { font-size: 30px; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-inner">
+    <div class="logo-area">
+      <div class="logo-circle">SHK</div>
+      <div>
+        <h1 class="site-title">Salford Hongkongers</h1>
+        <p class="site-subtitle">CIC &middot; Salford, Greater Manchester</p>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- DESKTOP NAV -->
+<nav class="nav" id="nav">
+  <ul>
+    <li><a href="#" class="nav-link active" data-page="home">🏠 主頁</a></li>
+    <li><a href="#" class="nav-link" data-page="about">👥 關於我們</a></li>
+    <li><a href="#" class="nav-link" data-page="events">📅 活動</a></li>
+    <li><a href="#" class="nav-link" data-page="register">📝 活動登記</a></li>
+    <li><a href="#" class="nav-link" data-page="contact">📞 聯絡我們</a></li>
+  </ul>
+</nav>
+
+<!-- MAIN -->
+<main class="main" id="main">
+
+  <!-- HOME -->
+  <section id="page-home" class="page active">
+    <div class="hero">
+      <div class="hero-badge">🇬🇧 🇭🇰</div>
+      <h2 class="hero-title">歡迎來到<br/>Salford Hongkongers CIC</h2>
+      <p class="hero-subtitle">凝聚在 Salford 的香港人，共建互助社群</p>
+      <button class="btn-primary" onclick="showPage('events')">查看即將舉行的活動</button>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-num">1,200+</div>
+        <div class="stat-label">社群成員</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">2022</div>
+        <div class="stat-label">成立年份</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">100+</div>
+        <div class="stat-label">舉辦活動</div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <h3 class="section-title">我們的服務</h3>
+      <div class="service-grid">
+        <div class="service-item"><div class="service-icon">🤝</div><div class="service-name">社群支援</div></div>
+        <div class="service-item"><div class="service-icon">📞</div><div class="service-name">熱線服務</div></div>
+        <div class="service-item"><div class="service-icon">🎭</div><div class="service-name">文化活動</div></div>
+        <div class="service-item"><div class="service-icon">💼</div><div class="service-name">就業支援</div></div>
+        <div class="service-item"><div class="service-icon">🏠</div><div class="service-name">住屋資訊</div></div>
+        <div class="service-item"><div class="service-icon">🎓</div><div class="service-name">教育資源</div></div>
+      </div>
+    </div>
+
+    <div class="news-card">
+      <h3 class="section-title">最新消息</h3>
+      <div class="news-item">
+        <div class="news-date">2025年2月</div>
+        <div class="news-text">🏆 首屆 Salford Hongkongers Awards 圓滿舉行，表揚義工貢獻！</div>
+      </div>
+      <div class="news-item">
+        <div class="news-date">2024年7月</div>
+        <div class="news-text">🎵 Music Meet Night 2024 成功舉辦，逾百人出席！</div>
+      </div>
+      <div class="news-item">
+        <div class="news-date">持續進行</div>
+        <div class="news-text">☕ 每月茶聚，歡迎新來港人參加！</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="page-about" class="page">
+    <h2 class="page-title">關於我們</h2>
+
+    <div class="section-card">
+      <h3 class="section-title">🏢 機構簡介</h3>
+      <p class="body-text">Salford's Hongkongers CIC（SHK CIC）於 2022 年 1 月正式成立，是一間在英國公司註冊處登記的社群利益公司（Company No. 13877472）。</p>
+      <p class="body-text">我們致力於支援及協助移居 Salford 及大曼徹斯特地區的香港人，促進文化多元及社會融合。</p>
+    </div>
+
+    <div class="section-card">
+      <h3 class="section-title">🎯 使命與願景</h3>
+      <ul class="mission-list">
+        <li>🤝 協助香港新移民適應英國生活</li>
+        <li>🌏 保存及推廣香港文化身份認同</li>
+        <li>💪 促進社區凝聚力與互助精神</li>
+        <li>📢 為香港人發聲，倡議社區權益</li>
+        <li>🌱 支援個人及家庭的整體發展</li>
+      </ul>
+    </div>
+
+    <div class="section-card">
+      <h3 class="section-title">📍 服務地區</h3>
+      <p class="body-text">主要服務範圍：Salford, Greater Manchester</p>
+      <p class="body-text">Salford 現有逾 2,000 名香港居民，是英國其中一個最大的香港人社群聚居地，被稱為「小香港」。</p>
+    </div>
+
+    <div class="section-card">
+      <h3 class="section-title">🌟 定期活動</h3>
+      <div class="activity-list">
+        <div class="activity-item">☕ 每月茶聚 — 歡迎新移民</div>
+        <div class="activity-item">🎵 音樂聚會之夜</div>
+        <div class="activity-item">🎲 棋盤遊戲及麻將之夜</div>
+        <div class="activity-item">🍳 香港烹飪班</div>
+        <div class="activity-item">🏃 行山及運動活動</div>
+        <div class="activity-item">💼 職業 Networking 晚會</div>
+        <div class="activity-item">📚 實用工作坊（租務、法律、急救）</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EVENTS -->
+  <section id="page-events" class="page">
+    <h2 class="page-title">即將舉行的活動</h2>
+
+    <div class="event-card upcoming">
+      <div class="event-badge">即將舉行</div>
+      <div class="event-header">
+        <div class="event-date-box">
+          <div class="event-month">MAR</div>
+          <div class="event-day">2026</div>
+        </div>
+        <div class="event-info">
+          <h3 class="event-title">每月社群茶聚</h3>
+          <p class="event-detail">📍 Old Pint Pot, Adelphi Street, Salford M3 6EN</p>
+          <p class="event-detail">🕐 下午 2:00 - 5:00</p>
+          <p class="event-detail">💰 免費入場</p>
+        </div>
+      </div>
+      <p class="event-desc">每月定期茶聚，歡迎新移民及舊朋友，一起分享生活點滴，互相支持。</p>
+      <button class="btn-register" onclick="showPage('register'); setEvent('每月社群茶聚')">立即登記</button>
+    </div>
+
+    <div class="event-card">
+      <div class="event-header">
+        <div class="event-date-box">
+          <div class="event-month">APR</div>
+          <div class="event-day">2026</div>
+        </div>
+        <div class="event-info">
+          <h3 class="event-title">音樂聚會之夜</h3>
+          <p class="event-detail">📍 JFFI, Lord Byron Square, M50 2XH</p>
+          <p class="event-detail">🕐 晚上 7:00 - 10:00</p>
+          <p class="event-detail">💰 免費入場</p>
+        </div>
+      </div>
+      <p class="event-desc">音樂表演、即興演奏，歡迎所有音樂愛好者參與，共享香港音樂文化。</p>
+      <button class="btn-register" onclick="showPage('register'); setEvent('音樂聚會之夜')">立即登記</button>
+    </div>
+
+    <div class="event-card">
+      <div class="event-header">
+        <div class="event-date-box">
+          <div class="event-month">MAY</div>
+          <div class="event-day">2026</div>
+        </div>
+        <div class="event-info">
+          <h3 class="event-title">實用生活工作坊</h3>
+          <p class="event-detail">📍 Agnes Hopkins Community Centre, Swinton</p>
+          <p class="event-detail">🕐 上午 10:00 - 12:00</p>
+          <p class="event-detail">💰 免費入場</p>
+        </div>
+      </div>
+      <p class="event-desc">涵蓋租務權益、英國法律知識、福利申請等實用資訊，歡迎新移民參加。</p>
+      <button class="btn-register" onclick="showPage('register'); setEvent('實用生活工作坊')">立即登記</button>
+    </div>
+
+    <div class="event-card">
+      <div class="event-header">
+        <div class="event-date-box">
+          <div class="event-month">JUN</div>
+          <div class="event-day">2026</div>
+        </div>
+        <div class="event-info">
+          <h3 class="event-title">社群廚房 &amp; 飲食文化日</h3>
+          <p class="event-detail">📍 Kargo MKT, Quayside MediaCity</p>
+          <p class="event-detail">🕐 中午 12:00 - 3:00</p>
+          <p class="event-detail">💰 免費入場</p>
+        </div>
+      </div>
+      <p class="event-desc">一起煮食、分享香港家鄉菜，推廣飲食文化，認識新朋友。</p>
+      <button class="btn-register" onclick="showPage('register'); setEvent('社群廚房 & 飲食文化日')">立即登記</button>
+    </div>
+
+    <p class="events-note">* 活動詳情或有更改，請留意我們的 Facebook 及 Instagram @SalfordHongkongers</p>
+  </section>
+
+  <!-- REGISTER -->
+  <section id="page-register" class="page">
+    <h2 class="page-title">活動登記</h2>
+    <div class="form-card">
+      <p class="form-intro">請填寫以下表格完成登記，我們會以電郵確認你的報名。</p>
+
+      <form id="registerForm" onsubmit="submitForm(event)">
+        <div class="form-group">
+          <label class="form-label">選擇活動 *</label>
+          <select class="form-input" id="eventSelect" required>
+            <option value="">-- 請選擇活動 --</option>
+            <option value="每月社群茶聚">每月社群茶聚</option>
+            <option value="音樂聚會之夜">音樂聚會之夜</option>
+            <option value="實用生活工作坊">實用生活工作坊</option>
+            <option value="社群廚房 & 飲食文化日">社群廚房 &amp; 飲食文化日</option>
+            <option value="其他">其他活動</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">姓名 *</label>
+          <input type="text" class="form-input" id="fullName" placeholder="你的全名" required />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">電郵地址 *</label>
+          <input type="email" class="form-input" id="email" placeholder="your@email.com" required />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">電話號碼</label>
+          <input type="tel" class="form-input" id="phone" placeholder="+44 7XXX XXXXXX" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">參加人數 *</label>
+          <select class="form-input" id="attendees" required>
+            <option value="1">1 人</option>
+            <option value="2">2 人</option>
+            <option value="3">3 人</option>
+            <option value="4">4 人</option>
+            <option value="5+">5 人或以上</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">你是新移民嗎？</label>
+          <div class="radio-group">
+            <label class="radio-label"><input type="radio" name="newcomer" value="yes" /> 是，剛來英國不久</label>
+            <label class="radio-label"><input type="radio" name="newcomer" value="no" /> 否，已在英國一段時間</label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">備註 / 特別需要</label>
+          <textarea class="form-input form-textarea" id="notes" placeholder="例如：輪椅使用者、飲食限制等"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="checkbox-label">
+            <input type="checkbox" id="consent" required />
+            我同意 Salford Hongkongers CIC 儲存及使用我的個人資料用於活動聯絡目的。
+          </label>
+        </div>
+
+        <button type="submit" class="btn-submit">提交登記</button>
+      </form>
+
+      <div id="successMsg" class="success-msg hidden">
+        <div class="success-icon">✅</div>
+        <h3>登記成功！</h3>
+        <p>多謝你的登記！我們會盡快以電郵確認你的報名詳情。</p>
+        <p>如有查詢，請電郵至 <strong>salfordhongkongers@gmail.com</strong></p>
+        <button class="btn-primary" onclick="resetForm()">再次登記</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="page-contact" class="page">
+    <h2 class="page-title">聯絡我們</h2>
+
+    <div class="contact-card">
+      <div class="contact-item">
+        <div class="contact-icon">📧</div>
+        <div>
+          <div class="contact-label">電郵</div>
+          <a href="mailto:salfordhongkongers@gmail.com" class="contact-value">salfordhongkongers@gmail.com</a>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">📍</div>
+        <div>
+          <div class="contact-label">地址</div>
+          <div class="contact-value">Salford, Greater Manchester, UK</div>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">🌐</div>
+        <div>
+          <div class="contact-label">網站</div>
+          <a href="https://hkers.org.uk/salford_hongkongers/" target="_blank" class="contact-value">hkers.org.uk/salford_hongkongers</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <h3 class="section-title">社交媒體</h3>
+      <div class="social-grid">
+        <a href="https://www.facebook.com/SalfordHongkongers" target="_blank" class="social-btn facebook">
+          <span>f</span> Facebook
+        </a>
+        <a href="https://www.instagram.com/SalfordHongkongers" target="_blank" class="social-btn instagram">
+          <span>&#9679;</span> Instagram
+        </a>
+      </div>
+      <p class="social-handle">@SalfordHongkongers</p>
+    </div>
+
+    <div class="section-card">
+      <h3 class="section-title">公司資料</h3>
+      <p class="body-text">公司名稱：Salford Hongkongers CIC</p>
+      <p class="body-text">公司編號：13877472</p>
+      <p class="body-text">成立日期：2022 年 1 月</p>
+      <p class="body-text">性質：Community Interest Company (CIC)</p>
+    </div>
+
+    <div class="section-card">
+      <h3 class="section-title">常用活動地點</h3>
+      <div class="venue-list">
+        <div class="venue-item">📍 Old Pint Pot, Adelphi Street, Salford M3 6EN</div>
+        <div class="venue-item">📍 JFFI, Lord Byron Square M50 2XH</div>
+        <div class="venue-item">📍 Agnes Hopkins Community Centre, Swinton</div>
+        <div class="venue-item">📍 Kargo MKT, Quayside MediaCity</div>
+        <div class="venue-item">📍 People's History Museum, Manchester</div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <button class="bottom-btn active" id="btn-home" onclick="showPage('home')">
+    <span class="bottom-icon">🏠</span>
+    <span class="bottom-label">主頁</span>
+  </button>
+  <button class="bottom-btn" id="btn-about" onclick="showPage('about')">
+    <span class="bottom-icon">ℹ️</span>
+    <span class="bottom-label">關於</span>
+  </button>
+  <button class="bottom-btn" id="btn-events" onclick="showPage('events')">
+    <span class="bottom-icon">📅</span>
+    <span class="bottom-label">活動</span>
+  </button>
+  <button class="bottom-btn" id="btn-register" onclick="showPage('register')">
+    <span class="bottom-icon">📝</span>
+    <span class="bottom-label">登記</span>
+  </button>
+  <button class="bottom-btn" id="btn-contact" onclick="showPage('contact')">
+    <span class="bottom-icon">📞</span>
+    <span class="bottom-label">聯絡</span>
+  </button>
+</nav>
+
+<script>
+// ===== NAVIGATION =====
+function showPage(pageId) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const target = document.getElementById('page-' + pageId);
+  if (target) target.classList.add('active');
+
+  document.querySelectorAll('.bottom-btn').forEach(b => b.classList.remove('active'));
+  const activeBtn = document.getElementById('btn-' + pageId);
+  if (activeBtn) activeBtn.classList.add('active');
+
+  document.querySelectorAll('.nav-link').forEach(l => {
+    l.classList.toggle('active', l.dataset.page === pageId);
+  });
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+document.querySelectorAll('.nav-link').forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    showPage(link.dataset.page);
+  });
+});
+
+// ===== EVENT REGISTRATION =====
+function setEvent(eventName) {
+  const select = document.getElementById('eventSelect');
+  if (!select) return;
+  for (let i = 0; i < select.options.length; i++) {
+    if (select.options[i].value === eventName) {
+      select.selectedIndex = i;
+      break;
+    }
+  }
+}
+
+function submitForm(e) {
+  e.preventDefault();
+  const data = {
+    event:     document.getElementById('eventSelect').value,
+    name:      document.getElementById('fullName').value,
+    email:     document.getElementById('email').value,
+    phone:     document.getElementById('phone').value,
+    attendees: document.getElementById('attendees').value,
+    newcomer:  document.querySelector('input[name="newcomer"]:checked')?.value || '未說明',
+    notes:     document.getElementById('notes').value,
+    timestamp: new Date().toISOString()
+  };
+
+  const submissions = JSON.parse(localStorage.getItem('shk_registrations') || '[]');
+  submissions.push(data);
+  localStorage.setItem('shk_registrations', JSON.stringify(submissions));
+
+  const subject = encodeURIComponent(`活動登記 - ${data.event} - ${data.name}`);
+  const body = encodeURIComponent(
+    `活動登記詳情\n====================\n` +
+    `活動：${data.event}\n姓名：${data.name}\n電郵：${data.email}\n` +
+    `電話：${data.phone || '未提供'}\n人數：${data.attendees}\n` +
+    `新移民：${data.newcomer === 'yes' ? '是' : data.newcomer === 'no' ? '否' : '未說明'}\n` +
+    `備註：${data.notes || '無'}\n登記時間：${new Date().toLocaleString('zh-HK')}`
+  );
+  window.location.href = `mailto:salfordhongkongers@gmail.com?subject=${subject}&body=${body}`;
+
+  document.getElementById('registerForm').classList.add('hidden');
+  document.getElementById('successMsg').classList.remove('hidden');
+}
+
+function resetForm() {
+  document.getElementById('registerForm').reset();
+  document.getElementById('registerForm').classList.remove('hidden');
+  document.getElementById('successMsg').classList.add('hidden');
+}
+
+// ===== PWA INSTALL PROMPT =====
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  setTimeout(showInstallBanner, 3000);
+});
+
+function showInstallBanner() {
+  if (!deferredPrompt || localStorage.getItem('shk_install_dismissed')) return;
+  const banner = document.createElement('div');
+  banner.id = 'installBanner';
+  banner.innerHTML = `
+    <div style="position:fixed;bottom:76px;left:12px;right:12px;background:#1a1a2e;color:white;
+      border-radius:14px;padding:16px;display:flex;align-items:center;gap:12px;
+      box-shadow:0 4px 20px rgba(0,0,0,0.3);z-index:200;animation:slideUp 0.3s ease;">
+      <div style="font-size:32px;">📱</div>
+      <div style="flex:1;">
+        <div style="font-weight:700;font-size:14px;margin-bottom:4px;">加入主畫面</div>
+        <div style="font-size:12px;opacity:0.8;">將 App 儲存到主畫面，隨時快速開啟！</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <button id="installBtn" style="background:#c0392b;color:white;border:none;
+          padding:8px 14px;border-radius:50px;font-size:13px;font-weight:700;cursor:pointer;">安裝</button>
+        <button id="dismissBtn" style="background:none;color:rgba(255,255,255,0.6);
+          border:none;font-size:12px;cursor:pointer;">不了</button>
+      </div>
+    </div>`;
+  document.body.appendChild(banner);
+  document.getElementById('installBtn').addEventListener('click', async () => {
+    deferredPrompt.prompt();
+    await deferredPrompt.userChoice;
+    deferredPrompt = null;
+    banner.remove();
+  });
+  document.getElementById('dismissBtn').addEventListener('click', () => {
+    localStorage.setItem('shk_install_dismissed', '1');
+    banner.remove();
+  });
+}
+
+window.addEventListener('appinstalled', () => { deferredPrompt = null; });
+
+// ===== SERVICE WORKER =====
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  });
+}
+
+// ===== INIT =====
+document.addEventListener('DOMContentLoaded', () => showPage('home'));
+</script>
+</body>
+</html>
