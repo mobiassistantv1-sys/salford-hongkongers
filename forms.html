@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>聯絡我們 | Salford Hongkongers</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', sans-serif; background: #f9f9f9; color: #333; }
+
+nav {
+  background: #8B0000;
+  padding: 16px 24px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+nav .logo { color: white; font-size: 1.2rem; font-weight: 700; text-decoration: none; }
+nav a { color: rgba(255,255,255,0.85); text-decoration: none; margin-left: 20px; font-size: 0.95rem; }
+nav a:hover { color: white; }
+
+.hero {
+  background: linear-gradient(135deg, #8B0000 0%, #C41E3A 50%, #8B0000 100%);
+  color: white; text-align: center; padding: 60px 24px 40px;
+}
+.hero h1 { font-size: 2.2rem; margin-bottom: 12px; }
+.hero p { font-size: 1.1rem; opacity: 0.9; max-width: 600px; margin: 0 auto; }
+
+.container { max-width: 860px; margin: 0 auto; padding: 40px 20px; }
+
+.tabs {
+  display: flex; gap: 8px; margin-bottom: 32px;
+  border-bottom: 2px solid #e0e0e0; flex-wrap: wrap;
+}
+.tab-btn {
+  padding: 10px 20px; border: none; background: none;
+  font-size: 0.95rem; cursor: pointer; color: #666;
+  border-bottom: 3px solid transparent; margin-bottom: -2px;
+  transition: all 0.2s; white-space: nowrap;
+}
+.tab-btn.active { color: #8B0000; border-bottom-color: #8B0000; font-weight: 600; }
+.tab-btn:hover { color: #8B0000; }
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+.card {
+  background: white; border-radius: 12px; padding: 28px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08); margin-bottom: 24px;
+}
+.card h2 { font-size: 1.3rem; color: #8B0000; margin-bottom: 6px; }
+.card .subtitle { color: #888; font-size: 0.9rem; margin-bottom: 24px; line-height: 1.5; }
+
+.form-group { margin-bottom: 16px; }
+.form-group label {
+  display: block; font-weight: 600; margin-bottom: 6px;
+  color: #555; font-size: 0.9rem;
+}
+.form-group label .required { color: #C41E3A; }
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%; padding: 12px 14px;
+  border: 2px solid #e0e0e0; border-radius: 8px;
+  font-size: 0.95rem; outline: none;
+  transition: border-color 0.2s; font-family: inherit;
+}
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus { border-color: #8B0000; }
+.form-group textarea { resize: vertical; min-height: 100px; }
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+.radio-group { display: flex; flex-direction: column; gap: 10px; }
+.radio-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 12px 14px; border: 2px solid #e0e0e0;
+  border-radius: 8px; cursor: pointer; transition: all 0.2s;
+}
+.radio-item:hover { border-color: #8B0000; background: #fff9f9; }
+.radio-item input[type="radio"] { margin-top: 2px; accent-color: #8B0000; }
+.radio-item .radio-label { font-weight: 600; color: #333; font-size: 0.95rem; }
+.radio-item .radio-desc { font-size: 0.82rem; color: #888; margin-top: 2px; }
+
+.checkbox-group { display: flex; flex-direction: column; gap: 8px; }
+.checkbox-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px; border: 2px solid #e0e0e0;
+  border-radius: 8px; cursor: pointer; transition: all 0.2s;
+}
+.checkbox-item:hover { border-color: #8B0000; background: #fff9f9; }
+.checkbox-item input[type="checkbox"] { accent-color: #8B0000; width: 16px; height: 16px; }
+
+.stars { display: flex; gap: 8px; margin-top: 6px; }
+.star {
+  font-size: 1.8rem; cursor: pointer; color: #ddd;
+  transition: color 0.15s;
+}
+.star.active, .star:hover { color: #FFC107; }
+
+.rating-group { display: flex; flex-direction: column; gap: 12px; }
+.rating-row { display: flex; align-items: center; justify-content: space-between; }
+.rating-label { font-size: 0.9rem; color: #555; flex: 1; }
+.rating-stars { display: flex; gap: 4px; }
+.rating-stars .star { font-size: 1.4rem; }
+
+.emailjs-note {
+  background: #e8f4fd; border: 2px dashed #2196F3;
+  border-radius: 10px; padding: 16px 20px; margin: 20px 0;
+  display: flex; align-items: flex-start; gap: 12px;
+}
+.emailjs-note .note-icon { font-size: 1.4rem; flex-shrink: 0; }
+.emailjs-note h4 { color: #1565C0; font-size: 0.95rem; margin-bottom: 4px; }
+.emailjs-note p { color: #555; font-size: 0.85rem; line-height: 1.5; }
+
+.btn-primary {
+  width: 100%; padding: 14px; background: linear-gradient(135deg, #8B0000, #C41E3A);
+  color: white; border: none; border-radius: 10px; font-size: 1rem;
+  font-weight: 700; cursor: pointer; transition: all 0.2s; letter-spacing: 0.5px;
+  margin-top: 8px;
+}
+.btn-primary:hover { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 4px 15px rgba(139,0,0,0.3); }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+.success-banner {
+  display: none; background: #e8f5e9; border-radius: 10px;
+  padding: 20px 24px; text-align: center; margin-bottom: 20px;
+  border: 2px solid #81C784;
+}
+.success-banner.show { display: block; }
+.success-banner h3 { color: #2e7d32; margin-bottom: 6px; }
+.success-banner p { color: #555; font-size: 0.9rem; }
+
+/* volunteer grid */
+.skills-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+}
+.skill-chip {
+  padding: 8px 12px; border: 2px solid #e0e0e0;
+  border-radius: 20px; text-align: center; cursor: pointer;
+  font-size: 0.85rem; transition: all 0.2s;
+}
+.skill-chip:hover { border-color: #8B0000; color: #8B0000; }
+.skill-chip.selected { border-color: #8B0000; background: #8B0000; color: white; }
+
+.avail-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
+}
+.avail-chip {
+  padding: 8px 6px; border: 2px solid #e0e0e0;
+  border-radius: 8px; text-align: center; cursor: pointer;
+  font-size: 0.82rem; transition: all 0.2s;
+}
+.avail-chip:hover { border-color: #8B0000; }
+.avail-chip.selected { border-color: #8B0000; background: #8B0000; color: white; }
+
+.contact-info-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+  margin-bottom: 32px;
+}
+.contact-card {
+  background: white; border-radius: 10px; padding: 20px;
+  text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  text-decoration: none; color: inherit; transition: transform 0.2s;
+}
+.contact-card:hover { transform: translateY(-3px); }
+.contact-card .icon { font-size: 2rem; margin-bottom: 8px; }
+.contact-card h4 { font-size: 0.9rem; color: #555; margin-bottom: 4px; }
+.contact-card p { font-size: 0.85rem; color: #8B0000; font-weight: 600; }
+
+.section-title {
+  font-size: 1rem; font-weight: 700; color: #555;
+  margin: 20px 0 10px; text-transform: uppercase; letter-spacing: 0.5px;
+}
+
+footer { background: #222; color: #aaa; text-align: center; padding: 24px; font-size: 0.85rem; margin-top: 60px; }
+footer a { color: #ddd; text-decoration: none; }
+
+@media (max-width: 600px) {
+  .form-row { grid-template-columns: 1fr; }
+  .contact-info-grid { grid-template-columns: 1fr; }
+  .skills-grid { grid-template-columns: repeat(2, 1fr); }
+  .avail-grid { grid-template-columns: repeat(2, 1fr); }
+  nav .nav-links { display: none; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="index.html">&#x1F1ED;&#x1F1F0; Salford Hongkongers</a>
+  <div class="nav-links">
+    <a href="index.html">主頁</a>
+    <a href="index.html#events">活動</a>
+    <a href="donate.html">支持我們</a>
+    <a href="forms.html">聯絡</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <h1>&#x1F4AC; 聯絡我們</h1>
+  <p>有任何問題、意見或想加入我們？填寫以下表格，我們會盡快回覆。</p>
+</div>
+
+<div class="container">
+
+  <!-- CONTACT QUICK LINKS -->
+  <div class="contact-info-grid">
+    <a class="contact-card" href="mailto:salfordhongkongers@gmail.com">
+      <div class="icon">&#x2709;&#xFE0F;</div>
+      <h4>電郵</h4>
+      <p>salfordhongkongers@gmail.com</p>
+    </a>
+    <a class="contact-card" href="https://www.facebook.com/salfordhongkongers" target="_blank">
+      <div class="icon">&#x1F4D8;</div>
+      <h4>Facebook</h4>
+      <p>@salfordhongkongers</p>
+    </a>
+    <a class="contact-card" href="https://wa.me/447700000000" target="_blank">
+      <div class="icon">&#x1F4AC;</div>
+      <h4>WhatsApp</h4>
+      <p>+44 7700 000000</p>
+    </a>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('general', this)">&#x1F4DD; 一般查詢</button>
+    <button class="tab-btn" onclick="switchTab('volunteer', this)">&#x1F91D; 義工申請</button>
+    <button class="tab-btn" onclick="switchTab('member', this)">&#x1F3AB; 會員申請</button>
+    <button class="tab-btn" onclick="switchTab('survey', this)">&#x1F4CA; 活動意見</button>
+  </div>
+
+  <!-- ── TAB 1: GENERAL ENQUIRY ── -->
+  <div id="tab-general" class="tab-panel active">
+    <div class="success-banner" id="success-general">
+      <h3>&#x2705; 訊息已發送！</h3>
+      <p>感謝你的查詢，我們會在 2 個工作天內回覆你。</p>
+    </div>
+    <div class="card">
+      <h2>&#x1F4DD; 一般查詢 / 意見</h2>
+      <p class="subtitle">有任何問題或意見？填寫以下表格，訊息將直接發送至我們的電郵。</p>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>姓名 <span class="required">*</span></label>
+          <input type="text" id="g-name" placeholder="你的姓名">
+        </div>
+        <div class="form-group">
+          <label>電郵 <span class="required">*</span></label>
+          <input type="email" id="g-email" placeholder="your@email.com">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>查詢類別 <span class="required">*</span></label>
+        <select id="g-type">
+          <option value="">-- 請選擇 --</option>
+          <option value="general">一般查詢</option>
+          <option value="event">活動相關</option>
+          <option value="membership">會員事宜</option>
+          <option value="media">傳媒 / 合作</option>
+          <option value="complaint">投訴</option>
+          <option value="other">其他</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>主題</label>
+        <input type="text" id="g-subject" placeholder="簡短描述你的查詢">
+      </div>
+
+      <div class="form-group">
+        <label>訊息內容 <span class="required">*</span></label>
+        <textarea id="g-message" rows="5" placeholder="請詳細描述你的查詢或意見..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>電話（選填，方便我們回覆）</label>
+        <input type="tel" id="g-phone" placeholder="+44 7XXX XXXXXX">
+      </div>
+
+      <div class="emailjs-note">
+        <div class="note-icon">&#x1F4E7;</div>
+        <div>
+          <h4>電郵通知系統</h4>
+          <p>提交後，你將收到確認電郵，我們的團隊亦會同時收到通知。<br>
+          <strong>設定中：</strong>連接 EmailJS 後自動發送。現階段訊息會儲存並人手跟進。</p>
+        </div>
+      </div>
+
+      <button class="btn-primary" onclick="submitForm('general')">
+        &#x1F4E8; 發送訊息
+      </button>
+    </div>
+  </div>
+
+  <!-- ── TAB 2: VOLUNTEER ── -->
+  <div id="tab-volunteer" class="tab-panel">
+    <div class="success-banner" id="success-volunteer">
+      <h3>&#x2705; 申請已提交！</h3>
+      <p>感謝你願意成為義工！我們的義工協調員會在 3 個工作天內聯絡你。</p>
+    </div>
+    <div class="card">
+      <h2>&#x1F91D; 義工申請</h2>
+      <p class="subtitle">加入我們的義工團隊，一起為香港社群出一份力！我們非常歡迎各種背景和技能的朋友。</p>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>姓名 <span class="required">*</span></label>
+          <input type="text" id="v-name" placeholder="你的全名">
+        </div>
+        <div class="form-group">
+          <label>電郵 <span class="required">*</span></label>
+          <input type="email" id="v-email" placeholder="your@email.com">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>電話 <span class="required">*</span></label>
+          <input type="tel" id="v-phone" placeholder="+44 7XXX XXXXXX">
+        </div>
+        <div class="form-group">
+          <label>年齡組別</label>
+          <select id="v-age">
+            <option value="">-- 請選擇 --</option>
+            <option>18-25</option>
+            <option>26-35</option>
+            <option>36-45</option>
+            <option>46-55</option>
+            <option>56+</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>居住地區 <span class="required">*</span></label>
+        <input type="text" id="v-area" placeholder="例：Salford, Manchester City Centre, Eccles...">
+      </div>
+
+      <div class="section-title">你能貢獻的技能（可多選）</div>
+      <div class="form-group">
+        <div class="skills-grid" id="skillsGrid">
+          <div class="skill-chip" onclick="toggleChip(this)">&#x1F4F7; 攝影 / 攝錄</div>
+          <div class="skill-chip" onclick="toggleChip(this)">&#x1F4BB; 網頁 / IT</div>
+          <div class="skill-chip" onclick="toggleChip(this)">&#x1F3A8; 設計</div>
+          <div class="skill-chip" onclick="toggleChip(this)">&#x270D;&#xFE0F; 寫作 / 翻譯</div>
+          <div class="skill-chip" onclick="toggleChip(this)">&#x1F4F1; 社交媒體</div>
+          <div class="skill-chip" onclick="toggleChip(this)">&#x1F373; 烹飪</div>
+          <div class="skill-chip" onclick="toggleChip(this)">&#x1F3B5; 音樂 / 表演</div>
+          <div class="skill-chip" onclick="toggleChip(this)">&#x1F697; 駕駛接送</div>
+          <div class="skill-chip" onclick="toggleChip(this)">&#x1F4BC; 行政 / 文書</div>
+          <div class="skill-chip" onclick="toggleChip(this)">&#x1F4AA; 體能活動</div>
+          <div class="skill-chip" onclick="toggleChip(this)">&#x1F4AC; 輔導 / 支援</div>
+          <div class="skill-chip" onclick="toggleChip(this)">&#x2695;&#xFE0F; 醫療 / 護理</div>
+        </div>
+      </div>
+
+      <div class="section-title">可以義務服務的時間</div>
+      <div class="form-group">
+        <div class="avail-grid" id="availGrid">
+          <div class="avail-chip" onclick="toggleChip(this)">週一</div>
+          <div class="avail-chip" onclick="toggleChip(this)">週二</div>
+          <div class="avail-chip" onclick="toggleChip(this)">週三</div>
+          <div class="avail-chip" onclick="toggleChip(this)">週四</div>
+          <div class="avail-chip" onclick="toggleChip(this)">週五</div>
+          <div class="avail-chip" onclick="toggleChip(this)">週六</div>
+          <div class="avail-chip" onclick="toggleChip(this)">週日</div>
+          <div class="avail-chip" onclick="toggleChip(this)">隨時</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>每月可服務時數</label>
+        <select id="v-hours">
+          <option value="">-- 請選擇 --</option>
+          <option>少於 5 小時</option>
+          <option>5-10 小時</option>
+          <option>10-20 小時</option>
+          <option>20 小時以上</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>為何想成為義工？</label>
+        <textarea id="v-reason" rows="3" placeholder="簡單告訴我們你的動機..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>有否相關義工或社區服務經驗？</label>
+        <textarea id="v-exp" rows="3" placeholder="（選填）簡述過往經驗..."></textarea>
+      </div>
+
+      <div class="emailjs-note">
+        <div class="note-icon">&#x1F4E7;</div>
+        <div>
+          <h4>申請通知</h4>
+          <p>提交後你會收到確認電郵，義工協調員亦會同步收到通知並安排跟進。<br>
+          <strong>設定中：</strong>連接 EmailJS 後自動發送。</p>
+        </div>
+      </div>
+
+      <button class="btn-primary" onclick="submitForm('volunteer')">
+        &#x1F91D; 提交義工申請
+      </button>
+    </div>
+  </div>
+
+  <!-- ── TAB 3: MEMBERSHIP ── -->
+  <div id="tab-member" class="tab-panel">
+    <div class="success-banner" id="success-member">
+      <h3>&#x2705; 申請已提交！</h3>
+      <p>歡迎加入 Salford Hongkongers！我們會盡快聯絡你完成入會手續。</p>
+    </div>
+    <div class="card">
+      <h2>&#x1F3AB; 會員申請</h2>
+      <p class="subtitle">成為正式會員，享有優先報名、折扣及專屬社群。正式付款請到<a href="donate.html" style="color:#8B0000;">支持我們</a>頁面。</p>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>姓名（中文）</label>
+          <input type="text" id="m-name-zh" placeholder="例：陳大文">
+        </div>
+        <div class="form-group">
+          <label>姓名（英文）<span class="required">*</span></label>
+          <input type="text" id="m-name-en" placeholder="e.g. Chan Tai Man">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>電郵 <span class="required">*</span></label>
+          <input type="email" id="m-email" placeholder="your@email.com">
+        </div>
+        <div class="form-group">
+          <label>電話 <span class="required">*</span></label>
+          <input type="tel" id="m-phone" placeholder="+44 7XXX XXXXXX">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>居住地區</label>
+          <input type="text" id="m-area" placeholder="例：Salford M5">
+        </div>
+        <div class="form-group">
+          <label>來英年份</label>
+          <select id="m-year">
+            <option value="">-- 請選擇 --</option>
+            <option>2021 或之前</option>
+            <option>2021</option>
+            <option>2022</option>
+            <option>2023</option>
+            <option>2024</option>
+            <option>2025</option>
+            <option>2026</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>簽證類型</label>
+        <div class="radio-group">
+          <label class="radio-item">
+            <input type="radio" name="m-visa" value="BNO5">
+            <div>
+              <div class="radio-label">BN(O) 5+1</div>
+              <div class="radio-desc">BN(O) Visa 持有人</div>
+            </div>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="m-visa" value="student">
+            <div>
+              <div class="radio-label">學生簽證</div>
+              <div class="radio-desc">Student Visa</div>
+            </div>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="m-visa" value="work">
+            <div>
+              <div class="radio-label">工作簽證</div>
+              <div class="radio-desc">Skilled Worker / 其他工作簽證</div>
+            </div>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="m-visa" value="settled">
+            <div>
+              <div class="radio-label">永久居留 / 英籍</div>
+              <div class="radio-desc">ILR / British Citizen</div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>有興趣的活動類型（可多選）</label>
+        <div class="checkbox-group">
+          <label class="checkbox-item"><input type="checkbox" value="culture">&#x1F3AD; 文化藝術活動</label>
+          <label class="checkbox-item"><input type="checkbox" value="social">&#x1F37B; 社交聯誼活動</label>
+          <label class="checkbox-item"><input type="checkbox" value="support">&#x1F91D; 社區支援服務</label>
+          <label class="checkbox-item"><input type="checkbox" value="language">&#x1F4DA; 語言學習</label>
+          <label class="checkbox-item"><input type="checkbox" value="sport">&#x26BD; 體育健康活動</label>
+          <label class="checkbox-item"><input type="checkbox" value="children">&#x1F9D2; 兒童家庭活動</label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>如何認識我們？</label>
+        <select id="m-source">
+          <option value="">-- 請選擇 --</option>
+          <option>Facebook</option>
+          <option>Instagram</option>
+          <option>朋友介紹</option>
+          <option>WhatsApp 群組</option>
+          <option>Google 搜尋</option>
+          <option>社區活動</option>
+          <option>其他</option>
+        </select>
+      </div>
+
+      <div class="emailjs-note">
+        <div class="note-icon">&#x1F4E7;</div>
+        <div>
+          <h4>申請通知</h4>
+          <p>提交後你會收到確認電郵，我們的團隊會安排跟進並告知入會費詳情。<br>
+          <strong>設定中：</strong>連接 EmailJS 後自動發送確認電郵至你的郵箱。</p>
+        </div>
+      </div>
+
+      <button class="btn-primary" onclick="submitForm('member')">
+        &#x1F3AB; 提交會員申請
+      </button>
+    </div>
+  </div>
+
+  <!-- ── TAB 4: SURVEY ── -->
+  <div id="tab-survey" class="tab-panel">
+    <div class="success-banner" id="success-survey">
+      <h3>&#x2705; 意見已提交！</h3>
+      <p>非常感謝你的寶貴意見，我們會用於改善未來活動。</p>
+    </div>
+    <div class="card">
+      <h2>&#x1F4CA; 活動意見調查</h2>
+      <p class="subtitle">你的意見對我們非常重要！只需 2 分鐘，幫助我們改善未來活動。</p>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>姓名（選填）</label>
+          <input type="text" id="s-name" placeholder="可匿名">
+        </div>
+        <div class="form-group">
+          <label>電郵（選填）</label>
+          <input type="email" id="s-email" placeholder="your@email.com">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>你參加了哪個活動？ <span class="required">*</span></label>
+        <input type="text" id="s-event" placeholder="例：中秋聯歡晚會 2025">
+      </div>
+
+      <div class="section-title">&#x2B50; 活動評分</div>
+      <div class="rating-group">
+        <div class="rating-row">
+          <div class="rating-label">整體滿意度</div>
+          <div class="rating-stars" id="stars-overall">
+            <span class="star" onclick="setRating('overall',1)">&#x2605;</span>
+            <span class="star" onclick="setRating('overall',2)">&#x2605;</span>
+            <span class="star" onclick="setRating('overall',3)">&#x2605;</span>
+            <span class="star" onclick="setRating('overall',4)">&#x2605;</span>
+            <span class="star" onclick="setRating('overall',5)">&#x2605;</span>
+          </div>
+        </div>
+        <div class="rating-row">
+          <div class="rating-label">活動組織 / 安排</div>
+          <div class="rating-stars" id="stars-org">
+            <span class="star" onclick="setRating('org',1)">&#x2605;</span>
+            <span class="star" onclick="setRating('org',2)">&#x2605;</span>
+            <span class="star" onclick="setRating('org',3)">&#x2605;</span>
+            <span class="star" onclick="setRating('org',4)">&#x2605;</span>
+            <span class="star" onclick="setRating('org',5)">&#x2605;</span>
+          </div>
+        </div>
+        <div class="rating-row">
+          <div class="rating-label">場地 / 環境</div>
+          <div class="rating-stars" id="stars-venue">
+            <span class="star" onclick="setRating('venue',1)">&#x2605;</span>
+            <span class="star" onclick="setRating('venue',2)">&#x2605;</span>
+            <span class="star" onclick="setRating('venue',3)">&#x2605;</span>
+            <span class="star" onclick="setRating('venue',4)">&#x2605;</span>
+            <span class="star" onclick="setRating('venue',5)">&#x2605;</span>
+          </div>
+        </div>
+        <div class="rating-row">
+          <div class="rating-label">義工 / 工作人員服務</div>
+          <div class="rating-stars" id="stars-staff">
+            <span class="star" onclick="setRating('staff',1)">&#x2605;</span>
+            <span class="star" onclick="setRating('staff',2)">&#x2605;</span>
+            <span class="star" onclick="setRating('staff',3)">&#x2605;</span>
+            <span class="star" onclick="setRating('staff',4)">&#x2605;</span>
+            <span class="star" onclick="setRating('staff',5)">&#x2605;</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-top:20px;">
+        <label>最喜歡活動的哪部分？</label>
+        <textarea id="s-best" rows="3" placeholder="例：大家氣氛好好，認識了很多新朋友..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>有什麼可以改善的地方？</label>
+        <textarea id="s-improve" rows="3" placeholder="你的建議對我們非常重要..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>你會推薦朋友參加我們的活動嗎？</label>
+        <div class="radio-group">
+          <label class="radio-item">
+            <input type="radio" name="s-recommend" value="definitely">
+            <div><div class="radio-label">&#x1F44D; 一定會</div></div>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="s-recommend" value="probably">
+            <div><div class="radio-label">&#x1F644; 可能會</div></div>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="s-recommend" value="no">
+            <div><div class="radio-label">&#x1F614; 未必</div></div>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>你希望我們舉辦什麼類型的活動？</label>
+        <textarea id="s-suggest" rows="3" placeholder="例：更多親子活動、廣東話班、粵菜烹飪課..."></textarea>
+      </div>
+
+      <div class="emailjs-note">
+        <div class="note-icon">&#x1F4E7;</div>
+        <div>
+          <h4>意見收集</h4>
+          <p>你的意見會以電郵形式發送至活動負責人，幫助我們持續改善。<br>
+          <strong>設定中：</strong>連接 EmailJS 後自動發送。</p>
+        </div>
+      </div>
+
+      <button class="btn-primary" onclick="submitForm('survey')">
+        &#x1F4CA; 提交意見
+      </button>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<footer>
+  <p>&copy; 2025 Salford Hongkongers. All rights reserved. | <a href="index.html">主頁</a> | <a href="donate.html">支持我們</a></p>
+</footer>
+
+<script>
+// ── EmailJS Config (填入後啟用) ──
+// const EMAILJS_SERVICE_ID  = 'YOUR_SERVICE_ID';
+// const EMAILJS_PUBLIC_KEY  = 'YOUR_PUBLIC_KEY';
+// const ADMIN_EMAIL         = 'salfordhongkongers@gmail.com';
+// Template IDs:
+// const TEMPLATE_GENERAL    = 'template_general';
+// const TEMPLATE_VOLUNTEER  = 'template_volunteer';
+// const TEMPLATE_MEMBER     = 'template_member';
+// const TEMPLATE_SURVEY     = 'template_survey';
+
+// ── Tab Switch ──
+function switchTab(tab, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  if (btn) btn.classList.add('active');
+}
+
+// ── Auto-switch tab from URL hash ──
+(function() {
+  const hash = window.location.hash.replace('#', '');
+  const validTabs = ['general', 'volunteer', 'member', 'survey'];
+  if (hash && validTabs.includes(hash)) {
+    window.addEventListener('DOMContentLoaded', function() {
+      const btn = document.querySelector('.tab-btn[onclick*="\'' + hash + '\'"]');
+      switchTab(hash, btn);
+    });
+  }
+})();
+
+// ── Chip Toggle ──
+function toggleChip(el) {
+  el.classList.toggle('selected');
+}
+
+// ── Star Rating ──
+const ratings = { overall: 0, org: 0, venue: 0, staff: 0 };
+function setRating(key, val) {
+  ratings[key] = val;
+  const stars = document.querySelectorAll('#stars-' + key + ' .star');
+  stars.forEach((s, i) => {
+    s.classList.toggle('active', i < val);
+  });
+}
+
+// ── Form Submit ──
+function submitForm(type) {
+  // Validation
+  const validators = {
+    general:  () => getValue('g-name') && getValue('g-email') && getValue('g-message'),
+    volunteer:() => getValue('v-name') && getValue('v-email') && getValue('v-phone'),
+    member:   () => getValue('m-name-en') && getValue('m-email') && getValue('m-phone'),
+    survey:   () => getValue('s-event')
+  };
+  if (!validators[type]()) {
+    alert('請填妥所有必填欄位（標有 * 號）');
+    return;
+  }
+
+  // Collect data
+  const data = collectData(type);
+
+  // EMAILJS INTEGRATION POINT:
+  // emailjs.send(EMAILJS_SERVICE_ID, 'template_' + type, {
+  //   to_email: ADMIN_EMAIL,
+  //   reply_to: data.email,
+  //   ...data
+  // }).then(() => {
+  //   // Also send confirmation to submitter
+  //   emailjs.send(EMAILJS_SERVICE_ID, 'template_confirm', { to_email: data.email, name: data.name });
+  // });
+
+  // Save to localStorage as backup
+  const key = 'shk_submissions_' + type;
+  const existing = JSON.parse(localStorage.getItem(key) || '[]');
+  existing.push({ ...data, timestamp: new Date().toISOString() });
+  localStorage.setItem(key, JSON.stringify(existing));
+
+  // Show success
+  document.getElementById('success-' + type).classList.add('show');
+  document.querySelector('#tab-' + type + ' .card').style.display = 'none';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function getValue(id) {
+  const el = document.getElementById(id);
+  return el ? el.value.trim() : '';
+}
+
+function collectData(type) {
+  const base = {};
+  if (type === 'general') {
+    Object.assign(base, {
+      name: getValue('g-name'), email: getValue('g-email'),
+      type: getValue('g-type'), subject: getValue('g-subject'),
+      message: getValue('g-message'), phone: getValue('g-phone')
+    });
+  } else if (type === 'volunteer') {
+    const skills = [...document.querySelectorAll('#skillsGrid .skill-chip.selected')].map(c => c.textContent).join(', ');
+    const avail  = [...document.querySelectorAll('#availGrid .avail-chip.selected')].map(c => c.textContent).join(', ');
+    Object.assign(base, {
+      name: getValue('v-name'), email: getValue('v-email'),
+      phone: getValue('v-phone'), age: getValue('v-age'),
+      area: getValue('v-area'), skills, avail,
+      hours: getValue('v-hours'), reason: getValue('v-reason'),
+      experience: getValue('v-exp')
+    });
+  } else if (type === 'member') {
+    const interests = [...document.querySelectorAll('#tab-member input[type=checkbox]:checked')].map(c => c.value).join(', ');
+    const visa = document.querySelector('input[name="m-visa"]:checked');
+    Object.assign(base, {
+      name: getValue('m-name-en'), nameZh: getValue('m-name-zh'),
+      email: getValue('m-email'), phone: getValue('m-phone'),
+      area: getValue('m-area'), year: getValue('m-year'),
+      visa: visa ? visa.value : '', interests,
+      source: getValue('m-source')
+    });
+  } else if (type === 'survey') {
+    const recommend = document.querySelector('input[name="s-recommend"]:checked');
+    Object.assign(base, {
+      name: getValue('s-name'), email: getValue('s-email'),
+      event: getValue('s-event'), ratings: JSON.stringify(ratings),
+      best: getValue('s-best'), improve: getValue('s-improve'),
+      recommend: recommend ? recommend.value : '',
+      suggest: getValue('s-suggest')
+    });
+  }
+  return base;
+}
+</script>
+</body>
+</html>
