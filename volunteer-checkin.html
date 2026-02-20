@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>義工簽到 | Salford Hongkongers</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  background: #f0f0f0;
+  color: #333;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* NAV */
+nav {
+  background: #8B0000;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+nav .logo { color: #fff; font-size: 1.05rem; font-weight: 700; }
+nav .nav-time { color: rgba(255,255,255,.85); font-size: 0.88rem; font-variant-numeric: tabular-nums; }
+
+/* LAYOUT */
+.page {
+  display: flex; flex-direction: column; gap: 16px;
+  padding: 20px 16px 40px;
+  max-width: 560px; margin: 0 auto; width: 100%;
+}
+
+/* CLOCK HERO */
+.clock-hero {
+  background: #8B0000;
+  border-radius: 16px;
+  padding: 24px 20px 20px;
+  text-align: center;
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(139,0,0,.3);
+}
+.clock-display {
+  font-size: 3.2rem; font-weight: 800;
+  letter-spacing: 4px; font-variant-numeric: tabular-nums;
+  line-height: 1; margin-bottom: 6px;
+}
+.clock-date { font-size: 0.92rem; opacity: .8; }
+
+/* CARD */
+.card {
+  background: #fff; border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.07);
+}
+.card-title {
+  font-size: 0.8rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .8px;
+  color: #999; margin-bottom: 14px;
+}
+
+/* NAME INPUT */
+.name-wrap { position: relative; }
+.name-input {
+  width: 100%; font-size: 1.25rem;
+  padding: 14px 16px;
+  border: 2px solid #e0e0e0; border-radius: 10px;
+  outline: none; transition: border-color .2s;
+  font-family: inherit; -webkit-appearance: none;
+}
+.name-input:focus { border-color: #8B0000; }
+.name-input.has-value { border-color: #8B0000; background: #fff9f9; }
+
+.suggest-box {
+  position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+  background: #fff; border: 1.5px solid #e0e0e0; border-radius: 10px;
+  box-shadow: 0 6px 20px rgba(0,0,0,.12);
+  z-index: 50; overflow: hidden; display: none;
+  max-height: 200px; overflow-y: auto;
+}
+.suggest-item {
+  padding: 13px 16px; cursor: pointer;
+  font-size: 1rem; border-bottom: 1px solid #f5f5f5;
+  transition: background .15s;
+}
+.suggest-item:last-child { border-bottom: none; }
+.suggest-item:hover, .suggest-item:active { background: #fff5f5; color: #8B0000; }
+
+.confirm-btn {
+  width: 100%; margin-top: 12px; padding: 15px;
+  font-size: 1.05rem; font-weight: 700;
+  border: none; border-radius: 10px;
+  background: #8B0000; color: #fff;
+  cursor: pointer; font-family: inherit;
+  transition: background .2s, transform .1s;
+}
+.confirm-btn:active { background: #6a0000; transform: scale(.98); }
+.confirm-btn:disabled { background: #ccc; cursor: not-allowed; transform: none; }
+
+/* STATUS CARD */
+.status-card { border-radius: 14px; padding: 20px; display: none; }
+.status-card.active { display: block; background: #e8f5e9; border: 2px solid #4caf50; }
+.status-card.idle   { display: block; background: #fff; border: 2px solid #e0e0e0; }
+
+.status-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.status-dot { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; }
+.status-dot.green { background: #4caf50; box-shadow: 0 0 0 3px rgba(76,175,80,.2); animation: pulse 2s infinite; }
+.status-dot.grey  { background: #bbb; }
+@keyframes pulse {
+  0%,100% { box-shadow: 0 0 0 3px rgba(76,175,80,.2); }
+  50%      { box-shadow: 0 0 0 7px rgba(76,175,80,.05); }
+}
+.status-name { font-size: 1.15rem; font-weight: 700; flex: 1; }
+.status-badge {
+  font-size: 0.75rem; font-weight: 700;
+  padding: 4px 10px; border-radius: 20px; letter-spacing: .4px;
+}
+.badge-in  { background: #4caf50; color: #fff; }
+.badge-out { background: #e53935; color: #fff; }
+.badge-new { background: #1e88e5; color: #fff; }
+
+.status-meta { font-size: 0.88rem; color: #555; margin-bottom: 16px; }
+.status-meta span { display: inline-block; margin-right: 12px; }
+
+.elapsed {
+  font-size: 2rem; font-weight: 800; color: #2e7d32;
+  font-variant-numeric: tabular-nums; margin-bottom: 2px;
+}
+.elapsed-label { font-size: 0.8rem; color: #777; margin-bottom: 16px; }
+
+/* ACTION BUTTONS */
+.action-row { display: flex; gap: 12px; }
+.btn-checkin, .btn-checkout {
+  flex: 1; padding: 20px 12px;
+  font-size: 1.1rem; font-weight: 800;
+  border: none; border-radius: 12px; cursor: pointer;
+  font-family: inherit; display: flex;
+  flex-direction: column; align-items: center; gap: 4px;
+  transition: transform .1s, box-shadow .1s;
+}
+.btn-checkin { background: #2e7d32; color: #fff; box-shadow: 0 4px 14px rgba(46,125,50,.35); }
+.btn-checkin:active { transform: scale(.97); box-shadow: none; }
+.btn-checkin:disabled { background: #c8e6c9; color: #a5d6a7; box-shadow: none; cursor: not-allowed; transform: none; }
+.btn-checkout { background: #c62828; color: #fff; box-shadow: 0 4px 14px rgba(198,40,40,.35); }
+.btn-checkout:active { transform: scale(.97); box-shadow: none; }
+.btn-checkout:disabled { background: #ffcdd2; color: #ef9a9a; box-shadow: none; cursor: not-allowed; transform: none; }
+.btn-icon  { font-size: 1.6rem; line-height: 1; }
+.btn-label { font-size: 0.7rem; opacity: .8; font-weight: 600; }
+
+/* LEADERBOARD */
+.leaderboard-list { display: flex; flex-direction: column; gap: 10px; }
+.lb-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 14px; border-radius: 10px;
+  background: #fafafa; border: 1.5px solid #f0f0f0;
+}
+.lb-item.rank-1 { background: #fff8e1; border-color: #ffd54f; }
+.lb-item.rank-2 { background: #f5f5f5; border-color: #e0e0e0; }
+.lb-item.rank-3 { background: #fbe9e7; border-color: #ffccbc; }
+
+.lb-rank {
+  width: 34px; height: 34px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.05rem; font-weight: 800; flex-shrink: 0;
+}
+.rank-1 .lb-rank { background: #ffd54f; color: #5d4037; }
+.rank-2 .lb-rank { background: #cfd8dc; color: #37474f; }
+.rank-3 .lb-rank { background: #ffab91; color: #bf360c; }
+.rank-other .lb-rank { background: #eee; color: #757575; font-size: 0.85rem; }
+
+.lb-name  { font-size: 0.98rem; font-weight: 600; flex: 1; }
+.lb-hours { font-size: 0.82rem; color: #666; text-align: right; line-height: 1.5; }
+.lb-hours strong { display: block; font-size: 1.05rem; color: #8B0000; font-weight: 800; }
+
+.lb-empty { text-align: center; color: #bbb; font-size: 0.9rem; padding: 20px 0; }
+
+/* TODAY LOG */
+.log-list  { display: flex; flex-direction: column; gap: 8px; }
+.log-item  {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; border-radius: 9px;
+  background: #fafafa; border: 1px solid #efefef;
+  font-size: 0.88rem;
+}
+.log-name  { font-weight: 600; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.log-time  { color: #666; white-space: nowrap; font-size: 0.82rem; }
+.log-dur   { font-weight: 700; color: #8B0000; white-space: nowrap; }
+.log-badge { font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 12px; white-space: nowrap; }
+.log-active { background: #e8f5e9; color: #2e7d32; }
+.log-done   { background: #fce4ec; color: #c62828; }
+.log-empty  { text-align: center; color: #bbb; font-size: 0.88rem; padding: 16px 0; }
+
+/* CLOCK-OUT MODAL */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.5);
+  z-index: 200; display: none;
+  align-items: flex-end; justify-content: center;
+}
+.modal-overlay.show { display: flex; }
+.modal-sheet {
+  background: #fff; width: 100%; max-width: 560px;
+  border-radius: 20px 20px 0 0;
+  padding: 28px 24px 40px;
+  transform: translateY(100%);
+  transition: transform .3s cubic-bezier(.34,1.2,.64,1);
+}
+.modal-overlay.show .modal-sheet { transform: translateY(0); }
+.modal-handle { width: 40px; height: 4px; background: #ddd; border-radius: 2px; margin: 0 auto 22px; }
+.modal-title    { font-size: 1.2rem; font-weight: 800; margin-bottom: 16px; }
+.modal-vol-info { background: #f9f9f9; border-radius: 10px; padding: 14px 16px; margin-bottom: 20px; }
+.modal-vol-name { font-size: 1.1rem; font-weight: 700; color: #8B0000; margin-bottom: 4px; }
+.modal-elapsed  { font-size: 0.9rem; color: #555; }
+.modal-warning  { font-size: 0.85rem; color: #e65100; background: #fff3e0; border-radius: 8px; padding: 10px 12px; margin-bottom: 20px; }
+.modal-actions  { display: flex; gap: 12px; }
+.modal-cancel {
+  flex: 1; padding: 16px; font-size: 1rem; font-weight: 700;
+  border: 2px solid #e0e0e0; border-radius: 12px;
+  background: #fff; color: #555; cursor: pointer; font-family: inherit;
+}
+.modal-cancel:hover { background: #f5f5f5; }
+.modal-confirm {
+  flex: 1; padding: 16px; font-size: 1rem; font-weight: 700;
+  border: none; border-radius: 12px;
+  background: #c62828; color: #fff; cursor: pointer; font-family: inherit;
+}
+.modal-confirm:hover { background: #9b1b1b; }
+
+/* TOAST */
+.toast {
+  position: fixed; bottom: 28px; left: 50%;
+  transform: translateX(-50%) translateY(120px);
+  background: #323232; color: #fff;
+  padding: 12px 24px; border-radius: 28px;
+  font-size: 0.92rem; font-weight: 600;
+  white-space: nowrap; z-index: 999;
+  transition: transform .4s cubic-bezier(.34,1.56,.64,1), opacity .3s;
+  opacity: 0; box-shadow: 0 4px 16px rgba(0,0,0,.25);
+}
+.toast.show    { transform: translateX(-50%) translateY(0); opacity: 1; }
+.toast.success { background: #2e7d32; }
+.toast.error   { background: #c62828; }
+
+@media (max-width: 400px) {
+  .clock-display { font-size: 2.6rem; letter-spacing: 2px; }
+  .btn-checkin, .btn-checkout { padding: 16px 8px; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Salford Hongkongers — 義工簽到</div>
+  <div class="nav-time" id="nav-time"></div>
+</nav>
+
+<div class="page">
+
+  <!-- 1. Clock Hero -->
+  <div class="clock-hero">
+    <div class="clock-display" id="clock">00:00:00</div>
+    <div class="clock-date"   id="clock-date"></div>
+  </div>
+
+  <!-- 2. Name Search -->
+  <div class="card">
+    <div class="card-title">義工姓名</div>
+    <div class="name-wrap">
+      <input
+        id="name-input"
+        class="name-input"
+        type="text"
+        placeholder="輸入姓名搜尋..."
+        autocomplete="off"
+        autocorrect="off"
+        spellcheck="false"
+        oninput="onNameInput()"
+        onkeydown="onNameKey(event)"
+      >
+      <div class="suggest-box" id="suggest-box"></div>
+    </div>
+    <button class="confirm-btn" id="confirm-btn" onclick="lookupVolunteer()" disabled>
+      確認身份
+    </button>
+  </div>
+
+  <!-- 3. Status + Actions -->
+  <div class="status-card" id="status-card">
+    <div class="status-header">
+      <div class="status-dot"  id="status-dot"></div>
+      <div class="status-name" id="status-name"></div>
+      <div class="status-badge" id="status-badge"></div>
+    </div>
+    <div class="status-meta" id="status-meta"></div>
+    <div class="elapsed"       id="elapsed"       style="display:none"></div>
+    <div class="elapsed-label" id="elapsed-label" style="display:none">已服務時間</div>
+    <div class="action-row">
+      <button class="btn-checkin"  id="btn-in"  onclick="clockIn()">
+        <span class="btn-icon">&#9654;</span>
+        <span>Clock In</span>
+        <span class="btn-label">開始服務</span>
+      </button>
+      <button class="btn-checkout" id="btn-out" onclick="showClockOutModal()">
+        <span class="btn-icon">&#9632;</span>
+        <span>Clock Out</span>
+        <span class="btn-label">完成服務</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- 4. Monthly Leaderboard -->
+  <div class="card">
+    <div class="card-title">&#127942; 本月義工時數排行榜</div>
+    <div class="leaderboard-list" id="leaderboard"></div>
+  </div>
+
+  <!-- 5. Today Log -->
+  <div class="card">
+    <div class="card-title">今日簽到記錄</div>
+    <div class="log-list" id="today-log"></div>
+  </div>
+
+</div>
+
+<!-- Clock-Out Confirmation Modal -->
+<div class="modal-overlay" id="modal-overlay" onclick="onOverlayClick(event)">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">確認 Clock Out？</div>
+    <div class="modal-vol-info">
+      <div class="modal-vol-name" id="modal-vol-name"></div>
+      <div class="modal-elapsed"  id="modal-elapsed"></div>
+    </div>
+    <div class="modal-warning">&#9888;&#65039; Clock Out 後將記錄服務時數，請確認無誤。</div>
+    <div class="modal-actions">
+      <button class="modal-cancel"  onclick="closeModal()">取消</button>
+      <button class="modal-confirm" onclick="confirmClockOut()">確認 Clock Out</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── KEYS ──
+const LOGS_KEY  = 'shk_vol_logs';
+const NAMES_KEY = 'shk_vol_names';
+
+// ── STATE ──
+let currentName  = '';
+let currentLog   = null;
+let elapsedTimer = null;
+
+// ── CLOCK ──
+function updateClock() {
+  const n  = new Date();
+  const hh = String(n.getHours()).padStart(2,'0');
+  const mm = String(n.getMinutes()).padStart(2,'0');
+  const ss = String(n.getSeconds()).padStart(2,'0');
+  document.getElementById('clock').textContent     = `${hh}:${mm}:${ss}`;
+  document.getElementById('nav-time').textContent  = `${hh}:${mm}`;
+  document.getElementById('clock-date').textContent =
+    n.toLocaleDateString('zh-HK', {year:'numeric', month:'long', day:'numeric', weekday:'short'});
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// ── HELPERS ──
+function getLogs()  { try { return JSON.parse(localStorage.getItem(LOGS_KEY) ||'[]'); } catch(e){return[];} }
+function saveLogs(a){ localStorage.setItem(LOGS_KEY,  JSON.stringify(a)); }
+function getNames() { try { return JSON.parse(localStorage.getItem(NAMES_KEY)||'[]'); } catch(e){return[];} }
+function addName(n) {
+  let arr = getNames().filter(x => x.toLowerCase() !== n.toLowerCase());
+  arr.unshift(n);
+  if (arr.length > 200) arr = arr.slice(0, 200);
+  localStorage.setItem(NAMES_KEY, JSON.stringify(arr));
+}
+function todayStr() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+function fmtTime(ms) {
+  const d = new Date(ms);
+  return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+}
+function fmtDur(mins) {
+  if (mins == null) return '--';
+  const h = Math.floor(mins / 60), m = mins % 60;
+  return h > 0 ? `${h}h ${m}m` : `${m}m`;
+}
+
+// ── NAME INPUT ──
+function onNameInput() {
+  const val = document.getElementById('name-input').value.trim();
+  document.getElementById('confirm-btn').disabled = val.length === 0;
+  document.getElementById('name-input').classList.toggle('has-value', val.length > 0);
+  renderSuggest(val);
+}
+
+function renderSuggest(val) {
+  const box = document.getElementById('suggest-box');
+  if (!val) { box.style.display = 'none'; return; }
+  const matches = getNames()
+    .filter(n => n.toLowerCase().includes(val.toLowerCase()))
+    .slice(0, 8);
+  if (!matches.length) { box.style.display = 'none'; return; }
+  const esc = val.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+  box.innerHTML = matches.map(n =>
+    `<div class="suggest-item" onmousedown="selectName('${n.replace(/'/g,"\\'")}')">
+      ${n.replace(new RegExp('('+esc+')','gi'),'<strong>$1</strong>')}
+    </div>`
+  ).join('');
+  box.style.display = 'block';
+}
+
+function selectName(name) {
+  document.getElementById('name-input').value = name;
+  document.getElementById('suggest-box').style.display = 'none';
+  document.getElementById('name-input').classList.add('has-value');
+  document.getElementById('confirm-btn').disabled = false;
+  lookupVolunteer();
+}
+
+function onNameKey(e) {
+  if (e.key === 'Enter')  { lookupVolunteer(); document.getElementById('suggest-box').style.display='none'; }
+  if (e.key === 'Escape') { document.getElementById('suggest-box').style.display='none'; }
+}
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('.name-wrap'))
+    document.getElementById('suggest-box').style.display = 'none';
+});
+
+// ── LOOKUP ──
+function lookupVolunteer() {
+  const name = document.getElementById('name-input').value.trim();
+  if (!name) return;
+  currentName = name;
+  document.getElementById('suggest-box').style.display = 'none';
+
+  const logs       = getLogs();
+  const todayLogs  = logs.filter(l => l.name.toLowerCase() === name.toLowerCase() && l.date === todayStr());
+  const inProgress = todayLogs.find(l => !l.outMs);
+
+  renderStatusCard(name, inProgress, todayLogs);
+  renderTodayLog();
+  renderLeaderboard();
+}
+
+// ── STATUS CARD ──
+function renderStatusCard(name, inProgress, todayLogs) {
+  const card   = document.getElementById('status-card');
+  const dot    = document.getElementById('status-dot');
+  const sname  = document.getElementById('status-name');
+  const badge  = document.getElementById('status-badge');
+  const meta   = document.getElementById('status-meta');
+  const elDiv  = document.getElementById('elapsed');
+  const elLbl  = document.getElementById('elapsed-label');
+  const btnIn  = document.getElementById('btn-in');
+  const btnOut = document.getElementById('btn-out');
+
+  card.className = 'status-card';
+  sname.textContent = name;
+  clearInterval(elapsedTimer);
+  elDiv.style.display = 'none';
+  elLbl.style.display = 'none';
+
+  if (inProgress) {
+    currentLog = inProgress;
+    card.classList.add('active');
+    dot.className  = 'status-dot green';
+    badge.textContent = '服務中';
+    badge.className   = 'status-badge badge-in';
+    meta.innerHTML    = `<span>Clock In: <strong>${inProgress.inTime}</strong></span>`;
+    elDiv.style.display = 'block';
+    elLbl.style.display = 'block';
+
+    const tick = () => {
+      const mins = Math.floor((Date.now() - inProgress.inMs) / 60000);
+      elDiv.textContent = fmtDur(mins);
+    };
+    tick();
+    elapsedTimer = setInterval(tick, 10000);
+
+    btnIn.disabled  = true;
+    btnOut.disabled = false;
+
+  } else if (todayLogs.length > 0) {
+    currentLog = null;
+    const totalMins = todayLogs.reduce((s,l) => s + (l.durMin||0), 0);
+    card.classList.add('idle');
+    dot.className     = 'status-dot grey';
+    badge.textContent = '已完成';
+    badge.className   = 'status-badge badge-out';
+    meta.innerHTML    = `<span>今日共服務: <strong>${fmtDur(totalMins)}</strong></span><span>${todayLogs.length} 節</span>`;
+    btnIn.disabled  = false;
+    btnOut.disabled = true;
+
+  } else {
+    currentLog = null;
+    card.classList.add('idle');
+    dot.className     = 'status-dot grey';
+    badge.textContent = '今日未簽到';
+    badge.className   = 'status-badge badge-new';
+    meta.textContent  = '按 Clock In 開始記錄服務時間';
+    btnIn.disabled  = false;
+    btnOut.disabled = true;
+  }
+}
+
+// ── CLOCK IN ──
+function clockIn() {
+  if (!currentName) return;
+  const now = Date.now();
+  const log = {
+    id: 'ci' + now, name: currentName,
+    date: todayStr(), inTime: fmtTime(now), inMs: now,
+    outTime: null, outMs: null, durMin: null
+  };
+  const logs = getLogs();
+  logs.push(log);
+  saveLogs(logs);
+  addName(currentName);
+  showToast(`${currentName} Clock In 成功！`, 'success');
+  lookupVolunteer();
+}
+
+// ── CLOCK OUT MODAL ──
+function showClockOutModal() {
+  if (!currentLog) return;
+  const mins = Math.floor((Date.now() - currentLog.inMs) / 60000);
+  document.getElementById('modal-vol-name').textContent = currentLog.name;
+  document.getElementById('modal-elapsed').textContent  = `已服務時間：${fmtDur(mins)}（${currentLog.inTime} 開始）`;
+  document.getElementById('modal-overlay').classList.add('show');
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('show');
+}
+
+function onOverlayClick(e) {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+}
+
+function confirmClockOut() {
+  closeModal();
+  if (!currentLog) return;
+  const now  = Date.now();
+  const mins = Math.floor((now - currentLog.inMs) / 60000);
+  const logs = getLogs();
+  const idx  = logs.findIndex(l => l.id === currentLog.id);
+  if (idx !== -1) {
+    logs[idx].outTime = fmtTime(now);
+    logs[idx].outMs   = now;
+    logs[idx].durMin  = mins;
+    saveLogs(logs);
+  }
+  clearInterval(elapsedTimer);
+  currentLog = null;
+  showToast(`Clock Out 完成！共服務 ${fmtDur(mins)}`, 'success');
+  lookupVolunteer();
+}
+
+// ── LEADERBOARD ──
+function renderLeaderboard() {
+  const now  = new Date();
+  const ym   = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  const logs = getLogs().filter(l => l.date && l.date.startsWith(ym) && l.durMin != null);
+
+  const map = {};
+  logs.forEach(l => {
+    const key = l.name.trim();
+    if (!map[key]) map[key] = { mins: 0, sessions: 0, days: new Set() };
+    map[key].mins     += l.durMin;
+    map[key].sessions += 1;
+    map[key].days.add(l.date);
+  });
+
+  const sorted = Object.entries(map)
+    .map(([name, v]) => ({ name, mins: v.mins, sessions: v.sessions, days: v.days.size }))
+    .sort((a, b) => b.mins - a.mins)
+    .slice(0, 5);
+
+  const el     = document.getElementById('leaderboard');
+  const month  = now.toLocaleDateString('zh-HK', { month: 'long' });
+  const medals = ['\uD83E\uDD47', '\uD83E\uDD48', '\uD83E\uDD49'];
+
+  if (!sorted.length) {
+    el.innerHTML = `<div class="lb-empty">${month}暫無完成記錄</div>`;
+    return;
+  }
+
+  el.innerHTML = sorted.map((v, i) => {
+    const cls  = i < 3 ? `rank-${i+1}` : 'rank-other';
+    const icon = i < 3 ? medals[i] : `${i+1}`;
+    const hrs  = (v.mins / 60).toFixed(1);
+    return `
+      <div class="lb-item ${cls}">
+        <div class="lb-rank">${icon}</div>
+        <div class="lb-name">${v.name}</div>
+        <div class="lb-hours">
+          <strong>${hrs} 小時</strong>
+          ${v.sessions} 節 · ${v.days} 日
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// ── TODAY LOG ──
+function renderTodayLog() {
+  const logs = getLogs().filter(l => l.date === todayStr()).reverse();
+  const el   = document.getElementById('today-log');
+
+  if (!logs.length) {
+    el.innerHTML = '<div class="log-empty">今日暫無記錄</div>';
+    return;
+  }
+
+  el.innerHTML = logs.map(l => {
+    const active = !l.outMs;
+    const dur    = active
+      ? `<span class="log-badge log-active">服務中</span>`
+      : `<span class="log-dur">${fmtDur(l.durMin)}</span>`;
+    const times  = active ? `${l.inTime} →` : `${l.inTime} – ${l.outTime}`;
+    return `
+      <div class="log-item">
+        <div class="log-name">${l.name}</div>
+        <div class="log-time">${times}</div>
+        ${dur}
+      </div>`;
+  }).join('');
+}
+
+// ── TOAST ──
+function showToast(msg, type='') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className   = `toast show ${type}`;
+  clearTimeout(t._t);
+  t._t = setTimeout(() => { t.className = 'toast'; }, 3200);
+}
+
+// ── INIT ──
+renderLeaderboard();
+renderTodayLog();
+document.getElementById('name-input').focus();
+</script>
+</body>
+</html>
