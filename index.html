@@ -955,8 +955,13 @@ function setEvent(eventName) {
   }
 }
 
-function submitForm(e) {
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbynCMHUlp-5AVsmu53zIADS2_F_2itzDfXOTxDpCCocdmsVXbmkjg438KKyfWtqQ_uvIQ/exec';
+
+async function submitForm(e) {
   e.preventDefault();
+  const submitBtn = document.querySelector('.btn-submit');
+  const isEn = document.documentElement.lang === 'en';
+
   const data = {
     event:     document.getElementById('eventSelect').value,
     name:      document.getElementById('fullName').value,
@@ -968,22 +973,37 @@ function submitForm(e) {
     timestamp: new Date().toISOString()
   };
 
+  // Save to localStorage as backup
   const submissions = JSON.parse(localStorage.getItem('shk_registrations') || '[]');
   submissions.push(data);
   localStorage.setItem('shk_registrations', JSON.stringify(submissions));
 
-  const subject = encodeURIComponent(`活動登記 - ${data.event} - ${data.name}`);
-  const body = encodeURIComponent(
-    `活動登記詳情\n====================\n` +
-    `活動：${data.event}\n姓名：${data.name}\n電郵：${data.email}\n` +
-    `電話：${data.phone || '未提供'}\n人數：${data.attendees}\n` +
-    `新移民：${data.newcomer === 'yes' ? '是' : data.newcomer === 'no' ? '否' : '未說明'}\n` +
-    `備註：${data.notes || '無'}\n登記時間：${new Date().toLocaleString('zh-HK')}`
-  );
-  window.location.href = `mailto:salfordhongkongers@gmail.com?subject=${subject}&body=${body}`;
+  // Disable button and show loading state
+  submitBtn.disabled = true;
+  submitBtn.textContent = isEn ? 'Submitting...' : '提交中...';
 
-  document.getElementById('registerForm').classList.add('hidden');
-  document.getElementById('successMsg').classList.remove('hidden');
+  try {
+    const formData = new FormData();
+    Object.entries(data).forEach(([k, v]) => formData.append(k, v));
+
+    await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      body: formData,
+      mode: 'no-cors'
+    });
+
+    // mode: no-cors means we can't read response body, but no thrown error = success
+    document.getElementById('registerForm').classList.add('hidden');
+    document.getElementById('successMsg').classList.remove('hidden');
+  } catch (err) {
+    console.error('Submission error:', err);
+    submitBtn.disabled = false;
+    submitBtn.textContent = isEn ? 'Submit Registration' : '提交登記';
+    alert(isEn
+      ? 'Submission failed. Please try again or email us directly at salfordhongkongers@gmail.com'
+      : '提交失敗，請再試一次，或直接電郵至 salfordhongkongers@gmail.com'
+    );
+  }
 }
 
 function resetForm() {
