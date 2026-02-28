@@ -526,6 +526,21 @@ function clockIn() {
   logs.push(log);
   saveLogs(logs);
   addName(currentName);
+
+  // Notify via Formspree
+  fetch('https://formspree.io/hkerssalford@gmail.com', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify({
+      _subject: `【SHK 義工簽到】${currentName} Clock In - ${todayStr()}`,
+      姓名: currentName,
+      日期: todayStr(),
+      簽到時間: fmtTime(now),
+      簽出時間: '（服務中）',
+      總時長: '--'
+    })
+  }).catch(() => {});
+
   showToast(`${currentName} Clock In 成功！`, 'success');
   lookupVolunteer();
 }
@@ -561,7 +576,24 @@ function confirmClockOut() {
     saveLogs(logs);
   }
   clearInterval(elapsedTimer);
+  const outName = currentLog ? currentLog.name : currentName;
+  const inTime  = currentLog ? currentLog.inTime : '--';
   currentLog = null;
+
+  // Notify via Formspree
+  fetch('https://formspree.io/hkerssalford@gmail.com', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify({
+      _subject: `【SHK 義工簽到】${outName} Clock Out - ${todayStr()}`,
+      姓名: outName,
+      日期: todayStr(),
+      簽到時間: inTime,
+      簽出時間: fmtTime(now),
+      總時長: fmtDur(mins)
+    })
+  }).catch(() => {});
+
   showToast(`Clock Out 完成！共服務 ${fmtDur(mins)}`, 'success');
   lookupVolunteer();
 }
