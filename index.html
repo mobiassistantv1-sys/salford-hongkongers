@@ -465,24 +465,61 @@ body > * { position: relative; z-index: 1; }
 
 /* ===== CONTACT ===== */
 .contact-card { display: flex; flex-direction: column; gap: 0; padding: 0; overflow: hidden; }
-.contact-item { display: flex; align-items: center; gap: 16px; padding: 16px 20px; border-bottom: 1px solid var(--glass-border); }
+.contact-item {
+  display: flex; align-items: center; gap: 16px;
+  padding: 16px 20px; border-bottom: 1px solid var(--glass-border);
+  transition: background 0.2s;
+}
 .contact-item:last-child { border-bottom: none; }
-.contact-icon { font-size: 22px; flex-shrink: 0; }
+.contact-item:hover { background: rgba(255,255,255,0.04); }
+.contact-icon {
+  width: 42px; height: 42px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; overflow: hidden;
+}
+.contact-icon img { width: 100%; height: 100%; object-fit: contain; border-radius: 10px; }
+.contact-icon.icon-whatsapp { background: #25D366; box-shadow: 0 0 10px rgba(37,211,102,0.5); }
+.contact-icon.icon-email    { background: #fff; box-shadow: 0 0 10px rgba(234,67,53,0.4); }
+.contact-icon.icon-location { background: rgba(255,45,120,0.15); box-shadow: 0 0 10px rgba(255,45,120,0.3); font-size: 20px; }
+.contact-icon.icon-web      { background: rgba(0,212,255,0.15); box-shadow: 0 0 10px rgba(0,212,255,0.3); font-size: 20px; }
 .contact-label { font-size: 10px; color: var(--text-muted); margin-bottom: 3px; letter-spacing: 0.4px; text-transform: uppercase; }
 .contact-value { font-size: 14px; font-weight: 500; color: var(--text); text-decoration: none; }
 a.contact-value:hover { color: var(--pink); }
+
+/* WhatsApp tap-to-reveal */
+.wa-reveal-wrap { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+.wa-hidden-num { font-size: 14px; font-weight: 500; color: var(--text-muted); letter-spacing: 2px; }
+.wa-reveal-btn {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.5px;
+  background: rgba(37,211,102,0.15); border: 1px solid rgba(37,211,102,0.4);
+  color: #25D366; padding: 3px 8px; border-radius: 20px; cursor: pointer;
+  transition: background 0.2s;
+}
+.wa-reveal-btn:hover { background: rgba(37,211,102,0.3); }
+
 .social-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
 .social-btn {
   display: flex; align-items: center; justify-content: center; gap: 8px;
-  padding: 12px; border-radius: var(--radius-sm);
+  padding: 14px 12px; border-radius: var(--radius-sm);
   font-size: 14px; font-weight: 700; color: white; text-decoration: none;
-  transition: opacity 0.2s, transform 0.2s;
+  transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s;
   border: 1px solid var(--glass-border);
 }
-.social-btn:hover { opacity: 0.85; transform: translateY(-2px); }
-.social-btn.facebook { background: rgba(0,212,255,0.12);
-  border: 1px solid rgba(0,212,255,0.3); }
-.social-btn.instagram { background: linear-gradient(135deg, rgba(240,148,51,0.35), rgba(220,39,67,0.35), rgba(188,24,136,0.35)); }
+.social-btn:hover { opacity: 0.9; transform: translateY(-2px); }
+.social-btn svg { width: 20px; height: 20px; flex-shrink: 0; }
+.social-btn.whatsapp {
+  background: rgba(37,211,102,0.15);
+  border: 1px solid rgba(37,211,102,0.4);
+  box-shadow: 0 0 12px rgba(37,211,102,0.2);
+}
+.social-btn.whatsapp:hover { box-shadow: 0 0 20px rgba(37,211,102,0.4); }
+.social-btn.facebook {
+  background: rgba(24,119,242,0.15);
+  border: 1px solid rgba(24,119,242,0.4);
+  box-shadow: 0 0 12px rgba(24,119,242,0.2);
+}
+.social-btn.facebook:hover { box-shadow: 0 0 20px rgba(24,119,242,0.4); }
+.social-btn.instagram { background: linear-gradient(135deg, rgba(240,148,51,0.25), rgba(220,39,67,0.25), rgba(188,24,136,0.25)); border: 1px solid rgba(188,24,136,0.4); }
 .social-handle { text-align: center; font-size: 12px; color: var(--text-muted); }
 .venue-list { display: flex; flex-direction: column; gap: 8px; }
 .venue-item { font-size: 13px; color: var(--text-muted); padding: 10px 14px; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: var(--radius-sm); line-height: 1.5; }
@@ -852,22 +889,51 @@ a.contact-value:hover { color: var(--pink); }
     <h2 class="page-title">聯絡我們</h2>
 
     <div class="contact-card">
+      <!-- WhatsApp -->
       <div class="contact-item">
-        <div class="contact-icon">📧</div>
+        <div class="contact-icon icon-whatsapp">
+          <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:28px;height:28px;">
+            <path d="M16 3C9.373 3 4 8.373 4 15c0 2.385.668 4.61 1.832 6.5L4 29l7.703-1.812A11.94 11.94 0 0016 28c6.627 0 12-5.373 12-12S22.627 3 16 3z" fill="#fff"/>
+            <path d="M22.003 18.837c-.306-.153-1.81-.893-2.09-.995-.28-.1-.484-.153-.688.154-.203.306-.79.995-.968 1.2-.178.203-.357.228-.663.076-.306-.154-1.29-.476-2.458-1.516-.908-.81-1.522-1.81-1.7-2.116-.178-.306-.019-.47.134-.623.137-.136.306-.357.458-.535.153-.178.204-.306.306-.51.102-.204.051-.382-.025-.535-.077-.153-.688-1.66-.943-2.272-.248-.598-.5-.517-.688-.526-.178-.009-.382-.011-.586-.011-.204 0-.535.077-.815.382-.28.306-1.07 1.045-1.07 2.549s1.095 2.957 1.248 3.161c.153.203 2.156 3.293 5.225 4.618.73.315 1.3.503 1.744.644.733.233 1.4.2 1.927.121.588-.088 1.81-.74 2.065-1.455.255-.715.255-1.328.178-1.455-.076-.128-.28-.204-.586-.357z" fill="#25D366"/>
+          </svg>
+        </div>
+        <div style="flex:1;">
+          <div class="contact-label">WhatsApp</div>
+          <div class="wa-reveal-wrap" onclick="revealPhone(this)">
+            <span class="wa-hidden-num" data-phone="+4407999338006">+44 07*** ******</span>
+            <button class="wa-reveal-btn">顯示號碼</button>
+          </div>
+        </div>
+      </div>
+      <!-- Gmail -->
+      <div class="contact-item">
+        <div class="contact-icon icon-email">
+          <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="width:28px;height:28px;">
+            <path d="M4 8h24v16H4z" fill="#fff"/>
+            <path d="M4 8l12 9 12-9" stroke="#EA4335" stroke-width="2" fill="none"/>
+            <path d="M4 8v16h24V8L16 17 4 8z" fill="#fff"/>
+            <path d="M4 8l12 9 12-9H4z" fill="#EA4335"/>
+            <path d="M4 24V8l12 9 12-9v16" fill="none" stroke="#34A853" stroke-width="0"/>
+            <rect x="4" y="8" width="24" height="16" rx="2" fill="none" stroke="#DADCE0" stroke-width="1"/>
+            <path d="M4 8l12 9.5L28 8" stroke="#EA4335" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          </svg>
+        </div>
         <div>
           <div class="contact-label">電郵</div>
           <a href="mailto:salfordhongkongers@gmail.com" class="contact-value">salfordhongkongers@gmail.com</a>
         </div>
       </div>
+      <!-- Location -->
       <div class="contact-item">
-        <div class="contact-icon">📍</div>
+        <div class="contact-icon icon-location">📍</div>
         <div>
           <div class="contact-label">地址</div>
           <div class="contact-value">Salford, Greater Manchester, UK</div>
         </div>
       </div>
+      <!-- Web -->
       <div class="contact-item">
-        <div class="contact-icon">🌐</div>
+        <div class="contact-icon icon-web">🌐</div>
         <div>
           <div class="contact-label">網站</div>
           <a href="https://hkers.org.uk/salford_hongkongers/" target="_blank" class="contact-value">hkers.org.uk/salford_hongkongers</a>
@@ -879,10 +945,16 @@ a.contact-value:hover { color: var(--pink); }
       <h3 class="section-title">社交媒體</h3>
       <div class="social-grid">
         <a href="https://www.facebook.com/SalfordHongkongers" target="_blank" class="social-btn facebook">
-          <span>f</span> Facebook
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.514c-1.491 0-1.956.93-1.956 1.886v2.267h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z" fill="#1877F2"/></svg>
+          Facebook
+        </a>
+        <a href="https://wa.me/4407999338006" target="_blank" class="social-btn whatsapp">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.975-1.418A9.956 9.956 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18a7.958 7.958 0 01-4.078-1.117l-.292-.174-3.033.866.855-3.121-.19-.302A7.958 7.958 0 014 12c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8zm4.406-5.924c-.242-.121-1.432-.707-1.654-.787-.222-.08-.384-.121-.545.121-.162.242-.626.787-.768.95-.14.161-.282.18-.524.06-.242-.121-1.022-.377-1.947-1.2-.72-.641-1.205-1.434-1.346-1.676-.14-.242-.015-.373.106-.493.109-.108.242-.282.363-.423.12-.141.161-.242.242-.404.08-.161.04-.302-.02-.423-.061-.12-.545-1.314-.747-1.8-.196-.472-.396-.408-.545-.416-.14-.007-.302-.009-.464-.009s-.423.06-.645.302c-.222.242-.847.828-.847 2.02s.867 2.342.988 2.503c.121.161 1.706 2.606 4.134 3.654.578.25 1.028.399 1.38.51.58.184 1.107.158 1.524.096.465-.069 1.432-.586 1.634-1.152.201-.565.201-1.05.14-1.152-.06-.101-.222-.161-.464-.282z" fill="#25D366"/></svg>
+          WhatsApp
         </a>
         <a href="https://www.instagram.com/SalfordHongkongers" target="_blank" class="social-btn instagram">
-          <span>&#9679;</span> Instagram
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" fill="url(#ig-grad)"/><defs><linearGradient id="ig-grad" x1="0" y1="24" x2="24" y2="0"><stop offset="0%" stop-color="#f09433"/><stop offset="25%" stop-color="#e6683c"/><stop offset="50%" stop-color="#dc2743"/><stop offset="75%" stop-color="#cc2366"/><stop offset="100%" stop-color="#bc1888"/></linearGradient></defs></svg>
+          Instagram
         </a>
       </div>
       <p class="social-handle">@SalfordHongkongers</p>
@@ -1122,6 +1194,19 @@ if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('sw.js').catch(() => {});
   });
+}
+
+// ===== WHATSAPP REVEAL PHONE =====
+function revealPhone(wrap) {
+  const span = wrap.querySelector('.wa-hidden-num');
+  const btn  = wrap.querySelector('.wa-reveal-btn');
+  const phone = span.getAttribute('data-phone');
+  span.textContent = phone;
+  span.style.letterSpacing = 'normal';
+  span.style.color = 'var(--text)';
+  btn.textContent = '撥打';
+  btn.style.background = 'rgba(37,211,102,0.25)';
+  wrap.onclick = () => window.open('https://wa.me/' + phone.replace(/\D/g,''), '_blank');
 }
 
 // ===== LANGUAGE TOGGLE =====
