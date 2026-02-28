@@ -279,12 +279,11 @@ footer a { color: #ddd; text-decoration: none; }
         <input type="tel" id="g-phone" placeholder="+44 7XXX XXXXXX">
       </div>
 
-      <div class="emailjs-note">
-        <div class="note-icon">&#x1F4E7;</div>
+      <div class="emailjs-note" style="background:#e8f5e9;border-color:#4CAF50;">
+        <div class="note-icon">✅</div>
         <div>
-          <h4>電郵通知系統</h4>
-          <p>提交後，你將收到確認電郵，我們的團隊亦會同時收到通知。<br>
-          <strong>設定中：</strong>連接 EmailJS 後自動發送。現階段訊息會儲存並人手跟進。</p>
+          <h4 style="color:#2e7d32;">電郵通知已啟用</h4>
+          <p>提交後，訊息將即時發送至 hkerssalford@gmail.com</p>
         </div>
       </div>
 
@@ -390,12 +389,11 @@ footer a { color: #ddd; text-decoration: none; }
         <textarea id="v-exp" rows="3" placeholder="（選填）簡述過往經驗..."></textarea>
       </div>
 
-      <div class="emailjs-note">
-        <div class="note-icon">&#x1F4E7;</div>
+      <div class="emailjs-note" style="background:#e8f5e9;border-color:#4CAF50;">
+        <div class="note-icon">✅</div>
         <div>
-          <h4>申請通知</h4>
-          <p>提交後你會收到確認電郵，義工協調員亦會同步收到通知並安排跟進。<br>
-          <strong>設定中：</strong>連接 EmailJS 後自動發送。</p>
+          <h4 style="color:#2e7d32;">電郵通知已啟用</h4>
+          <p>提交後，訊息將即時發送至 hkerssalford@gmail.com</p>
         </div>
       </div>
 
@@ -515,12 +513,11 @@ footer a { color: #ddd; text-decoration: none; }
         </select>
       </div>
 
-      <div class="emailjs-note">
-        <div class="note-icon">&#x1F4E7;</div>
+      <div class="emailjs-note" style="background:#e8f5e9;border-color:#4CAF50;">
+        <div class="note-icon">✅</div>
         <div>
-          <h4>申請通知</h4>
-          <p>提交後你會收到確認電郵，我們的團隊會安排跟進並告知入會費詳情。<br>
-          <strong>設定中：</strong>連接 EmailJS 後自動發送確認電郵至你的郵箱。</p>
+          <h4 style="color:#2e7d32;">電郵通知已啟用</h4>
+          <p>提交後，訊息將即時發送至 hkerssalford@gmail.com</p>
         </div>
       </div>
 
@@ -633,12 +630,11 @@ footer a { color: #ddd; text-decoration: none; }
         <textarea id="s-suggest" rows="3" placeholder="例：更多親子活動、廣東話班、粵菜烹飪課..."></textarea>
       </div>
 
-      <div class="emailjs-note">
-        <div class="note-icon">&#x1F4E7;</div>
+      <div class="emailjs-note" style="background:#e8f5e9;border-color:#4CAF50;">
+        <div class="note-icon">✅</div>
         <div>
-          <h4>意見收集</h4>
-          <p>你的意見會以電郵形式發送至活動負責人，幫助我們持續改善。<br>
-          <strong>設定中：</strong>連接 EmailJS 後自動發送。</p>
+          <h4 style="color:#2e7d32;">電郵通知已啟用</h4>
+          <p>提交後，訊息將即時發送至 hkerssalford@gmail.com</p>
         </div>
       </div>
 
@@ -701,7 +697,7 @@ function setRating(key, val) {
 }
 
 // ── Form Submit ──
-function submitForm(type) {
+async function submitForm(type) {
   // Validation
   const validators = {
     general:  () => getValue('g-name') && getValue('g-email') && getValue('g-message'),
@@ -717,26 +713,54 @@ function submitForm(type) {
   // Collect data
   const data = collectData(type);
 
-  // EMAILJS INTEGRATION POINT:
-  // emailjs.send(EMAILJS_SERVICE_ID, 'template_' + type, {
-  //   to_email: ADMIN_EMAIL,
-  //   reply_to: data.email,
-  //   ...data
-  // }).then(() => {
-  //   // Also send confirmation to submitter
-  //   emailjs.send(EMAILJS_SERVICE_ID, 'template_confirm', { to_email: data.email, name: data.name });
-  // });
+  // Prepare subject line for different form types
+  const subjects = {
+    general: `【SHK 網站】一般查詢 - ${data.name}`,
+    volunteer: `【SHK 網站】義工申請 - ${data.name}`,
+    member: `【SHK 網站】會員申請 - ${data.name}`,
+    survey: `【SHK 網站】活動意見 - ${data.event}`
+  };
 
-  // Save to localStorage as backup
-  const key = 'shk_submissions_' + type;
-  const existing = JSON.parse(localStorage.getItem(key) || '[]');
-  existing.push({ ...data, timestamp: new Date().toISOString() });
-  localStorage.setItem(key, JSON.stringify(existing));
+  // Get submit button and disable it
+  const submitBtn = document.querySelector(`#tab-${type} .btn-primary`);
+  const originalText = submitBtn.textContent;
+  submitBtn.disabled = true;
+  submitBtn.textContent = '發送中...';
 
-  // Show success
-  document.getElementById('success-' + type).classList.add('show');
-  document.querySelector('#tab-' + type + ' .card').style.display = 'none';
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  try {
+    // Send via Formspree
+    const response = await fetch('https://formspree.io/hkerssalford@gmail.com', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        _subject: subjects[type],
+        ...data
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error('發送失敗');
+    }
+
+    // Save to localStorage as backup
+    const key = 'shk_submissions_' + type;
+    const existing = JSON.parse(localStorage.getItem(key) || '[]');
+    existing.push({ ...data, timestamp: new Date().toISOString() });
+    localStorage.setItem(key, JSON.stringify(existing));
+
+    // Show success
+    document.getElementById('success-' + type).classList.add('show');
+    document.querySelector('#tab-' + type + ' .card').style.display = 'none';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  } catch (error) {
+    alert('發送失敗，請直接電郵 salfordhongkongers@gmail.com');
+    submitBtn.disabled = false;
+    submitBtn.textContent = originalText;
+  }
 }
 
 function getValue(id) {
