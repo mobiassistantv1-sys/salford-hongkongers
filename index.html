@@ -353,6 +353,63 @@ body > * { position: relative; z-index: 1; }
 .news-date { font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
 .news-text { font-size: 14px; line-height: 1.5; color: var(--text); }
 
+/* ===== PARTNERS MARQUEE ===== */
+.partners-card { overflow: hidden; padding: 16px 12px; }
+.partners-track-wrapper {
+  overflow: hidden;
+  width: 100%;
+  mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+}
+.partners-track {
+  display: flex;
+  gap: 28px;
+  width: max-content;
+  animation: partnersScroll 28s linear infinite;
+}
+.partners-track:hover { animation-play-state: paused; }
+@keyframes partnersScroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.partner-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  min-width: 100px;
+  max-width: 120px;
+  flex-shrink: 0;
+}
+.partner-item img {
+  height: 40px;
+  width: auto;
+  max-width: 110px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+  opacity: 0.85;
+}
+.partner-item span {
+  font-size: 10px;
+  color: var(--text-muted);
+  text-align: center;
+  line-height: 1.3;
+  white-space: normal;
+}
+.partner-initials {
+  height: 40px;
+  width: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.15);
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 1px;
+}
+
 /* ===== ABOUT ===== */
 .body-text { font-size: 14px; line-height: 1.7; color: var(--text-muted); margin-bottom: 10px; }
 .mission-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
@@ -707,19 +764,46 @@ a.contact-value:hover { color: var(--pink); }
       </div>
     </div>
 
-    <div class="news-card">
-      <h3 class="section-title">最新消息</h3>
-      <div class="news-item">
-        <div class="news-date">2025年2月</div>
-        <div class="news-text">🏆 首屆 Salford Hongkongers Awards 圓滿舉行，表揚義工貢獻！</div>
-      </div>
-      <div class="news-item">
-        <div class="news-date">2024年7月</div>
-        <div class="news-text">🎵 Music Meet Night 2024 成功舉辦，逾百人出席！</div>
-      </div>
-      <div class="news-item">
-        <div class="news-date">持續進行</div>
-        <div class="news-text">☕ 每月茶聚，歡迎新來港人參加！</div>
+    <div class="news-card partners-card">
+      <h3 class="section-title" id="partnersTitle">合作單位</h3>
+      <div class="partners-track-wrapper">
+        <div class="partners-track" id="partnersTrack">
+          <!-- Salford City Council -->
+          <div class="partner-item">
+            <img src="https://upload.wikimedia.org/wikipedia/en/thumb/a/a4/Salford_City_Council_logo.svg/200px-Salford_City_Council_logo.svg.png" alt="Salford City Council" onerror="this.style.display='none'">
+            <span>Salford City Council</span>
+          </div>
+          <!-- National Lottery Community Fund -->
+          <div class="partner-item">
+            <img src="https://www.tnlcommunityfund.org.uk/assets/logos/tnlcf-logo.svg" alt="The National Lottery Community Fund" onerror="this.style.display='none'">
+            <span>National Lottery Community Fund</span>
+          </div>
+          <!-- Salford CVS -->
+          <div class="partner-item">
+            <img src="https://www.salfordcvs.co.uk/sites/salfordcvs.co.uk/files/salfordcvs_logo.png" alt="Salford CVS" onerror="this.style.display='none'">
+            <span>Salford CVS</span>
+          </div>
+          <!-- Salford Foodbank -->
+          <div class="partner-item">
+            <img src="https://salford.foodbank.org.uk/wp-content/themes/foodbank/img/foodbank-logo.png" alt="Salford Foodbank" onerror="this.style.display='none'">
+            <span>Salford Foodbank</span>
+          </div>
+          <!-- The Angel Centre -->
+          <div class="partner-item">
+            <img src="https://theangelcentre.org.uk/wp-content/uploads/2021/01/angel-centre-logo.png" alt="The Angel Centre" onerror="this.style.display='none'">
+            <span>The Angel Centre</span>
+          </div>
+          <!-- Europia -->
+          <div class="partner-item">
+            <img src="https://europia.org.uk/wp-content/uploads/2020/01/europia-logo.png" alt="Europia" onerror="this.style.display='none'">
+            <span>Europia</span>
+          </div>
+          <!-- Salford ESOL -->
+          <div class="partner-item">
+            <div class="partner-initials">SE</div>
+            <span>Salford ESOL</span>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -1225,6 +1309,7 @@ const translations = {
     pageTitle_register: '活動登記',
     pageTitle_volunteer: '義工簽到',
     pageTitle_news: '最新消息',
+    partnersTitle: '合作單位',
     pageTitle_contact: '聯絡我們',
     registerBtn: '立即登記',
     submitBtn: '提交登記',
@@ -1248,6 +1333,7 @@ const translations = {
     pageTitle_register: 'Event Registration',
     pageTitle_volunteer: 'Volunteer Check-In',
     pageTitle_news: 'Latest News',
+    partnersTitle: 'Our Partners',
     pageTitle_contact: 'Contact Us',
     registerBtn: 'Register Now',
     submitBtn: 'Submit Registration',
@@ -1255,6 +1341,19 @@ const translations = {
     volunteerOut: 'Clock Out',
   }
 };
+
+// ===== PARTNERS INFINITE SCROLL INIT =====
+(function initPartnersMarquee() {
+  const track = document.getElementById('partnersTrack');
+  if (!track) return;
+  // Clone all items and append to create seamless loop
+  const items = Array.from(track.children);
+  items.forEach(item => {
+    const clone = item.cloneNode(true);
+    clone.setAttribute('aria-hidden', 'true');
+    track.appendChild(clone);
+  });
+})();
 
 let currentLang = 'zh';
 
@@ -1298,6 +1397,10 @@ function applyTranslations() {
   if (heroCheckinBtn) heroCheckinBtn.textContent = t.heroCheckinBtn;
   const heroJoinBtn = document.getElementById('heroJoinBtn');
   if (heroJoinBtn) heroJoinBtn.textContent = t.heroJoinBtn;
+
+  // Partners title
+  const partnersTitle = document.getElementById('partnersTitle');
+  if (partnersTitle) partnersTitle.textContent = t.partnersTitle;
 
   // Page titles
   ['events','register','volunteer','news','contact'].forEach(p => {
