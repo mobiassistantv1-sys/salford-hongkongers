@@ -304,6 +304,48 @@ a.contact-value:hover { color: var(--red); }
 .venue-list { display: flex; flex-direction: column; gap: 8px; }
 .venue-item { font-size: 13px; color: var(--text); padding: 8px 12px; background: var(--bg); border-radius: var(--radius-sm); line-height: 1.5; }
 
+/* ===== IG FEED / NEWS ===== */
+.ig-feed-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.ig-feed-header h2 { font-size: 20px; font-weight: 700; color: var(--dark); }
+.ig-feed-updated { font-size: 11px; color: var(--text-light); }
+.ig-post-card {
+  background: var(--white); border-radius: var(--radius);
+  box-shadow: var(--card-shadow); margin-bottom: 16px; overflow: hidden;
+}
+.ig-post-image {
+  width: 100%; aspect-ratio: 1/1; object-fit: cover;
+  display: block; background: #f0f0f0;
+}
+.ig-post-image-placeholder {
+  width: 100%; aspect-ratio: 1/1;
+  background: linear-gradient(135deg, #fce4ec, #f8bbd0);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 48px;
+}
+.ig-post-body { padding: 14px 16px 16px; }
+.ig-post-date { font-size: 11px; color: var(--text-light); margin-bottom: 8px; }
+.ig-post-caption {
+  font-size: 14px; color: var(--text); line-height: 1.6;
+  display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden;
+}
+.ig-post-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  margin-top: 12px; font-size: 13px; font-weight: 600;
+  color: var(--red); text-decoration: none;
+}
+.ig-post-link:hover { opacity: 0.8; }
+.ig-feed-footer {
+  text-align: center; padding: 16px 0 8px;
+}
+.ig-feed-footer a {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 12px 24px; border-radius: 50px;
+  background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+  color: white; font-size: 14px; font-weight: 700; text-decoration: none;
+}
+.ig-loading { text-align: center; padding: 40px 0; color: var(--text-light); font-size: 14px; }
+.ig-error { text-align: center; padding: 32px 16px; color: var(--text-light); font-size: 13px; background: var(--white); border-radius: var(--radius); }
+
 /* ===== BOTTOM NAV ===== */
 .bottom-nav {
   position: fixed; bottom: 0; left: 0; right: 0;
@@ -516,6 +558,22 @@ a.contact-value:hover { color: var(--red); }
     <p class="events-note">* 活動詳情或有更改，請留意我們的 Facebook 及 Instagram @SalfordHongkongers</p>
   </section>
 
+  <!-- NEWS / IG FEED -->
+  <section id="page-news" class="page">
+    <div class="ig-feed-header">
+      <h2 class="page-title" style="margin-bottom:0;">最新消息</h2>
+      <span class="ig-feed-updated" id="igFeedUpdated"></span>
+    </div>
+    <div id="igFeedContainer">
+      <div class="ig-loading">⏳ 載入中...</div>
+    </div>
+    <div class="ig-feed-footer">
+      <a href="https://www.instagram.com/SalfordHongkongers/" target="_blank">
+        <span>📸</span> 關注 @SalfordHongkongers
+      </a>
+    </div>
+  </section>
+
   <!-- REGISTER -->
   <section id="page-register" class="page">
     <h2 class="page-title">活動登記</h2>
@@ -664,6 +722,10 @@ a.contact-value:hover { color: var(--red); }
     <span class="bottom-icon">📅</span>
     <span class="bottom-label">活動</span>
   </button>
+  <button class="bottom-btn" id="btn-news" onclick="showPage('news')">
+    <span class="bottom-icon">📣</span>
+    <span class="bottom-label">消息</span>
+  </button>
   <button class="bottom-btn" id="btn-register" onclick="showPage('register')">
     <span class="bottom-icon">📝</span>
     <span class="bottom-label">登記</span>
@@ -684,6 +746,7 @@ function showPage(pageId) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   const target = document.getElementById('page-' + pageId);
   if (target) target.classList.add('active');
+  if (pageId === 'news') loadIgFeed();
 
   document.querySelectorAll('.bottom-btn').forEach(b => b.classList.remove('active'));
   const activeBtn = document.getElementById('btn-' + pageId);
@@ -750,6 +813,47 @@ function resetForm() {
   document.getElementById('registerForm').reset();
   document.getElementById('registerForm').classList.remove('hidden');
   document.getElementById('successMsg').classList.add('hidden');
+}
+
+// ===== IG FEED LOADER =====
+async function loadIgFeed() {
+  const container = document.getElementById('igFeedContainer');
+  const updatedEl = document.getElementById('igFeedUpdated');
+  if (!container) return;
+  try {
+    const res = await fetch('ig-feed.json?t=' + Date.now());
+    if (!res.ok) throw new Error('fetch failed');
+    const data = await res.json();
+    if (updatedEl && data.updated) {
+      updatedEl.textContent = '更新：' + data.updated;
+    }
+    if (!data.posts || data.posts.length === 0) {
+      container.innerHTML = '<div class="ig-error">暫時未有最新消息，請稍後再試。</div>';
+      return;
+    }
+    container.innerHTML = data.posts.map(post => {
+      const imgHtml = post.image
+        ? `<img class="ig-post-image" src="${post.image}" alt="IG post" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\"ig-post-image-placeholder\\">📸</div>'">`
+        : `<div class="ig-post-image-placeholder">📸</div>`;
+      const caption = post.caption
+        ? post.caption.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>')
+        : '';
+      const dateStr = post.date ? new Date(post.date).toLocaleDateString('zh-HK', {year:'numeric',month:'long',day:'numeric'}) : '';
+      return `
+        <div class="ig-post-card">
+          ${imgHtml}
+          <div class="ig-post-body">
+            ${dateStr ? `<div class="ig-post-date">📅 ${dateStr}</div>` : ''}
+            <div class="ig-post-caption">${caption}</div>
+            <a class="ig-post-link" href="${post.permalink || 'https://www.instagram.com/SalfordHongkongers/'}" target="_blank">
+              查看原帖 ↗
+            </a>
+          </div>
+        </div>`;
+    }).join('');
+  } catch (e) {
+    container.innerHTML = '<div class="ig-error">📡 無法載入最新消息<br>請檢查網絡連接或稍後再試</div>';
+  }
 }
 
 // ===== PWA INSTALL PROMPT =====
