@@ -5,28 +5,70 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>義工簽到 | Salford Hongkongers</title>
 <style>
+:root {
+  --pink: #ff2d78;
+  --blue: #00d4ff;
+  --purple: #b44fff;
+  --green-neon: #39ff14;
+  --bg: #0a0a0f;
+  --card-bg: rgba(255,255,255,0.05);
+  --card-border: rgba(255,255,255,0.1);
+  --text: #f0f0f0;
+  --text-muted: rgba(255,255,255,0.45);
+  --radius: 16px;
+}
+
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
   font-family: 'Segoe UI', system-ui, sans-serif;
-  background: #f0f0f0;
-  color: #333;
+  background: var(--bg);
+  color: var(--text);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background-image:
+    radial-gradient(ellipse at 20% 20%, rgba(255,45,120,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(0,212,255,0.08) 0%, transparent 50%);
 }
 
 /* NAV */
 nav {
-  background: #8B0000;
+  background: rgba(10,10,15,0.95);
+  border-bottom: 1px solid rgba(255,45,120,0.3);
   padding: 14px 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-shrink: 0;
+  backdrop-filter: blur(12px);
+  position: sticky; top: 0; z-index: 100;
 }
-nav .logo { color: #fff; font-size: 1.05rem; font-weight: 700; }
-nav .nav-time { color: rgba(255,255,255,.85); font-size: 0.88rem; font-variant-numeric: tabular-nums; }
+nav .logo {
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+}
+nav .logo span {
+  color: var(--pink);
+  text-shadow: 0 0 10px var(--pink);
+}
+nav .nav-time {
+  color: var(--blue);
+  font-size: 0.88rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  text-shadow: 0 0 8px var(--blue);
+}
+nav .back-btn {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  text-decoration: none;
+  display: flex; align-items: center; gap: 4px;
+  transition: color 0.2s;
+}
+nav .back-btn:hover { color: var(--pink); }
 
 /* LAYOUT */
 .page {
@@ -37,216 +79,322 @@ nav .nav-time { color: rgba(255,255,255,.85); font-size: 0.88rem; font-variant-n
 
 /* CLOCK HERO */
 .clock-hero {
-  background: #8B0000;
-  border-radius: 16px;
-  padding: 24px 20px 20px;
+  background: linear-gradient(135deg, rgba(255,45,120,0.15), rgba(0,212,255,0.1));
+  border: 1px solid rgba(255,45,120,0.3);
+  border-radius: var(--radius);
+  padding: 28px 20px 22px;
   text-align: center;
-  color: #fff;
-  box-shadow: 0 4px 16px rgba(139,0,0,.3);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 30px rgba(255,45,120,0.15), inset 0 1px 0 rgba(255,255,255,0.1);
+}
+.clock-hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, transparent 100%);
+  pointer-events: none;
 }
 .clock-display {
-  font-size: 3.2rem; font-weight: 800;
-  letter-spacing: 4px; font-variant-numeric: tabular-nums;
-  line-height: 1; margin-bottom: 6px;
+  font-size: 3.4rem; font-weight: 800;
+  letter-spacing: 6px; font-variant-numeric: tabular-nums;
+  line-height: 1; margin-bottom: 8px;
+  color: #fff;
+  text-shadow: 0 0 20px rgba(255,45,120,0.8), 0 0 40px rgba(255,45,120,0.4);
 }
-.clock-date { font-size: 0.92rem; opacity: .8; }
+.clock-date {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  letter-spacing: 0.3px;
+}
 
 /* CARD */
 .card {
-  background: #fff; border-radius: 14px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
   padding: 20px;
-  box-shadow: 0 2px 8px rgba(0,0,0,.07);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
 }
 .card-title {
-  font-size: 0.8rem; font-weight: 700;
-  text-transform: uppercase; letter-spacing: .8px;
-  color: #999; margin-bottom: 14px;
+  font-size: 0.75rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1px;
+  color: var(--text-muted); margin-bottom: 16px;
 }
 
 /* NAME INPUT */
 .name-wrap { position: relative; }
 .name-input {
-  width: 100%; font-size: 1.25rem;
+  width: 100%; font-size: 1.2rem;
   padding: 14px 16px;
-  border: 2px solid #e0e0e0; border-radius: 10px;
-  outline: none; transition: border-color .2s;
-  font-family: inherit; -webkit-appearance: none;
+  border: 1.5px solid var(--card-border);
+  border-radius: 12px;
+  outline: none;
+  transition: border-color .2s, box-shadow .2s;
+  font-family: inherit;
+  -webkit-appearance: none;
+  background: rgba(255,255,255,0.05);
+  color: var(--text);
 }
-.name-input:focus { border-color: #8B0000; }
-.name-input.has-value { border-color: #8B0000; background: #fff9f9; }
+.name-input::placeholder { color: var(--text-muted); }
+.name-input:focus {
+  border-color: var(--pink);
+  box-shadow: 0 0 0 3px rgba(255,45,120,0.15), 0 0 15px rgba(255,45,120,0.2);
+}
+.name-input.has-value {
+  border-color: var(--pink);
+  background: rgba(255,45,120,0.05);
+}
 
 .suggest-box {
-  position: absolute; top: calc(100% + 4px); left: 0; right: 0;
-  background: #fff; border: 1.5px solid #e0e0e0; border-radius: 10px;
-  box-shadow: 0 6px 20px rgba(0,0,0,.12);
+  position: absolute; top: calc(100% + 6px); left: 0; right: 0;
+  background: #1a1a2e;
+  border: 1px solid rgba(255,45,120,0.3);
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.5), 0 0 20px rgba(255,45,120,0.1);
   z-index: 50; overflow: hidden; display: none;
   max-height: 200px; overflow-y: auto;
 }
 .suggest-item {
   padding: 13px 16px; cursor: pointer;
-  font-size: 1rem; border-bottom: 1px solid #f5f5f5;
-  transition: background .15s;
+  font-size: 1rem; border-bottom: 1px solid rgba(255,255,255,0.06);
+  transition: background .15s; color: var(--text);
 }
 .suggest-item:last-child { border-bottom: none; }
-.suggest-item:hover, .suggest-item:active { background: #fff5f5; color: #8B0000; }
+.suggest-item:hover, .suggest-item:active {
+  background: rgba(255,45,120,0.15);
+  color: var(--pink);
+}
+.suggest-item strong { color: var(--pink); }
 
 .confirm-btn {
   width: 100%; margin-top: 12px; padding: 15px;
   font-size: 1.05rem; font-weight: 700;
-  border: none; border-radius: 10px;
-  background: #8B0000; color: #fff;
+  border: none; border-radius: 12px;
+  background: linear-gradient(135deg, var(--pink), #c0006a);
+  color: #fff;
   cursor: pointer; font-family: inherit;
-  transition: background .2s, transform .1s;
+  transition: opacity .2s, transform .1s, box-shadow .2s;
+  box-shadow: 0 4px 15px rgba(255,45,120,0.4);
+  letter-spacing: 0.3px;
 }
-.confirm-btn:active { background: #6a0000; transform: scale(.98); }
-.confirm-btn:disabled { background: #ccc; cursor: not-allowed; transform: none; }
+.confirm-btn:active { transform: scale(.98); opacity: 0.9; }
+.confirm-btn:disabled {
+  background: rgba(255,255,255,0.08);
+  color: var(--text-muted);
+  box-shadow: none; cursor: not-allowed; transform: none;
+}
 
 /* STATUS CARD */
-.status-card { border-radius: 14px; padding: 20px; display: none; }
-.status-card.active { display: block; background: #e8f5e9; border: 2px solid #4caf50; }
-.status-card.idle   { display: block; background: #fff; border: 2px solid #e0e0e0; }
+.status-card { border-radius: var(--radius); padding: 20px; display: none; }
+.status-card.active {
+  display: block;
+  background: rgba(57,255,20,0.06);
+  border: 1.5px solid rgba(57,255,20,0.3);
+  box-shadow: 0 0 20px rgba(57,255,20,0.1);
+}
+.status-card.idle {
+  display: block;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+}
 
 .status-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
 .status-dot { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; }
-.status-dot.green { background: #4caf50; box-shadow: 0 0 0 3px rgba(76,175,80,.2); animation: pulse 2s infinite; }
-.status-dot.grey  { background: #bbb; }
-@keyframes pulse {
-  0%,100% { box-shadow: 0 0 0 3px rgba(76,175,80,.2); }
-  50%      { box-shadow: 0 0 0 7px rgba(76,175,80,.05); }
+.status-dot.green {
+  background: var(--green-neon);
+  box-shadow: 0 0 0 3px rgba(57,255,20,0.2), 0 0 10px rgba(57,255,20,0.6);
+  animation: pulse-green 2s infinite;
+}
+.status-dot.grey { background: rgba(255,255,255,0.2); }
+@keyframes pulse-green {
+  0%,100% { box-shadow: 0 0 0 3px rgba(57,255,20,0.2), 0 0 10px rgba(57,255,20,0.6); }
+  50%      { box-shadow: 0 0 0 7px rgba(57,255,20,0.05), 0 0 20px rgba(57,255,20,0.3); }
 }
 .status-name { font-size: 1.15rem; font-weight: 700; flex: 1; }
 .status-badge {
-  font-size: 0.75rem; font-weight: 700;
+  font-size: 0.72rem; font-weight: 700;
   padding: 4px 10px; border-radius: 20px; letter-spacing: .4px;
 }
-.badge-in  { background: #4caf50; color: #fff; }
-.badge-out { background: #e53935; color: #fff; }
-.badge-new { background: #1e88e5; color: #fff; }
+.badge-in  { background: rgba(57,255,20,0.2); color: var(--green-neon); border: 1px solid rgba(57,255,20,0.4); }
+.badge-out { background: rgba(255,45,120,0.2); color: var(--pink); border: 1px solid rgba(255,45,120,0.4); }
+.badge-new { background: rgba(0,212,255,0.2); color: var(--blue); border: 1px solid rgba(0,212,255,0.4); }
 
-.status-meta { font-size: 0.88rem; color: #555; margin-bottom: 16px; }
+.status-meta { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 16px; }
 .status-meta span { display: inline-block; margin-right: 12px; }
+.status-meta strong { color: var(--text); }
 
 .elapsed {
-  font-size: 2rem; font-weight: 800; color: #2e7d32;
+  font-size: 2.2rem; font-weight: 800;
+  color: var(--green-neon);
+  text-shadow: 0 0 15px rgba(57,255,20,0.6);
   font-variant-numeric: tabular-nums; margin-bottom: 2px;
 }
-.elapsed-label { font-size: 0.8rem; color: #777; margin-bottom: 16px; }
+.elapsed-label { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 16px; letter-spacing: 0.5px; }
 
 /* ACTION BUTTONS */
 .action-row { display: flex; gap: 12px; }
 .btn-checkin, .btn-checkout {
   flex: 1; padding: 20px 12px;
-  font-size: 1.1rem; font-weight: 800;
-  border: none; border-radius: 12px; cursor: pointer;
+  font-size: 1.05rem; font-weight: 800;
+  border: none; border-radius: 14px; cursor: pointer;
   font-family: inherit; display: flex;
-  flex-direction: column; align-items: center; gap: 4px;
-  transition: transform .1s, box-shadow .1s;
+  flex-direction: column; align-items: center; gap: 6px;
+  transition: transform .1s, box-shadow .2s, opacity .2s;
 }
-.btn-checkin { background: #2e7d32; color: #fff; box-shadow: 0 4px 14px rgba(46,125,50,.35); }
+.btn-checkin {
+  background: linear-gradient(135deg, #00c853, #39ff14);
+  color: #0a0a0f;
+  box-shadow: 0 4px 20px rgba(57,255,20,0.4);
+}
 .btn-checkin:active { transform: scale(.97); box-shadow: none; }
-.btn-checkin:disabled { background: #c8e6c9; color: #a5d6a7; box-shadow: none; cursor: not-allowed; transform: none; }
-.btn-checkout { background: #c62828; color: #fff; box-shadow: 0 4px 14px rgba(198,40,40,.35); }
+.btn-checkin:disabled {
+  background: rgba(255,255,255,0.07);
+  color: var(--text-muted);
+  box-shadow: none; cursor: not-allowed; transform: none;
+}
+.btn-checkout {
+  background: linear-gradient(135deg, var(--pink), #c0006a);
+  color: #fff;
+  box-shadow: 0 4px 20px rgba(255,45,120,0.4);
+}
 .btn-checkout:active { transform: scale(.97); box-shadow: none; }
-.btn-checkout:disabled { background: #ffcdd2; color: #ef9a9a; box-shadow: none; cursor: not-allowed; transform: none; }
+.btn-checkout:disabled {
+  background: rgba(255,255,255,0.07);
+  color: var(--text-muted);
+  box-shadow: none; cursor: not-allowed; transform: none;
+}
 .btn-icon  { font-size: 1.6rem; line-height: 1; }
-.btn-label { font-size: 0.7rem; opacity: .8; font-weight: 600; }
+.btn-label { font-size: 0.68rem; opacity: .8; font-weight: 600; letter-spacing: 0.3px; }
 
 /* LEADERBOARD */
 .leaderboard-list { display: flex; flex-direction: column; gap: 10px; }
 .lb-item {
   display: flex; align-items: center; gap: 12px;
-  padding: 12px 14px; border-radius: 10px;
-  background: #fafafa; border: 1.5px solid #f0f0f0;
+  padding: 12px 14px; border-radius: 12px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  transition: border-color 0.2s;
 }
-.lb-item.rank-1 { background: #fff8e1; border-color: #ffd54f; }
-.lb-item.rank-2 { background: #f5f5f5; border-color: #e0e0e0; }
-.lb-item.rank-3 { background: #fbe9e7; border-color: #ffccbc; }
+.lb-item.rank-1 {
+  background: rgba(255,215,0,0.08);
+  border-color: rgba(255,215,0,0.3);
+  box-shadow: 0 0 12px rgba(255,215,0,0.1);
+}
+.lb-item.rank-2 {
+  background: rgba(192,192,192,0.07);
+  border-color: rgba(192,192,192,0.25);
+}
+.lb-item.rank-3 {
+  background: rgba(205,127,50,0.08);
+  border-color: rgba(205,127,50,0.3);
+}
 
 .lb-rank {
   width: 34px; height: 34px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   font-size: 1.05rem; font-weight: 800; flex-shrink: 0;
 }
-.rank-1 .lb-rank { background: #ffd54f; color: #5d4037; }
-.rank-2 .lb-rank { background: #cfd8dc; color: #37474f; }
-.rank-3 .lb-rank { background: #ffab91; color: #bf360c; }
-.rank-other .lb-rank { background: #eee; color: #757575; font-size: 0.85rem; }
+.rank-1 .lb-rank { background: rgba(255,215,0,0.2); color: #FFD700; text-shadow: 0 0 8px rgba(255,215,0,0.6); }
+.rank-2 .lb-rank { background: rgba(192,192,192,0.15); color: #C0C0C0; }
+.rank-3 .lb-rank { background: rgba(205,127,50,0.2); color: #CD7F32; }
+.rank-other .lb-rank { background: rgba(255,255,255,0.06); color: var(--text-muted); font-size: 0.85rem; }
 
 .lb-name  { font-size: 0.98rem; font-weight: 600; flex: 1; }
-.lb-hours { font-size: 0.82rem; color: #666; text-align: right; line-height: 1.5; }
-.lb-hours strong { display: block; font-size: 1.05rem; color: #8B0000; font-weight: 800; }
+.lb-hours { font-size: 0.82rem; color: var(--text-muted); text-align: right; line-height: 1.6; }
+.lb-hours strong { display: block; font-size: 1rem; color: var(--pink); font-weight: 800; text-shadow: 0 0 8px rgba(255,45,120,0.4); }
 
-.lb-empty { text-align: center; color: #bbb; font-size: 0.9rem; padding: 20px 0; }
+.lb-empty { text-align: center; color: var(--text-muted); font-size: 0.9rem; padding: 20px 0; }
 
 /* TODAY LOG */
 .log-list  { display: flex; flex-direction: column; gap: 8px; }
 .log-item  {
   display: flex; align-items: center; gap: 10px;
-  padding: 10px 12px; border-radius: 9px;
-  background: #fafafa; border: 1px solid #efefef;
+  padding: 10px 12px; border-radius: 10px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
   font-size: 0.88rem;
 }
 .log-name  { font-weight: 600; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.log-time  { color: #666; white-space: nowrap; font-size: 0.82rem; }
-.log-dur   { font-weight: 700; color: #8B0000; white-space: nowrap; }
+.log-time  { color: var(--text-muted); white-space: nowrap; font-size: 0.82rem; }
+.log-dur   { font-weight: 700; color: var(--pink); white-space: nowrap; text-shadow: 0 0 6px rgba(255,45,120,0.4); }
 .log-badge { font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 12px; white-space: nowrap; }
-.log-active { background: #e8f5e9; color: #2e7d32; }
-.log-done   { background: #fce4ec; color: #c62828; }
-.log-empty  { text-align: center; color: #bbb; font-size: 0.88rem; padding: 16px 0; }
+.log-active { background: rgba(57,255,20,0.15); color: var(--green-neon); border: 1px solid rgba(57,255,20,0.3); }
+.log-done   { background: rgba(255,45,120,0.15); color: var(--pink); border: 1px solid rgba(255,45,120,0.3); }
+.log-empty  { text-align: center; color: var(--text-muted); font-size: 0.88rem; padding: 16px 0; }
 
 /* CLOCK-OUT MODAL */
 .modal-overlay {
   position: fixed; inset: 0;
-  background: rgba(0,0,0,.5);
+  background: rgba(0,0,0,.7);
+  backdrop-filter: blur(6px);
   z-index: 200; display: none;
   align-items: flex-end; justify-content: center;
 }
 .modal-overlay.show { display: flex; }
 .modal-sheet {
-  background: #fff; width: 100%; max-width: 560px;
-  border-radius: 20px 20px 0 0;
+  background: #12121f;
+  border: 1px solid rgba(255,45,120,0.3);
+  width: 100%; max-width: 560px;
+  border-radius: 24px 24px 0 0;
   padding: 28px 24px 40px;
   transform: translateY(100%);
   transition: transform .3s cubic-bezier(.34,1.2,.64,1);
+  box-shadow: 0 -10px 40px rgba(255,45,120,0.2);
 }
 .modal-overlay.show .modal-sheet { transform: translateY(0); }
-.modal-handle { width: 40px; height: 4px; background: #ddd; border-radius: 2px; margin: 0 auto 22px; }
+.modal-handle { width: 40px; height: 4px; background: rgba(255,255,255,0.15); border-radius: 2px; margin: 0 auto 22px; }
 .modal-title    { font-size: 1.2rem; font-weight: 800; margin-bottom: 16px; }
-.modal-vol-info { background: #f9f9f9; border-radius: 10px; padding: 14px 16px; margin-bottom: 20px; }
-.modal-vol-name { font-size: 1.1rem; font-weight: 700; color: #8B0000; margin-bottom: 4px; }
-.modal-elapsed  { font-size: 0.9rem; color: #555; }
-.modal-warning  { font-size: 0.85rem; color: #e65100; background: #fff3e0; border-radius: 8px; padding: 10px 12px; margin-bottom: 20px; }
+.modal-vol-info {
+  background: rgba(255,45,120,0.08);
+  border: 1px solid rgba(255,45,120,0.2);
+  border-radius: 12px; padding: 14px 16px; margin-bottom: 16px;
+}
+.modal-vol-name { font-size: 1.1rem; font-weight: 700; color: var(--pink); margin-bottom: 4px; text-shadow: 0 0 10px rgba(255,45,120,0.4); }
+.modal-elapsed  { font-size: 0.9rem; color: var(--text-muted); }
+.modal-warning  {
+  font-size: 0.85rem; color: #ffb347;
+  background: rgba(255,179,71,0.1);
+  border: 1px solid rgba(255,179,71,0.25);
+  border-radius: 10px; padding: 10px 12px; margin-bottom: 20px;
+}
 .modal-actions  { display: flex; gap: 12px; }
 .modal-cancel {
   flex: 1; padding: 16px; font-size: 1rem; font-weight: 700;
-  border: 2px solid #e0e0e0; border-radius: 12px;
-  background: #fff; color: #555; cursor: pointer; font-family: inherit;
+  border: 1px solid rgba(255,255,255,0.15); border-radius: 14px;
+  background: rgba(255,255,255,0.05); color: var(--text);
+  cursor: pointer; font-family: inherit; transition: background 0.2s;
 }
-.modal-cancel:hover { background: #f5f5f5; }
+.modal-cancel:hover { background: rgba(255,255,255,0.1); }
 .modal-confirm {
   flex: 1; padding: 16px; font-size: 1rem; font-weight: 700;
-  border: none; border-radius: 12px;
-  background: #c62828; color: #fff; cursor: pointer; font-family: inherit;
+  border: none; border-radius: 14px;
+  background: linear-gradient(135deg, var(--pink), #c0006a);
+  color: #fff; cursor: pointer; font-family: inherit;
+  box-shadow: 0 4px 15px rgba(255,45,120,0.4);
 }
-.modal-confirm:hover { background: #9b1b1b; }
+.modal-confirm:hover { opacity: 0.9; }
 
 /* TOAST */
 .toast {
   position: fixed; bottom: 28px; left: 50%;
   transform: translateX(-50%) translateY(120px);
-  background: #323232; color: #fff;
-  padding: 12px 24px; border-radius: 28px;
+  background: rgba(20,20,35,0.95);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: #fff;
+  padding: 12px 24px; border-radius: 30px;
   font-size: 0.92rem; font-weight: 600;
   white-space: nowrap; z-index: 999;
   transition: transform .4s cubic-bezier(.34,1.56,.64,1), opacity .3s;
-  opacity: 0; box-shadow: 0 4px 16px rgba(0,0,0,.25);
+  opacity: 0; box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+  backdrop-filter: blur(12px);
 }
 .toast.show    { transform: translateX(-50%) translateY(0); opacity: 1; }
-.toast.success { background: #2e7d32; }
-.toast.error   { background: #c62828; }
+.toast.success { background: rgba(0,150,60,0.9); border-color: rgba(57,255,20,0.4); box-shadow: 0 0 20px rgba(57,255,20,0.3); }
+.toast.error   { background: rgba(180,0,50,0.9); border-color: rgba(255,45,120,0.4); box-shadow: 0 0 20px rgba(255,45,120,0.3); }
 
 @media (max-width: 400px) {
-  .clock-display { font-size: 2.6rem; letter-spacing: 2px; }
+  .clock-display { font-size: 2.8rem; letter-spacing: 3px; }
   .btn-checkin, .btn-checkout { padding: 16px 8px; }
 }
 </style>
@@ -254,7 +402,8 @@ nav .nav-time { color: rgba(255,255,255,.85); font-size: 0.88rem; font-variant-n
 <body>
 
 <nav>
-  <div class="logo">Salford Hongkongers — 義工簽到</div>
+  <a href="index.html" class="back-btn">← 返回主頁</a>
+  <div class="logo">SHK <span>義工簽到</span></div>
   <div class="nav-time" id="nav-time"></div>
 </nav>
 
@@ -300,12 +449,12 @@ nav .nav-time { color: rgba(255,255,255,.85); font-size: 0.88rem; font-variant-n
     <div class="elapsed-label" id="elapsed-label" style="display:none">已服務時間</div>
     <div class="action-row">
       <button class="btn-checkin"  id="btn-in"  onclick="clockIn()">
-        <span class="btn-icon">&#9654;</span>
+        <span class="btn-icon">▶</span>
         <span>Clock In</span>
         <span class="btn-label">開始服務</span>
       </button>
       <button class="btn-checkout" id="btn-out" onclick="showClockOutModal()">
-        <span class="btn-icon">&#9632;</span>
+        <span class="btn-icon">■</span>
         <span>Clock Out</span>
         <span class="btn-label">完成服務</span>
       </button>
@@ -314,7 +463,7 @@ nav .nav-time { color: rgba(255,255,255,.85); font-size: 0.88rem; font-variant-n
 
   <!-- 4. Monthly Leaderboard -->
   <div class="card">
-    <div class="card-title">&#127942; 本月義工時數排行榜</div>
+    <div class="card-title">🏆 本月義工時數排行榜</div>
     <div class="leaderboard-list" id="leaderboard"></div>
   </div>
 
@@ -335,7 +484,7 @@ nav .nav-time { color: rgba(255,255,255,.85); font-size: 0.88rem; font-variant-n
       <div class="modal-vol-name" id="modal-vol-name"></div>
       <div class="modal-elapsed"  id="modal-elapsed"></div>
     </div>
-    <div class="modal-warning">&#9888;&#65039; Clock Out 後將記錄服務時數，請確認無誤。</div>
+    <div class="modal-warning">⚠️ Clock Out 後將記錄服務時數，請確認無誤。</div>
     <div class="modal-actions">
       <button class="modal-cancel"  onclick="closeModal()">取消</button>
       <button class="modal-confirm" onclick="confirmClockOut()">確認 Clock Out</button>
@@ -527,17 +676,13 @@ function clockIn() {
   saveLogs(logs);
   addName(currentName);
 
-  // Notify via Formspree
   fetch('https://formspree.io/hkerssalford@gmail.com', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
     body: JSON.stringify({
       _subject: `【SHK 義工簽到】${currentName} Clock In - ${todayStr()}`,
-      姓名: currentName,
-      日期: todayStr(),
-      簽到時間: fmtTime(now),
-      簽出時間: '（服務中）',
-      總時長: '--'
+      姓名: currentName, 日期: todayStr(),
+      簽到時間: fmtTime(now), 簽出時間: '（服務中）', 總時長: '--'
     })
   }).catch(() => {});
 
@@ -580,17 +725,13 @@ function confirmClockOut() {
   const inTime  = currentLog ? currentLog.inTime : '--';
   currentLog = null;
 
-  // Notify via Formspree
   fetch('https://formspree.io/hkerssalford@gmail.com', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
     body: JSON.stringify({
       _subject: `【SHK 義工簽到】${outName} Clock Out - ${todayStr()}`,
-      姓名: outName,
-      日期: todayStr(),
-      簽到時間: inTime,
-      簽出時間: fmtTime(now),
-      總時長: fmtDur(mins)
+      姓名: outName, 日期: todayStr(),
+      簽到時間: inTime, 簽出時間: fmtTime(now), 總時長: fmtDur(mins)
     })
   }).catch(() => {});
 
@@ -620,7 +761,7 @@ function renderLeaderboard() {
 
   const el     = document.getElementById('leaderboard');
   const month  = now.toLocaleDateString('zh-HK', { month: 'long' });
-  const medals = ['\uD83E\uDD47', '\uD83E\uDD48', '\uD83E\uDD49'];
+  const medals = ['🥇', '🥈', '🥉'];
 
   if (!sorted.length) {
     el.innerHTML = `<div class="lb-empty">${month}暫無完成記錄</div>`;
