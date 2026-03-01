@@ -10,6 +10,9 @@
   --blue: #00d4ff;
   --purple: #b44fff;
   --green-neon: #39ff14;
+  --gold: #ffd700;
+  --silver: #c0c0c0;
+  --bronze: #cd7f32;
   --bg: #0a0a0f;
   --card-bg: rgba(255,255,255,0.05);
   --card-border: rgba(255,255,255,0.1);
@@ -44,28 +47,16 @@ nav {
   backdrop-filter: blur(12px);
   position: sticky; top: 0; z-index: 100;
 }
-nav .logo {
-  color: #fff;
-  font-size: 1rem;
-  font-weight: 800;
-  letter-spacing: -0.3px;
-}
-nav .logo span {
-  color: var(--pink);
-  text-shadow: 0 0 10px var(--pink);
-}
+nav .logo { color: #fff; font-size: 1rem; font-weight: 800; letter-spacing: -0.3px; }
+nav .logo span { color: var(--pink); text-shadow: 0 0 10px var(--pink); }
 nav .nav-time {
-  color: var(--blue);
-  font-size: 0.88rem;
-  font-variant-numeric: tabular-nums;
-  font-weight: 700;
+  color: var(--blue); font-size: 0.88rem;
+  font-variant-numeric: tabular-nums; font-weight: 700;
   text-shadow: 0 0 8px var(--blue);
 }
 nav .back-btn {
-  color: var(--text-muted);
-  font-size: 0.85rem;
-  text-decoration: none;
-  display: flex; align-items: center; gap: 4px;
+  color: var(--text-muted); font-size: 0.85rem;
+  text-decoration: none; display: flex; align-items: center; gap: 4px;
   transition: color 0.2s;
 }
 nav .back-btn:hover { color: var(--pink); }
@@ -75,6 +66,89 @@ nav .back-btn:hover { color: var(--pink); }
   display: flex; flex-direction: column; gap: 16px;
   padding: 20px 16px 40px;
   max-width: 480px; margin: 0 auto; width: 100%;
+}
+
+/* ── LEADERBOARD ─────────────────────────────────────────────── */
+.leaderboard {
+  background: linear-gradient(135deg, rgba(255,215,0,0.08), rgba(180,79,255,0.08));
+  border: 1px solid rgba(255,215,0,0.25);
+  border-radius: var(--radius);
+  padding: 20px 18px 18px;
+  box-shadow: 0 0 20px rgba(255,215,0,0.08);
+}
+.lb-header {
+  text-align: center;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--gold);
+  text-shadow: 0 0 10px rgba(255,215,0,0.6);
+  margin-bottom: 16px;
+}
+.lb-month {
+  display: block;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+  margin-top: 3px;
+  text-transform: none;
+  font-weight: 500;
+}
+.lb-list {
+  display: flex; flex-direction: column; gap: 10px;
+  list-style: none;
+}
+.lb-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+}
+.lb-item.gold   { background: rgba(255,215,0,0.10); border: 1px solid rgba(255,215,0,0.3); }
+.lb-item.silver { background: rgba(192,192,192,0.08); border: 1px solid rgba(192,192,192,0.25); }
+.lb-item.bronze { background: rgba(205,127,50,0.08); border: 1px solid rgba(205,127,50,0.22); }
+.lb-item.empty  { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); }
+
+.lb-medal {
+  font-size: 1.6rem;
+  line-height: 1;
+  flex-shrink: 0;
+  width: 36px;
+  text-align: center;
+}
+.lb-info { flex: 1; min-width: 0; }
+.lb-name {
+  font-size: 1rem; font-weight: 800;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.lb-item.gold   .lb-name { color: var(--gold);   text-shadow: 0 0 8px rgba(255,215,0,0.5); }
+.lb-item.silver .lb-name { color: var(--silver); text-shadow: 0 0 8px rgba(192,192,192,0.4); }
+.lb-item.bronze .lb-name { color: var(--bronze); text-shadow: 0 0 8px rgba(205,127,50,0.4); }
+.lb-item.empty  .lb-name { color: var(--text-muted); font-weight: 500; font-size: 0.88rem; }
+.lb-hours {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+  font-variant-numeric: tabular-nums;
+}
+.lb-badge {
+  font-size: 1.1rem;
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+.lb-item.gold   .lb-badge { color: var(--gold); }
+.lb-item.silver .lb-badge { color: var(--silver); }
+.lb-item.bronze .lb-badge { color: var(--bronze); }
+.lb-loading {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  padding: 12px 0;
 }
 
 /* CLOCK HERO */
@@ -101,11 +175,7 @@ nav .back-btn:hover { color: var(--pink); }
   color: #fff;
   text-shadow: 0 0 20px rgba(255,45,120,0.8), 0 0 40px rgba(255,45,120,0.4);
 }
-.clock-date {
-  font-size: 0.9rem;
-  color: var(--text-muted);
-  letter-spacing: 0.3px;
-}
+.clock-date { font-size: 0.9rem; color: var(--text-muted); letter-spacing: 0.3px; }
 
 /* CARD */
 .card {
@@ -120,120 +190,131 @@ nav .back-btn:hover { color: var(--pink); }
 .section-title {
   font-size: 1.15rem; font-weight: 700;
   color: #fff; margin-bottom: 18px;
-  letter-spacing: 0.3px;
-  text-align: center;
+  letter-spacing: 0.3px; text-align: center;
 }
 
 /* NAME INPUT */
-label {
+label.field-label {
   display: block;
-  font-size: 0.88rem;
-  color: var(--text-muted);
-  margin-bottom: 8px;
-  font-weight: 500;
-  letter-spacing: 0.3px;
+  font-size: 0.88rem; color: var(--text-muted);
+  margin-bottom: 8px; font-weight: 500; letter-spacing: 0.3px;
 }
-input[type="text"] {
+input[type="text"], input[type="email"], input[type="tel"], textarea, select {
   width: 100%;
   padding: 14px 16px;
-  font-size: 1.05rem;
-  font-weight: 600;
+  font-size: 1rem;
+  font-weight: 500;
   color: #fff;
   background: rgba(255,255,255,0.08);
   border: 1px solid rgba(255,255,255,0.2);
   border-radius: 10px;
   outline: none;
   transition: all 0.3s;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3px;
+  font-family: inherit;
 }
-input[type="text"]::placeholder {
-  color: rgba(255,255,255,0.25);
-  font-weight: 400;
-}
-input[type="text"]:focus {
+input[type="text"]::placeholder,
+input[type="email"]::placeholder,
+input[type="tel"]::placeholder,
+textarea::placeholder { color: rgba(255,255,255,0.25); font-weight: 400; }
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="tel"]:focus,
+textarea:focus,
+select:focus {
   border-color: var(--pink);
   box-shadow: 0 0 0 2px rgba(255,45,120,0.2);
   background: rgba(255,255,255,0.1);
 }
+textarea { resize: vertical; min-height: 90px; }
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.form-group { margin-bottom: 16px; }
+.form-group:last-child { margin-bottom: 0; }
+
+.required { color: var(--pink); }
+
+/* Checkbox / Radio groups */
+.checkbox-group, .radio-group {
+  display: flex; flex-direction: column; gap: 8px; margin-top: 6px;
+}
+.checkbox-item, .radio-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+.checkbox-item:hover, .radio-item:hover {
+  border-color: rgba(255,45,120,0.4);
+  background: rgba(255,45,120,0.06);
+}
+.checkbox-item input, .radio-item input {
+  width: auto; padding: 0;
+  margin-top: 2px; flex-shrink: 0;
+  accent-color: var(--pink);
+}
+.checkbox-label, .radio-label { font-size: 0.9rem; font-weight: 600; color: #fff; }
+.checkbox-desc, .radio-desc { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
 
 /* BUTTONS */
-.btn-row {
-  display: flex;
-  gap: 12px;
-  margin-top: 6px;
-}
+.btn-row { display: flex; gap: 12px; margin-top: 6px; }
 button {
-  flex: 1;
-  padding: 16px 12px;
-  font-size: 1rem;
-  font-weight: 800;
-  cursor: pointer;
-  border: none;
-  border-radius: 12px;
+  flex: 1; padding: 16px 12px;
+  font-size: 1rem; font-weight: 800;
+  cursor: pointer; border: none; border-radius: 12px;
   transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
+  letter-spacing: 0.5px; text-transform: uppercase;
+  font-family: inherit;
 }
 button:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-  transform: none !important;
-  box-shadow: none !important;
+  opacity: 0.4; cursor: not-allowed;
+  transform: none !important; box-shadow: none !important;
 }
 button.btn-clockin {
   background: linear-gradient(135deg, var(--green-neon), #00c853);
-  color: #000;
-  box-shadow: 0 4px 15px rgba(57,255,20,0.3);
+  color: #000; box-shadow: 0 4px 15px rgba(57,255,20,0.3);
 }
 button.btn-clockin:hover:not(:disabled) {
-  box-shadow: 0 8px 25px rgba(57,255,20,0.5);
-  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(57,255,20,0.5); transform: translateY(-2px);
 }
 button.btn-clockout {
   background: linear-gradient(135deg, var(--pink), var(--purple));
-  color: #fff;
-  box-shadow: 0 4px 15px rgba(255,45,120,0.3);
+  color: #fff; box-shadow: 0 4px 15px rgba(255,45,120,0.3);
 }
 button.btn-clockout:hover:not(:disabled) {
-  box-shadow: 0 8px 25px rgba(255,45,120,0.5);
-  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(255,45,120,0.5); transform: translateY(-2px);
+}
+button.btn-submit {
+  flex: none; width: 100%;
+  background: linear-gradient(135deg, var(--pink), var(--purple));
+  color: #fff; box-shadow: 0 4px 15px rgba(255,45,120,0.3);
+  margin-top: 8px;
+}
+button.btn-submit:hover {
+  box-shadow: 0 8px 25px rgba(255,45,120,0.5); transform: translateY(-2px);
 }
 
 /* TOAST */
 .toast {
-  display: none;
-  padding: 16px 20px;
-  border-radius: 12px;
-  font-size: 1rem;
-  font-weight: 600;
-  text-align: center;
-  letter-spacing: 0.3px;
-  animation: slideUp 0.3s ease forwards;
+  display: none; padding: 16px 20px; border-radius: 12px;
+  font-size: 1rem; font-weight: 600; text-align: center;
+  letter-spacing: 0.3px; animation: slideUp 0.3s ease forwards;
 }
 .toast.in {
   background: linear-gradient(135deg, rgba(57,255,20,0.2), rgba(0,212,255,0.1));
-  border: 1px solid rgba(57,255,20,0.4);
-  color: var(--green-neon);
+  border: 1px solid rgba(57,255,20,0.4); color: var(--green-neon);
   text-shadow: 0 0 10px rgba(57,255,20,0.5);
 }
 .toast.out {
   background: linear-gradient(135deg, rgba(255,45,120,0.2), rgba(180,79,255,0.1));
-  border: 1px solid rgba(255,45,120,0.4);
-  color: var(--pink);
+  border: 1px solid rgba(255,45,120,0.4); color: var(--pink);
   text-shadow: 0 0 10px rgba(255,45,120,0.5);
 }
-.toast .toast-name {
-  display: block;
-  font-size: 1.3rem;
-  font-weight: 800;
-  margin-bottom: 4px;
-}
-.toast .toast-time {
-  display: block;
-  font-size: 0.82rem;
-  opacity: 0.7;
-  font-variant-numeric: tabular-nums;
-}
+.toast .toast-name { display: block; font-size: 1.3rem; font-weight: 800; margin-bottom: 4px; }
+.toast .toast-time { display: block; font-size: 0.82rem; opacity: 0.7; font-variant-numeric: tabular-nums; }
 @keyframes slideUp {
   from { opacity: 0; transform: translateY(10px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -248,32 +329,16 @@ button.btn-clockout:hover:not(:disabled) {
   backdrop-filter: blur(10px);
 }
 .log-title {
-  font-size: 0.88rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  margin-bottom: 12px;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
+  font-size: 0.88rem; font-weight: 600;
+  color: var(--text-muted); margin-bottom: 12px;
+  letter-spacing: 0.5px; text-transform: uppercase;
 }
-.log-empty {
-  text-align: center;
-  color: var(--text-muted);
-  font-size: 0.88rem;
-  padding: 10px 0;
-}
-.log-list {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
+.log-empty { text-align: center; color: var(--text-muted); font-size: 0.88rem; padding: 10px 0; }
+.log-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
 .log-item {
-  display: flex;
-  align-items: center;
+  display: flex; align-items: center;
   justify-content: space-between;
-  padding: 10px 14px;
-  border-radius: 8px;
-  font-size: 0.9rem;
+  padding: 10px 14px; border-radius: 8px; font-size: 0.9rem;
 }
 .log-item.in  { background: rgba(57,255,20,0.08);  border: 1px solid rgba(57,255,20,0.2); }
 .log-item.out { background: rgba(255,45,120,0.08); border: 1px solid rgba(255,45,120,0.2); }
@@ -284,26 +349,47 @@ button.btn-clockout:hover:not(:disabled) {
 }
 .log-item.in  .log-badge { background: rgba(57,255,20,0.2);  color: var(--green-neon); }
 .log-item.out .log-badge { background: rgba(255,45,120,0.2); color: var(--pink); }
-.log-item .log-time {
-  font-size: 0.78rem;
-  color: var(--text-muted);
-  font-variant-numeric: tabular-nums;
+.log-item .log-time { font-size: 0.78rem; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+
+/* REGISTRATION FORM CARD */
+.reg-card {
+  background: linear-gradient(135deg, rgba(255,45,120,0.06), rgba(180,79,255,0.06));
+  border: 1px solid rgba(255,45,120,0.2);
+  border-radius: var(--radius);
+  padding: 24px 20px;
+  backdrop-filter: blur(10px);
+}
+.reg-title {
+  font-size: 1.1rem; font-weight: 800; color: #fff;
+  margin-bottom: 6px; text-align: center;
+}
+.reg-subtitle {
+  font-size: 0.82rem; color: var(--text-muted);
+  text-align: center; margin-bottom: 22px; line-height: 1.5;
+}
+
+.form-success {
+  display: none; padding: 16px 18px; border-radius: 10px;
+  background: rgba(57,255,20,0.1); border: 1px solid rgba(57,255,20,0.3);
+  color: var(--green-neon); font-weight: 600; font-size: 0.95rem;
+  text-align: center; margin-top: 12px;
+}
+.form-error {
+  display: none; padding: 16px 18px; border-radius: 10px;
+  background: rgba(255,45,120,0.1); border: 1px solid rgba(255,45,120,0.3);
+  color: var(--pink); font-weight: 600; font-size: 0.95rem;
+  text-align: center; margin-top: 12px;
 }
 
 /* SPINNER */
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
-}
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 .spinner {
   display: inline-block;
   border: 3px solid rgba(255,255,255,0.15);
-  border-top-color: currentColor;
-  border-radius: 50%;
+  border-top-color: currentColor; border-radius: 50%;
   width: 18px; height: 18px;
   animation: spin 0.7s linear infinite;
-  vertical-align: middle;
-  margin-right: 6px;
+  vertical-align: middle; margin-right: 6px;
 }
 </style>
 </head>
@@ -318,6 +404,17 @@ button.btn-clockout:hover:not(:disabled) {
 
 <div class="page">
 
+  <!-- LEADERBOARD (本月義工時數排行榜) -->
+  <div class="leaderboard">
+    <div class="lb-header">
+      本月義工時數排行榜
+      <span class="lb-month" id="lbMonth"></span>
+    </div>
+    <ul class="lb-list" id="lbList">
+      <li class="lb-loading">載入中...</li>
+    </ul>
+  </div>
+
   <!-- CLOCK -->
   <div class="clock-hero">
     <div class="clock-display" id="clockDisplay">00:00</div>
@@ -328,7 +425,7 @@ button.btn-clockout:hover:not(:disabled) {
   <div class="card">
     <div class="section-title">義工報到</div>
 
-    <label for="inputName">請輸入姓名</label>
+    <label class="field-label" for="inputName">請輸入姓名</label>
     <input type="text" id="inputName" placeholder="例如：陳大文 / Chan Tai Man" autocomplete="off" autocorrect="off" spellcheck="false"/>
 
     <div class="btn-row" style="margin-top:18px;">
@@ -350,12 +447,107 @@ button.btn-clockout:hover:not(:disabled) {
     <ul class="log-list" id="logList" style="display:none;"></ul>
   </div>
 
-</div>
+  <!-- VOLUNTEER REGISTRATION FORM -->
+  <div class="reg-card">
+    <div class="reg-title">🤝 加入義工隊</div>
+    <div class="reg-subtitle">加入我們的義工團隊，一起為香港社群出一份力！<br/>我們歡迎各種背景和技能的朋友。</div>
+
+    <form id="form-volunteer">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="field-label">姓名 <span class="required">*</span></label>
+          <input type="text" name="name" placeholder="你的姓名" required/>
+        </div>
+        <div class="form-group">
+          <label class="field-label">電郵 <span class="required">*</span></label>
+          <input type="email" name="email" placeholder="you@example.com" required/>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="field-label">電話</label>
+          <input type="tel" name="phone" placeholder="07xxx xxxxxx"/>
+        </div>
+        <div class="form-group">
+          <label class="field-label">居住地區</label>
+          <input type="text" name="region" placeholder="例如：Salford"/>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="field-label">你想參與哪方面的義工工作？ <span class="required">*</span></label>
+        <div class="checkbox-group">
+          <label class="checkbox-item">
+            <input type="checkbox" name="interests" value="活動籌劃"/>
+            <div><div class="checkbox-label">活動籌劃</div><div class="checkbox-desc">協助策劃及籌辦各類型活動</div></div>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="interests" value="宣傳推廣"/>
+            <div><div class="checkbox-label">宣傳推廣</div><div class="checkbox-desc">協助社交媒體宣傳、文案撰寫</div></div>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="interests" value="設計創作"/>
+            <div><div class="checkbox-label">設計創作</div><div class="checkbox-desc">平面設計、海報製作、影片剪輯</div></div>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="interests" value="技術支援"/>
+            <div><div class="checkbox-label">技術支援</div><div class="checkbox-desc">網站維護、數據管理、系統開發</div></div>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="interests" value="翻譯"/>
+            <div><div class="checkbox-label">翻譯</div><div class="checkbox-desc">中英文翻譯、文件編輯</div></div>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" name="interests" value="其他"/>
+            <div><div class="checkbox-label">其他</div><div class="checkbox-desc">請在下方補充說明</div></div>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="field-label">可提供的時間</label>
+        <div class="radio-group">
+          <label class="radio-item">
+            <input type="radio" name="availability" value="每週數小時"/>
+            <div><div class="radio-label">每週數小時</div><div class="radio-desc">定期投入，協助日常運作</div></div>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="availability" value="每月數小時"/>
+            <div><div class="radio-label">每月數小時</div><div class="radio-desc">參與特定項目或活動</div></div>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="availability" value="不定期參與"/>
+            <div><div class="radio-label">不定期參與</div><div class="radio-desc">視乎個人時間彈性參與</div></div>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="field-label">其他資料或特別技能</label>
+        <textarea name="additional" placeholder="例如：擁有活動籌辦經驗、熟悉影片剪輯軟件、會說廣東話及英語等..."></textarea>
+      </div>
+
+      <button type="submit" class="btn-submit">提交登記</button>
+      <div class="form-success" id="regSuccess">感謝你的登記！我們會盡快與你聯絡。</div>
+      <div class="form-error" id="regError">提交失敗，請檢查網絡連接後重試。</div>
+    </form>
+  </div>
+
+</div><!-- end .page -->
 
 <script>
-// ── Clock ──────────────────────────────────────────────────────────
-const WEEKDAYS = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
+// ── Medals & Month ──────────────────────────────────────────────────
+const MEDALS = [
+  { cls: 'gold',   icon: '🥇' },
+  { cls: 'silver', icon: '🥈' },
+  { cls: 'bronze', icon: '🥉' },
+];
 
+const MONTHS_ZH = ['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'];
+const WEEKDAYS  = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
+
+// ── Clock ──────────────────────────────────────────────────────────
 function updateClock() {
   const now = new Date();
   const hh = String(now.getHours()).padStart(2,'0');
@@ -372,8 +564,68 @@ function updateClock() {
 setInterval(updateClock, 1000);
 updateClock();
 
+// Set leaderboard month label
+(function() {
+  const now = new Date();
+  document.getElementById('lbMonth').textContent =
+    `${now.getFullYear()} 年 ${MONTHS_ZH[now.getMonth()]}`;
+})();
+
+// ── Leaderboard: load from Google Sheets ──────────────────────────
+const SHEET_API = 'https://script.google.com/macros/s/AKfycbxlSEI9vj0rignRVwTWTNQvIoTvMFaHjySpknp8O4XtKkZ-hrHEuqwtNffiL7E0xfn_S/exec';
+
+async function loadLeaderboard() {
+  const lbList = document.getElementById('lbList');
+  try {
+    const now = new Date();
+    const yearMonth = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+    const resp = await fetch(`${SHEET_API}?action=leaderboard&month=${yearMonth}`);
+    const data = await resp.json();
+    // Expect data.top3 = [{name, hours}, {name, hours}, {name, hours}]
+    const top3 = (data.top3 || []).slice(0, 3);
+    renderLeaderboard(top3);
+  } catch(e) {
+    renderLeaderboard([]);
+  }
+}
+
+function renderLeaderboard(top3) {
+  const lbList = document.getElementById('lbList');
+  lbList.innerHTML = '';
+  for (let i = 0; i < 3; i++) {
+    const m = MEDALS[i];
+    const li = document.createElement('li');
+    if (top3[i]) {
+      const entry = top3[i];
+      const hrs = parseFloat(entry.hours || 0).toFixed(1);
+      li.className = `lb-item ${m.cls}`;
+      li.innerHTML = `
+        <div class="lb-medal">${m.icon}</div>
+        <div class="lb-info">
+          <div class="lb-name">${escapeHtml(entry.name)}</div>
+          <div class="lb-hours">本月累計</div>
+        </div>
+        <div class="lb-badge">${hrs}h</div>
+      `;
+    } else {
+      li.className = 'lb-item empty';
+      li.innerHTML = `
+        <div class="lb-medal">${m.icon}</div>
+        <div class="lb-info">
+          <div class="lb-name">虛位以待</div>
+        </div>
+      `;
+    }
+    lbList.appendChild(li);
+  }
+}
+
+// Load on page load; also show placeholder immediately
+renderLeaderboard([]);
+loadLeaderboard();
+
 // ── Input → enable buttons ─────────────────────────────────────────
-const inputName  = document.getElementById('inputName');
+const inputName   = document.getElementById('inputName');
 const btnClockIn  = document.getElementById('btnClockIn');
 const btnClockOut = document.getElementById('btnClockOut');
 
@@ -383,21 +635,15 @@ inputName.addEventListener('input', () => {
   btnClockOut.disabled = !ok;
 });
 
-// ── Google Sheets API ──────────────────────────────────────────────
-const SHEET_API = 'https://script.google.com/macros/s/AKfycbxlSEI9vj0rignRVwTWTNQvIoTvMFaHjySpknp8O4XtKkZ-hrHEuqwtNffiL7E0xfn_S/exec';
-
+// ── Google Sheets: record attendance ──────────────────────────────
 async function recordAttendance(name, type) {
   const now = new Date();
   const dateStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
   const timeStr = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
-
   try {
     const params = new URLSearchParams({ action: 'checkin', name, type, date: dateStr, time: timeStr });
     await fetch(`${SHEET_API}?${params}`);
-  } catch(e) {
-    // fail silently – local log still records
-  }
-
+  } catch(e) { /* fail silently */ }
   return { name, type, date: dateStr, time: timeStr };
 }
 
@@ -406,7 +652,6 @@ async function handleAttendance(type) {
   const name = inputName.value.trim();
   if (!name) return;
 
-  // Disable buttons during request
   btnClockIn.disabled  = true;
   btnClockOut.disabled = true;
   const activeBtn = type === 'in' ? btnClockIn : btnClockOut;
@@ -415,22 +660,17 @@ async function handleAttendance(type) {
 
   const record = await recordAttendance(name, type);
 
-  // Restore buttons
   activeBtn.textContent = originalText;
-  const ok = inputName.value.trim().length > 0;
-  btnClockIn.disabled  = !ok;
-  btnClockOut.disabled = !ok;
-
-  // Show toast
-  showToast(record);
-
-  // Add to log
-  addLogItem(record);
-
-  // Clear input
   inputName.value = '';
   btnClockIn.disabled  = true;
   btnClockOut.disabled = true;
+
+  showToast(record);
+  addLogItem(record);
+
+  // Refresh leaderboard after clock-out (hours may have changed)
+  if (type === 'out') setTimeout(loadLeaderboard, 1500);
+
   inputName.focus();
 }
 
@@ -451,15 +691,11 @@ function showToast(record) {
 }
 
 // ── Log List ───────────────────────────────────────────────────────
-const sessionLog = [];
-
 function addLogItem(record) {
-  sessionLog.unshift(record);
   const logEmpty = document.getElementById('logEmpty');
   const logList  = document.getElementById('logList');
   logEmpty.style.display = 'none';
   logList.style.display  = 'flex';
-
   const li = document.createElement('li');
   li.className = `log-item ${record.type}`;
   li.innerHTML = `
@@ -470,16 +706,53 @@ function addLogItem(record) {
   logList.prepend(li);
 }
 
+// ── Enter key → Clock In ───────────────────────────────────────────
+inputName.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && inputName.value.trim()) btnClockIn.click();
+});
+
+// ── Volunteer Registration Form ────────────────────────────────────
+document.getElementById('form-volunteer').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const form = e.target;
+  const submitBtn = form.querySelector('.btn-submit');
+  const successEl = document.getElementById('regSuccess');
+  const errorEl   = document.getElementById('regError');
+
+  // Gather data
+  const data = {
+    action: 'volunteer',
+    name:   form.name.value.trim(),
+    email:  form.email.value.trim(),
+    phone:  form.phone.value.trim(),
+    region: form.region.value.trim(),
+    interests: [...form.querySelectorAll('input[name="interests"]:checked')].map(c => c.value).join(', '),
+    availability: form.availability ? (form.querySelector('input[name="availability"]:checked')?.value || '') : '',
+    additional: form.additional.value.trim(),
+  };
+
+  submitBtn.disabled = true;
+  submitBtn.innerHTML = '<span class="spinner"></span>提交中...';
+  successEl.style.display = 'none';
+  errorEl.style.display   = 'none';
+
+  try {
+    const params = new URLSearchParams(data);
+    await fetch(`${SHEET_API}?${params}`);
+    successEl.style.display = 'block';
+    form.reset();
+  } catch(err) {
+    errorEl.style.display = 'block';
+  }
+
+  submitBtn.disabled = false;
+  submitBtn.textContent = '提交登記';
+});
+
+// ── Utilities ──────────────────────────────────────────────────────
 function escapeHtml(str) {
   return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
-
-// ── Enter key support ──────────────────────────────────────────────
-inputName.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter' && inputName.value.trim()) {
-    btnClockIn.click();
-  }
-});
 </script>
 </body>
 </html>
