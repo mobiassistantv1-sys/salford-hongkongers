@@ -904,19 +904,18 @@ a.contact-value:hover { color: var(--pink); }
 </div>
 <p class="events-note">* 活動詳情或有更改，請留意我們的 Facebook 及 Instagram @SalfordHongkongers</p>
 </section>
-
 <!-- NEWS / IG FEED -->
 <section class="page" id="page-news">
 <!-- MAX DAILY NEWS -->
 <section class="news-daily-section" id="newsDailySection" style="margin-bottom:1.2rem;">
-  <div class="news-daily-header">
-    <span class="news-daily-icon">📰</span>
-    <h3 class="news-daily-title">每日新聞簡報</h3>
-    <span class="news-daily-badge" id="newsDailyDate"></span>
-  </div>
-  <div id="newsDailyContainer">
-    <div class="ig-loading">⏳ 載入中...</div>
-  </div>
+<div class="news-daily-header">
+<span class="news-daily-icon">📰</span>
+<h3 class="news-daily-title">每日新聞簡報</h3>
+<span class="news-daily-badge" id="newsDailyDate"></span>
+</div>
+<div id="newsDailyContainer">
+<div class="ig-loading">⏳ 載入中...</div>
+</div>
 </section>
 <div class="ig-feed-header">
 <h2 class="page-title" style="margin-bottom:0;">最新消息</h2>
@@ -938,48 +937,48 @@ a.contact-value:hover { color: var(--pink); }
 <p class="form-intro">請填寫以下表格完成登記，我們會以電郵確認你的報名。</p>
 <form id="registerForm" onsubmit="submitForm(event)">
 <div class="form-group">
-<label class="form-label">選擇活動 *</label>
+<label class="form-label" data-en="Select Event *" data-zh="選擇活動 *">選擇活動 *</label>
 <select class="form-input" id="eventSelect" required="">
-<option value="">-- 請選擇活動 --</option>
-<option value="每月社群茶聚">每月社群茶聚</option>
-<option value="其他">其他活動</option>
+<option data-en="-- Please Select Event --" data-zh="-- 請選擇活動 --" value="">-- 請選擇活動 --</option>
+<option data-en="Monthly Community Gathering" data-zh="每月社群茶聚" value="每月社群茶聚">每月社群茶聚</option>
+<option data-en="Other Events" data-zh="其他活動" value="其他">其他活動</option>
 </select>
 </div>
 <div class="form-group">
-<label class="form-label">姓名 *</label>
-<input class="form-input" id="fullName" placeholder="你的全名" required="" type="text"/>
+<label class="form-label" data-en="Full Name *" data-zh="姓名 *">姓名 *</label>
+<input class="form-input" data-ph-en="Your full name" data-ph-zh="你的全名" id="fullName" placeholder="你的全名" required="" type="text"/>
 </div>
 <div class="form-group">
-<label class="form-label">電郵地址 *</label>
-<input class="form-input" id="email" placeholder="your@email.com" required="" type="email"/>
+<label class="form-label" data-en="Email Address *" data-zh="電郵地址 *">電郵地址 *</label>
+<input class="form-input" data-ph-en="your@email.com" data-ph-zh="your@email.com" id="email" placeholder="your@email.com" required="" type="email"/>
 </div>
 <div class="form-group">
-<label class="form-label">電話號碼</label>
-<input class="form-input" id="phone" placeholder="+44 7XXX XXXXXX" type="tel"/>
+<label class="form-label" data-en="Phone Number" data-zh="電話號碼">電話號碼</label>
+<input class="form-input" data-ph-en="+44 7XXX XXXXXX" data-ph-zh="+44 7XXX XXXXXX" id="phone" placeholder="+44 7XXX XXXXXX" type="tel"/>
 </div>
 <div class="form-group">
-<label class="form-label">參加人數 *</label>
+<label class="form-label" data-en="Number of Attendees *" data-zh="參加人數 *">參加人數 *</label>
 <select class="form-input" id="attendees" required="">
-<option value="1">1 人</option>
-<option value="2">2 人</option>
-<option value="3">3 人</option>
-<option value="4">4 人</option>
-<option value="5+">5 人或以上</option>
+<option data-en="1 person" data-zh="1 人" value="1">1 人</option>
+<option data-en="2 persons" data-zh="2 人" value="2">2 人</option>
+<option data-en="3 persons" data-zh="3 人" value="3">3 人</option>
+<option data-en="4 persons" data-zh="4 人" value="4">4 人</option>
+<option data-en="5 or more" data-zh="5 人或以上" value="5+">5 人或以上</option>
 </select>
 </div>
 <div class="form-group">
-<label class="form-label">你是新移民嗎？</label>
+<label class="form-label" data-en="Are you a new arrival?" data-zh="你是新移民嗎？">你是新移民嗎？</label>
 <div class="radio-group">
-<label class="radio-label"><input name="newcomer" type="radio" value="yes"/> 是，剛來英國不久</label>
-<label class="radio-label"><input name="newcomer" type="radio" value="no"/> 否，已在英國一段時間</label>
+<label class="radio-label" data-en="Yes, I recently arrived in the UK" data-zh="是，剛來英國不久"><input name="newcomer" type="radio" value="yes"/> 是，剛來英國不久</label>
+<label class="radio-label" data-en="No, I have been in the UK for a while" data-zh="否，已在英國一段時間"><input name="newcomer" type="radio" value="no"/> 否，已在英國一段時間</label>
 </div>
 </div>
 <div class="form-group">
-<label class="form-label">備註 / 特別需要</label>
-<textarea class="form-input form-textarea" id="notes" placeholder="例如：輪椅使用者、飲食限制等"></textarea>
+<label class="form-label" data-en="Notes / Special Requirements" data-zh="備註 / 特別需要">備註 / 特別需要</label>
+<textarea class="form-input form-textarea" data-ph-en="e.g. wheelchair user, dietary requirements, etc." data-ph-zh="例如：輪椅使用者、飲食限制等" id="notes" placeholder="例如：輪椅使用者、飲食限制等"></textarea>
 </div>
 <div class="form-group">
-<label class="checkbox-label">
+<label class="checkbox-label" data-en="I agree to Salford Hongkongers CIC storing and using my personal data for event communication purposes." data-zh="我同意 Salford Hongkongers CIC 儲存及使用我的個人資料用於活動聯絡目的。">
 <input id="consent" required="" type="checkbox"/>
             我同意 Salford Hongkongers CIC 儲存及使用我的個人資料用於活動聯絡目的。
           </label>
@@ -1071,48 +1070,46 @@ a.contact-value:hover { color: var(--pink); }
         追蹤「Salford HongKongers」頻道
       </a>
 </div>
-
 <div class="section-card" id="enquiry-card">
 <h3 class="section-title">📬 查詢</h3>
 <p class="body-text" style="margin-bottom:16px;">有任何問題？填寫下方表格，我們會盡快回覆。</p>
 <form id="enquiry-form" onsubmit="submitEnquiry(event)">
-  <div class="form-group">
-    <label class="form-label">姓名 <span style="color:var(--pink)">*</span></label>
-    <input class="form-input" id="enq-name" placeholder="你的姓名" required type="text"/>
-  </div>
-  <div class="form-group">
-    <label class="form-label">電話</label>
-    <input class="form-input" id="enq-phone" placeholder="（選填）" type="tel"/>
-  </div>
-  <div class="form-group">
-    <label class="form-label">電郵 <span style="color:var(--pink)">*</span></label>
-    <input class="form-input" id="enq-email" placeholder="your@email.com" required type="email"/>
-  </div>
-  <div class="form-group">
-    <label class="form-label">查詢類別</label>
-    <select class="form-input" id="enq-category">
-      <option value="">-- 請選擇 --</option>
-      <option value="活動查詢">活動查詢</option>
-      <option value="義工報名">義工報名</option>
-      <option value="合作洽談">合作洽談</option>
-      <option value="傳媒查詢">傳媒查詢</option>
-      <option value="一般查詢">一般查詢</option>
-      <option value="其他">其他</option>
-    </select>
-  </div>
-  <div class="form-group">
-    <label class="form-label">主題</label>
-    <input class="form-input" id="enq-subject" placeholder="查詢主題（選填）" type="text"/>
-  </div>
-  <div class="form-group">
-    <label class="form-label">內容 <span style="color:var(--pink)">*</span></label>
-    <textarea class="form-input" id="enq-message" placeholder="請詳述你的查詢..." required rows="5" style="resize:vertical;min-height:120px;"></textarea>
-  </div>
-  <button class="submit-btn" id="enq-submit" type="submit">發送查詢</button>
-  <div id="enq-feedback" style="display:none;margin-top:14px;padding:12px 16px;border-radius:10px;font-size:14px;font-weight:600;text-align:center;"></div>
+<div class="form-group">
+<label class="form-label" data-en="Name *" data-zh="姓名*">姓名 <span style="color:var(--pink)">*</span></label>
+<input class="form-input" data-ph-en="Your name" data-ph-zh="你的姓名" id="enq-name" placeholder="你的姓名" required="" type="text"/>
+</div>
+<div class="form-group">
+<label class="form-label" data-en="Phone" data-zh="電話">電話</label>
+<input class="form-input" data-ph-en="(Optional)" data-ph-zh="（選填）" id="enq-phone" placeholder="（選填）" type="tel"/>
+</div>
+<div class="form-group">
+<label class="form-label" data-en="Email *" data-zh="電郵*">電郵 <span style="color:var(--pink)">*</span></label>
+<input class="form-input" data-ph-en="your@email.com" data-ph-zh="your@email.com" id="enq-email" placeholder="your@email.com" required="" type="email"/>
+</div>
+<div class="form-group">
+<label class="form-label" data-en="Enquiry Type" data-zh="查詢類別">查詢類別</label>
+<select class="form-input" id="enq-category">
+<option data-en="-- Please Select --" data-zh="-- 請選擇 --" value="">-- 請選擇 --</option>
+<option data-en="Event Enquiry" data-zh="活動查詢" value="活動查詢">活動查詢</option>
+<option data-en="Volunteer Registration" data-zh="義工報名" value="義工報名">義工報名</option>
+<option data-en="Partnership" data-zh="合作洽談" value="合作洽談">合作洽談</option>
+<option data-en="Media Enquiry" data-zh="傳媒查詢" value="傳媒查詢">傳媒查詢</option>
+<option data-en="General Enquiry" data-zh="一般查詢" value="一般查詢">一般查詢</option>
+<option data-en="Other" data-zh="其他" value="其他">其他</option>
+</select>
+</div>
+<div class="form-group">
+<label class="form-label" data-en="Subject" data-zh="主題">主題</label>
+<input class="form-input" data-ph-en="(Optional)" data-ph-zh="（選填）" id="enq-subject" placeholder="查詢主題（選填）" type="text"/>
+</div>
+<div class="form-group">
+<label class="form-label" data-en="Message *" data-zh="內容*">內容 <span style="color:var(--pink)">*</span></label>
+<textarea class="form-input" data-ph-en="Please describe your enquiry..." data-ph-zh="請詳述你的查詢..." id="enq-message" placeholder="請詳述你的查詢..." required="" rows="5" style="resize:vertical;min-height:120px;"></textarea>
+</div>
+<button class="submit-btn" data-en="Send Enquiry" data-zh="發送查詢" id="enq-submit" type="submit">發送查詢</button>
+<div id="enq-feedback" style="display:none;margin-top:14px;padding:12px 16px;border-radius:10px;font-size:14px;font-weight:600;text-align:center;"></div>
 </form>
 </div>
-
 </section>
 </main>
 <!-- BOTTOM NAV -->
@@ -1465,6 +1462,7 @@ function toggleLang() {
   document.documentElement.lang = currentLang === 'zh' ? 'zh-Hant' : 'en';
   document.getElementById('langBtn').textContent = currentLang === 'zh' ? 'EN' : '中';
   applyTranslations();
+    applyFormTranslations(currentLang);
 }
 
 function applyTranslations() {
@@ -1523,6 +1521,33 @@ function applyTranslations() {
 
 // ===== INIT =====
 document.addEventListener('DOMContentLoaded', () => showPage('home'));
+
+  // Apply form translations based on current language
+  function applyFormTranslations(lang) {
+    // Translate labels - use childNodes to only update text nodes, preserving child elements
+    document.querySelectorAll('label[data-zh][data-en]').forEach(el => {
+      const newText = lang === 'en' ? el.getAttribute('data-en') : el.getAttribute('data-zh');
+      // Only replace direct text nodes, not child elements
+      Array.from(el.childNodes).forEach(node => {
+        if (node.nodeType === Node.TEXT_NODE && node.textContent.trim().length > 0) {
+          node.textContent = newText + ' ';
+        }
+      });
+    });
+    // Translate option elements
+    document.querySelectorAll('option[data-zh][data-en]').forEach(el => {
+      el.textContent = lang === 'en' ? el.getAttribute('data-en') : el.getAttribute('data-zh');
+    });
+    // Translate buttons with data-zh/data-en (not handled by main translations)
+    document.querySelectorAll('button[data-zh][data-en]').forEach(el => {
+      el.textContent = lang === 'en' ? el.getAttribute('data-en') : el.getAttribute('data-zh');
+    });
+    // Translate placeholders
+    document.querySelectorAll('[data-ph-zh][data-ph-en]').forEach(el => {
+      el.placeholder = lang === 'en' ? el.getAttribute('data-ph-en') : el.getAttribute('data-ph-zh');
+    });
+  }
+
 </script>
 </body>
 </html>
