@@ -538,10 +538,10 @@ button.btn-submit:hover {
 
 <script>
 // ── Medals & Month ──────────────────────────────────────────────────
-const MEDALS = [
-  { cls: 'gold',   icon: '🥇' },
-  { cls: 'silver', icon: '🥈' },
-  { cls: 'bronze', icon: '🥉' },
+const MEDALS = [\
+  { cls: 'gold',   icon: '🥇' },\
+  { cls: 'silver', icon: '🥈' },\
+  { cls: 'bronze', icon: '🥉' },\
 ];
 
 const MONTHS_ZH = ['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'];
@@ -572,7 +572,7 @@ updateClock();
 })();
 
 // ── Leaderboard: load from Google Sheets ──────────────────────────
-const SHEET_API = 'https://script.google.com/macros/s/AKfycbxlSEI9vj0rignRVwTWTNQvIoTvMFaHjySpknp8O4XtKkZ-hrHEuqwtNffiL7E0xfn_S/exec';
+const SHEET_API = 'https://script.google.com/macros/s/AKfycbxN__-ft7ZZ3bIYDRBPL6lsSG-UyzA5PRSQWDh_r1HhJBDhYoqrXnRgxDWIiCCVcfNnKA/exec';
 
 async function loadLeaderboard() {
   const lbList = document.getElementById('lbList');
