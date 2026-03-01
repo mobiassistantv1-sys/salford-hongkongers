@@ -17,12 +17,29 @@
 // All notifications → hkerssalford@gmail.com
 // ===================================================================
 
-var SS               = SpreadsheetApp.getActiveSpreadsheet();
 var REGISTRATION_SHEET = "Registration";
 var CHECKIN_SHEET      = "Checkin";
 var VOLUNTEER_SHEET    = "Volunteer";
 var ENQUIRY_SHEET      = "Enquiry";
 var NOTIFY_EMAIL       = "hkerssalford@gmail.com";
+
+// ── Get (or auto-create) the backing Spreadsheet ─────────────────────────────
+// Standalone Web Apps cannot use getActiveSpreadsheet().
+// We store the Spreadsheet ID in Script Properties after first creation.
+function getSpreadsheet() {
+  var props = PropertiesService.getScriptProperties();
+  var id    = props.getProperty("SPREADSHEET_ID");
+
+  if (id) {
+    try { return SpreadsheetApp.openById(id); } catch (e) { /* fall through to create */ }
+  }
+
+  // First run: create a new spreadsheet in the script owner's Drive
+  var ss = SpreadsheetApp.create("Salford Hongkongers — Form Responses");
+  props.setProperty("SPREADSHEET_ID", ss.getId());
+  Logger.log("Created new spreadsheet: " + ss.getUrl());
+  return ss;
+}
 
 // ━━ Shared style constants ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 var RED       = "#c0392b";
@@ -136,7 +153,7 @@ function handleLeaderboard(p) {
   var monthParam   = (p.month || "").trim();
   var targetMonth  = monthParam || (now.getFullYear() + "-" + pad(now.getMonth() + 1));
 
-  var sheet = SS.getSheetByName(CHECKIN_SHEET);
+  var sheet = getSpreadsheet().getSheetByName(CHECKIN_SHEET);
   if (!sheet || sheet.getLastRow() < 2) {
     return { ok: true, month: targetMonth, top3: [] };
   }
@@ -351,9 +368,10 @@ function sendMail(to, subject, plain, html, replyTo) {
 // HELPERS
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 function getOrCreateSheet(name, headers) {
-  var sheet = SS.getSheetByName(name);
+  var ss    = getSpreadsheet();
+  var sheet = ss.getSheetByName(name);
   if (!sheet) {
-    sheet = SS.insertSheet(name);
+    sheet = ss.insertSheet(name);
     if (headers && headers.length) {
       var headerRow = sheet.getRange(1, 1, 1, headers.length);
       headerRow.setValues([headers]);
