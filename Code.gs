@@ -8,8 +8,9 @@
 // ============================================================
 
 var SS = SpreadsheetApp.getActiveSpreadsheet();
-var CHECKIN_SHEET  = "Checkin";
+var CHECKIN_SHEET   = "Checkin";
 var VOLUNTEER_SHEET = "Volunteer";
+var ENQUIRY_SHEET   = "Enquiry";
 
 // ── Entry point ─────────────────────────────────────────────
 function doGet(e) {
@@ -23,6 +24,8 @@ function doGet(e) {
       result = handleLeaderboard(e.parameter);
     } else if (action === "volunteer") {
       result = handleVolunteer(e.parameter);
+    } else if (action === "enquiry") {
+      result = handleEnquiry(e.parameter);
     } else {
       result = { ok: false, error: "Unknown action: " + action };
     }
@@ -129,6 +132,43 @@ function handleVolunteer(p) {
   ]);
 
   return { ok: true, message: "Thank you " + name + "! Your application has been received." };
+}
+
+// ── 4. Enquiry Form ──────────────────────────────────────────
+function handleEnquiry(p) {
+  var name     = (p.name     || "").trim();
+  var phone    = (p.phone    || "").trim();
+  var email    = (p.email    || "").trim();
+  var category = (p.category || "").trim();
+  var subject  = (p.subject  || "").trim();
+  var message  = (p.message  || "").trim();
+
+  if (!name || !email || !message) {
+    return { ok: false, error: "Name, email and message are required" };
+  }
+
+  var sheet = getOrCreateSheet(ENQUIRY_SHEET,
+    ["Timestamp","Name","Phone","Email","Category","Subject","Message"]);
+  sheet.appendRow([
+    new Date().toISOString(),
+    name, phone, email, category, subject, message
+  ]);
+
+  // Optional: send notification email
+  try {
+    MailApp.sendEmail({
+      to: "salfordhongkongers@gmail.com",
+      subject: "[查詢] " + (category || "一般查詢") + " - " + (subject || name),
+      body: "新查詢收到：\n\n姓名：" + name + "\n電話：" + phone +
+            "\n電郵：" + email + "\n類別：" + category +
+            "\n主題：" + subject + "\n\n內容：\n" + message +
+            "\n\n─────────────\n時間：" + new Date().toLocaleString("zh-HK")
+    });
+  } catch(mailErr) {
+    // Non-fatal: still save the record even if email fails
+  }
+
+  return { ok: true, message: "Thank you " + name + "! We will get back to you soon." };
 }
 
 // ── Helpers ──────────────────────────────────────────────────
