@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport"/>
-<title>義工堂刻 | Salford Hongkongers</title>
+<title>義工堂吉 | Salford Hongkongers</title>
 <style>
 :root {
   --pink: #ff2d78;
@@ -68,7 +68,7 @@ nav .back-btn:hover { color: var(--pink); }
   max-width: 480px; margin: 0 auto; width: 100%;
 }
 
-/* ─── LEADERBOARD ────────────────────────────────────────────────────────────── */
+/* ┌── LEADERBOARD ──────────────────────────────────────────────┐ */
 .leaderboard {
   background: linear-gradient(135deg, rgba(255,215,0,0.08), rgba(180,79,255,0.08));
   border: 1px solid rgba(255,215,0,0.25);
@@ -107,165 +107,327 @@ nav .back-btn:hover { color: var(--pink); }
   border-radius: 12px;
   position: relative;
   overflow: hidden;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.08);
-  transition: all 0.2s;
 }
-.lb-item:hover {
-  background: rgba(255,255,255,0.06);
-  border-color: rgba(255,255,255,0.15);
+.lb-item::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
 }
-.lb-rank {
-  font-size: 1.1rem;
-  font-weight: 800;
-  width: 32px; text-align: center;
-  flex-shrink: 0;
-  font-variant-numeric: tabular-nums;
-}
-.lb-item.gold .lb-rank { color: var(--gold); text-shadow: 0 0 12px rgba(255,215,0,0.5); }
-.lb-item.silver .lb-rank { color: var(--silver); text-shadow: 0 0 10px rgba(192,192,192,0.4); }
-.lb-item.bronze .lb-rank { color: var(--bronze); text-shadow: 0 0 10px rgba(205,127,50,0.4); }
-.lb-item:not(.gold):not(.silver):not(.bronze) .lb-rank { color: var(--text-muted); }
+.lb-item:nth-child(1)::before { border-color: var(--gold); box-shadow: 0 0 12px rgba(255,215,0,0.2); }
+.lb-item:nth-child(2)::before { border-color: var(--silver); }
+.lb-item:nth-child(3)::before { border-color: var(--bronze); }
 
-.lb-name {
-  font-size: 0.92rem;
-  font-weight: 600;
+.lb-rank {
+  position: relative;
+  width: 36px; height: 36px;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 900;
+  font-size: 1rem;
+  flex-shrink: 0;
+  border-radius: 8px;
+}
+.lb-item:nth-child(1) .lb-rank { color: var(--gold); text-shadow: 0 0 10px var(--gold); background: rgba(255,215,0,0.15); }
+.lb-item:nth-child(2) .lb-rank { color: var(--silver); text-shadow: 0 0 8px var(--silver); background: rgba(192,192,192,0.12); }
+.lb-item:nth-child(3) .lb-rank { color: var(--bronze); text-shadow: 0 0 8px var(--bronze); background: rgba(205,127,50,0.12); }
+
+.lb-info {
   flex: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.lb-name {
+  font-weight: 700;
+  font-size: 0.95rem;
   color: var(--text);
 }
-.lb-score {
-  font-size: 1.05rem;
-  font-weight: 800;
-  font-variant-numeric: tabular-nums;
-  color: var(--pink);
-  text-shadow: 0 0 8px rgba(255,45,120,0.4);
-}
-.lb-unit {
-  font-size: 0.68rem;
-  margin-left: 2px;
+.lb-hours {
+  font-size: 0.82rem;
   color: var(--text-muted);
-  font-weight: 600;
+  font-variant-numeric: tabular-nums;
 }
 
-/* ─── CHECK-IN FORM ──────────────────────────────────────────────────────────── */
-.card {
+.lb-badge {
+  position: relative;
+  font-size: 1.3rem;
+  filter: drop-shadow(0 0 6px currentColor);
+  flex-shrink: 0;
+}
+.lb-item:nth-child(1) .lb-badge { color: var(--gold); }
+.lb-item:nth-child(2) .lb-badge { color: var(--silver); }
+.lb-item:nth-child(3) .lb-badge { color: var(--bronze); }
+
+/* ┌── CHECK-IN CARD ──────────────────────────────────────────────┐ */
+.checkin-card {
   background: var(--card-bg);
   border: 1px solid var(--card-border);
   border-radius: var(--radius);
-  padding: 24px 20px;
+  padding: 24px 18px;
 }
+
 .card-title {
-  font-size: 1.1rem; font-weight: 700;
-  margin-bottom: 18px; color: var(--blue);
-  text-shadow: 0 0 10px rgba(0,212,255,0.3);
+  font-size: 1.15rem;
+  font-weight: 800;
+  margin-bottom: 18px;
+  text-align: center;
+  color: var(--text);
+  letter-spacing: -0.3px;
 }
+
 .form-group {
   margin-bottom: 16px;
 }
-.label-row {
-  display: flex; justify-content: space-between; align-items: baseline;
-  margin-bottom: 8px;
-}
+
 label {
   display: block;
-  font-size: 0.85rem; font-weight: 600;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 6px;
   color: var(--text-muted);
-}
-.required {
-  color: var(--pink); margin-left: 3px;
-}
-.char-counter {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.3px;
 }
 
 input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="date"],
+input[type="time"],
 input[type="number"],
 textarea,
 select {
   width: 100%;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 10px;
   padding: 12px 14px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  font-size: 0.95rem;
   color: var(--text);
-  font-size: 0.92rem;
   font-family: inherit;
-  transition: all 0.2s;
+  transition: all 0.25s;
 }
-input:focus, textarea:focus, select:focus {
+
+input:focus,
+textarea:focus,
+select:focus {
   outline: none;
-  border-color: var(--blue);
-  box-shadow: 0 0 0 3px rgba(0,212,255,0.15);
-  background: rgba(255,255,255,0.08);
+  border-color: var(--pink);
+  box-shadow: 0 0 0 3px rgba(255,45,120,0.15);
+  background: rgba(255,255,255,0.05);
 }
+
 textarea {
-  resize: vertical;
   min-height: 80px;
+  resize: vertical;
 }
+
 select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23f0f0f0'%3E%3Cpath d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 40px;
   cursor: pointer;
 }
 
+option {
+  background: #1a1a1f;
+  color: var(--text);
+}
+
+/* ┌── BUTTONS ──────────────────────────────────────────────┐ */
+.btn-group {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
 .btn {
-  width: 100%;
-  padding: 14px;
-  border: none;
-  border-radius: 12px;
+  flex: 1;
+  padding: 13px 20px;
   font-size: 0.95rem;
   font-weight: 700;
+  border: none;
+  border-radius: 10px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.25s;
   font-family: inherit;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3px;
 }
+
 .btn-primary {
   background: linear-gradient(135deg, var(--pink), var(--purple));
   color: #fff;
-  box-shadow: 0 4px 20px rgba(255,45,120,0.3);
+  box-shadow: 0 4px 12px rgba(255,45,120,0.3);
 }
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 30px rgba(255,45,120,0.5);
+  box-shadow: 0 6px 16px rgba(255,45,120,0.4);
 }
 .btn-primary:active {
   transform: translateY(0);
 }
-.btn-primary:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  transform: none;
+
+.btn-secondary {
+  background: var(--card-bg);
+  color: var(--text);
+  border: 1px solid var(--card-border);
+}
+.btn-secondary:hover {
+  background: rgba(255,255,255,0.08);
+  border-color: var(--text-muted);
 }
 
-/* ─── SUCCESS / ERROR ────────────────────────────────────────────────────────── */
-.message {
-  padding: 16px;
+/* ┌── STATS CARD ──────────────────────────────────────────────┐ */
+.stats-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 20px 18px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.stat-box {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
   border-radius: 12px;
-  font-size: 0.9rem;
-  margin-bottom: 16px;
-  display: none;
-}
-.message.show { display: block; }
-.message.success {
-  background: rgba(57,255,20,0.1);
-  border: 1px solid rgba(57,255,20,0.3);
-  color: var(--green-neon);
-}
-.message.error {
-  background: rgba(255,45,120,0.1);
-  border: 1px solid rgba(255,45,120,0.3);
-  color: var(--pink);
+  padding: 14px 12px;
+  text-align: center;
 }
 
-/* ─── FOOTER ─────────────────────────────────────────────────────────────────── */
-footer {
-  margin-top: auto;
-  text-align: center;
-  padding: 20px;
-  font-size: 0.75rem;
+.stat-value {
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: var(--pink);
+  text-shadow: 0 0 12px rgba(255,45,120,0.4);
+  margin-bottom: 4px;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-label {
+  font-size: 0.78rem;
   color: var(--text-muted);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* ┌── HISTORY ──────────────────────────────────────────────┐ */
+.history-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 20px 18px;
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  list-style: none;
+}
+
+.history-item {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  padding: 12px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.history-date {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.history-hours {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--blue);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ┌── MODAL / ALERT ──────────────────────────────────────────────┐ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(4px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  padding: 20px;
+}
+.modal-overlay.active { display: flex; }
+
+.modal {
+  background: linear-gradient(135deg, rgba(20,20,30,0.98), rgba(15,15,25,0.98));
+  border: 1px solid var(--pink);
+  border-radius: var(--radius);
+  padding: 28px 24px;
+  max-width: 360px;
+  width: 100%;
+  box-shadow: 0 12px 40px rgba(255,45,120,0.3);
+  animation: modalFadeIn 0.25s ease-out;
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.modal-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 12px;
+  color: var(--pink);
+  text-shadow: 0 0 12px rgba(255,45,120,0.5);
+}
+
+.modal-message {
+  text-align: center;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  margin-bottom: 22px;
+  line-height: 1.5;
+}
+
+.modal-btn {
+  width: 100%;
+  padding: 12px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--pink), var(--purple));
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.25s;
+  box-shadow: 0 4px 12px rgba(255,45,120,0.3);
+}
+.modal-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(255,45,120,0.4);
+}
+
+/* ┌── RESPONSIVE ──────────────────────────────────────────────┐ */
+@media (max-width: 380px) {
+  .page { padding: 16px 12px 32px; }
+  .card-title { font-size: 1.05rem; }
+  .btn-group { flex-direction: column; }
+  .stats-grid { grid-template-columns: 1fr; }
 }
 </style>
 </head>
@@ -273,230 +435,304 @@ footer {
 
 <nav>
   <div class="logo">Salford <span>HKers</span></div>
-  <div class="nav-time" id="navTime">--:--:--</div>
-  <a class="back-btn" href="index.html">← 返回主頁</a>
+  <div class="nav-time" id="nav-time">00:00</div>
+  <a href="index.html" class="back-btn">← 返回主頁</a>
 </nav>
 
 <div class="page">
-  <!-- LEADERBOARD -->
+
+  <!-- ┌── LEADERBOARD ──────────────────────────────────────────────┐ -->
   <section class="leaderboard">
     <div class="lb-header">
-      義工排行榜
-      <span class="lb-month" id="lbMonth">正在載入...</span>
+      🏆 義工時數排行榜
+      <span class="lb-month" id="lb-month-display">本月</span>
     </div>
-    <ol class="lb-list" id="lbList">
-      <li style="text-align:center; color:var(--text-muted); padding:20px;">
-        載入中...
+    <ul class="lb-list" id="leaderboard-list">
+      <li class="lb-item">
+        <div class="lb-rank">1</div>
+        <div class="lb-info">
+          <div class="lb-name">Max Chan</div>
+          <div class="lb-hours">42.5 小時</div>
+        </div>
+        <div class="lb-badge">🥇</div>
       </li>
-    </ol>
+      <li class="lb-item">
+        <div class="lb-rank">2</div>
+        <div class="lb-info">
+          <div class="lb-name">Emily Wong</div>
+          <div class="lb-hours">38.0 小時</div>
+        </div>
+        <div class="lb-badge">🥈</div>
+      </li>
+      <li class="lb-item">
+        <div class="lb-rank">3</div>
+        <div class="lb-info">
+          <div class="lb-name">Leo Lee</div>
+          <div class="lb-hours">35.5 小時</div>
+        </div>
+        <div class="lb-badge">🥉</div>
+      </li>
+    </ul>
   </section>
 
-  <!-- CHECK-IN FORM -->
-  <section class="card">
-    <h2 class="card-title">簽到表格</h2>
-    
-    <div class="message" id="message"></div>
+  <!-- ┌── CHECK-IN FORM ──────────────────────────────────────────────┐ -->
+  <section class="checkin-card">
+    <h2 class="card-title">義工簽到 / 簽退</h2>
 
-    <form id="checkinForm">
+    <form id="checkin-form">
       <div class="form-group">
-        <div class="label-row">
-          <label>姓名 <span class="required">*</span></label>
-        </div>
-        <input type="text" id="name" name="name" required maxlength="50" />
+        <label for="volunteer-name">義工姓名 *</label>
+        <input type="text" id="volunteer-name" name="name" required placeholder="請輸入你的名字">
       </div>
 
-      <div class="form-group">
-        <div class="label-row">
-          <label>參與活動 <span class="required">*</span></label>
-        </div>
-        <select id="event" name="event" required>
-          <option value="">請選擇...</option>
-          <option value="workshop">工作坊</option>
-          <option value="community">社區服務</option>
-          <option value="event-setup">活動籌備</option>
-          <option value="admin">行政支援</option>
-          <option value="other">其他</option>
-        </select>
+      <div class="btn-group" style="margin-top:8px;">
+        <button type="submit" name="type" value="in" class="btn btn-primary" id="btn-clockin">🟢 Clock In</button>
+        <button type="submit" name="type" value="out" class="btn btn-secondary" id="btn-clockout">🔴 Clock Out</button>
       </div>
-
-      <div class="form-group">
-        <div class="label-row">
-          <label>服務時數 (小時) <span class="required">*</span></label>
-        </div>
-        <input type="number" id="hours" name="hours" required min="0.5" max="24" step="0.5" />
-      </div>
-
-      <div class="form-group">
-        <div class="label-row">
-          <label>備註</label>
-          <span class="char-counter"><span id="noteCount">0</span>/200</span>
-        </div>
-        <textarea id="notes" name="notes" maxlength="200" placeholder="任何補充說明 (可選)"></textarea>
-      </div>
-
-      <button type="submit" class="btn btn-primary" id="submitBtn">
-        提交簽到
-      </button>
     </form>
   </section>
+
+  <!-- ┌── PERSONAL STATS ──────────────────────────────────────────────┐ -->
+  <section class="stats-card">
+    <h2 class="card-title">你的統計</h2>
+    <div class="stats-grid">
+      <div class="stat-box">
+        <div class="stat-value" id="user-month-hours">0</div>
+        <div class="stat-label">本月時數</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value" id="user-total-hours">0</div>
+        <div class="stat-label">總時數</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value" id="user-checkins">0</div>
+        <div class="stat-label">簽到次數</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value" id="user-rank">-</div>
+        <div class="stat-label">本月排名</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ┌── HISTORY ──────────────────────────────────────────────┐ -->
+  <section class="history-card">
+    <h2 class="card-title">最近記錄</h2>
+    <ul class="history-list" id="history-list">
+      <li class="history-item">
+        <span class="history-date">2026-02-28 · 簽退</span>
+        <span class="history-hours">+3.5小時</span>
+      </li>
+      <li class="history-item">
+        <span class="history-date">2026-02-28 · 簽到</span>
+        <span class="history-hours">開始</span>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ┌── VOLUNTEER REGISTRATION ───────────────────────────────────┐ -->
+  <section class="checkin-card" id="volunteer-reg-section">
+    <h2 class="card-title">🙋 義工報名</h2>
+    <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:14px;">有興趣加入義工團隊？填寫以下表格，我們會盡快聯絡你！</p>
+    <form id="volunteer-reg-form">
+      <div class="form-group">
+        <label for="reg-name">姓名 *</label>
+        <input type="text" id="reg-name" name="name" required placeholder="你的全名">
+      </div>
+      <div class="form-group">
+        <label for="reg-email">電郵 *</label>
+        <input type="email" id="reg-email" name="email" required placeholder="your@email.com">
+      </div>
+      <div class="form-group">
+        <label for="reg-phone">電話 (選填)</label>
+        <input type="tel" id="reg-phone" name="phone" placeholder="+44 ...">
+      </div>
+      <div class="form-group">
+        <label for="reg-message">自我介紹 / 備註 (選填)</label>
+        <textarea id="reg-message" name="message" placeholder="簡單介紹自己，或你有興趣參與的義工類型..."></textarea>
+      </div>
+      <div class="btn-group">
+        <button type="submit" class="btn btn-primary">📩 提交報名</button>
+      </div>
+    </form>
+  </section>
+
 </div>
 
-<footer>
-  © 2026 Salford Hongkongers · 義工管理系統
-</footer>
+<!-- ┌── MODAL ──────────────────────────────────────────────┐ -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <div class="modal-title" id="modal-title">成功!</div>
+    <div class="modal-message" id="modal-message">你的簽到已記錄。</div>
+    <button class="modal-btn" onclick="closeModal()">確定</button>
+  </div>
+</div>
 
 <script>
-// ═══════════════════════════════════════════════════════════════════════════════
-// CONFIG
-// ═══════════════════════════════════════════════════════════════════════════════
-const SHEET_URL = 'https://script.google.com/macros/s/AKfycbxN__-ft7ZZ3bIYDRBPL6lsSG-UyzA5PRSQWDh_r1HhJBDhYoqrXnRgxDWIiCCVcfNnKA/exec';
+// ┌──────────────────────────────────────────────────────────────┐
+// │ CONFIG                                                        │
+// └──────────────────────────────────────────────────────────────┘
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxN__-ft7ZZ3bIYDRBPL6lsSG-UyzA5PRSQWDh_r1HhJBDhYoqrXnRgxDWIiCCVcfNnKA/exec';
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// NAV TIME
-// ═══════════════════════════════════════════════════════════════════════════════
-function updateTime() {
+// ┌──────────────────────────────────────────────────────────────┐
+// │ CLOCK                                                         │
+// └──────────────────────────────────────────────────────────────┘
+function updateClock() {
   const now = new Date();
-  const hh = String(now.getHours()).padStart(2, '0');
-  const mm = String(now.getMinutes()).padStart(2, '0');
-  const ss = String(now.getSeconds()).padStart(2, '0');
-  document.getElementById('navTime').textContent = `${hh}:${mm}:${ss}`;
+  const h = String(now.getHours()).padStart(2,'0');
+  const m = String(now.getMinutes()).padStart(2,'0');
+  document.getElementById('nav-time').textContent = `${h}:${m}`;
 }
-setInterval(updateTime, 1000);
-updateTime();
+setInterval(updateClock, 1000);
+updateClock();
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// LEADERBOARD
-// ═══════════════════════════════════════════════════════════════════════════════
+// ┌──────────────────────────────────────────────────────────────┐
+// │ MONTH DISPLAY                                                 │
+// └──────────────────────────────────────────────────────────────┘
+function updateMonthDisplay() {
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = now.getMonth() + 1;
+  document.getElementById('lb-month-display').textContent = `${y}年${m}月`;
+}
+updateMonthDisplay();
+
+// ┌──────────────────────────────────────────────────────────────┐
+// │ FORM SUBMIT — GET request with query params                   │
+// └──────────────────────────────────────────────────────────────┘
+document.getElementById('checkin-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const nameEl = document.getElementById('volunteer-name');
+  const name = nameEl ? nameEl.value.trim() : '';
+  const type = e.submitter ? e.submitter.value : '';
+
+  if (!name) {
+    showModal('錯誤', '請輸入你的姓名。');
+    nameEl.focus();
+    return;
+  }
+  if (!type) {
+    showModal('錯誤', '請按 Clock In 或 Clock Out。');
+    return;
+  }
+
+  // Save name
+  localStorage.setItem('volunteer-name', name);
+
+  const now = new Date();
+  const date = now.toISOString().slice(0, 10);
+  const time = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+
+  const params = new URLSearchParams({ action: 'checkin', name, type, date, time });
+
+  try {
+    const response = await fetch(`${SCRIPT_URL}?${params}`);
+    if (!response.ok) throw new Error('Network error');
+    const result = await response.json();
+
+    if (result.ok) {
+      showModal('成功!', result.message || '你的記錄已提交。');
+      loadLeaderboard();
+    } else {
+      showModal('錯誤', result.error || '提交失敗，請稍後再試。');
+    }
+  } catch (err) {
+    console.error('Error:', err);
+    showModal('錯誤', '無法連接到伺服器，請檢查網絡連接。');
+  }
+});
+
+// ┌──────────────────────────────────────────────────────────────┐
+// │ MODAL                                                         │
+// └──────────────────────────────────────────────────────────────┘
+function showModal(title, message) {
+  document.getElementById('modal-title').textContent = title;
+  document.getElementById('modal-message').textContent = message;
+  document.getElementById('modal-overlay').classList.add('active');
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('active');
+}
+
+// ┌──────────────────────────────────────────────────────────────┐
+// │ LOAD LEADERBOARD                                              │
+// └──────────────────────────────────────────────────────────────┘
 async function loadLeaderboard() {
   try {
-    const resp = await fetch(`${SHEET_URL}?action=leaderboard`);
+    const resp = await fetch(`${SCRIPT_URL}?action=leaderboard`);
     if (!resp.ok) throw new Error('Network error');
     const data = await resp.json();
 
     // Month display
-    const monthEl = document.getElementById('lbMonth');
     if (data.month) {
-      monthEl.textContent = data.month;
+      const [y, m] = data.month.split('-');
+      document.getElementById('lb-month-display').textContent = `${y}年${parseInt(m)}月`;
     }
 
-    // Render list (Code.gs returns top3, not leaderboard)
-    const listEl = document.getElementById('lbList');
-    const entries = data.top3 || data.leaderboard || [];
+    // Render top3
+    const listEl = document.getElementById('leaderboard-list');
+    const entries = data.top3 || [];
     if (entries.length === 0) {
-      listEl.innerHTML = '<li style="text-align:center; color:var(--text-muted); padding:20px;">暫無記錄</li>';
+      listEl.innerHTML = '<li style="text-align:center;color:rgba(255,255,255,0.4);padding:12px;">本月暫無記錄</li>';
       return;
     }
-
-    const medals = ['gold', 'silver', 'bronze'];
-    listEl.innerHTML = entries
-      .map((item, i) => {
-        const rank = i + 1;
-        const cls = medals[i] || '';
-        return `
-          <li class="lb-item ${cls}">
-            <div class="lb-rank">${rank}</div>
-            <div class="lb-name">${escapeHtml(item.name)}</div>
-            <div class="lb-score">${item.hours}<span class="lb-unit">h</span></div>
-          </li>
-        `;
-      })
-      .join('');
+    const medals = ['🥇','🥈','🥉'];
+    listEl.innerHTML = entries.map((e, i) => `
+      <li class="lb-item">
+        <span class="lb-rank">${medals[i] || (i+1)}</span>
+        <span class="lb-name">${e.name}</span>
+        <span class="lb-hours">${e.hours}h</span>
+      </li>`).join('');
   } catch (err) {
-    console.error('Failed to load leaderboard:', err);
-    document.getElementById('lbList').innerHTML =
-      '<li style="text-align:center; color:var(--pink); padding:20px;">載入失敗</li>';
+    console.error('Leaderboard error:', err);
   }
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// FORM
-// ═══════════════════════════════════════════════════════════════════════════════
-const form = document.getElementById('checkinForm');
-const messageEl = document.getElementById('message');
-const submitBtn = document.getElementById('submitBtn');
-const notesField = document.getElementById('notes');
-const noteCounter = document.getElementById('noteCount');
-
-// Character counter
-notesField.addEventListener('input', () => {
-  noteCounter.textContent = notesField.value.length;
-});
-
-form.addEventListener('submit', async (e) => {
+// ┌──────────────────────────────────────────────────────────────┐
+// │ VOLUNTEER REGISTRATION FORM SUBMIT                            │
+// └──────────────────────────────────────────────────────────────┘
+document.getElementById('volunteer-reg-form').addEventListener('submit', async (e) => {
   e.preventDefault();
+  const formData = new FormData(e.target);
+  const params = new URLSearchParams({ action: 'volunteer' });
+  formData.forEach((v, k) => params.set(k, v));
 
-  // Collect data
-  const formData = new FormData(form);
-  const payload = {
-    action: 'checkin',
-    name: formData.get('name').trim(),
-    event: formData.get('event'),
-    hours: parseFloat(formData.get('hours')),
-    notes: formData.get('notes').trim()
-  };
-
-  // Validation
-  if (!payload.name) {
-    showMessage('請輸入姓名', 'error');
-    return;
-  }
-  if (!payload.event) {
-    showMessage('請選擇活動', 'error');
-    return;
-  }
-  if (!payload.hours || payload.hours < 0.5) {
-    showMessage('服務時數至少 0.5 小時', 'error');
-    return;
-  }
-
-  // Submit
-  submitBtn.disabled = true;
-  submitBtn.textContent = '提交中...';
+  const btn = e.target.querySelector('button[type="submit"]');
+  btn.disabled = true;
+  btn.textContent = '提交中...';
 
   try {
-    const resp = await fetch(SHEET_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-
-    if (!resp.ok) throw new Error('Server error');
-
+    const resp = await fetch(`${SCRIPT_URL}?${params}`);
+    if (!resp.ok) throw new Error('Network error');
     const result = await resp.json();
-    if (result.status === 'success') {
-      showMessage('✓ 簽到成功！感謝您的付出', 'success');
-      form.reset();
-      noteCounter.textContent = '0';
-      // Reload leaderboard
-      setTimeout(() => loadLeaderboard(), 500);
+    if (result.ok) {
+      showModal('多謝報名！', result.message || '我們已收到你的申請，將盡快聯絡你。');
+      e.target.reset();
     } else {
-      showMessage(result.message || '提交失敗', 'error');
+      showModal('錯誤', result.error || '提交失敗，請稍後再試。');
     }
   } catch (err) {
-    console.error('Submit error:', err);
-    showMessage('網絡錯誤，請稍後再試', 'error');
+    console.error('Reg error:', err);
+    showModal('錯誤', '無法連接到伺服器，請檢查網絡連接。');
   } finally {
-    submitBtn.disabled = false;
-    submitBtn.textContent = '提交簽到';
+    btn.disabled = false;
+    btn.textContent = '📩 提交報名';
   }
 });
 
-function showMessage(text, type) {
-  messageEl.textContent = text;
-  messageEl.className = `message ${type} show`;
-  setTimeout(() => messageEl.classList.remove('show'), 5000);
-}
-
-function escapeHtml(str) {
-  const div = document.createElement('div');
-  div.textContent = str;
-  return div.innerHTML;
-}
-
-// ═══════════════════════════════════════════════════════════════════════════════
-// INIT
-// ═══════════════════════════════════════════════════════════════════════════════
-loadLeaderboard();
+// ┌──────────────────────────────────────────────────────────────┐
+// │ INIT                                                          │
+// └──────────────────────────────────────────────────────────────┘
+window.addEventListener('DOMContentLoaded', () => {
+  const savedName = localStorage.getItem('volunteer-name');
+  if (savedName) {
+    const nameEl = document.getElementById('volunteer-name');
+    if (nameEl) nameEl.value = savedName;
+  }
+  loadLeaderboard();
+});
 </script>
 
 </body>
