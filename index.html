@@ -696,6 +696,31 @@ a.contact-value:hover { color: var(--pink); }
   .hero-subtitle { font-size: 15px; max-width: 420px; }
   .stat-num { font-size: 28px; }
 }
+
+/* ---- ENQUIRY FORM ---- */
+#enquiry-card .form-group { margin-bottom: 14px; }
+#enquiry-card .form-label { display:block; font-size:13px; color:rgba(255,255,255,0.7); margin-bottom:6px; }
+#enquiry-card .form-input {
+  width:100%; padding:11px 14px; border-radius:10px;
+  background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.15);
+  color:#fff; font-size:14px; box-sizing:border-box;
+  transition:border-color 0.2s, box-shadow 0.2s;
+}
+#enquiry-card .form-input:focus {
+  outline:none; border-color:var(--pink);
+  box-shadow:0 0 12px rgba(255,45,120,0.25);
+}
+#enquiry-card select.form-input option { background:#1a1a2e; color:#fff; }
+#enquiry-card .submit-btn {
+  width:100%; padding:13px; border-radius:10px; border:none; cursor:pointer;
+  background:linear-gradient(135deg, var(--pink), var(--purple));
+  color:#fff; font-size:15px; font-weight:700;
+  box-shadow:0 0 18px rgba(255,45,120,0.35);
+  transition:opacity 0.2s, transform 0.2s;
+}
+#enquiry-card .submit-btn:hover { opacity:0.9; transform:translateY(-1px); }
+#enquiry-card .submit-btn:disabled { opacity:0.5; cursor:not-allowed; transform:none; }
+
 </style>
 </head>
 <body>
@@ -1025,6 +1050,47 @@ a.contact-value:hover { color: var(--pink); }
       </a>
 </div>
 
+<div class="section-card" id="enquiry-card">
+<h3 class="section-title">📬 查詢</h3>
+<p class="body-text" style="margin-bottom:16px;">有任何問題？填寫下方表格，我們會盡快回覆。</p>
+<form id="enquiry-form" onsubmit="submitEnquiry(event)">
+  <div class="form-group">
+    <label class="form-label">姓名 <span style="color:var(--pink)">*</span></label>
+    <input class="form-input" id="enq-name" placeholder="你的姓名" required type="text"/>
+  </div>
+  <div class="form-group">
+    <label class="form-label">電話</label>
+    <input class="form-input" id="enq-phone" placeholder="（選填）" type="tel"/>
+  </div>
+  <div class="form-group">
+    <label class="form-label">電郵 <span style="color:var(--pink)">*</span></label>
+    <input class="form-input" id="enq-email" placeholder="your@email.com" required type="email"/>
+  </div>
+  <div class="form-group">
+    <label class="form-label">查詢類別</label>
+    <select class="form-input" id="enq-category">
+      <option value="">-- 請選擇 --</option>
+      <option value="活動查詢">活動查詢</option>
+      <option value="義工報名">義工報名</option>
+      <option value="合作洽談">合作洽談</option>
+      <option value="傳媒查詢">傳媒查詢</option>
+      <option value="一般查詢">一般查詢</option>
+      <option value="其他">其他</option>
+    </select>
+  </div>
+  <div class="form-group">
+    <label class="form-label">主題</label>
+    <input class="form-input" id="enq-subject" placeholder="查詢主題（選填）" type="text"/>
+  </div>
+  <div class="form-group">
+    <label class="form-label">內容 <span style="color:var(--pink)">*</span></label>
+    <textarea class="form-input" id="enq-message" placeholder="請詳述你的查詢..." required rows="5" style="resize:vertical;min-height:120px;"></textarea>
+  </div>
+  <button class="submit-btn" id="enq-submit" type="submit">發送查詢</button>
+  <div id="enq-feedback" style="display:none;margin-top:14px;padding:12px 16px;border-radius:10px;font-size:14px;font-weight:600;text-align:center;"></div>
+</form>
+</div>
+
 </section>
 </main>
 <!-- BOTTOM NAV -->
@@ -1056,6 +1122,43 @@ a.contact-value:hover { color: var(--pink); }
 </nav>
 <script>
 // ===== NAVIGATION =====
+
+// ===== ENQUIRY FORM =====
+async function submitEnquiry(e) {
+  e.preventDefault();
+  const btn = document.getElementById('enq-submit');
+  const feedback = document.getElementById('enq-feedback');
+  const name = document.getElementById('enq-name').value.trim();
+  const phone = document.getElementById('enq-phone').value.trim();
+  const email = document.getElementById('enq-email').value.trim();
+  const category = document.getElementById('enq-category').value;
+  const subject = document.getElementById('enq-subject').value.trim();
+  const message = document.getElementById('enq-message').value.trim();
+  btn.disabled = true;
+  btn.textContent = '發送中...';
+  feedback.style.display = 'none';
+  try {
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw-r-F6eWI63ggpZPUCHH5v-LoSqiT1Jkm9dJyvMnv81Z9m1iyWyMX5dFoMimgiyqwu/exec';
+    const params = new URLSearchParams({ action:'enquiry', name, phone, email, category, subject, message });
+    await fetch(SCRIPT_URL + '?' + params.toString(), { method:'GET', mode:'no-cors' });
+    feedback.style.display = 'block';
+    feedback.style.background = 'rgba(57,255,20,0.15)';
+    feedback.style.border = '1px solid rgba(57,255,20,0.4)';
+    feedback.style.color = '#39ff14';
+    feedback.textContent = '✅ 查詢已送出！我們會盡快聯絡你。';
+    document.getElementById('enquiry-form').reset();
+  } catch(err) {
+    feedback.style.display = 'block';
+    feedback.style.background = 'rgba(255,45,120,0.15)';
+    feedback.style.border = '1px solid rgba(255,45,120,0.4)';
+    feedback.style.color = 'var(--pink)';
+    feedback.textContent = '❌ 發送失敗，請稍後再試或直接 WhatsApp 聯絡我們。';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '發送查詢';
+  }
+}
+
 function showPage(pageId) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   const target = document.getElementById('page-' + pageId);
