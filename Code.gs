@@ -30,15 +30,13 @@ function getSpreadsheet() {
   var props = PropertiesService.getScriptProperties();
   var id    = props.getProperty("SPREADSHEET_ID");
 
-  if (id) {
-    try { return SpreadsheetApp.openById(id); } catch (e) { /* fall through to create */ }
+  // Fallback to known ID if property missing
+  if (!id) {
+    id = "12F_XnrzRgXe0bCWuK2XloMnkALIxsUJdHm-17kSqdeE";
+    props.setProperty("SPREADSHEET_ID", id);
   }
 
-  // First run: create a new spreadsheet in the script owner's Drive
-  var ss = SpreadsheetApp.create("Salford Hongkongers — Form Responses");
-  props.setProperty("SPREADSHEET_ID", ss.getId());
-  Logger.log("Created new spreadsheet: " + ss.getUrl());
-  return ss;
+  return SpreadsheetApp.openById(id);
 }
 
 // ━━ Shared style constants ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
