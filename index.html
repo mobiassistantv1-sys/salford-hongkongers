@@ -560,6 +560,15 @@ a.contact-value:hover { color: var(--pink); }
   border: 1px solid var(--glass-border);
 }
 .social-btn:hover { opacity: 0.9; transform: translateY(-2px); }
+.wa-channel-btn {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  width: 100%; padding: 14px 20px; border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, rgba(37,211,102,0.25), rgba(18,140,126,0.25));
+  border: 1px solid rgba(37,211,102,0.4);
+  color: #25D366; font-size: 15px; font-weight: 600;
+  text-decoration: none; transition: all 0.2s; cursor: pointer;
+}
+.wa-channel-btn:hover { background: linear-gradient(135deg, rgba(37,211,102,0.4), rgba(18,140,126,0.4)); box-shadow: 0 0 20px rgba(37,211,102,0.3); transform: translateY(-1px); }
 .social-btn svg { width: 20px; height: 20px; flex-shrink: 0; }
 .social-btn.whatsapp {
   background: rgba(37,211,102,0.15);
@@ -980,10 +989,7 @@ a.contact-value:hover { color: var(--pink); }
         </div>
         <div style="flex:1;">
           <div class="contact-label">WhatsApp</div>
-          <div class="wa-reveal-wrap" onclick="revealPhone(this)">
-            <span class="wa-hidden-num" data-phone="+4407999338006">+44 07*** ******</span>
-            <button class="wa-reveal-btn">顯示號碼</button>
-          </div>
+          <div class="contact-value" style="color:var(--text-muted);font-size:13px;">salfordhongkongers</div>
         </div>
       </div>
       <!-- Gmail -->
@@ -1012,14 +1018,6 @@ a.contact-value:hover { color: var(--pink); }
           <div class="contact-value">Salford, Greater Manchester, UK</div>
         </div>
       </div>
-      <!-- Web -->
-      <div class="contact-item">
-        <div class="contact-icon icon-web">🌐</div>
-        <div>
-          <div class="contact-label">網站</div>
-          <a href="https://hkers.org.uk/salford_hongkongers/" target="_blank" class="contact-value">hkers.org.uk/salford_hongkongers</a>
-        </div>
-      </div>
     </div>
 
     <div class="section-card">
@@ -1042,6 +1040,17 @@ a.contact-value:hover { color: var(--pink); }
     </div>
 
     <div class="section-card">
+      <h3 class="section-title">WhatsApp 頻道</h3>
+      <p class="body-text" style="margin-bottom:14px;">追蹤我們的 WhatsApp 頻道，接收最新活動資訊及公告。</p>
+      <a href="https://whatsapp.com/channel/0029VaSj6Bk8kyyHDVnHkx2E" target="_blank" class="wa-channel-btn">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width:22px;height:22px;flex-shrink:0;">
+          <path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.975-1.418A9.956 9.956 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18a7.958 7.958 0 01-4.078-1.117l-.292-.174-3.033.866.855-3.121-.19-.302A7.958 7.958 0 014 12c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8zm4.406-5.924c-.242-.121-1.432-.707-1.654-.787-.222-.08-.384-.121-.545.121-.162.242-.626.787-.768.95-.14.161-.282.18-.524.06-.242-.121-1.022-.377-1.947-1.2-.72-.641-1.205-1.434-1.346-1.676-.14-.242-.015-.373.106-.493.109-.108.242-.282.363-.423.12-.141.161-.242.242-.404.08-.161.04-.302-.02-.423-.061-.12-.545-1.314-.747-1.8-.196-.472-.396-.408-.545-.416-.14-.007-.302-.009-.464-.009s-.423.06-.645.302c-.222.242-.847.828-.847 2.02s.867 2.342.988 2.503c.121.161 1.706 2.606 4.134 3.654.578.25 1.028.399 1.38.51.58.184 1.107.158 1.524.096.465-.069 1.432-.586 1.634-1.152.201-.565.201-1.05.14-1.152-.06-.101-.222-.161-.464-.282z" fill="#fff"/>
+        </svg>
+        追蹤「Salford HongKongers」頻道
+      </a>
+    </div>
+
+    <div class="section-card">
       <h3 class="section-title">公司資料</h3>
       <p class="body-text">公司名稱：Salford Hongkongers CIC</p>
       <p class="body-text">公司編號：13877472</p>
@@ -1049,16 +1058,6 @@ a.contact-value:hover { color: var(--pink); }
       <p class="body-text">性質：Community Interest Company (CIC)</p>
     </div>
 
-    <div class="section-card">
-      <h3 class="section-title">常用活動地點</h3>
-      <div class="venue-list">
-        <div class="venue-item">📍 Old Pint Pot, Adelphi Street, Salford M3 6EN</div>
-        <div class="venue-item">📍 JFFI, Lord Byron Square M50 2XH</div>
-        <div class="venue-item">📍 Agnes Hopkins Community Centre, Swinton</div>
-        <div class="venue-item">📍 Kargo MKT, Quayside MediaCity</div>
-        <div class="venue-item">📍 People's History Museum, Manchester</div>
-      </div>
-    </div>
   </section>
 
 </main>
