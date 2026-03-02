@@ -621,15 +621,22 @@ a.contact-value:hover { color: var(--pink); }
 
 /* ===== BOTTOM NAV ===== */
 .bottom-nav {
-  position: fixed; bottom: 0; left: 0; right: 0;
+  position: fixed !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
   height: var(--bottom-nav-h);
-  background: rgba(15,15,26,0.88);
+  background: rgba(15,15,26,0.95);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  display: flex;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: space-around !important;
   border-top: 1px solid rgba(255,45,120,0.3);
   box-shadow: 0 -4px 20px rgba(255,45,120,0.08);
-  z-index: 100;
+  z-index: 9999 !important;
   padding-bottom: env(safe-area-inset-bottom);
 }
 .bottom-btn {
