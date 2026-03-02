@@ -1221,31 +1221,43 @@ async function submitEnquiry(e) {
   e.preventDefault();
   const btn = document.getElementById('enq-submit');
   const feedback = document.getElementById('enq-feedback');
-  const name = document.getElementById('enq-name').value.trim();
-  const phone = document.getElementById('enq-phone').value.trim();
-  const email = document.getElementById('enq-email').value.trim();
-  const category = document.getElementById('enq-category').value;
-  const subject = document.getElementById('enq-subject').value.trim();
-  const message = document.getElementById('enq-message').value.trim();
+
   btn.disabled = true;
   btn.textContent = '發送中...';
-  feedback.style.display = 'none';
+
+  const data = {
+    formType: 'enquiry',
+    name: document.getElementById('enq-name').value.trim(),
+    phone: document.getElementById('enq-phone').value.trim(),
+    email: document.getElementById('enq-email').value.trim(),
+    category: document.getElementById('enq-category').value,
+    subject: document.getElementById('enq-subject').value.trim(),
+    message: document.getElementById('enq-message').value.trim()
+  };
+
   try {
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw-r-F6eWI63ggpZPUCHH5v-LoSqiT1Jkm9dJyvMnv81Z9m1iyWyMX5dFoMimgiyqwu/exec';
-    const params = new URLSearchParams({ action:'enquiry', name, phone, email, category, subject, message });
-    await fetch(SCRIPT_URL + '?' + params.toString(), { method:'GET', mode:'no-cors' });
+    await fetch('https://script.google.com/macros/s/AKfycbyU6W8W3vm5R7TGd4A9t2qD3NZp5NI3PaXyptlBiiJawL_SK7LcZqfkX1v4wU-nenw/exec', {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data)
+    });
+
+    // Success feedback
     feedback.style.display = 'block';
     feedback.style.background = 'rgba(57,255,20,0.15)';
     feedback.style.border = '1px solid rgba(57,255,20,0.4)';
     feedback.style.color = '#39ff14';
-    feedback.textContent = '<span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ff2d78" stroke-width="1.8" filter="url(#glow-pink)"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22,4 12,14.01 9,11.01"/></svg></span> 查詢已送出！我們會盡快聯絡你。';
+    feedback.textContent = '查詢已送出！我們會盡快聯絡你。';
     document.getElementById('enquiry-form').reset();
   } catch(err) {
+    // Error feedback
     feedback.style.display = 'block';
     feedback.style.background = 'rgba(255,45,120,0.15)';
     feedback.style.border = '1px solid rgba(255,45,120,0.4)';
     feedback.style.color = 'var(--pink)';
-    feedback.textContent = '<span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#bf5fff" stroke-width="1.8" filter="url(#glow-purple)"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg></span> 發送失敗，請稍後再試或直接 WhatsApp 聯絡我們。';
+    feedback.textContent = '提交失敗，請再試一次，或直接電郵至 salfordhongkongers@gmail.com';
+    console.error('Enquiry submission error:', err);
   } finally {
     btn.disabled = false;
     btn.textContent = '發送查詢';
@@ -1293,40 +1305,34 @@ const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbynCMHUlp-5AVsm
 
 async function submitForm(e) {
   e.preventDefault();
+  const form = document.getElementById('registerForm');
   const submitBtn = document.querySelector('.btn-submit');
   const isEn = document.documentElement.lang === 'en';
 
-  const data = {
-    event:     document.getElementById('eventSelect').value,
-    name:      document.getElementById('fullName').value,
-    email:     document.getElementById('email').value,
-    phone:     document.getElementById('phone').value,
-    attendees: document.getElementById('attendees').value,
-    newcomer:  document.querySelector('input[name="newcomer"]:checked')?.value || '未說明',
-    notes:     document.getElementById('notes').value,
-    timestamp: new Date().toISOString()
-  };
-
-  // Save to localStorage as backup
-  const submissions = JSON.parse(localStorage.getItem('shk_registrations') || '[]');
-  submissions.push(data);
-  localStorage.setItem('shk_registrations', JSON.stringify(submissions));
-
-  // Disable button and show loading state
   submitBtn.disabled = true;
   submitBtn.textContent = isEn ? 'Submitting...' : '提交中...';
 
-  try {
-    const formData = new FormData();
-    Object.entries(data).forEach(([k, v]) => formData.append(k, v));
+  const data = {
+    formType: 'registration',
+    eventName: document.getElementById('eventSelect').value,
+    fullName: document.getElementById('fullName').value,
+    email: document.getElementById('email').value,
+    phone: document.getElementById('phone').value,
+    attendees: document.getElementById('attendees').value,
+    newcomer: document.querySelector('input[name="newcomer"]:checked')?.value || '',
+    notes: document.getElementById('notes')?.value || '',
+    consent: document.getElementById('consent')?.checked || false
+  };
 
-    await fetch(APPS_SCRIPT_URL, {
+  try {
+    await fetch('https://script.google.com/macros/s/AKfycbyU6W8W3vm5R7TGd4A9t2qD3NZp5NI3PaXyptlBiiJawL_SK7LcZqfkX1v4wU-nenw/exec', {
       method: 'POST',
-      body: formData,
-      mode: 'no-cors'
+      mode: 'no-cors',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data)
     });
 
-    // mode: no-cors means we can't read response body, but no thrown error = success
+    // Success - hide form and show success message
     document.getElementById('registerForm').classList.add('hidden');
     document.getElementById('successMsg').classList.remove('hidden');
   } catch (err) {
