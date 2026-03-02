@@ -68,7 +68,7 @@ nav .back-btn:hover { color: var(--pink); }
   max-width: 480px; margin: 0 auto; width: 100%;
 }
 
-/* ┌── LEADERBOARD ──────────────────────────────────────────────┐ */
+/* ┌── LEADERBOARD ─────────────────────────────────────────┐ */
 .leaderboard {
   background: linear-gradient(135deg, rgba(255,215,0,0.08), rgba(180,79,255,0.08));
   border: 1px solid rgba(255,215,0,0.25);
@@ -107,632 +107,563 @@ nav .back-btn:hover { color: var(--pink); }
   border-radius: 12px;
   position: relative;
   overflow: hidden;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  transition: transform 0.2s, box-shadow 0.2s;
 }
-.lb-item::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
-  border-radius: 12px;
+.lb-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255,215,0,0.12);
 }
-.lb-item:nth-child(1)::before { border-color: var(--gold); box-shadow: 0 0 12px rgba(255,215,0,0.2); }
-.lb-item:nth-child(2)::before { border-color: var(--silver); }
-.lb-item:nth-child(3)::before { border-color: var(--bronze); }
+.lb-item.top-1 {
+  background: linear-gradient(135deg, rgba(255,215,0,0.12), rgba(255,215,0,0.05));
+  border-color: var(--gold);
+  box-shadow: 0 0 14px rgba(255,215,0,0.15);
+}
+.lb-item.top-2 {
+  background: linear-gradient(135deg, rgba(192,192,192,0.1), rgba(192,192,192,0.03));
+  border-color: var(--silver);
+}
+.lb-item.top-3 {
+  background: linear-gradient(135deg, rgba(205,127,50,0.1), rgba(205,127,50,0.03));
+  border-color: var(--bronze);
+}
 
 .lb-rank {
-  position: relative;
-  width: 36px; height: 36px;
-  display: flex; align-items: center; justify-content: center;
-  font-weight: 900;
-  font-size: 1rem;
+  font-size: 1.3rem; font-weight: 900; width: 40px;
+  text-align: center; line-height: 1;
   flex-shrink: 0;
-  border-radius: 8px;
 }
-.lb-item:nth-child(1) .lb-rank { color: var(--gold); text-shadow: 0 0 10px var(--gold); background: rgba(255,215,0,0.15); }
-.lb-item:nth-child(2) .lb-rank { color: var(--silver); text-shadow: 0 0 8px var(--silver); background: rgba(192,192,192,0.12); }
-.lb-item:nth-child(3) .lb-rank { color: var(--bronze); text-shadow: 0 0 8px var(--bronze); background: rgba(205,127,50,0.12); }
+.lb-item.top-1 .lb-rank {
+  color: var(--gold);
+  text-shadow: 0 0 8px var(--gold), 0 0 14px rgba(255,215,0,0.4);
+  filter: drop-shadow(0 2px 4px rgba(255,215,0,0.3));
+}
+.lb-item.top-2 .lb-rank {
+  color: var(--silver);
+  text-shadow: 0 0 8px var(--silver);
+}
+.lb-item.top-3 .lb-rank {
+  color: var(--bronze);
+  text-shadow: 0 0 8px var(--bronze);
+}
+.lb-rank-badge {
+  font-size: 1.6rem;
+  display: inline-block;
+  filter: drop-shadow(0 2px 6px rgba(255,215,0,0.5));
+}
 
-.lb-info {
-  flex: 1;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
 .lb-name {
-  font-weight: 700;
+  flex: 1;
+  font-weight: 600;
   font-size: 0.95rem;
   color: var(--text);
+  letter-spacing: -0.2px;
 }
-.lb-hours {
-  font-size: 0.82rem;
-  color: var(--text-muted);
+.lb-item.top-1 .lb-name { color: var(--gold); font-weight: 700; }
+.lb-item.top-2 .lb-name { color: var(--silver); font-weight: 700; }
+.lb-item.top-3 .lb-name { color: var(--bronze); font-weight: 700; }
+
+.lb-score {
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: var(--text);
   font-variant-numeric: tabular-nums;
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
 }
-
-.lb-badge {
-  position: relative;
-  font-size: 1.3rem;
-  filter: drop-shadow(0 0 6px currentColor);
-  flex-shrink: 0;
+.lb-score-num { font-size: 1.25rem; }
+.lb-score-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
-.lb-item:nth-child(1) .lb-badge { color: var(--gold); }
-.lb-item:nth-child(2) .lb-badge { color: var(--silver); }
-.lb-item:nth-child(3) .lb-badge { color: var(--bronze); }
+.lb-item.top-1 .lb-score { color: var(--gold); }
+.lb-item.top-2 .lb-score { color: var(--silver); }
+.lb-item.top-3 .lb-score { color: var(--bronze); }
 
-/* ┌── CHECK-IN CARD ──────────────────────────────────────────────┐ */
+/* ┌── CHECK-IN CARD ─────────────────────────────────────┐ */
 .checkin-card {
   background: var(--card-bg);
   border: 1px solid var(--card-border);
   border-radius: var(--radius);
-  padding: 24px 18px;
+  padding: 22px 20px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
 }
-
-.card-title {
-  font-size: 1.15rem;
-  font-weight: 800;
-  margin-bottom: 18px;
-  text-align: center;
+.checkin-title {
+  font-size: 1.1rem;
+  font-weight: 700;
   color: var(--text);
+  text-align: center;
+  margin-bottom: 18px;
   letter-spacing: -0.3px;
 }
+.checkin-title .emoji { font-size: 1.3rem; margin-right: 6px; }
 
-.form-group {
+.input-group {
+  display: flex; flex-direction: column; gap: 7px;
   margin-bottom: 16px;
 }
-
 label {
-  display: block;
   font-size: 0.85rem;
   font-weight: 600;
-  margin-bottom: 6px;
   color: var(--text-muted);
   letter-spacing: 0.3px;
 }
-
-input[type="text"],
-input[type="email"],
-input[type="tel"],
-input[type="date"],
-input[type="time"],
-input[type="number"],
-textarea,
-select {
-  width: 100%;
-  padding: 12px 14px;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid var(--card-border);
+input, select {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
   border-radius: 10px;
-  font-size: 0.95rem;
+  padding: 12px 14px;
   color: var(--text);
-  font-family: inherit;
-  transition: all 0.25s;
-}
-
-input:focus,
-textarea:focus,
-select:focus {
+  font-size: 0.95rem;
   outline: none;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+input:focus, select:focus {
+  background: rgba(255,255,255,0.12);
   border-color: var(--pink);
   box-shadow: 0 0 0 3px rgba(255,45,120,0.15);
-  background: rgba(255,255,255,0.05);
 }
-
-textarea {
-  min-height: 80px;
-  resize: vertical;
-}
-
-select {
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23f0f0f0'%3E%3Cpath d='M6 9L1 4h10z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 14px center;
-  padding-right: 40px;
-  cursor: pointer;
-}
-
-option {
+select option {
   background: #1a1a1f;
-  color: var(--text);
-}
-
-/* ┌── BUTTONS ──────────────────────────────────────────────┐ */
-.btn-group {
-  display: flex;
-  gap: 10px;
-  margin-top: 20px;
-}
-
-.btn {
-  flex: 1;
-  padding: 13px 20px;
-  font-size: 0.95rem;
-  font-weight: 700;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: all 0.25s;
-  font-family: inherit;
-  letter-spacing: 0.3px;
+  color: #fff;
 }
 
 .btn-primary {
   background: linear-gradient(135deg, var(--pink), var(--purple));
   color: #fff;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 8px;
+  letter-spacing: 0.5px;
+  transition: all 0.3s;
   box-shadow: 0 4px 12px rgba(255,45,120,0.3);
 }
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(255,45,120,0.4);
+  box-shadow: 0 6px 20px rgba(255,45,120,0.5);
 }
 .btn-primary:active {
   transform: translateY(0);
 }
-
-.btn-secondary {
-  background: var(--card-bg);
-  color: var(--text);
-  border: 1px solid var(--card-border);
-}
-.btn-secondary:hover {
-  background: rgba(255,255,255,0.08);
-  border-color: var(--text-muted);
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
 }
 
-/* ┌── STATS CARD ──────────────────────────────────────────────┐ */
-.stats-card {
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
-  border-radius: var(--radius);
-  padding: 20px 18px;
-}
-
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 14px;
-}
-
-.stat-box {
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 12px;
-  padding: 14px 12px;
-  text-align: center;
-}
-
-.stat-value {
-  font-size: 1.8rem;
-  font-weight: 900;
-  color: var(--pink);
-  text-shadow: 0 0 12px rgba(255,45,120,0.4);
-  margin-bottom: 4px;
-  font-variant-numeric: tabular-nums;
-}
-
-.stat-label {
-  font-size: 0.78rem;
-  color: var(--text-muted);
-  font-weight: 600;
-  letter-spacing: 0.5px;
-}
-
-/* ┌── HISTORY ──────────────────────────────────────────────┐ */
+/* ┌── HISTORY LOG ─────────────────────────────────────┐ */
 .history-card {
   background: var(--card-bg);
   border: 1px solid var(--card-border);
   border-radius: var(--radius);
   padding: 20px 18px;
 }
-
-.history-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  list-style: none;
+.history-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 14px;
+  letter-spacing: -0.2px;
 }
-
+.history-list {
+  display: flex; flex-direction: column; gap: 10px;
+  list-style: none;
+  max-height: 320px;
+  overflow-y: auto;
+}
 .history-item {
-  background: rgba(255,255,255,0.03);
+  background: rgba(255,255,255,0.04);
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 10px;
   padding: 12px 14px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  transition: background 0.2s;
 }
-
-.history-date {
-  font-size: 0.85rem;
-  color: var(--text-muted);
+.history-item:hover {
+  background: rgba(255,255,255,0.07);
+}
+.history-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.history-name {
   font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text);
 }
-
-.history-hours {
-  font-size: 0.95rem;
-  font-weight: 800;
+.history-type {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+.history-time {
+  font-size: 0.75rem;
   color: var(--blue);
   font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  text-align: right;
+  text-shadow: 0 0 6px rgba(0,212,255,0.4);
 }
 
-/* ┌── MODAL / ALERT ──────────────────────────────────────────────┐ */
-.modal-overlay {
+/* ┌── TOAST NOTIFICATION ──────────────────────────────┐ */
+.toast {
   position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.75);
-  backdrop-filter: blur(4px);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 200;
-  padding: 20px;
-}
-.modal-overlay.active { display: flex; }
-
-.modal {
-  background: linear-gradient(135deg, rgba(20,20,30,0.98), rgba(15,15,25,0.98));
-  border: 1px solid var(--pink);
-  border-radius: var(--radius);
-  padding: 28px 24px;
-  max-width: 360px;
-  width: 100%;
-  box-shadow: 0 12px 40px rgba(255,45,120,0.3);
-  animation: modalFadeIn 0.25s ease-out;
-}
-
-@keyframes modalFadeIn {
-  from { opacity: 0; transform: scale(0.9); }
-  to { opacity: 1; transform: scale(1); }
-}
-
-.modal-title {
-  font-size: 1.25rem;
-  font-weight: 800;
-  text-align: center;
-  margin-bottom: 12px;
-  color: var(--pink);
-  text-shadow: 0 0 12px rgba(255,45,120,0.5);
-}
-
-.modal-message {
-  text-align: center;
-  font-size: 0.95rem;
-  color: var(--text-muted);
-  margin-bottom: 22px;
-  line-height: 1.5;
-}
-
-.modal-btn {
-  width: 100%;
-  padding: 12px;
-  font-size: 0.95rem;
-  font-weight: 700;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
   background: linear-gradient(135deg, var(--pink), var(--purple));
   color: #fff;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: all 0.25s;
-  box-shadow: 0 4px 12px rgba(255,45,120,0.3);
+  padding: 14px 24px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  box-shadow: 0 6px 24px rgba(255,45,120,0.4);
+  z-index: 999;
+  opacity: 0;
+  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+  pointer-events: none;
+  max-width: 90%;
+  text-align: center;
 }
-.modal-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(255,45,120,0.4);
-}
-
-/* ┌── RESPONSIVE ──────────────────────────────────────────────┐ */
-@media (max-width: 380px) {
-  .page { padding: 16px 12px 32px; }
-  .card-title { font-size: 1.05rem; }
-  .btn-group { flex-direction: column; }
-  .stats-grid { grid-template-columns: 1fr; }
+.toast.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
 }
 </style>
 </head>
 <body>
 
 <nav>
-  <div class="logo">Salford <span>HKers</span></div>
+  <a class="back-btn" href="index.html">
+    <span>←</span> 返回主頁
+  </a>
+  <div class="logo">Salford<span>HK</span></div>
   <div class="nav-time" id="nav-time">00:00</div>
-  <a href="index.html" class="back-btn">← 返回主頁</a>
 </nav>
 
 <div class="page">
-
-  <!-- ┌── LEADERBOARD ──────────────────────────────────────────────┐ -->
-  <section class="leaderboard">
+  <!-- ┌── LEADERBOARD ──────────────────────────────┐ -->
+  <div class="leaderboard">
     <div class="lb-header">
-      🏆 義工時數排行榜
-      <span class="lb-month" id="lb-month-display">本月</span>
+      🏆 義工王者榜 🏆
+      <span class="lb-month" id="lb-month">本月數據</span>
     </div>
-    <ul class="lb-list" id="leaderboard-list">
-      <li class="lb-item">
-        <div class="lb-rank">1</div>
-        <div class="lb-info">
-          <div class="lb-name">Max Chan</div>
-          <div class="lb-hours">42.5 小時</div>
-        </div>
-        <div class="lb-badge">🥇</div>
-      </li>
-      <li class="lb-item">
-        <div class="lb-rank">2</div>
-        <div class="lb-info">
-          <div class="lb-name">Emily Wong</div>
-          <div class="lb-hours">38.0 小時</div>
-        </div>
-        <div class="lb-badge">🥈</div>
-      </li>
-      <li class="lb-item">
-        <div class="lb-rank">3</div>
-        <div class="lb-info">
-          <div class="lb-name">Leo Lee</div>
-          <div class="lb-hours">35.5 小時</div>
-        </div>
-        <div class="lb-badge">🥉</div>
-      </li>
+    <ul class="lb-list" id="lb-list">
+      <!-- populated by JS -->
     </ul>
-  </section>
+  </div>
 
-  <!-- ┌── CHECK-IN FORM ──────────────────────────────────────────────┐ -->
-  <section class="checkin-card">
-    <h2 class="card-title">義工簽到 / 簽退</h2>
-
+  <!-- ┌── CHECK-IN CARD ────────────────────────────┐ -->
+  <div class="checkin-card">
+    <div class="checkin-title">
+      <span class="emoji">✅</span>
+      義工堂吉
+    </div>
     <form id="checkin-form">
-      <div class="form-group">
-        <label for="volunteer-name">義工姓名 *</label>
-        <input type="text" id="volunteer-name" name="name" required placeholder="請輸入你的名字">
+      <div class="input-group">
+        <label for="name">姓名</label>
+        <input id="name" name="name" placeholder="請輸入你的名字" required="" type="text"/>
       </div>
-
-      <div class="btn-group" style="margin-top:8px;">
-        <button type="submit" name="type" value="in" class="btn btn-primary" id="btn-clockin">🟢 Clock In</button>
-        <button type="submit" name="type" value="out" class="btn btn-secondary" id="btn-clockout">🔴 Clock Out</button>
+      <div class="input-group">
+        <label for="type">堂吉類別</label>
+        <select id="type" name="type" required="">
+          <option value="">請選擇義工活動類型</option>
+          <option value="活動義工">活動義工 (Event Volunteer)</option>
+          <option value="網站維護">網站維護 (Website Maintenance)</option>
+          <option value="社群管理">社群管理 (Community Management)</option>
+          <option value="內容創作">內容創作 (Content Creation)</option>
+          <option value="活動策劃">活動策劃 (Event Planning)</option>
+          <option value="其他">其他 (Other)</option>
+        </select>
       </div>
+      <button class="btn-primary" type="submit">
+        提交堂吉
+      </button>
     </form>
-  </section>
+  </div>
 
-  <!-- ┌── PERSONAL STATS ──────────────────────────────────────────────┐ -->
-  <section class="stats-card">
-    <h2 class="card-title">你的統計</h2>
-    <div class="stats-grid">
-      <div class="stat-box">
-        <div class="stat-value" id="user-month-hours">0</div>
-        <div class="stat-label">本月時數</div>
-      </div>
-      <div class="stat-box">
-        <div class="stat-value" id="user-total-hours">0</div>
-        <div class="stat-label">總時數</div>
-      </div>
-      <div class="stat-box">
-        <div class="stat-value" id="user-checkins">0</div>
-        <div class="stat-label">簽到次數</div>
-      </div>
-      <div class="stat-box">
-        <div class="stat-value" id="user-rank">-</div>
-        <div class="stat-label">本月排名</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ┌── HISTORY ──────────────────────────────────────────────┐ -->
-  <section class="history-card">
-    <h2 class="card-title">最近記錄</h2>
+  <!-- ┌── HISTORY LOG ──────────────────────────────┐ -->
+  <div class="history-card">
+    <div class="history-title">📋 最近堂吉記錄</div>
     <ul class="history-list" id="history-list">
-      <li class="history-item">
-        <span class="history-date">2026-02-28 · 簽退</span>
-        <span class="history-hours">+3.5小時</span>
-      </li>
-      <li class="history-item">
-        <span class="history-date">2026-02-28 · 簽到</span>
-        <span class="history-hours">開始</span>
-      </li>
+      <!-- populated by JS -->
     </ul>
-  </section>
-
-  <!-- ┌── VOLUNTEER REGISTRATION ───────────────────────────────────┐ -->
-  <section class="checkin-card" id="volunteer-reg-section">
-    <h2 class="card-title">🙋 義工報名</h2>
-    <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:14px;">有興趣加入義工團隊？填寫以下表格，我們會盡快聯絡你！</p>
-    <form id="volunteer-reg-form">
-      <div class="form-group">
-        <label for="reg-name">姓名 *</label>
-        <input type="text" id="reg-name" name="name" required placeholder="你的全名">
-      </div>
-      <div class="form-group">
-        <label for="reg-email">電郵 *</label>
-        <input type="email" id="reg-email" name="email" required placeholder="your@email.com">
-      </div>
-      <div class="form-group">
-        <label for="reg-phone">電話 (選填)</label>
-        <input type="tel" id="reg-phone" name="phone" placeholder="+44 ...">
-      </div>
-      <div class="form-group">
-        <label for="reg-message">自我介紹 / 備註 (選填)</label>
-        <textarea id="reg-message" name="message" placeholder="簡單介紹自己，或你有興趣參與的義工類型..."></textarea>
-      </div>
-      <div class="btn-group">
-        <button type="submit" class="btn btn-primary">📩 提交報名</button>
-      </div>
-    </form>
-  </section>
-
-</div>
-
-<!-- ┌── MODAL ──────────────────────────────────────────────┐ -->
-<div class="modal-overlay" id="modal-overlay">
-  <div class="modal">
-    <div class="modal-title" id="modal-title">成功!</div>
-    <div class="modal-message" id="modal-message">你的簽到已記錄。</div>
-    <button class="modal-btn" onclick="closeModal()">確定</button>
   </div>
 </div>
 
-<script>
-// ┌──────────────────────────────────────────────────────────────┐
-// │ CONFIG                                                        │
-// └──────────────────────────────────────────────────────────────┘
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxN__-ft7ZZ3bIYDRBPL6lsSG-UyzA5PRSQWDh_r1HhJBDhYoqrXnRgxDWIiCCVcfNnKA/exec';
+<div class="toast" id="toast"></div>
 
-// ┌──────────────────────────────────────────────────────────────┐
-// │ CLOCK                                                         │
-// └──────────────────────────────────────────────────────────────┘
+<script>
+// ┌────────────────────────────────────────────────────────────────┐
+// │ CONFIG                                                         │
+// └────────────────────────────────────────────────────────────────┘
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbzcNCWdXG0qh15qgLohEu18Z3VGwJuZ2RYZSDSuNdRXcuP1-t_8Y23bM-F_esFSKk_h/exec';
+const CACHE_KEY_HISTORY = 'shk_volunteer_history';
+const CACHE_KEY_LEADERBOARD = 'shk_volunteer_leaderboard';
+const CACHE_TTL = 5 * 60 * 1000; // 5 min
+
+// ┌────────────────────────────────────────────────────────────────┐
+// │ CLOCK                                                          │
+// └────────────────────────────────────────────────────────────────┘
 function updateClock() {
   const now = new Date();
-  const h = String(now.getHours()).padStart(2,'0');
-  const m = String(now.getMinutes()).padStart(2,'0');
-  document.getElementById('nav-time').textContent = `${h}:${m}`;
+  const hh = String(now.getHours()).padStart(2, '0');
+  const mm = String(now.getMinutes()).padStart(2, '0');
+  document.getElementById('nav-time').textContent = `${hh}:${mm}`;
 }
 setInterval(updateClock, 1000);
 updateClock();
 
-// ┌──────────────────────────────────────────────────────────────┐
-// │ MONTH DISPLAY                                                 │
-// └──────────────────────────────────────────────────────────────┘
+// ┌────────────────────────────────────────────────────────────────┐
+// │ MONTH DISPLAY                                                  │
+// └────────────────────────────────────────────────────────────────┘
 function updateMonthDisplay() {
   const now = new Date();
-  const y = now.getFullYear();
-  const m = now.getMonth() + 1;
-  document.getElementById('lb-month-display').textContent = `${y}年${m}月`;
+  const year = now.getFullYear();
+  const month = now.getMonth() + 1;
+  document.getElementById('lb-month').textContent = `${year}年${month}月數據`;
 }
 updateMonthDisplay();
 
-// ┌──────────────────────────────────────────────────────────────┐
-// │ FORM SUBMIT — GET request with query params                   │
-// └──────────────────────────────────────────────────────────────┘
+// ┌────────────────────────────────────────────────────────────────┐
+// │ CACHE HELPERS                                                  │
+// └────────────────────────────────────────────────────────────────┘
+function getCache(key) {
+  try {
+    const item = localStorage.getItem(key);
+    if (!item) return null;
+    const parsed = JSON.parse(item);
+    if (Date.now() > parsed.expiry) {
+      localStorage.removeItem(key);
+      return null;
+    }
+    return parsed.data;
+  } catch {
+    return null;
+  }
+}
+
+function setCache(key, data) {
+  try {
+    const item = {
+      data: data,
+      expiry: Date.now() + CACHE_TTL
+    };
+    localStorage.setItem(key, JSON.stringify(item));
+  } catch (e) {
+    console.warn('Cache write failed:', e);
+  }
+}
+
+// ┌────────────────────────────────────────────────────────────────┐
+// │ TOAST                                                          │
+// └────────────────────────────────────────────────────────────────┘
+function showToast(message, duration = 3000) {
+  const toast = document.getElementById('toast');
+  toast.textContent = message;
+  toast.classList.add('show');
+  setTimeout(() => {
+    toast.classList.remove('show');
+  }, duration);
+}
+
+// ┌────────────────────────────────────────────────────────────────┐
+// │ LEADERBOARD RENDER                                             │
+// └────────────────────────────────────────────────────────────────┘
+function renderLeaderboard(data) {
+  const list = document.getElementById('lb-list');
+  list.innerHTML = '';
+
+  if (!data || data.length === 0) {
+    list.innerHTML = '<li style="text-align:center;color:var(--text-muted);padding:20px;">暫無數據</li>';
+    return;
+  }
+
+  // Sort by count descending
+  const sorted = [...data].sort((a, b) => b.count - a.count);
+
+  sorted.forEach((item, idx) => {
+    const rank = idx + 1;
+    const li = document.createElement('li');
+    li.className = 'lb-item';
+    if (rank === 1) li.classList.add('top-1');
+    if (rank === 2) li.classList.add('top-2');
+    if (rank === 3) li.classList.add('top-3');
+
+    let rankDisplay = `${rank}`;
+    if (rank === 1) rankDisplay = '<span class="lb-rank-badge">🥇</span>';
+    if (rank === 2) rankDisplay = '<span class="lb-rank-badge">🥈</span>';
+    if (rank === 3) rankDisplay = '<span class="lb-rank-badge">🥉</span>';
+
+    li.innerHTML = `
+      <div class="lb-rank">${rankDisplay}</div>
+      <div class="lb-name">${escapeHtml(item.name)}</div>
+      <div class="lb-score">
+        <span class="lb-score-num">${item.count}</span>
+        <span class="lb-score-label">次</span>
+      </div>
+    `;
+    list.appendChild(li);
+  });
+}
+
+// ┌────────────────────────────────────────────────────────────────┐
+// │ HISTORY RENDER                                                 │
+// └────────────────────────────────────────────────────────────────┘
+function renderHistory(data) {
+  const list = document.getElementById('history-list');
+  list.innerHTML = '';
+
+  if (!data || data.length === 0) {
+    list.innerHTML = '<li style="text-align:center;color:var(--text-muted);padding:20px;">暫無記錄</li>';
+    return;
+  }
+
+  // Show latest 20
+  const recent = data.slice(0, 20);
+  recent.forEach(item => {
+    const li = document.createElement('li');
+    li.className = 'history-item';
+    li.innerHTML = `
+      <div class="history-info">
+        <div class="history-name">${escapeHtml(item.name)}</div>
+        <div class="history-type">${escapeHtml(item.type)}</div>
+      </div>
+      <div class="history-time">${escapeHtml(item.timestamp)}</div>
+    `;
+    list.appendChild(li);
+  });
+}
+
+// ┌────────────────────────────────────────────────────────────────┐
+// │ FETCH LEADERBOARD                                              │
+// └────────────────────────────────────────────────────────────────┘
+async function fetchLeaderboard() {
+  const cached = getCache(CACHE_KEY_LEADERBOARD);
+  if (cached) {
+    renderLeaderboard(cached);
+    return;
+  }
+
+  try {
+    const res = await fetch(`${SHEET_URL}?action=leaderboard&t=${Date.now()}`);
+    const json = await res.json();
+    if (json.status === 'success' && json.data) {
+      setCache(CACHE_KEY_LEADERBOARD, json.data);
+      renderLeaderboard(json.data);
+    } else {
+      console.error('Leaderboard fetch error:', json.message);
+    }
+  } catch (err) {
+    console.error('Leaderboard fetch failed:', err);
+  }
+}
+
+// ┌────────────────────────────────────────────────────────────────┐
+// │ FETCH HISTORY                                                  │
+// └────────────────────────────────────────────────────────────────┘
+async function fetchHistory() {
+  const cached = getCache(CACHE_KEY_HISTORY);
+  if (cached) {
+    renderHistory(cached);
+    return;
+  }
+
+  try {
+    const res = await fetch(`${SHEET_URL}?action=history&t=${Date.now()}`);
+    const json = await res.json();
+    if (json.status === 'success' && json.data) {
+      setCache(CACHE_KEY_HISTORY, json.data);
+      renderHistory(json.data);
+    } else {
+      console.error('History fetch error:', json.message);
+    }
+  } catch (err) {
+    console.error('History fetch failed:', err);
+  }
+}
+
+// ┌────────────────────────────────────────────────────────────────┐
+// │ SUBMIT CHECK-IN                                                │
+// └────────────────────────────────────────────────────────────────┘
 document.getElementById('checkin-form').addEventListener('submit', async (e) => {
   e.preventDefault();
-
-  const nameEl = document.getElementById('volunteer-name');
-  const name = nameEl ? nameEl.value.trim() : '';
-  const type = e.submitter ? e.submitter.value : '';
-
-  if (!name) {
-    showModal('錯誤', '請輸入你的姓名。');
-    nameEl.focus();
-    return;
-  }
-  if (!type) {
-    showModal('錯誤', '請按 Clock In 或 Clock Out。');
-    return;
-  }
-
-  // Save name
-  localStorage.setItem('volunteer-name', name);
-
-  const now = new Date();
-  const date = now.toISOString().slice(0, 10);
-  const time = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-
-  const params = new URLSearchParams({ action: 'checkin', name, type, date, time });
-
-  try {
-    const response = await fetch(`${SCRIPT_URL}?${params}`);
-    if (!response.ok) throw new Error('Network error');
-    const result = await response.json();
-
-    if (result.ok) {
-      showModal('成功!', result.message || '你的記錄已提交。');
-      loadLeaderboard();
-    } else {
-      showModal('錯誤', result.error || '提交失敗，請稍後再試。');
-    }
-  } catch (err) {
-    console.error('Error:', err);
-    showModal('錯誤', '無法連接到伺服器，請檢查網絡連接。');
-  }
-});
-
-// ┌──────────────────────────────────────────────────────────────┐
-// │ MODAL                                                         │
-// └──────────────────────────────────────────────────────────────┘
-function showModal(title, message) {
-  document.getElementById('modal-title').textContent = title;
-  document.getElementById('modal-message').textContent = message;
-  document.getElementById('modal-overlay').classList.add('active');
-}
-
-function closeModal() {
-  document.getElementById('modal-overlay').classList.remove('active');
-}
-
-// ┌──────────────────────────────────────────────────────────────┐
-// │ LOAD LEADERBOARD                                              │
-// └──────────────────────────────────────────────────────────────┘
-async function loadLeaderboard() {
-  try {
-    const resp = await fetch(`${SCRIPT_URL}?action=leaderboard`);
-    if (!resp.ok) throw new Error('Network error');
-    const data = await resp.json();
-
-    // Month display
-    if (data.month) {
-      const [y, m] = data.month.split('-');
-      document.getElementById('lb-month-display').textContent = `${y}年${parseInt(m)}月`;
-    }
-
-    // Render top3
-    const listEl = document.getElementById('leaderboard-list');
-    const entries = data.top3 || [];
-    if (entries.length === 0) {
-      listEl.innerHTML = '<li style="text-align:center;color:rgba(255,255,255,0.4);padding:12px;">本月暫無記錄</li>';
-      return;
-    }
-    const medals = ['🥇','🥈','🥉'];
-    listEl.innerHTML = entries.map((e, i) => `
-      <li class="lb-item">
-        <span class="lb-rank">${medals[i] || (i+1)}</span>
-        <span class="lb-name">${e.name}</span>
-        <span class="lb-hours">${e.hours}h</span>
-      </li>`).join('');
-  } catch (err) {
-    console.error('Leaderboard error:', err);
-  }
-}
-
-// ┌──────────────────────────────────────────────────────────────┐
-// │ VOLUNTEER REGISTRATION FORM SUBMIT                            │
-// └──────────────────────────────────────────────────────────────┘
-document.getElementById('volunteer-reg-form').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const formData = new FormData(e.target);
-  const params = new URLSearchParams({ action: 'volunteer' });
-  formData.forEach((v, k) => params.set(k, v));
-
   const btn = e.target.querySelector('button[type="submit"]');
+  const name = document.getElementById('name').value.trim();
+  const type = document.getElementById('type').value.trim();
+
+  if (!name || !type) {
+    showToast('請填寫所有欄位');
+    return;
+  }
+
   btn.disabled = true;
   btn.textContent = '提交中...';
 
   try {
-    const resp = await fetch(`${SCRIPT_URL}?${params}`);
-    if (!resp.ok) throw new Error('Network error');
-    const result = await resp.json();
-    if (result.ok) {
-      showModal('多謝報名！', result.message || '我們已收到你的申請，將盡快聯絡你。');
-      e.target.reset();
+    const res = await fetch(SHEET_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        action: 'checkin',
+        name: name,
+        type: type,
+        timestamp: new Date().toLocaleString('zh-HK', { timeZone: 'Europe/London', hour12: false })
+      })
+    });
+    const json = await res.json();
+
+    if (json.status === 'success') {
+      showToast('✅ 堂吉成功！');
+      document.getElementById('checkin-form').reset();
+
+      // Clear cache and refresh
+      localStorage.removeItem(CACHE_KEY_HISTORY);
+      localStorage.removeItem(CACHE_KEY_LEADERBOARD);
+      setTimeout(() => {
+        fetchHistory();
+        fetchLeaderboard();
+      }, 500);
     } else {
-      showModal('錯誤', result.error || '提交失敗，請稍後再試。');
+      showToast('❌ ' + (json.message || '提交失敗'));
     }
   } catch (err) {
-    console.error('Reg error:', err);
-    showModal('錯誤', '無法連接到伺服器，請檢查網絡連接。');
+    console.error('Checkin submit error:', err);
+    showToast('❌ 網絡錯誤，請重試');
   } finally {
     btn.disabled = false;
-    btn.textContent = '📩 提交報名';
+    btn.textContent = '提交堂吉';
   }
 });
 
-// ┌──────────────────────────────────────────────────────────────┐
-// │ INIT                                                          │
-// └──────────────────────────────────────────────────────────────┘
-window.addEventListener('DOMContentLoaded', () => {
-  const savedName = localStorage.getItem('volunteer-name');
-  if (savedName) {
-    const nameEl = document.getElementById('volunteer-name');
-    if (nameEl) nameEl.value = savedName;
-  }
-  loadLeaderboard();
-});
+// ┌────────────────────────────────────────────────────────────────┐
+// │ ESCAPE HTML (prevent XSS)                                      │
+// └────────────────────────────────────────────────────────────────┘
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+// ┌────────────────────────────────────────────────────────────────┐
+// │ INIT                                                           │
+// └────────────────────────────────────────────────────────────────┘
+fetchHistory();
+fetchLeaderboard();
 </script>
 
 </body>
