@@ -1,11 +1,11 @@
-// ===================================================================
+// ===============================================================
 // Salford Hongkongers — Google Apps Script Backend (Code.gs)
-// ===================================================================
+// ===============================================================
 // Sheets:
-//   "Registration" : Timestamp | Event | Name | Email | Phone | Attendees | IsNewArrival | Notes
-//   "Checkin"      : Timestamp | Name | Date | Time | Type
-//   "Volunteer"    : Timestamp | Name | Email | Phone | District | Interests | Availability
-//   "Enquiry"      : Timestamp | Name | Email | Phone | Category | Subject | Message
+//    "Registration" : Timestamp | Event | Name | Email | Phone | Attendees | IsNewArrival | Notes
+//    "Checkin"      : Timestamp | Name | Date | Time | Type
+//    "Volunteer"    : Timestamp | Name | Email | Phone | District | Interests | Availability
+//    "Enquiry"      : Timestamp | Name | Email | Phone | Category | Subject | Message
 //
 // Actions (doGet ?action=):
 //   register    — Event registration form
@@ -15,7 +15,7 @@
 //   enquiry     — General enquiry / contact form
 //
 // All notifications → hkerssalford@gmail.com
-// ===================================================================
+// ===============================================================
 
 var REGISTRATION_SHEET = "Registration";
 var CHECKIN_SHEET      = "Checkin";
@@ -23,7 +23,7 @@ var VOLUNTEER_SHEET    = "Volunteer";
 var ENQUIRY_SHEET      = "Enquiry";
 var NOTIFY_EMAIL       = "hkerssalford@gmail.com";
 
-// ── Get (or auto-create) the backing Spreadsheet ─────────────────────────────
+// ── Get (or auto-create) the backing Spreadsheet ────────────────────────────────────────────────────────
 // Standalone Web Apps cannot use getActiveSpreadsheet().
 // We store the Spreadsheet ID in Script Properties after first creation.
 function getSpreadsheet() {
@@ -39,11 +39,11 @@ function getSpreadsheet() {
   return SpreadsheetApp.openById(id);
 }
 
-// ━━ Shared style constants ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// ── Shared style constants ─────────────────────────────────────────────────────────────────────────────
 var RED       = "#c0392b";
-var LIGHT_RED = "#fdecea";
+var LIGHT_RED = "#fdceea";
 
-// ━━ Entry point ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// ── Entry point ────────────────────────────────────────────────────────────────────────────────────────
 function doGet(e) {
   var action = e.parameter.action || "";
   var result;
@@ -64,331 +64,281 @@ function doGet(e) {
     .setMimeType(ContentService.MimeType.JSON);
 }
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 1. EVENT REGISTRATION
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-function handleRegister(p) {
-  var event       = (p.event       || "").trim();
-  var name        = (p.name        || "").trim();
-  var email       = (p.email       || "").trim();
-  var phone       = (p.phone       || "").trim();
-  var attendees   = (p.attendees   || "1").trim();
-  var isNewArrival= (p.isNewArrival|| "").trim();
-  var notes       = (p.notes       || "").trim();
+// ═══════════════════════════════════════════════════════════════════════════════════════════════════════
+// 1) EVENT REGISTRATION
+// ═══════════════════════════════════════════════════════════════════════════════════════════════════════
+function handleRegister(params) {
+  var event     = params.event     || "";
+  var name      = params.name      || "";
+  var email     = params.email     || "";
+  var phone     = params.phone     || "";
+  var attendees = params.attendees || "1";
+  var isNew     = params.isNew     || "no";
+  var notes     = params.notes     || "";
 
-  if (!event || !name || !email) {
-    return { ok: false, error: "Event, Name and Email are required" };
+  if (!event || !name) {
+    return { ok: false, error: "Missing event or name" };
   }
 
-  var sheet = getOrCreateSheet(REGISTRATION_SHEET, [
-    "Timestamp","Event","Name","Email","Phone","Attendees","IsNewArrival","Notes"
-  ]);
-  sheet.appendRow([
-    new Date().toISOString(), event, name, email, phone, attendees, isNewArrival, notes
-  ]);
-
-  sendRegistrationNotification(event, name, email, phone, attendees, isNewArrival, notes);
-
-  return { ok: true, message: "Registration received for " + name + ". See you at " + event + "!" };
-}
-
-function sendRegistrationNotification(event, name, email, phone, attendees, isNewArrival, notes) {
-  var subject = "[SHK 活動登記] " + event + " — " + name;
-
-  var rows = [
-    ["活動 Event",          event],
-    ["姓名 Name",           name],
-    ["電郵 Email",          '<a href="mailto:' + email + '" style="color:' + RED + ';">' + email + '</a>'],
-    ["電話 Phone",          phone       || "—"],
-    ["參加人數 Attendees",  attendees   || "1"],
-    ["新移民 New Arrival",  isNewArrival === "yes" ? "是 Yes" : "否 No"],
-    ["備注 Notes",          notes       || "—"]
-  ];
-
-  var html = buildHtmlEmail(
-    "活動登記通知 Event Registration",
-    rows,
-    null  // no message block
-  );
-
-  var plain =
-    "New event registration from salfordhongkongers.co.uk\n\n" +
-    "Event:       " + event       + "\n" +
-    "Name:        " + name        + "\n" +
-    "Email:       " + email       + "\n" +
-    "Phone:       " + (phone      || "—") + "\n" +
-    "Attendees:   " + (attendees  || "1") + "\n" +
-    "New Arrival: " + (isNewArrival === "yes" ? "Yes" : "No") + "\n" +
-    "Notes:       " + (notes      || "—");
-
-  sendMail(NOTIFY_EMAIL, subject, plain, html, email);
-}
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 2. VOLUNTEER CHECK-IN / CHECK-OUT
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-function handleCheckin(p) {
-  var name = (p.name || "").trim();
-  var type = (p.type || "").trim();   // "in" or "out"
-  var date = (p.date || "").trim();   // YYYY-MM-DD
-  var time = (p.time || "").trim();   // HH:MM
-
-  if (!name || !type || !date || !time) {
-    return { ok: false, error: "Missing required fields (name, type, date, time)" };
+  var ss    = getSpreadsheet();
+  var sheet = ss.getSheetByName(REGISTRATION_SHEET);
+  if (!sheet) {
+    sheet = ss.insertSheet(REGISTRATION_SHEET);
+    sheet.appendRow(["Timestamp","Event","Name","Email","Phone","Attendees","IsNewArrival","Notes"]);
+    formatHeader(sheet);
   }
 
-  var sheet = getOrCreateSheet(CHECKIN_SHEET, ["Timestamp","Name","Date","Time","Type"]);
-  sheet.appendRow([new Date().toISOString(), name, date, time, type]);
+  var timestamp = new Date();
+  sheet.appendRow([timestamp, event, name, email, phone, attendees, isNew, notes]);
 
-  return { ok: true, message: name + " clocked " + type + " at " + time + " on " + date };
-}
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 3. MONTHLY LEADERBOARD — top 3 volunteers by total hours
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-function handleLeaderboard(p) {
-  var now          = new Date();
-  var monthParam   = (p.month || "").trim();
-  var targetMonth  = monthParam || (now.getFullYear() + "-" + pad(now.getMonth() + 1));
-
-  var sheet = getSpreadsheet().getSheetByName(CHECKIN_SHEET);
-  if (!sheet || sheet.getLastRow() < 2) {
-    return { ok: true, month: targetMonth, top3: [] };
+  // Send notification email
+  try {
+    var subject = "新活動登記 — " + event;
+    var body = 
+      "活動: " + event + "\n" +
+      "姓名: " + name + "\n" +
+      "電郵: " + email + "\n" +
+      "電話: " + phone + "\n" +
+      "人數: " + attendees + "\n" +
+      "新到港: " + isNew + "\n" +
+      "備註: " + notes + "\n\n" +
+      "時間: " + timestamp;
+    MailApp.sendEmail(NOTIFY_EMAIL, subject, body);
+  } catch (mailErr) {
+    Logger.log("Email send failed: " + mailErr.message);
   }
 
-  var data    = sheet.getRange(2, 1, sheet.getLastRow() - 1, 5).getValues();
-  var records = {}; // name -> { ins: [], outs: [] }
+  return { ok: true, message: "登記成功" };
+}
 
-  data.forEach(function(row) {
-    var dateStr = String(row[2]).trim();
-    if (!dateStr.startsWith(targetMonth)) return;
+// ═══════════════════════════════════════════════════════════════════════════════════════════════════════
+// 2) VOLUNTEER CHECK-IN / CHECK-OUT
+// ═══════════════════════════════════════════════════════════════════════════════════════════════════════
+function handleCheckin(params) {
+  var name = params.name || "";
+  var type = params.type || "in"; // "in" or "out"
 
-    var n    = String(row[1]).trim();
-    var t    = String(row[3]).trim();
-    var type = String(row[4]).trim().toLowerCase();
+  if (!name) {
+    return { ok: false, error: "Missing name" };
+  }
 
-    if (!records[n]) records[n] = { ins: [], outs: [] };
-    if (type === "in")  records[n].ins.push(t);
-    if (type === "out") records[n].outs.push(t);
-  });
+  var ss    = getSpreadsheet();
+  var sheet = ss.getSheetByName(CHECKIN_SHEET);
+  if (!sheet) {
+    sheet = ss.insertSheet(CHECKIN_SHEET);
+    sheet.appendRow(["Timestamp","Name","Date","Time","Type"]);
+    formatHeader(sheet);
+  }
 
-  var totals = [];
-  for (var n in records) {
-    var ins  = records[n].ins.sort();
-    var outs = records[n].outs.sort();
-    var mins = 0;
-    for (var i = 0; i < Math.min(ins.length, outs.length); i++) {
-      var inT  = parseTime(ins[i]);
-      var outT = parseTime(outs[i]);
-      if (inT !== null && outT !== null) mins += (outT - inT);
+  var now       = new Date();
+  var dateStr   = Utilities.formatDate(now, "Europe/London", "yyyy-MM-dd");
+  var timeStr   = Utilities.formatDate(now, "Europe/London", "HH:mm:ss");
+  
+  sheet.appendRow([now, name, dateStr, timeStr, type]);
+
+  var action = (type === "in") ? "簽到" : "簽退";
+  return { ok: true, message: action + "成功", time: timeStr };
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════════════════════════════
+// 3) LEADERBOARD — Top volunteers by hours this month
+// ═══════════════════════════════════════════════════════════════════════════════════════════════════════
+function handleLeaderboard(params) {
+  var ss    = getSpreadsheet();
+  var sheet = ss.getSheetByName(CHECKIN_SHEET);
+  
+  if (!sheet) {
+    return { ok: true, leaderboard: [], month: "" };
+  }
+
+  var data = sheet.getDataRange().getValues();
+  if (data.length <= 1) {
+    return { ok: true, leaderboard: [], month: "" };
+  }
+
+  // Get current month bounds using Europe/London timezone
+  var now        = new Date();
+  var yearStr    = Utilities.formatDate(now, "Europe/London", "yyyy");
+  var monthStr   = Utilities.formatDate(now, "Europe/London", "MM");
+  var year       = parseInt(yearStr);
+  var month      = parseInt(monthStr) - 1; // 0-indexed
+  // Build start/end in UTC to match stored timestamps
+  var monthStart = new Date(Date.UTC(year, month, 1, 0, 0, 0));
+  var monthEnd   = new Date(Date.UTC(year, month + 1, 0, 23, 59, 59));
+
+  // Parse check-in/out pairs
+  var volunteers = {}; // name → { clockIns: [...], clockOuts: [...] }
+
+  for (var i = 1; i < data.length; i++) {
+    var row       = data[i];
+    var timestamp = row[0];
+    var vName     = row[1];
+    var vType     = row[4]; // "in" or "out"
+
+    if (!vName || !timestamp) continue;
+    
+    var d = new Date(timestamp);
+    if (d < monthStart || d > monthEnd) continue;
+
+    if (!volunteers[vName]) {
+      volunteers[vName] = { clockIns: [], clockOuts: [] };
     }
-    totals.push({ name: n, hours: Math.round((mins / 60) * 10) / 10 });
+
+    if (vType === "in") {
+      volunteers[vName].clockIns.push(d);
+    } else if (vType === "out") {
+      volunteers[vName].clockOuts.push(d);
+    }
   }
 
-  totals.sort(function(a, b) { return b.hours - a.hours; });
-  return { ok: true, month: targetMonth, top3: totals.slice(0, 3) };
+  // Calculate hours for each volunteer
+  var results = [];
+  for (var name in volunteers) {
+    var v = volunteers[name];
+    var totalHours = calculateHours(v.clockIns, v.clockOuts);
+    if (totalHours > 0) {
+      results.push({ name: name, hours: totalHours });
+    }
+  }
+
+  // Sort descending by hours, take top 3
+  results.sort(function(a, b) { return b.hours - a.hours; });
+  var top3 = results.slice(0, 3);
+
+  var monthName = Utilities.formatDate(now, "Europe/London", "yyyy年MM月");
+
+  return { ok: true, leaderboard: top3, month: monthName };
 }
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 4. JOIN VOLUNTEER TEAM
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-function handleVolunteer(p) {
-  var name         = (p.name         || "").trim();
-  var email        = (p.email        || "").trim();
-  var phone        = (p.phone        || "").trim();
-  var district     = (p.district     || "").trim();
-  var interests    = (p.interests    || "").trim();
-  var availability = (p.availability || "").trim();
+/**
+ * Calculate total hours from arrays of clock-in and clock-out times.
+ * Pairs each clock-in with the next clock-out.
+ */
+function calculateHours(clockIns, clockOuts) {
+  // Sort both arrays
+  clockIns.sort(function(a, b) { return a - b; });
+  clockOuts.sort(function(a, b) { return a - b; });
+
+  var totalMs = 0;
+  var inIdx = 0;
+  var outIdx = 0;
+
+  while (inIdx < clockIns.length && outIdx < clockOuts.length) {
+    var inTime = clockIns[inIdx];
+    var outTime = clockOuts[outIdx];
+
+    if (inTime < outTime) {
+      // Valid pair
+      totalMs += (outTime - inTime);
+      inIdx++;
+      outIdx++;
+    } else {
+      // Out before In, skip this out
+      outIdx++;
+    }
+  }
+
+  var hours = totalMs / (1000 * 60 * 60);
+  return Math.round(hours * 10) / 10; // 1 decimal place
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════════════════════════════
+// 4) VOLUNTEER JOIN FORM
+// ═══════════════════════════════════════════════════════════════════════════════════════════════════════
+function handleVolunteer(params) {
+  var name         = params.name         || "";
+  var email        = params.email        || "";
+  var phone        = params.phone        || "";
+  var district     = params.district     || "";
+  var interests    = params.interests    || "";
+  var availability = params.availability || "";
 
   if (!name || !email) {
-    return { ok: false, error: "Name and Email are required" };
+    return { ok: false, error: "Missing name or email" };
   }
 
-  var sheet = getOrCreateSheet(VOLUNTEER_SHEET, [
-    "Timestamp","Name","Email","Phone","District","Interests","Availability"
-  ]);
-  sheet.appendRow([
-    new Date().toISOString(), name, email, phone, district, interests, availability
-  ]);
+  var ss    = getSpreadsheet();
+  var sheet = ss.getSheetByName(VOLUNTEER_SHEET);
+  if (!sheet) {
+    sheet = ss.insertSheet(VOLUNTEER_SHEET);
+    sheet.appendRow(["Timestamp","Name","Email","Phone","District","Interests","Availability"]);
+    formatHeader(sheet);
+  }
 
-  sendVolunteerNotification(name, email, phone, district, interests, availability);
+  var timestamp = new Date();
+  sheet.appendRow([timestamp, name, email, phone, district, interests, availability]);
 
-  return { ok: true, message: "Thank you " + name + "! We'll be in touch soon." };
+  // Send notification email
+  try {
+    var subject = "新義工登記 — " + name;
+    var body = 
+      "姓名: " + name + "\n" +
+      "電郵: " + email + "\n" +
+      "電話: " + phone + "\n" +
+      "地區: " + district + "\n" +
+      "興趣: " + interests + "\n" +
+      "可用時間: " + availability + "\n\n" +
+      "時間: " + timestamp;
+    MailApp.sendEmail(NOTIFY_EMAIL, subject, body);
+  } catch (mailErr) {
+    Logger.log("Email send failed: " + mailErr.message);
+  }
+
+  return { ok: true, message: "登記成功" };
 }
 
-function sendVolunteerNotification(name, email, phone, district, interests, availability) {
-  var subject = "[SHK 義工申請] " + name;
-
-  var rows = [
-    ["姓名 Name",           name],
-    ["電郵 Email",          '<a href="mailto:' + email + '" style="color:' + RED + ';">' + email + '</a>'],
-    ["電話 Phone",          phone        || "—"],
-    ["地區 District",       district     || "—"],
-    ["興趣 Interests",      interests    || "—"],
-    ["可用時間 Availability", availability || "—"]
-  ];
-
-  var html = buildHtmlEmail(
-    "新義工申請 New Volunteer Application",
-    rows,
-    null
-  );
-
-  var plain =
-    "New volunteer application from salfordhongkongers.co.uk\n\n" +
-    "Name:         " + name         + "\n" +
-    "Email:        " + email        + "\n" +
-    "Phone:        " + (phone        || "—") + "\n" +
-    "District:     " + (district     || "—") + "\n" +
-    "Interests:    " + (interests    || "—") + "\n" +
-    "Availability: " + (availability || "—");
-
-  sendMail(NOTIFY_EMAIL, subject, plain, html, email);
-}
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 5. GENERAL ENQUIRY
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-function handleEnquiry(p) {
-  var name     = (p.name     || "").trim();
-  var email    = (p.email    || "").trim();
-  var phone    = (p.phone    || "").trim();
-  var category = (p.category || "").trim();
-  var subject  = (p.subject  || "").trim();
-  var message  = (p.message  || "").trim();
+// ═══════════════════════════════════════════════════════════════════════════════════════════════════════
+// 5) ENQUIRY / CONTACT FORM
+// ═══════════════════════════════════════════════════════════════════════════════════════════════════════
+function handleEnquiry(params) {
+  var name     = params.name     || "";
+  var email    = params.email    || "";
+  var phone    = params.phone    || "";
+  var category = params.category || "";
+  var subject  = params.subject  || "";
+  var message  = params.message  || "";
 
   if (!name || !email || !message) {
-    return { ok: false, error: "Name, Email and Message are required" };
+    return { ok: false, error: "Missing required fields" };
   }
 
-  var sheet = getOrCreateSheet(ENQUIRY_SHEET, [
-    "Timestamp","Name","Email","Phone","Category","Subject","Message"
-  ]);
-  sheet.appendRow([
-    new Date().toISOString(), name, email, phone, category, subject, message
-  ]);
-
-  sendEnquiryNotification(name, email, phone, category, subject, message);
-
-  return { ok: true, message: "Your enquiry has been received. We'll get back to you soon!" };
-}
-
-function sendEnquiryNotification(name, email, phone, category, subject, message) {
-  var emailSubject = "[SHK 查詢] " + (subject || category || "新查詢 New Enquiry");
-
-  var rows = [
-    ["姓名 Name",     name],
-    ["電郵 Email",    '<a href="mailto:' + email + '" style="color:' + RED + ';">' + email + '</a>'],
-    ["電話 Phone",    phone    || "—"],
-    ["類別 Category", category || "—"],
-    ["主題 Subject",  subject  || "—"]
-  ];
-
-  var html = buildHtmlEmail(
-    "新查詢 New Enquiry",
-    rows,
-    message
-  );
-
-  var plain =
-    "New enquiry from salfordhongkongers.co.uk\n\n" +
-    "Name:     " + name     + "\n" +
-    "Email:    " + email    + "\n" +
-    "Phone:    " + (phone    || "—") + "\n" +
-    "Category: " + (category || "—") + "\n" +
-    "Subject:  " + (subject  || "—") + "\n\n" +
-    "Message:\n" + message;
-
-  sendMail(NOTIFY_EMAIL, emailSubject, plain, html, email);
-}
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// SHARED HTML EMAIL BUILDER
-// rows: [ ["Label", "Value"], ... ]
-// messageBlock: string or null
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-function buildHtmlEmail(title, rows, messageBlock) {
-  var rowsHtml = rows.map(function(r, i) {
-    var bg = i % 2 === 0 ? "#ffffff" : "#fafafa";
-    return (
-      '<tr style="background:' + bg + ';">' +
-        '<td style="padding:10px 14px;color:#888;width:160px;font-size:14px;border-bottom:1px solid #f0f0f0;">' + r[0] + '</td>' +
-        '<td style="padding:10px 14px;font-weight:600;font-size:14px;border-bottom:1px solid #f0f0f0;">' + r[1] + '</td>' +
-      '</tr>'
-    );
-  }).join("");
-
-  var msgHtml = messageBlock
-    ? '<div style="margin-top:20px;">' +
-        '<p style="color:#888;margin:0 0 8px;font-size:13px;text-transform:uppercase;letter-spacing:.05em;">訊息 Message</p>' +
-        '<div style="background:#fafafa;border-left:4px solid ' + RED + ';padding:14px 16px;border-radius:0 4px 4px 0;font-size:14px;line-height:1.7;white-space:pre-wrap;">' + messageBlock + '</div>' +
-      '</div>'
-    : "";
-
-  return (
-    '<div style="font-family:Arial,sans-serif;max-width:620px;margin:0 auto;border:1px solid #e0e0e0;border-radius:8px;overflow:hidden;">' +
-      '<div style="background:' + RED + ';padding:22px 24px;">' +
-        '<h2 style="color:#fff;margin:0;font-size:18px;letter-spacing:.03em;">&#x1F1ED;&#x1F1F0; Salford Hongkongers</h2>' +
-        '<p style="color:rgba(255,255,255,.85);margin:4px 0 0;font-size:14px;">' + title + '</p>' +
-      '</div>' +
-      '<div style="padding:24px;">' +
-        '<table style="width:100%;border-collapse:collapse;">' + rowsHtml + '</table>' +
-        msgHtml +
-        '<div style="margin-top:24px;padding-top:14px;border-top:1px solid #eee;font-size:12px;color:#bbb;">' +
-          'Received via <a href="https://salfordhongkongers.co.uk" style="color:#bbb;">salfordhongkongers.co.uk</a> &bull; ' +
-          new Date().toUTCString() +
-        '</div>' +
-      '</div>' +
-    '</div>'
-  );
-}
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// SHARED MAIL SENDER  (replyTo is optional)
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-function sendMail(to, subject, plain, html, replyTo) {
-  var opts = {
-    to:       to,
-    subject:  subject,
-    body:     plain,
-    htmlBody: html
-  };
-  if (replyTo) opts.replyTo = replyTo;
-
-  try {
-    MailApp.sendEmail(opts);
-  } catch (e) {
-    Logger.log("sendMail failed: " + e.message);
-  }
-}
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// HELPERS
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-function getOrCreateSheet(name, headers) {
   var ss    = getSpreadsheet();
-  var sheet = ss.getSheetByName(name);
+  var sheet = ss.getSheetByName(ENQUIRY_SHEET);
   if (!sheet) {
-    sheet = ss.insertSheet(name);
-    if (headers && headers.length) {
-      var headerRow = sheet.getRange(1, 1, 1, headers.length);
-      headerRow.setValues([headers]);
-      headerRow.setFontWeight("bold");
-      headerRow.setBackground("#fdecea");
-    }
+    sheet = ss.insertSheet(ENQUIRY_SHEET);
+    sheet.appendRow(["Timestamp","Name","Email","Phone","Category","Subject","Message"]);
+    formatHeader(sheet);
   }
-  return sheet;
+
+  var timestamp = new Date();
+  sheet.appendRow([timestamp, name, email, phone, category, subject, message]);
+
+  // Send notification email
+  try {
+    var emailSubject = "新查詢 — " + category + " — " + name;
+    var body = 
+      "姓名: " + name + "\n" +
+      "電郵: " + email + "\n" +
+      "電話: " + phone + "\n" +
+      "類別: " + category + "\n" +
+      "主旨: " + subject + "\n" +
+      "訊息: " + message + "\n\n" +
+      "時間: " + timestamp;
+    MailApp.sendEmail(NOTIFY_EMAIL, emailSubject, body);
+  } catch (mailErr) {
+    Logger.log("Email send failed: " + mailErr.message);
+  }
+
+  return { ok: true, message: "訊息已送出" };
 }
 
-function parseTime(timeStr) {
-  var parts = String(timeStr).split(":");
-  if (parts.length < 2) return null;
-  var h = parseInt(parts[0], 10);
-  var m = parseInt(parts[1], 10);
-  if (isNaN(h) || isNaN(m)) return null;
-  return h * 60 + m;
-}
-
-function pad(num) {
-  return num < 10 ? "0" + num : "" + num;
+// ═══════════════════════════════════════════════════════════════════════════════════════════════════════
+// HELPER: Format header row
+// ═══════════════════════════════════════════════════════════════════════════════════════════════════════
+function formatHeader(sheet) {
+  var headerRange = sheet.getRange(1, 1, 1, sheet.getLastColumn());
+  headerRange.setBackground(RED);
+  headerRange.setFontColor("#ffffff");
+  headerRange.setFontWeight("bold");
+  headerRange.setHorizontalAlignment("center");
 }
