@@ -1,0 +1,128 @@
+{
+  "date": "2026-03-02",
+  "weekday": "Monday",
+  "generated_at": "2026-03-02T09:41:00Z",
+  "author": "Max",
+  "weather": {
+    "location": "Salford, Greater Manchester",
+    "summary": "多雲間陣雨,下午有雨",
+    "temp_high_c": 14,
+    "temp_low_c": 4,
+    "wind": "南風 11 km/h",
+    "rain_chance_percent": 80,
+    "tip": "出門帶傘,下午雨勢漸增,宜備雨衣",
+    "sources": ["BBC/Met Office", "AccuWeather", "Weather.com"],
+    "verification": "三方基本一致,下午1時後陣雨機率達53–69%"
+  },
+  "world_news": [
+    {
+      "title": "美以聯軍空襲伊朗進入第三日,以色列同步打擊黎巴嫩真主黨",
+      "summary": "以色列在貝魯特南郊空襲造成至少31人死亡；伊朗最高領袖哈梅內伊據報已遇害,存活領導層宣誓復仇,伊朗發射第十波導彈攻擊",
+      "verification": "✅ 三方核實",
+      "sources": ["Reuters 2026-03-02", "BBC", "Al Jazeera"]
+    },
+    {
+      "title": "伊朗製無人機擊中位於賽普勒斯的英國皇家空軍 Akrotiri 基地",
+      "summary": "造成輕微損毀,賽普勒斯總統確認事件屬實",
+      "verification": "✅ 三方核實",
+      "sources": ["Reuters 2026-03-02", "BBC", "Al Jazeera"]
+    },
+    {
+      "title": "霍爾木茲海峽油輪受衝擊,油價急升",
+      "summary": "伊朗導彈反擊波及巴林、科威特、卡塔爾、阿聯酋等海灣國家,沙特阿拉伯 Ras Tanura 煉油廠因無人機攻擊臨時關閉",
+      "verification": "✅ 三方核實",
+      "sources": ["Reuters", "BBC", "Al Jazeera"]
+    },
+    {
+      "title": "美軍宣布在伊朗戰事中出現首批傷亡,另有美軍戰機在科威特墜毀",
+      "summary": "特朗普誓言繼續攻擊,稱「可能有更多美軍犧牲」",
+      "verification": "⚠️ 二比一採信",
+      "sources": ["Reuters 2026-03-01", "BBC"]
+    }
+  ],
+  "uk_news": [
+    {
+      "title": "施紀賢允許美軍使用英國基地打擊伊朗導彈陣地",
+      "summary": "RAF Fairford 及 Diego Garcia 基地開放予美軍,稱目的為「集體自衛」,並發布法律意見書；強調不參與進攻行動,吸取伊拉克教訓",
+      "verification": "✅ 三方核實",
+      "sources": ["BBC", "Sky News", "The Independent"]
+    },
+    {
+      "title": "難民制度重大改革今日生效",
+      "summary": "內政大臣 Mahmood 宣布獲批難民身份者只獲「臨時保護」,每30個月複審；另計劃延長永久居留年期至10–20年",
+      "verification": "✅ 三方核實",
+      "sources": ["BBC 2026-03-01", "Sky News", "The Independent"]
+    },
+    {
+      "title": "內閣辦公室部長 Josh Simons 辭職",
+      "summary": "其智庫「Labour Together」被指付費PR公司調查記者背景；倫理顧問裁定未違反部長守則,但 Simons 自稱已成「分心」而請辭",
+      "verification": "⚠️ 二比一採信",
+      "sources": ["The Independent 2026-03-02", "Sky News"]
+    },
+    {
+      "title": "曼徹斯特 Gorton and Denton 補選,綠黨勝出",
+      "summary": "綠黨 Hannah Spencer 勝出,工黨痛失「安全議席」",
+      "verification": "✅ 三方核實",
+      "sources": ["BBC", "Sky News", "The Independent"]
+    }
+  ],
+  "manchester_news": [
+    {
+      "title": "曼徹斯特市議會通過新年度預算,市政稅上調4.99%",
+      "summary": "首次突破10億英鎊支出大關；額外1100萬英鎊投入清潔街道；所有中學生獲免費健身房使用權",
+      "verification": "✅ 三方核實",
+      "sources": ["Manchester Evening News 2026-02-27", "BBC Manchester"]
+    },
+    {
+      "title": "曼徹斯特中央清真寺疑帶斧入侵事件",
+      "summary": "Rusholme Victoria Park,齋戒月塔拉維晚禱期間,在場約2000名禮拜者；警方拘捕兩男,袋內發現斧頭、鐵錘及刀；警方暫未列恐怖事件",
+      "verification": "✅ 三方核實",
+      "sources": ["BBC Manchester 2026-02-26", "Manchester Evening News"]
+    }
+  ],
+  "salford_news": [
+    {
+      "title": "Swinton 區 Chorley Road 舊建築申請改建為14房 HMO",
+      "summary": "居民及地區議員強烈反對,指僅4個停車位嚴重不足,已收逾50份反對意見",
+      "verification": "⚠️ 二比一採信",
+      "sources": ["Manchester Evening News 2026-03-01"]
+    },
+    {
+      "title": "索爾福德宣告「公共衛生危機」",
+      "summary": "99%受查HMO未達健康安全標準,市長 Paul Dennett 宣誓打擊劣質業主",
+      "verification": "⚠️ 背景資訊",
+      "sources": ["ITV Granada 2026-01-28"]
+    }
+  ],
+  "local_events": [
+    {
+      "title": "2026國際婦女節慶典：當女性茁壯,眾人同進",
+      "date": "2026-03-07",
+      "time": "11:00-16:00",
+      "location": "曼徹斯特市立圖書館,St. Peter's Square",
+      "cost": "免費",
+      "booking": "Eventbrite 預訂,部分活動先到先得"
+    },
+    {
+      "title": "波提科圖書館220週年紀念展「Everything and Nothing」",
+      "date": "2026-03-20",
+      "end_date": "2026-10-03",
+      "location": "Portico Library, Mosley Street",
+      "cost": "免費",
+      "note": "可參與時光囊計劃,明信片封存至2076年"
+    },
+    {
+      "title": "FunLab 免費科學活動（英國科學週）",
+      "date": "2026-03-07",
+      "end_date": "2026-03-08",
+      "location": "Trafford Centre",
+      "cost": "免費"
+    }
+  ],
+  "verification_legend": {
+    "✅": "三方核實",
+    "⚠️": "二比一採信",
+    "❓": "存疑採信",
+    "🔇": "待核實"
+  }
+}
