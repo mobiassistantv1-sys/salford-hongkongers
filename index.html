@@ -731,9 +731,48 @@ a.contact-value:hover { color: var(--pink); }
 #enquiry-card .submit-btn:hover { opacity:0.9; transform:translateY(-1px); }
 #enquiry-card .submit-btn:disabled { opacity:0.5; cursor:not-allowed; transform:none; }
 
+
+/* ===== NEON SVG ICONS ===== */
+.neon-icon {
+  display: inline-block;
+  vertical-align: middle;
+  width: 1.1em;
+  height: 1.1em;
+  margin-right: 0.25em;
+  flex-shrink: 0;
+}
+.neon-icon svg {
+  width: 100%;
+  height: 100%;
+}
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <filter id="glow-pink" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="1.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-blue" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="1.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-yellow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="1.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-green" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="1.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-purple" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="1.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+</svg>
+
 <!-- HEADER -->
 <header class="header" style="background:rgba(255,255,255,0.97);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,0,0,0.1);">
 <div class="header-inner">
@@ -746,14 +785,14 @@ a.contact-value:hover { color: var(--pink); }
 <!-- DESKTOP NAV -->
 <nav class="nav" id="nav">
 <ul>
-<li><a class="nav-link active" data-page="home" href="#">🏠 主頁</a></li>
-<li><a class="nav-link" data-page="about" href="#">👥 關於我們</a></li>
-<li><a class="nav-link" data-page="events" href="#">📅 活動</a></li>
-<li><a class="nav-link" data-page="register" href="#">📝 活動登記</a></li>
-<li><a class="nav-link" data-page="contact" href="#">📞 聯絡我們</a></li>
-<li><a class="nav-link" href="donate.html" style="color:#8B0000;font-weight:700;">💛 支持我們</a></li>
-<li><a class="nav-link" href="#" onclick="showPage('register'); return false;">📬 意見 / 申請</a></li>
-<li><a class="nav-link" href="volunteer-checkin.html" style="background:#2e7d32;color:#fff;border-radius:20px;padding:6px 14px;">✅ 義工簽到</a></li>
+<li><a class="nav-link active" data-page="home" href="#"><span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ff2d78" stroke-width="1.8" filter="url(#glow-pink)"><path d="M3 12L12 3l9 9"/><path d="M5 10v9a1 1 0 001 1h4v-4h4v4h4a1 1 0 001-1v-9"/></svg></span> 主頁</a></li>
+<li><a class="nav-link" data-page="about" href="#"><span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ff2d78" stroke-width="1.8" filter="url(#glow-pink)"><circle cx="9" cy="7" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="7" r="2.5"/><path d="M21 20c0-2.8-2-5-4.5-5.5"/></svg></span> 關於我們</a></li>
+<li><a class="nav-link" data-page="events" href="#"><span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#00d4ff" stroke-width="1.8" filter="url(#glow-blue)"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span> 活動</a></li>
+<li><a class="nav-link" data-page="register" href="#"><span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#00d4ff" stroke-width="1.8" filter="url(#glow-blue)"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10,9 9,9 8,9"/></svg></span> 活動登記</a></li>
+<li><a class="nav-link" data-page="contact" href="#"><span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ff2d78" stroke-width="1.8" filter="url(#glow-pink)"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg></span> 聯絡我們</a></li>
+<li><a class="nav-link" href="donate.html" style="color:#8B0000;font-weight:700;"><span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ff2d78" stroke-width="1.8" filter="url(#glow-pink)"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></span> 支持我們</a></li>
+<li><a class="nav-link" href="#" onclick="showPage('register'); return false;"><span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ff2d78" stroke-width="1.8" filter="url(#glow-pink)"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span> 意見 / 申請</a></li>
+<li><a class="nav-link" href="volunteer-checkin.html" style="background:#2e7d32;color:#fff;border-radius:20px;padding:6px 14px;"><span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ff2d78" stroke-width="1.8" filter="url(#glow-pink)"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22,4 12,14.01 9,11.01"/></svg></span> 義工簽到</a></li>
 </ul>
 </nav>
 <!-- MAIN -->
@@ -761,20 +800,20 @@ a.contact-value:hover { color: var(--pink); }
 <!-- HOME -->
 <section class="page active" id="page-home">
 <div class="hero">
-<div class="hero-badge">🇬🇧 🇭🇰  Salford · Manchester</div>
+<div class="hero-badge"><span class="neon-icon"><svg viewBox="0 0 24 16" fill="none" stroke="#00d4ff" stroke-width="1.5" filter="url(#glow-blue)"><rect x="0.5" y="0.5" width="23" height="15" rx="1"/><line x1="0" y1="0" x2="24" y2="16" stroke="#00d4ff"/><line x1="24" y1="0" x2="0" y2="16" stroke="#00d4ff"/><line x1="12" y1="0" x2="12" y2="16" stroke="#00d4ff" stroke-width="3"/><line x1="0" y1="8" x2="24" y2="8" stroke="#00d4ff" stroke-width="3"/></svg></span> <span class="neon-icon"><svg viewBox="0 0 24 16" fill="none" stroke="#bf5fff" stroke-width="1.5" filter="url(#glow-purple)"><rect x="0.5" y="0.5" width="23" height="15" rx="1"/><circle cx="12" cy="8" r="4"/><path d="M12 4 Q14 6 12 8 Q10 6 12 4z"/><path d="M12 12 Q14 10 12 8 Q10 10 12 12z"/><path d="M8 8 Q10 6 12 8 Q10 10 8 8z"/><path d="M16 8 Q14 6 12 8 Q14 10 16 8z"/></svg></span>  Salford · Manchester</div>
 <h2 class="hero-title" id="heroTitle">凝聚香港人<br/><span id="heroTitleSpan">共建互助社群</span></h2>
 <p class="hero-subtitle" id="heroSubtitle">在 Salford 的香港人社區組織，提供支援、文化活動與社群連結</p>
 <button class="btn-primary" id="heroEventsBtn" onclick="showPage('events')">→ 查看即將舉行的活動</button>
 <div style="display:flex;gap:10px;justify-content:center;margin-top:12px;flex-wrap:wrap;">
-<a href="donate.html" id="heroDonateBtn" style="background:rgba(255,215,0,0.2);border:2px solid #FFD700;color:#fff;padding:10px 20px;border-radius:25px;font-size:0.9rem;font-weight:700;text-decoration:none;">💛 支持我們</a>
-<a href="#" id="heroContactBtn" onclick="showPage('contact'); setTimeout(function(){var el=document.getElementById('enquiry-card');if(el)el.scrollIntoView({behavior:'smooth'});},200); return false;" style="background:rgba(255,255,255,0.15);border:2px solid rgba(255,255,255,0.5);color:#fff;padding:10px 20px;border-radius:25px;font-size:0.9rem;font-weight:700;text-decoration:none;">📬 聯絡 / 申請</a>
+<a href="donate.html" id="heroDonateBtn" style="background:rgba(255,215,0,0.2);border:2px solid #FFD700;color:#fff;padding:10px 20px;border-radius:25px;font-size:0.9rem;font-weight:700;text-decoration:none;"><span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ff2d78" stroke-width="1.8" filter="url(#glow-pink)"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></span> 支持我們</a>
+<a href="#" id="heroContactBtn" onclick="showPage('contact'); setTimeout(function(){var el=document.getElementById('enquiry-card');if(el)el.scrollIntoView({behavior:'smooth'});},200); return false;" style="background:rgba(255,255,255,0.15);border:2px solid rgba(255,255,255,0.5);color:#fff;padding:10px 20px;border-radius:25px;font-size:0.9rem;font-weight:700;text-decoration:none;"><span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ff2d78" stroke-width="1.8" filter="url(#glow-pink)"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span> 聯絡 / 申請</a>
 </div>
 <!-- 義工行動區 -->
 <div style="margin-top:20px;border-top:1px solid rgba(255,255,255,0.3);padding-top:16px;">
-<p id="volunteerZoneLabel" style="font-size:12px;opacity:0.8;margin-bottom:10px;letter-spacing:0.5px;">🙋 義工專區</p>
+<p id="volunteerZoneLabel" style="font-size:12px;opacity:0.8;margin-bottom:10px;letter-spacing:0.5px;"><span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ff2d78" stroke-width="1.8" filter="url(#glow-pink)"><circle cx="12" cy="5" r="2.5"/><path d="M12 8v5M9 10l-2 4h10l-2-4"/><path d="M7 22v-5M17 22v-5"/></svg></span> 義工專區</p>
 <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
-<a href="volunteer-checkin.html" id="heroCheckinBtn" style="background:#2e7d32;border:none;color:#fff;padding:12px 24px;border-radius:25px;font-size:0.95rem;font-weight:700;text-decoration:none;display:flex;align-items:center;gap:6px;box-shadow:0 2px 8px rgba(0,0,0,0.25);">✅ 義工簽到 / 簽退</a>
-<a href="volunteer-checkin.html" id="heroJoinBtn" style="background:rgba(255,255,255,0.2);border:2px solid rgba(255,255,255,0.7);color:#fff;padding:12px 24px;border-radius:25px;font-size:0.95rem;font-weight:700;text-decoration:none;display:flex;align-items:center;gap:6px;">🤝 加入義工隊</a>
+<a href="volunteer-checkin.html" id="heroCheckinBtn" style="background:#2e7d32;border:none;color:#fff;padding:12px 24px;border-radius:25px;font-size:0.95rem;font-weight:700;text-decoration:none;display:flex;align-items:center;gap:6px;box-shadow:0 2px 8px rgba(0,0,0,0.25);"><span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ff2d78" stroke-width="1.8" filter="url(#glow-pink)"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22,4 12,14.01 9,11.01"/></svg></span> 義工簽到 / 簽退</a>
+<a href="volunteer-checkin.html" id="heroJoinBtn" style="background:rgba(255,255,255,0.2);border:2px solid rgba(255,255,255,0.7);color:#fff;padding:12px 24px;border-radius:25px;font-size:0.95rem;font-weight:700;text-decoration:none;display:flex;align-items:center;gap:6px;"><span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ff2d78" stroke-width="1.8" filter="url(#glow-pink)"><path d="M14 9l-2-2-6 6 2 2 6-6zM8 15l-3 3M16 7l3-3M10 17l4 4 6-6-4-4"/></svg></span> 加入義工隊</a>
 </div>
 </div>
 </div>
@@ -795,12 +834,12 @@ a.contact-value:hover { color: var(--pink); }
 <div class="section-card">
 <h3 class="section-title">我們的服務</h3>
 <div class="service-grid">
-<div class="service-item"><div class="service-icon">🤝</div><div class="service-name">社群支援</div></div>
-<div class="service-item"><div class="service-icon">📞</div><div class="service-name">熱線服務</div></div>
-<div class="service-item"><div class="service-icon">🎭</div><div class="service-name">文化活動</div></div>
-<div class="service-item"><div class="service-icon">💼</div><div class="service-name">就業支援</div></div>
-<div class="service-item"><div class="service-icon">🏠</div><div class="service-name">住屋資訊</div></div>
-<div class="service-item"><div class="service-icon">🎓</div><div class="service-name">教育資源</div></div>
+<div class="service-item"><div class="service-icon"><span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ff2d78" stroke-width="1.8" filter="url(#glow-pink)"><path d="M14 9l-2-2-6 6 2 2 6-6zM8 15l-3 3M16 7l3-3M10 17l4 4 6-6-4-4"/></svg></span></div><div class="service-name">社群支援</div></div>
+<div class="service-item"><div class="service-icon"><span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ff2d78" stroke-width="1.8" filter="url(#glow-pink)"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg></span></div><div class="service-name">熱線服務</div></div>
+<div class="service-item"><div class="service-icon"><span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ffe033" stroke-width="1.8" filter="url(#glow-yellow)"><circle cx="9" cy="12" r="7"/><circle cx="15" cy="12" r="7"/><path d="M7 10.5c.5-.5 1.5-.5 2 0M11 15c.5.5 1.5 1 3 .5"/><path d="M13 10.5c.5-.5 1.5-.5 2 0M17 15c-.5.5-1.5 1-3 .5"/></svg></span></div><div class="service-name">文化活動</div></div>
+<div class="service-item"><div class="service-icon"><span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#00d4ff" stroke-width="1.8" filter="url(#glow-blue)"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><line x1="12" y1="12" x2="12" y2="12"/></svg></span></div><div class="service-name">就業支援</div></div>
+<div class="service-item"><div class="service-icon"><span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ff2d78" stroke-width="1.8" filter="url(#glow-pink)"><path d="M3 12L12 3l9 9"/><path d="M5 10v9a1 1 0 001 1h4v-4h4v4h4a1 1 0 001-1v-9"/></svg></span></div><div class="service-name">住屋資訊</div></div>
+<div class="service-item"><div class="service-icon"><span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#00d4ff" stroke-width="1.8" filter="url(#glow-blue)"><path d="M22 10l-10-7L2 10l10 7 10-7z"/><path d="M6 12v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5"/></svg></span></div><div class="service-name">教育資源</div></div>
 </div>
 </div>
 <div class="news-card partners-card">
@@ -850,35 +889,35 @@ a.contact-value:hover { color: var(--pink); }
 <section class="page" id="page-about">
 <h2 class="page-title">關於我們</h2>
 <div class="section-card">
-<h3 class="section-title">🏢 機構簡介</h3>
+<h3 class="section-title"><span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#00d4ff" stroke-width="1.8" filter="url(#glow-blue)"><rect x="4" y="2" width="16" height="20" rx="1"/><line x1="8" y1="6" x2="8" y2="6"/><line x1="12" y1="6" x2="12" y2="6"/><line x1="16" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="8" y2="10"/><line x1="12" y1="10" x2="12" y2="10"/><line x1="16" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="8" y2="14"/><line x1="12" y1="14" x2="12" y2="14"/><line x1="16" y1="14" x2="16" y2="14"/><rect x="10" y="18" width="4" height="4"/></svg></span> 機構簡介</h3>
 <p class="body-text">Salford's Hongkongers CIC（SHK CIC）於 2022 年 1 月正式成立，是一間在英國公司註冊處登記的社群利益公司（Company No. 13877472）。</p>
 <p class="body-text">我們致力於支援及協助移居 Salford 及大曼徹斯特地區的香港人，促進文化多元及社會融合。</p>
 </div>
 <div class="section-card">
-<h3 class="section-title">🎯 使命與願景</h3>
+<h3 class="section-title"><span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ffe033" stroke-width="1.8" filter="url(#glow-yellow)"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span> 使命與願景</h3>
 <ul class="mission-list">
-<li>🤝 協助香港新移民適應英國生活</li>
-<li>🌏 保存及推廣香港文化身份認同</li>
-<li>💪 促進社區凝聚力與互助精神</li>
-<li>📢 為香港人發聲，倡議社區權益</li>
-<li>🌱 支援個人及家庭的整體發展</li>
+<li><span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ff2d78" stroke-width="1.8" filter="url(#glow-pink)"><path d="M14 9l-2-2-6 6 2 2 6-6zM8 15l-3 3M16 7l3-3M10 17l4 4 6-6-4-4"/></svg></span> 協助香港新移民適應英國生活</li>
+<li><span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#39ff14" stroke-width="1.8" filter="url(#glow-green)"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg></span> 保存及推廣香港文化身份認同</li>
+<li><span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#39ff14" stroke-width="1.8" filter="url(#glow-green)"><path d="M18 3a3 3 0 00-3 3v5H9V6a3 3 0 00-6 0v12a3 3 0 006 0v-5h6v5a3 3 0 006 0V6a3 3 0 00-3-3z"/></svg></span> 促進社區凝聚力與互助精神</li>
+<li><span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#39ff14" stroke-width="1.8" filter="url(#glow-green)"><polygon points="11,5 6,9 2,9 2,15 6,15 11,19"/><path d="M15.54 8.46a5 5 0 010 7.07M19.07 4.93a10 10 0 010 14.14"/></svg></span> 為香港人發聲，倡議社區權益</li>
+<li><span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#39ff14" stroke-width="1.8" filter="url(#glow-green)"><path d="M12 22V12M12 12C12 12 7 8 4 4c4 0 8 4 8 8zM12 12c0 0 5-4 8-8-4 0-8 4-8 8z"/></svg></span> 支援個人及家庭的整體發展</li>
 </ul>
 </div>
 <div class="section-card">
-<h3 class="section-title">📍 服務地區</h3>
+<h3 class="section-title"><span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ffe033" stroke-width="1.8" filter="url(#glow-yellow)"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></span> 服務地區</h3>
 <p class="body-text">主要服務範圍：Salford, Greater Manchester</p>
 <p class="body-text">Salford 現有逾 2,000 名香港居民，是英國其中一個最大的香港人社群聚居地，被稱為「小香港」。</p>
 </div>
 <div class="section-card">
-<h3 class="section-title">🌟 定期活動</h3>
+<h3 class="section-title"><span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ffe033" stroke-width="1.8" filter="url(#glow-yellow)"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg></span> 定期活動</h3>
 <div class="activity-list">
-<div class="activity-item">☕ 每月茶聚 — 歡迎新移民</div>
-<div class="activity-item">🎵 音樂聚會之夜</div>
-<div class="activity-item">🎲 棋盤遊戲及麻將之夜</div>
-<div class="activity-item">🍳 香港烹飪班</div>
-<div class="activity-item">🏃 行山及運動活動</div>
-<div class="activity-item">💼 職業 Networking 晚會</div>
-<div class="activity-item">📚 實用工作坊（租務、法律、急救）</div>
+<div class="activity-item"><span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ffe033" stroke-width="1.8" filter="url(#glow-yellow)"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg></span> 每月茶聚 — 歡迎新移民</div>
+<div class="activity-item"><span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ffe033" stroke-width="1.8" filter="url(#glow-yellow)"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></span> 音樂聚會之夜</div>
+<div class="activity-item"><span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ffe033" stroke-width="1.8" filter="url(#glow-yellow)"><rect x="2" y="2" width="20" height="20" rx="3"/><circle cx="8" cy="8" r="1.2" fill="#ffe033"/><circle cx="16" cy="8" r="1.2" fill="#ffe033"/><circle cx="8" cy="16" r="1.2" fill="#ffe033"/><circle cx="16" cy="16" r="1.2" fill="#ffe033"/><circle cx="12" cy="12" r="1.2" fill="#ffe033"/></svg></span> 棋盤遊戲及麻將之夜</div>
+<div class="activity-item"><span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ffe033" stroke-width="1.8" filter="url(#glow-yellow)"><path d="M3 11c0-4.4 3.6-8 8-8s8 3.6 8 8v2H3v-2z"/><line x1="2" y1="13" x2="22" y2="13"/><line x1="5" y1="21" x2="5" y2="13"/><line x1="19" y1="21" x2="19" y2="13"/><line x1="5" y1="21" x2="19" y2="21"/></svg></span> 香港烹飪班</div>
+<div class="activity-item"><span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ffe033" stroke-width="1.8" filter="url(#glow-yellow)"><circle cx="13" cy="4" r="2"/><path d="M7 22l3-7 3 4 2-5 3 3"/><path d="M8 13l2-5 4 2 3-3"/></svg></span> 行山及運動活動</div>
+<div class="activity-item"><span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#00d4ff" stroke-width="1.8" filter="url(#glow-blue)"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><line x1="12" y1="12" x2="12" y2="12"/></svg></span> 職業 Networking 晚會</div>
+<div class="activity-item"><span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ffe033" stroke-width="1.8" filter="url(#glow-yellow)"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg></span> 實用工作坊（租務、法律、急救）</div>
 </div>
 </div>
 </section>
@@ -894,9 +933,9 @@ a.contact-value:hover { color: var(--pink); }
 </div>
 <div class="event-info">
 <h3 class="event-title">每月社群茶聚</h3>
-<p class="event-detail">📍 Sacred Trinity Church, Chapel St, Salford M3 5DW</p>
-<p class="event-detail">🕐 11:30 - 14:30</p>
-<p class="event-detail">💰 免費入場</p>
+<p class="event-detail"><span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ffe033" stroke-width="1.8" filter="url(#glow-yellow)"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></span> Sacred Trinity Church, Chapel St, Salford M3 5DW</p>
+<p class="event-detail"><span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ffe033" stroke-width="1.8" filter="url(#glow-yellow)"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg></span> 11:30 - 14:30</p>
+<p class="event-detail"><span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ffe033" stroke-width="1.8" filter="url(#glow-yellow)"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></span> 免費入場</p>
 </div>
 </div>
 <p class="event-desc">每月定期茶聚，歡迎新移民及舊朋友，一起分享生活點滴，互相支持。</p>
@@ -909,7 +948,7 @@ a.contact-value:hover { color: var(--pink); }
 <!-- MAX DAILY NEWS -->
 <section class="news-daily-section" id="newsDailySection" style="margin-bottom:1.2rem;">
 <div class="news-daily-header">
-<span class="news-daily-icon">📰</span>
+<span class="news-daily-icon"><span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#00d4ff" stroke-width="1.8" filter="url(#glow-blue)"><path d="M4 4h16v16H4zM4 9h16M9 9v11"/></svg></span></span>
 <h3 class="news-daily-title">每日新聞簡報</h3>
 <span class="news-daily-badge" id="newsDailyDate"></span>
 </div>
@@ -926,7 +965,7 @@ a.contact-value:hover { color: var(--pink); }
 </div>
 <div class="ig-feed-footer">
 <a href="https://www.instagram.com/salfordhongkongerscic/" target="_blank">
-<span>📸</span> 關注 @SalfordHongkongers
+<span><span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#00d4ff" stroke-width="1.8" filter="url(#glow-blue)"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg></span></span> 關注 @SalfordHongkongers
       </a>
 </div>
 </section>
@@ -986,7 +1025,7 @@ a.contact-value:hover { color: var(--pink); }
 <button class="btn-submit" type="submit">提交登記</button>
 </form>
 <div class="success-msg hidden" id="successMsg">
-<div class="success-icon">✅</div>
+<div class="success-icon"><span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ff2d78" stroke-width="1.8" filter="url(#glow-pink)"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22,4 12,14.01 9,11.01"/></svg></span></div>
 <h3>登記成功！</h3>
 <p>多謝你的登記！我們會盡快以電郵確認你的報名詳情。</p>
 <p>如有查詢，請電郵至 <strong>salfordhongkongers@gmail.com</strong></p>
@@ -1031,7 +1070,7 @@ a.contact-value:hover { color: var(--pink); }
 </div>
 <!-- Location -->
 <div class="contact-item">
-<div class="contact-icon icon-location">📍</div>
+<div class="contact-icon icon-location"><span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ffe033" stroke-width="1.8" filter="url(#glow-yellow)"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></span></div>
 <div>
 <div class="contact-label">地址</div>
 <div class="contact-value">Salford, Greater Manchester, UK</div>
@@ -1071,7 +1110,7 @@ a.contact-value:hover { color: var(--pink); }
       </a>
 </div>
 <div class="section-card" id="enquiry-card">
-<h3 class="section-title">📬 查詢</h3>
+<h3 class="section-title"><span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ff2d78" stroke-width="1.8" filter="url(#glow-pink)"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span> 查詢</h3>
 <p class="body-text" style="margin-bottom:16px;">有任何問題？填寫下方表格，我們會盡快回覆。</p>
 <form id="enquiry-form" onsubmit="submitEnquiry(event)">
 <div class="form-group">
@@ -1115,23 +1154,23 @@ a.contact-value:hover { color: var(--pink); }
 <!-- BOTTOM NAV -->
 <nav class="bottom-nav">
 <button class="bottom-btn active" id="btn-home" onclick="showPage('home')">
-<span class="bottom-icon">🏠</span>
+<span class="bottom-icon"><span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ff2d78" stroke-width="1.8" filter="url(#glow-pink)"><path d="M3 12L12 3l9 9"/><path d="M5 10v9a1 1 0 001 1h4v-4h4v4h4a1 1 0 001-1v-9"/></svg></span></span>
 <span class="bottom-label">主頁</span>
 </button>
 <button class="bottom-btn" id="btn-events" onclick="showPage('events')">
-<span class="bottom-icon">📅</span>
+<span class="bottom-icon"><span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#00d4ff" stroke-width="1.8" filter="url(#glow-blue)"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span></span>
 <span class="bottom-label">活動</span>
 </button>
 <button class="bottom-btn" id="btn-news" onclick="showPage('news')">
-<span class="bottom-icon">📣</span>
+<span class="bottom-icon"><span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ff2d78" stroke-width="1.8" filter="url(#glow-pink)"><polygon points="11,5 6,9 2,9 2,15 6,15 11,19 11,5"/><path d="M19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07"/></svg></span></span>
 <span class="bottom-label">消息</span>
 </button>
 <button class="bottom-btn" onclick="location.href='volunteer-checkin.html'">
-<span class="bottom-icon">✅</span>
+<span class="bottom-icon"><span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ff2d78" stroke-width="1.8" filter="url(#glow-pink)"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22,4 12,14.01 9,11.01"/></svg></span></span>
 <span class="bottom-label">義工</span>
 </button>
 <button class="bottom-btn" id="btn-contact" onclick="showPage('contact')">
-<span class="bottom-icon">📞</span>
+<span class="bottom-icon"><span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ff2d78" stroke-width="1.8" filter="url(#glow-pink)"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg></span></span>
 <span class="bottom-label">聯絡</span>
 </button>
 </nav>
@@ -1160,14 +1199,14 @@ async function submitEnquiry(e) {
     feedback.style.background = 'rgba(57,255,20,0.15)';
     feedback.style.border = '1px solid rgba(57,255,20,0.4)';
     feedback.style.color = '#39ff14';
-    feedback.textContent = '✅ 查詢已送出！我們會盡快聯絡你。';
+    feedback.textContent = '<span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ff2d78" stroke-width="1.8" filter="url(#glow-pink)"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22,4 12,14.01 9,11.01"/></svg></span> 查詢已送出！我們會盡快聯絡你。';
     document.getElementById('enquiry-form').reset();
   } catch(err) {
     feedback.style.display = 'block';
     feedback.style.background = 'rgba(255,45,120,0.15)';
     feedback.style.border = '1px solid rgba(255,45,120,0.4)';
     feedback.style.color = 'var(--pink)';
-    feedback.textContent = '❌ 發送失敗，請稍後再試或直接 WhatsApp 聯絡我們。';
+    feedback.textContent = '<span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#bf5fff" stroke-width="1.8" filter="url(#glow-purple)"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg></span> 發送失敗，請稍後再試或直接 WhatsApp 聯絡我們。';
   } finally {
     btn.disabled = false;
     btn.textContent = '發送查詢';
@@ -1304,8 +1343,8 @@ async function loadIgFeed() {
     }
     container.innerHTML = data.posts.map(post => {
       const imgHtml = post.image
-        ? `📸</div>'">`
-        : `<div class="ig-post-image-placeholder">📸</div>`;
+        ? `<span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#00d4ff" stroke-width="1.8" filter="url(#glow-blue)"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg></span></div>'">`
+        : `<div class="ig-post-image-placeholder"><span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#00d4ff" stroke-width="1.8" filter="url(#glow-blue)"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg></span></div>`;
       const caption = post.caption
         ? post.caption.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>')
         : '';
@@ -1314,7 +1353,7 @@ async function loadIgFeed() {
         <div class="ig-post-card">
           ${imgHtml}
           <div class="ig-post-body">
-            ${dateStr ? `<div class="ig-post-date">📅 ${dateStr}</div>` : ''}
+            ${dateStr ? `<div class="ig-post-date"><span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#00d4ff" stroke-width="1.8" filter="url(#glow-blue)"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span> ${dateStr}</div>` : ''}
             <div class="ig-post-caption">${caption}</div>
             <a class="ig-post-link" href="${post.permalink || 'https://www.instagram.com/SalfordHongkongers/'}" target="_blank">
               查看原帖 ↗
@@ -1323,7 +1362,7 @@ async function loadIgFeed() {
         </div>`;
     }).join('');
   } catch (e) {
-    container.innerHTML = '<div class="ig-error">📡 無法載入最新消息<br>請檢查網絡連接或稍後再試</div>';
+    container.innerHTML = '<div class="ig-error"><span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#bf5fff" stroke-width="1.8" filter="url(#glow-purple)"><path d="M1 6l5 5M6 1l5 5"/><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 010 8.49M19.07 4.93a10 10 0 010 14.14"/></svg></span> 無法載入最新消息<br>請檢查網絡連接或稍後再試</div>';
   }
 }
 
@@ -1343,7 +1382,7 @@ function showInstallBanner() {
     <div style="position:fixed;bottom:76px;left:12px;right:12px;background:#1a1a2e;color:white;
       border-radius:14px;padding:16px;display:flex;align-items:center;gap:12px;
       box-shadow:0 4px 20px rgba(0,0,0,0.3);z-index:200;animation:slideUp 0.3s ease;">
-      <div style="font-size:32px;">📱</div>
+      <div style="font-size:32px;"><span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#00d4ff" stroke-width="1.8" filter="url(#glow-blue)"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></span></div>
       <div style="flex:1;">
         <div style="font-weight:700;font-size:14px;margin-bottom:4px;">加入主畫面</div>
         <div style="font-size:12px;opacity:0.8;">將 App 儲存到主畫面，隨時快速開啟！</div>
@@ -1399,11 +1438,11 @@ const translations = {
     heroTitle: '凝聚香港人', heroTitleSpan: '共建互助社群',
     heroSubtitle: '在 Salford 的香港人社區組織，提供支援、文化活動與社群連結',
     heroEventsBtn: '→ 查看即將舉行的活動',
-    heroDonateBtn: '💛 支持我們',
-    heroContactBtn: '📬 聯絡 / 申請',
-    volunteerZoneLabel: '🙋 義工專區',
-    heroCheckinBtn: '✅ 義工簽到 / 簽退',
-    heroJoinBtn: '🤝 加入義工隊',
+    heroDonateBtn: '<span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ff2d78" stroke-width="1.8" filter="url(#glow-pink)"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></span> 支持我們',
+    heroContactBtn: '<span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ff2d78" stroke-width="1.8" filter="url(#glow-pink)"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span> 聯絡 / 申請',
+    volunteerZoneLabel: '<span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ff2d78" stroke-width="1.8" filter="url(#glow-pink)"><circle cx="12" cy="5" r="2.5"/><path d="M12 8v5M9 10l-2 4h10l-2-4"/><path d="M7 22v-5M17 22v-5"/></svg></span> 義工專區',
+    heroCheckinBtn: '<span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ff2d78" stroke-width="1.8" filter="url(#glow-pink)"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22,4 12,14.01 9,11.01"/></svg></span> 義工簽到 / 簽退',
+    heroJoinBtn: '<span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ff2d78" stroke-width="1.8" filter="url(#glow-pink)"><path d="M14 9l-2-2-6 6 2 2 6-6zM8 15l-3 3M16 7l3-3M10 17l4 4 6-6-4-4"/></svg></span> 加入義工隊',
     // Pages
     pageTitle_events: '即將舉行的活動',
     pageTitle_register: '活動登記',
@@ -1423,11 +1462,11 @@ const translations = {
     heroTitle: 'United Hongkongers', heroTitleSpan: 'Building Community Together',
     heroSubtitle: 'A Hong Kong community organisation in Salford providing support, cultural events and connection',
     heroEventsBtn: '→ View Upcoming Events',
-    heroDonateBtn: '💛 Support Us',
-    heroContactBtn: '📬 Contact / Apply',
-    volunteerZoneLabel: '🙋 Volunteer Zone',
-    heroCheckinBtn: '✅ Volunteer Check-In / Out',
-    heroJoinBtn: '🤝 Join as Volunteer',
+    heroDonateBtn: '<span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ff2d78" stroke-width="1.8" filter="url(#glow-pink)"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></span> Support Us',
+    heroContactBtn: '<span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ff2d78" stroke-width="1.8" filter="url(#glow-pink)"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span> Contact / Apply',
+    volunteerZoneLabel: '<span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ff2d78" stroke-width="1.8" filter="url(#glow-pink)"><circle cx="12" cy="5" r="2.5"/><path d="M12 8v5M9 10l-2 4h10l-2-4"/><path d="M7 22v-5M17 22v-5"/></svg></span> Volunteer Zone',
+    heroCheckinBtn: '<span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ff2d78" stroke-width="1.8" filter="url(#glow-pink)"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22,4 12,14.01 9,11.01"/></svg></span> Volunteer Check-In / Out',
+    heroJoinBtn: '<span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ff2d78" stroke-width="1.8" filter="url(#glow-pink)"><path d="M14 9l-2-2-6 6 2 2 6-6zM8 15l-3 3M16 7l3-3M10 17l4 4 6-6-4-4"/></svg></span> Join as Volunteer',
     // Pages
     pageTitle_events: 'Upcoming Events',
     pageTitle_register: 'Event Registration',
