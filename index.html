@@ -590,39 +590,27 @@ a.contact-value:hover { color: var(--pink); }
 .venue-item { font-size: 13px; color: var(--text-muted); padding: 10px 14px; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: var(--radius-sm); line-height: 1.5; }
 
 /* ===== IG FEED / NEWS ===== */
-.ig-feed-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
-.ig-feed-header h2 { font-size: 20px; font-weight: 800; color: var(--text); letter-spacing: -0.3px; }
-.ig-feed-updated { font-size: 11px; color: var(--text-muted); }
-.ig-post-card {
   background: var(--glass-bg); border: 1px solid var(--glass-border);
   border-radius: var(--radius); box-shadow: var(--card-shadow);
   margin-bottom: 16px; overflow: hidden;
   backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
 }
-.ig-post-image {
   width: 100%; aspect-ratio: 1/1; object-fit: cover;
   display: block; background: rgba(255,255,255,0.05);
 }
-.ig-post-image-placeholder {
   width: 100%; aspect-ratio: 1/1;
   background: linear-gradient(135deg, rgba(233,30,140,0.15), rgba(160,16,106,0.1));
   display: flex; align-items: center; justify-content: center;
   font-size: 48px;
 }
 .ig-post-body { padding: 14px 16px 16px; }
-.ig-post-date { font-size: 11px; color: var(--text-muted); margin-bottom: 8px; letter-spacing: 0.2px; }
-.ig-post-caption {
   font-size: 14px; color: var(--text); line-height: 1.6;
   display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden;
 }
-.ig-post-link {
   display: inline-flex; align-items: center; gap: 6px;
   margin-top: 12px; font-size: 13px; font-weight: 600;
   color: var(--pink); text-decoration: none;
 }
-.ig-post-link:hover { opacity: 0.8; }
-.ig-feed-footer { text-align: center; padding: 16px 0 8px; }
-.ig-feed-footer a {
   display: inline-flex; align-items: center; gap: 8px;
   padding: 12px 24px; border-radius: 50px;
   background: linear-gradient(135deg, rgba(240,148,51,0.8), rgba(220,39,67,0.8), rgba(188,24,136,0.8));
@@ -630,9 +618,6 @@ a.contact-value:hover { color: var(--pink); }
   color: white; font-size: 14px; font-weight: 700; text-decoration: none;
   transition: opacity 0.2s, transform 0.2s;
 }
-.ig-feed-footer a:hover { opacity: 0.85; transform: translateY(-2px); }
-.ig-loading { text-align: center; padding: 40px 0; color: var(--text-muted); font-size: 14px; }
-.ig-error { text-align: center; padding: 32px 16px; color: var(--text-muted); font-size: 13px; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: var(--radius); }
 
 /* ===== BOTTOM NAV ===== */
 .bottom-nav {
@@ -694,31 +679,6 @@ a.contact-value:hover { color: var(--pink); }
   .hero-title { font-size: 38px; }
   .hero-subtitle { font-size: 15px; max-width: 420px; }
   .stat-num { font-size: 28px; }
-}
-
-/* ===== DAILY NEWS BRIEFING ===== */
-.section-news-brief { padding: 60px 0; }
-.news-brief-card {
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,105,180,0.3);
-  border-radius: 16px;
-  padding: 28px;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 0 20px rgba(255,105,180,0.1);
-}
-.news-brief-meta {
-  color: #ff69b4;
-  font-size: 0.85rem;
-  margin-bottom: 16px;
-  font-weight: 600;
-}
-.news-brief-content {
-  color: #e0e0e0;
-  font-size: 0.95rem;
-  line-height: 1.8;
-  white-space: pre-wrap;
-  max-height: 600px;
-  overflow-y: auto;
 }
 </style>
 </head>
@@ -910,31 +870,10 @@ a.contact-value:hover { color: var(--pink); }
     <p class="events-note">* 活動詳情或有更改，請留意我們的 Facebook 及 Instagram @SalfordHongkongers</p>
   </section>
 
-  <!-- Daily News Briefing Section -->
-  <section id="newsBriefing" class="section-news-brief">
-    <div class="container">
-      <h2 class="section-title"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 0-2 2zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6z"/></svg> 每日新聞簡報</h2>
-      <div class="news-brief-card" id="newsBriefCard">
-        <div class="news-brief-meta" id="newsBriefMeta"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22c5.52 0 10-4.48 10-10S17.52 2 12 2 2 6.48 2 12s4.48 10 10 10z"/><path d="M12 6v6l4 2"/></svg> 載入中...</div>
-        <div class="news-brief-content" id="newsBriefContent"></div>
-      </div>
-    </div>
-  </section>
+  
 
   <!-- NEWS / IG FEED -->
   <section id="page-news" class="page">
-    <div class="ig-feed-header">
-      <h2 class="page-title" style="margin-bottom:0;">最新消息</h2>
-      <span class="ig-feed-updated" id="igFeedUpdated"></span>
-    </div>
-    <div id="igFeedContainer">
-      <div class="ig-loading"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22c5.52 0 10-4.48 10-10S17.52 2 12 2 2 6.48 2 12s4.48 10 10 10z"/><path d="M12 6v6l4 2"/></svg> 載入中...</div>
-    </div>
-    <div class="ig-feed-footer">
-      <a href="https://www.instagram.com/salfordhongkongerscic/" target="_blank">
-        <span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 0 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></span> 關注 @SalfordHongkongers
-      </a>
-    </div>
   </section>
 
   <!-- REGISTER -->
@@ -1263,10 +1202,6 @@ a.contact-value:hover { color: var(--pink); }
     <span class="bottom-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></span>
     <span class="bottom-label">消息</span>
   </button>
-  <button class="bottom-btn" id="btn-register" onclick="showPage('register')">
-    <span class="bottom-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></span>
-    <span class="bottom-label">登記</span>
-  </button>
   <button class="bottom-btn" id="btn-volunteer" onclick="showPage('volunteer')">
     <span class="bottom-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></span>
     <span class="bottom-label">義工</span>
@@ -1283,7 +1218,6 @@ function showPage(pageId) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   const target = document.getElementById('page-' + pageId);
   if (target) target.classList.add('active');
-  if (pageId === 'news') loadIgFeed();
 
   document.querySelectorAll('.bottom-btn').forEach(b => b.classList.remove('active'));
   const activeBtn = document.getElementById('btn-' + pageId);
@@ -1392,62 +1326,7 @@ function resetForm() {
   document.getElementById('registerForm').classList.remove('hidden');
   document.getElementById('successMsg').classList.add('hidden');
 }
-
-// ===== IG FEED LOADER =====
-async function loadIgFeed() {
-  const container = document.getElementById('igFeedContainer');
-  const updatedEl = document.getElementById('igFeedUpdated');
-  if (!container) return;
-  try {
-    const res = await fetch('ig-feed.json?t=' + Date.now());
-    if (!res.ok) throw new Error('fetch failed');
-    const data = await res.json();
-    if (updatedEl && data.updated) {
-      updatedEl.textContent = '更新：' + data.updated;
-    }
-    if (!data.posts || data.posts.length === 0) {
-      container.innerHTML = '<div class="ig-error">暫時未有最新消息，請稍後再試。</div>';
-      return;
-    }
-    container.innerHTML = data.posts.map(post => {
-      const imgHtml = post.image
-        ? `<img class="ig-post-image" src="${post.image}" alt="IG post" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\"ig-post-image-placeholder\\"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 0 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>'">`
-        : `<div class="ig-post-image-placeholder"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 0 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>`;
-      const caption = post.caption
-        ? post.caption.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>')
-        : '';
-      const dateStr = post.date ? new Date(post.date).toLocaleDateString('zh-HK', {year:'numeric',month:'long',day:'numeric'}) : '';
-      return `
-        <div class="ig-post-card">
-          ${imgHtml}
-          <div class="ig-post-body">
-            ${dateStr ? `<div class="ig-post-date"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> ${dateStr}</div>` : ''}
-            <div class="ig-post-caption">${caption}</div>
-            <a class="ig-post-link" href="${post.permalink || 'https://www.instagram.com/SalfordHongkongers/'}" target="_blank">
-              查看原帖 ↗
-            </a>
-          </div>
-        </div>`;
-    }).join('');
-  } catch (e) {
-    container.innerHTML = '<div class="ig-error"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg> 無法載入最新消息<br>請檢查網絡連接或稍後再試</div>';
-  }
 }
-
-// ===== DAILY NEWS BRIEFING LOADER =====
-async function loadNewsBrief() {
-  try {
-    const res = await fetch('data/news-daily.json?t=' + Date.now());
-    if (!res.ok) throw new Error('fetch failed');
-    const data = await res.json();
-    document.getElementById('newsBriefMeta').textContent = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> ' + data.date + '  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 更新於 ' + data.updated;
-    document.getElementById('newsBriefContent').textContent = data.content;
-  } catch(e) {
-    document.getElementById('newsBriefMeta').textContent = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffe033" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> 暫時無法載入新聞簡報';
-    document.getElementById('newsBriefContent').textContent = '';
-  }
-}
-loadNewsBrief();
 
 // ===== PWA INSTALL PROMPT =====
 let deferredPrompt = null;
@@ -1516,7 +1395,6 @@ function revealPhone(wrap) {
 const translations = {
   zh: {
     // Nav
-    home: '主頁', events: '活動', register: '登記', volunteer: '義工', news: '消息', contact: '聯絡',
     // Hero
     heroTitle: '凝聚香港人', heroTitleSpan: '共建互助社群',
     heroSubtitle: '在 Salford 的香港人社區組織，提供支援、文化活動與社群連結',
@@ -1528,7 +1406,6 @@ const translations = {
     heroJoinBtn: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> 加入義工隊',
     // Pages
     pageTitle_events: '即將舉行的活動',
-    pageTitle_register: '活動登記',
     pageTitle_volunteer: '義工簽到',
     pageTitle_news: '最新消息',
     partnersTitle: '合作單位',
@@ -1540,7 +1417,6 @@ const translations = {
   },
   en: {
     // Nav
-    home: 'Home', events: 'Events', register: 'Register', volunteer: 'Volunteer', news: 'News', contact: 'Contact',
     // Hero
     heroTitle: 'United Hongkongers', heroTitleSpan: 'Building Community Together',
     heroSubtitle: 'A Hong Kong community organisation in Salford providing support, cultural events and connection',
@@ -1552,7 +1428,6 @@ const translations = {
     heroJoinBtn: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> Join as Volunteer',
     // Pages
     pageTitle_events: 'Upcoming Events',
-    pageTitle_register: 'Event Registration',
     pageTitle_volunteer: 'Volunteer Check-In',
     pageTitle_news: 'Latest News',
     partnersTitle: 'Our Partners',
