@@ -695,6 +695,31 @@ a.contact-value:hover { color: var(--pink); }
   .hero-subtitle { font-size: 15px; max-width: 420px; }
   .stat-num { font-size: 28px; }
 }
+
+/* ===== DAILY NEWS BRIEFING ===== */
+.section-news-brief { padding: 60px 0; }
+.news-brief-card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,105,180,0.3);
+  border-radius: 16px;
+  padding: 28px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 20px rgba(255,105,180,0.1);
+}
+.news-brief-meta {
+  color: #ff69b4;
+  font-size: 0.85rem;
+  margin-bottom: 16px;
+  font-weight: 600;
+}
+.news-brief-content {
+  color: #e0e0e0;
+  font-size: 0.95rem;
+  line-height: 1.8;
+  white-space: pre-wrap;
+  max-height: 600px;
+  overflow-y: auto;
+}
 </style>
 </head>
 <body>
@@ -883,6 +908,17 @@ a.contact-value:hover { color: var(--pink); }
     </div>
 
     <p class="events-note">* 活動詳情或有更改，請留意我們的 Facebook 及 Instagram @SalfordHongkongers</p>
+  </section>
+
+  <!-- Daily News Briefing Section -->
+  <section id="newsBriefing" class="section-news-brief">
+    <div class="container">
+      <h2 class="section-title">📰 每日新聞簡報</h2>
+      <div class="news-brief-card" id="newsBriefCard">
+        <div class="news-brief-meta" id="newsBriefMeta">⏳ 載入中...</div>
+        <div class="news-brief-content" id="newsBriefContent"></div>
+      </div>
+    </div>
   </section>
 
   <!-- NEWS / IG FEED -->
@@ -1346,6 +1382,21 @@ async function loadIgFeed() {
     container.innerHTML = '<div class="ig-error">📡 無法載入最新消息<br>請檢查網絡連接或稍後再試</div>';
   }
 }
+
+// ===== DAILY NEWS BRIEFING LOADER =====
+async function loadNewsBrief() {
+  try {
+    const res = await fetch('data/news-daily.json?t=' + Date.now());
+    if (!res.ok) throw new Error('fetch failed');
+    const data = await res.json();
+    document.getElementById('newsBriefMeta').textContent = '📅 ' + data.date + '  ⏰ 更新於 ' + data.updated;
+    document.getElementById('newsBriefContent').textContent = data.content;
+  } catch(e) {
+    document.getElementById('newsBriefMeta').textContent = '⚠️ 暫時無法載入新聞簡報';
+    document.getElementById('newsBriefContent').textContent = '';
+  }
+}
+loadNewsBrief();
 
 // ===== PWA INSTALL PROMPT =====
 let deferredPrompt = null;
