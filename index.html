@@ -745,9 +745,50 @@ a.contact-value:hover { color: var(--pink); }
   width: 100%;
   height: 100%;
 }
+
+/* ===== NEON SVG ICONS ===== */
+.neon-icon {
+  display: inline-block;
+  vertical-align: middle;
+  width: 1.1em;
+  height: 1.1em;
+  margin: 0 0.15em;
+  position: relative;
+  top: -0.05em;
+}
+.neon-icon svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
 </style>
 </head>
 <body>
+<svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
+  <defs>
+    <filter id="glow-pink" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="1.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-blue" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="1.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-yellow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="1.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-green" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="1.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-purple" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="1.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+</svg>
+
 <svg width="0" height="0" style="position:absolute">
   <defs>
     <filter id="glow-pink" x="-50%" y="-50%" width="200%" height="200%">
@@ -953,7 +994,7 @@ a.contact-value:hover { color: var(--pink); }
 <span class="news-daily-badge" id="newsDailyDate"></span>
 </div>
 <div id="newsDailyContainer">
-<div class="ig-loading">⏳ 載入中...</div>
+<div class="ig-loading"><span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#bf5fff" stroke-width="1.8" filter="url(#glow-purple)"><path d="M5 2h14M5 22h14M6 2v5l5 5-5 5v5M18 2v5l-5 5 5 5v5"/></svg></span> 載入中...</div>
 </div>
 </section>
 <div class="ig-feed-header">
@@ -961,7 +1002,7 @@ a.contact-value:hover { color: var(--pink); }
 <span class="ig-feed-updated" id="igFeedUpdated"></span>
 </div>
 <div id="igFeedContainer">
-<div class="ig-loading">⏳ 載入中...</div>
+<div class="ig-loading"><span class="neon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#bf5fff" stroke-width="1.8" filter="url(#glow-purple)"><path d="M5 2h14M5 22h14M6 2v5l5 5-5 5v5M18 2v5l-5 5 5 5v5"/></svg></span> 載入中...</div>
 </div>
 <div class="ig-feed-footer">
 <a href="https://www.instagram.com/salfordhongkongerscic/" target="_blank">
