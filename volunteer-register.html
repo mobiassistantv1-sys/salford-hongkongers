@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>義工登記 — Salford Hongkongers</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f5f5f5;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+      padding: 36px 32px;
+      width: 100%;
+      max-width: 480px;
+    }
+    .logo {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .logo img {
+      height: 56px;
+      object-fit: contain;
+    }
+    h1 {
+      font-size: 1.4rem;
+      color: #1a1a2e;
+      text-align: center;
+      margin-bottom: 6px;
+    }
+    .subtitle {
+      text-align: center;
+      color: #666;
+      font-size: 0.9rem;
+      margin-bottom: 28px;
+    }
+    .form-group {
+      margin-bottom: 18px;
+    }
+    label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 6px;
+    }
+    input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid #ddd;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border-color 0.2s;
+      outline: none;
+    }
+    input:focus { border-color: #c0392b; }
+    .row { display: flex; gap: 12px; }
+    .row .form-group { flex: 1; }
+    .btn {
+      width: 100%;
+      padding: 14px;
+      background: #c0392b;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: 8px;
+    }
+    .btn:hover { background: #a93226; }
+    .btn:disabled { background: #ccc; cursor: not-allowed; }
+    .alert {
+      padding: 14px 16px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      margin-top: 16px;
+      display: none;
+    }
+    .alert.success { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
+    .alert.error   { background: #fdecea; color: #c62828; border: 1px solid #ef9a9a; }
+    .checkin-link {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 0.88rem;
+      color: #666;
+    }
+    .checkin-link a { color: #c0392b; text-decoration: none; font-weight: 600; }
+    .note {
+      font-size: 0.8rem;
+      color: #888;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo">
+      <img src="images/logo.png" alt="Salford Hongkongers" onerror="this.style.display='none'">
+    </div>
+    <h1>義工登記</h1>
+    <p class="subtitle">Volunteer Registration<br>Salford Hongkongers CIC</p>
+
+    <form id="regForm">
+      <div class="form-group">
+        <label>義工登記名字 <span style="color:#c0392b">*</span></label>
+        <input type="text" id="regName" placeholder="例：Chan Tai Man / 陳大文" required>
+        <p class="note">請與你常用的稱呼一致，方便日後打卡識別</p>
+      </div>
+      <div class="row">
+        <div class="form-group">
+          <label>First Name <span style="color:#c0392b">*</span></label>
+          <input type="text" id="firstName" placeholder="e.g. Tai Man" required>
+        </div>
+        <div class="form-group">
+          <label>Surname <span style="color:#c0392b">*</span></label>
+          <input type="text" id="surname" placeholder="e.g. Chan" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>WhatsApp 號碼 <span style="color:#c0392b">*</span></label>
+        <input type="tel" id="whatsapp" placeholder="例：07712345678 / 85291234567" required>
+        <p class="note">打卡時需要用電話尾四位核實身份</p>
+      </div>
+
+      <button type="submit" class="btn" id="submitBtn">提交登記 Submit</button>
+    </form>
+
+    <div class="alert" id="alertBox"></div>
+
+    <div class="checkin-link">
+      已登記？<a href="volunteer-checkin.html">前往打卡 →</a>
+    </div>
+  </div>
+
+  <script>
+    // ⚠️ 請將下方 URL 換成你的 Apps Script 部署 URL
+    var APPS_SCRIPT_URL = 'YOUR_APPS_SCRIPT_URL_HERE';
+
+    document.getElementById('regForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      var btn = document.getElementById('submitBtn');
+      var alert = document.getElementById('alertBox');
+      btn.disabled = true;
+      btn.textContent = '提交中...';
+      alert.style.display = 'none';
+
+      var payload = {
+        action: 'addVolunteer',
+        regName:    document.getElementById('regName').value.trim(),
+        firstName:  document.getElementById('firstName').value.trim(),
+        surname:    document.getElementById('surname').value.trim(),
+        whatsapp:   document.getElementById('whatsapp').value.trim()
+      };
+
+      fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify(payload)
+      })
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (data.success) {
+          alert.className = 'alert success';
+          alert.innerHTML = '✅ ' + data.message + '<br><small>歡迎加入 Salford Hongkongers！</small>';
+          document.getElementById('regForm').reset();
+        } else {
+          alert.className = 'alert error';
+          alert.innerHTML = '❌ ' + data.error;
+        }
+        alert.style.display = 'block';
+      })
+      .catch(function() {
+        alert.className = 'alert error';
+        alert.innerHTML = '❌ 網絡錯誤，請稍後再試';
+        alert.style.display = 'block';
+      })
+      .finally(function() {
+        btn.disabled = false;
+        btn.textContent = '提交登記 Submit';
+      });
+    });
+  </script>
+</body>
+</html>
