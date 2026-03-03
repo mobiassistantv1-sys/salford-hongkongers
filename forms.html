@@ -170,9 +170,9 @@ footer {
     <div class="card">
       <h2>義工報名</h2>
       <p class="subtitle">加入我們的義工團隊，為社群作出貢獻</p>
-      
+
       <div class="status-message" id="volunteer-status"></div>
-      
+
       <form id="volunteer-form">
         <div class="form-row">
           <div class="form-group">
@@ -272,9 +272,9 @@ footer {
     <div class="card">
       <h2>活動報名</h2>
       <p class="subtitle">報名參加我們的社區活動</p>
-      
+
       <div class="status-message" id="event-status"></div>
-      
+
       <form id="event-form">
         <div class="form-row">
           <div class="form-group">
@@ -316,15 +316,30 @@ footer {
         </div>
 
         <div class="form-group">
-          <label>居住區域 Area of Residence</label>
-          <select name="area">
-            <option value="">請選擇 Please select</option>
-            <option value="Swinton M27">Swinton M27</option>
-            <option value="Eccles M30">Eccles M30</option>
-            <option value="Salford M5/M6">Salford M5/M6</option>
-            <option value="Worsley M28">Worsley M28</option>
-            <option value="Pendlebury M27">Pendlebury M27</option>
-            <option value="Other 其他">Other 其他</option>
+          <label>居住區域 / Area of Residence <span class="required">*</span></label>
+          <select name="area" required>
+            <option value="">-- 請選擇 / Please select --</option>
+            <option value="Barton">Barton</option>
+            <option value="Boothstown and Worsley">Boothstown and Worsley</option>
+            <option value="Broughton">Broughton</option>
+            <option value="Cadishead">Cadishead</option>
+            <option value="Claremont">Claremont</option>
+            <option value="Eccles">Eccles</option>
+            <option value="Irlam">Irlam</option>
+            <option value="Kersal">Kersal</option>
+            <option value="Langworthy">Langworthy</option>
+            <option value="Little Hulton">Little Hulton</option>
+            <option value="Ordsall">Ordsall</option>
+            <option value="Pendleton and Charlestown">Pendleton and Charlestown</option>
+            <option value="Pendlebury">Pendlebury</option>
+            <option value="Swinton North">Swinton North</option>
+            <option value="Swinton South">Swinton South</option>
+            <option value="Walkden North">Walkden North</option>
+            <option value="Walkden South">Walkden South</option>
+            <option value="Weaste and Seedley">Weaste and Seedley</option>
+            <option value="Winton">Winton</option>
+            <option value="Worsley">Worsley</option>
+            <option value="Other / 其他">Other / 其他</option>
           </select>
         </div>
 
@@ -343,9 +358,9 @@ footer {
     <div class="card">
       <h2>意見回饋</h2>
       <p class="subtitle">分享你對我們服務的意見和建議</p>
-      
+
       <div class="status-message" id="feedback-status"></div>
-      
+
       <form id="feedback-form">
         <div class="form-row">
           <div class="form-group">
@@ -385,9 +400,9 @@ footer {
     <div class="card">
       <h2>合作查詢</h2>
       <p class="subtitle">與我們建立夥伴關係，共同服務社群</p>
-      
+
       <div class="status-message" id="partnership-status"></div>
-      
+
       <form id="partnership-form">
         <div class="form-row">
           <div class="form-group">
@@ -483,9 +498,9 @@ footer {
     <div class="card">
       <h2>一般查詢</h2>
       <p class="subtitle">有任何問題或需要協助，歡迎聯絡我們</p>
-      
+
       <div class="status-message" id="general-status"></div>
-      
+
       <form id="general-form">
         <div class="form-row">
           <div class="form-group">
@@ -561,10 +576,10 @@ footer {
 document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     const tab = btn.dataset.tab;
-    
+
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-    
+
     btn.classList.add('active');
     document.getElementById(tab).classList.add('active');
   });
@@ -576,38 +591,38 @@ const forms = ['volunteer', 'event', 'feedback', 'partnership', 'general'];
 forms.forEach(formType => {
   const form = document.getElementById(`${formType}-form`);
   const status = document.getElementById(`${formType}-status`);
-  
+
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    
+
     const formData = new FormData(form);
     const data = Object.fromEntries(formData);
     data.form_type = formType;
     data.submitted_at = new Date().toISOString();
-    
+
     // Show loading state
     const submitBtn = form.querySelector('.btn-primary');
     const originalText = submitBtn.textContent;
     submitBtn.disabled = true;
     submitBtn.textContent = '提交中...';
-    
+
     try {
       // Here you would normally send to your backend
       // For now, we'll simulate a successful submission
       await new Promise(resolve => setTimeout(resolve, 1000));
-      
+
       // Show success message
       status.className = 'status-message success';
       status.textContent = '✓ 已成功提交！我們會盡快回覆你。';
-      
+
       // Reset form
       form.reset();
-      
+
       // Hide message after 5 seconds
       setTimeout(() => {
         status.style.display = 'none';
       }, 5000);
-      
+
     } catch (error) {
       // Show error message
       status.className = 'status-message error';
