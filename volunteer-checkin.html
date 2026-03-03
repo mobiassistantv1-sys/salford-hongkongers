@@ -1,578 +1,387 @@
 <!DOCTYPE html>
 <html lang="zh-HK">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport"/>
-<title>義工簽到 | Salford Hongkongers</title>
-<style>
-:root {
-  --pink: #ff2d78;
-  --blue: #00d4ff;
-  --purple: #b44fff;
-  --green-neon: #39ff14;
-  --gold: #ffd700;
-  --silver: #c0c0c0;
-  --bronze: #cd7f32;
-  --bg: #0a0a0f;
-  --card-bg: rgba(255,255,255,0.05);
-  --card-border: rgba(255,255,255,0.1);
-  --text: #f0f0f0;
-  --text-muted: rgba(255,255,255,0.45);
-  --radius: 16px;
-}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>義工打卡 — Salford Hongkongers</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f5f5f5;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+      padding: 36px 32px;
+      width: 100%;
+      max-width: 480px;
+    }
+    .logo {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .logo img { height: 52px; object-fit: contain; }
+    h1 { font-size: 1.4rem; color: #1a1a2e; text-align: center; margin-bottom: 4px; }
+    .subtitle { text-align: center; color: #666; font-size: 0.9rem; margin-bottom: 28px; }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+    /* Step indicators */
+    .steps {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 28px;
+    }
+    .step {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.78rem; font-weight: 700;
+      background: #eee; color: #aaa;
+      transition: all 0.3s;
+    }
+    .step.active { background: #c0392b; color: #fff; }
+    .step.done   { background: #27ae60; color: #fff; }
+    .step-line { flex: 1; height: 2px; background: #eee; align-self: center; max-width: 40px; }
 
-body {
-  font-family: 'Segoe UI', system-ui, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background-image:
-    radial-gradient(ellipse at 20% 20%, rgba(255,45,120,0.08) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 80%, rgba(0,212,255,0.08) 0%, transparent 50%);
-}
+    /* Panels */
+    .panel { display: none; }
+    .panel.active { display: block; }
 
-/* NAV */
-nav {
-  background: rgba(10,10,15,0.95);
-  border-bottom: 1px solid rgba(255,45,120,0.3);
-  padding: 14px 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-shrink: 0;
-  backdrop-filter: blur(12px);
-  position: sticky; top: 0; z-index: 100;
-}
-nav .logo { color: #fff; font-size: 1rem; font-weight: 800; letter-spacing: -0.3px; }
-nav .logo span { color: var(--pink); text-shadow: 0 0 10px var(--pink); }
-nav .nav-time {
-  color: var(--blue); font-size: 0.88rem;
-  font-variant-numeric: tabular-nums; font-weight: 700;
-  text-shadow: 0 0 8px var(--blue);
-}
-nav .back-btn {
-  color: var(--text-muted); font-size: 0.85rem;
-  text-decoration: none; display: flex; align-items: center; gap: 4px;
-  transition: color 0.2s;
-}
-nav .back-btn:hover { color: var(--pink); }
+    .form-group { margin-bottom: 18px; }
+    label { display: block; font-size: 0.85rem; font-weight: 600; color: #333; margin-bottom: 6px; }
 
-/* LAYOUT */
-.page {
-  display: flex; flex-direction: column; gap: 16px;
-  padding: 20px 16px 40px;
-  max-width: 480px; margin: 0 auto; width: 100%;
-}
+    /* Autocomplete */
+    .autocomplete-wrap { position: relative; }
+    input[type="text"], input[type="tel"], input[type="date"] {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid #ddd;
+      border-radius: 8px;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input:focus { border-color: #c0392b; }
+    .dropdown {
+      position: absolute;
+      top: 100%; left: 0; right: 0;
+      background: #fff;
+      border: 1.5px solid #ddd;
+      border-top: none;
+      border-radius: 0 0 8px 8px;
+      max-height: 200px;
+      overflow-y: auto;
+      z-index: 100;
+      display: none;
+    }
+    .dropdown-item {
+      padding: 10px 14px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .dropdown-item:hover, .dropdown-item.selected { background: #fdecea; }
+    .dropdown-item:last-child { border-bottom: none; }
 
-/* ┌── LEADERBOARD ─────────────────────────────────────────┐ */
-.leaderboard {
-  background: linear-gradient(135deg, rgba(255,215,0,0.08), rgba(180,79,255,0.08));
-  border: 1px solid rgba(255,215,0,0.25);
-  border-radius: var(--radius);
-  padding: 20px 18px 18px;
-  box-shadow: 0 0 20px rgba(255,215,0,0.08);
-}
-.lb-header {
-  text-align: center;
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: var(--gold);
-  text-shadow: 0 0 10px rgba(255,215,0,0.6);
-  margin-bottom: 16px;
-}
-.lb-month {
-  display: block;
-  font-size: 0.7rem;
-  color: var(--text-muted);
-  letter-spacing: 0.5px;
-  margin-top: 3px;
-  text-transform: none;
-  font-weight: 500;
-}
-.lb-list {
-  display: flex; flex-direction: column; gap: 10px;
-  list-style: none;
-}
-.lb-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 14px;
-  border-radius: 12px;
-  position: relative;
-  overflow: hidden;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.08);
-  transition: all 0.3s;
-}
-.lb-item:hover {
-  border-color: rgba(255,215,0,0.3);
-  background: rgba(255,215,0,0.05);
-  transform: translateX(2px);
-}
+    .btn {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: 8px;
+    }
+    .btn-primary { background: #c0392b; color: #fff; }
+    .btn-primary:hover { background: #a93226; }
+    .btn-primary:disabled { background: #ccc; cursor: not-allowed; }
+    .btn-outline { background: #fff; color: #c0392b; border: 2px solid #c0392b; }
+    .btn-outline:hover { background: #fdecea; }
 
-/* Rank badges */
-.lb-rank {
-  width: 32px; height: 32px;
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-weight: 900; font-size: 0.85rem;
-  flex-shrink: 0;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-}
-.lb-item[data-rank="1"] .lb-rank {
-  background: linear-gradient(135deg, #ffd700, #ffed4e);
-  color: #1a1a1a;
-  box-shadow: 0 0 16px rgba(255,215,0,0.6), 0 2px 8px rgba(0,0,0,0.3);
-}
-.lb-item[data-rank="2"] .lb-rank {
-  background: linear-gradient(135deg, #c0c0c0, #e8e8e8);
-  color: #1a1a1a;
-  box-shadow: 0 0 12px rgba(192,192,192,0.5);
-}
-.lb-item[data-rank="3"] .lb-rank {
-  background: linear-gradient(135deg, #cd7f32, #e09b5f);
-  color: #1a1a1a;
-  box-shadow: 0 0 12px rgba(205,127,50,0.5);
-}
-.lb-item:not([data-rank="1"]):not([data-rank="2"]):not([data-rank="3"]) .lb-rank {
-  background: rgba(255,255,255,0.08);
-  color: var(--text-muted);
-  font-weight: 700;
-  border: 1px solid rgba(255,255,255,0.12);
-}
+    /* Check-in action buttons */
+    .action-btns { display: flex; gap: 14px; margin-top: 8px; }
+    .action-btns .btn { flex: 1; font-size: 1.1rem; padding: 16px; }
+    .btn-signin  { background: #27ae60; color: #fff; }
+    .btn-signin:hover  { background: #219150; }
+    .btn-signout { background: #e67e22; color: #fff; }
+    .btn-signout:hover { background: #ca6f1e; }
 
-.lb-info { flex: 1; min-width: 0; }
-.lb-name {
-  font-weight: 700;
-  font-size: 0.92rem;
-  margin-bottom: 2px;
-  display: block;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-.lb-item[data-rank="1"] .lb-name { color: var(--gold); }
-.lb-item[data-rank="2"] .lb-name { color: var(--silver); }
-.lb-item[data-rank="3"] .lb-name { color: var(--bronze); }
+    /* Volunteer info card */
+    .vol-card {
+      background: #f8f9fa;
+      border: 1.5px solid #e0e0e0;
+      border-radius: 10px;
+      padding: 16px 18px;
+      margin-bottom: 20px;
+    }
+    .vol-card .vol-name { font-size: 1.2rem; font-weight: 700; color: #1a1a2e; }
+    .vol-card .vol-id   { font-size: 0.85rem; color: #888; margin-top: 2px; }
 
-.lb-desc {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  display: block;
-}
+    /* Success screen */
+    .success-screen {
+      text-align: center;
+      padding: 20px 0;
+    }
+    .success-icon { font-size: 4rem; margin-bottom: 16px; }
+    .success-screen h2 { font-size: 1.5rem; color: #1a1a2e; margin-bottom: 8px; }
+    .success-screen .action-badge {
+      display: inline-block;
+      padding: 6px 18px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 12px;
+    }
+    .badge-signin  { background: #e8f5e9; color: #27ae60; }
+    .badge-signout { background: #fef3e2; color: #e67e22; }
+    .success-screen .vol-name-big { font-size: 1.3rem; font-weight: 700; color: #c0392b; margin-bottom: 6px; }
+    .success-screen .timestamp { font-size: 0.88rem; color: #888; }
 
-.lb-score {
-  font-size: 1.1rem;
-  font-weight: 900;
-  color: var(--blue);
-  flex-shrink: 0;
-  text-shadow: 0 0 8px rgba(0,212,255,0.5);
-  font-variant-numeric: tabular-nums;
-}
-.lb-item[data-rank="1"] .lb-score { color: var(--gold); text-shadow: 0 0 10px rgba(255,215,0,0.6); }
+    .alert {
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      margin-top: 14px;
+      display: none;
+    }
+    .alert.error { background: #fdecea; color: #c62828; border: 1px solid #ef9a9a; }
 
-/* ┌── FORM CARD ─────────────────────────────────────────┐ */
-.form-card {
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
-  border-radius: var(--radius);
-  padding: 24px 20px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-}
-.form-title {
-  font-size: 1.3rem;
-  font-weight: 800;
-  text-align: center;
-  margin-bottom: 6px;
-  background: linear-gradient(135deg, var(--pink), var(--blue));
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-.form-subtitle {
-  text-align: center;
-  font-size: 0.82rem;
-  color: var(--text-muted);
-  margin-bottom: 24px;
-}
+    .reg-link { text-align: center; margin-top: 20px; font-size: 0.88rem; color: #666; }
+    .reg-link a { color: #c0392b; text-decoration: none; font-weight: 600; }
 
-.form-group {
-  margin-bottom: 20px;
-}
-label {
-  display: block;
-  font-size: 0.85rem;
-  font-weight: 600;
-  margin-bottom: 8px;
-  color: var(--text);
-}
-input, select {
-  width: 100%;
-  padding: 14px 16px;
-  border-radius: 12px;
-  border: 1px solid rgba(255,255,255,0.15);
-  background: rgba(255,255,255,0.05);
-  color: var(--text);
-  font-size: 0.95rem;
-  transition: all 0.3s;
-  font-family: inherit;
-}
-input:focus, select:focus {
-  outline: none;
-  border-color: var(--pink);
-  background: rgba(255,45,120,0.08);
-  box-shadow: 0 0 0 3px rgba(255,45,120,0.15);
-}
-select {
-  cursor: pointer;
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%23ff2d78' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 16px center;
-  padding-right: 44px;
-}
-
-.submit-btn {
-  width: 100%;
-  padding: 16px;
-  border: none;
-  border-radius: 12px;
-  background: linear-gradient(135deg, var(--pink), var(--purple));
-  color: #fff;
-  font-size: 1rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.3s;
-  box-shadow: 0 4px 16px rgba(255,45,120,0.3);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-.submit-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 24px rgba(255,45,120,0.45);
-}
-.submit-btn:active {
-  transform: translateY(0);
-}
-.submit-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  transform: none;
-}
-
-/* Toast */
-.toast {
-  position: fixed;
-  bottom: 30px;
-  left: 50%;
-  transform: translateX(-50%) translateY(100px);
-  background: rgba(10,10,15,0.95);
-  color: #fff;
-  padding: 14px 24px;
-  border-radius: 12px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-  font-size: 0.9rem;
-  font-weight: 600;
-  z-index: 1000;
-  border: 1px solid rgba(255,255,255,0.1);
-  backdrop-filter: blur(12px);
-  opacity: 0;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.toast.show {
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
-}
-.toast.success {
-  border-color: var(--green-neon);
-  box-shadow: 0 8px 32px rgba(57,255,20,0.25);
-}
-.toast.error {
-  border-color: var(--pink);
-  box-shadow: 0 8px 32px rgba(255,45,120,0.25);
-}
-</style>
+    .date-row { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+    .date-row label { margin-bottom: 0; white-space: nowrap; font-size: 0.85rem; color: #555; }
+    .date-row input { flex: 1; padding: 8px 12px; font-size: 0.9rem; }
+  </style>
 </head>
 <body>
-<nav>
-<div class="logo">Salford <span>Hongkongers</span></div>
-<div class="nav-time" id="currentTime">00:00</div>
-<a class="back-btn" href="index.html">← 返回主頁</a>
-</nav>
+<div class="card">
+  <div class="logo">
+    <img src="images/logo.png" alt="Salford Hongkongers" onerror="this.style.display='none'">
+  </div>
+  <h1>義工打卡</h1>
+  <p class="subtitle">Volunteer Check-In / Check-Out<br>Salford Hongkongers CIC</p>
 
-<div class="page">
-<!-- ┌── TOP 3 LEADERBOARD ────────────────────────────────┐ -->
-<section class="leaderboard">
-<div class="lb-header">
-本月排行榜
-<span class="lb-month" id="currentMonth">2025年3月</span>
-</div>
-<ol class="lb-list" id="leaderboardList">
-<li class="lb-item" data-rank="1">
-<div class="lb-rank">1</div>
-<div class="lb-info">
-<span class="lb-name">載入中...</span>
-<span class="lb-desc">本月簽到次數</span>
-</div>
-<div class="lb-score">0</div>
-</li>
-<li class="lb-item" data-rank="2">
-<div class="lb-rank">2</div>
-<div class="lb-info">
-<span class="lb-name">載入中...</span>
-<span class="lb-desc">本月簽到次數</span>
-</div>
-<div class="lb-score">0</div>
-</li>
-<li class="lb-item" data-rank="3">
-<div class="lb-rank">3</div>
-<div class="lb-info">
-<span class="lb-name">載入中...</span>
-<span class="lb-desc">本月簽到次數</span>
-</div>
-<div class="lb-score">0</div>
-</li>
-</ol>
-</section>
+  <!-- Step indicators -->
+  <div class="steps">
+    <div class="step active" id="step1">1</div>
+    <div class="step-line"></div>
+    <div class="step" id="step2">2</div>
+    <div class="step-line"></div>
+    <div class="step" id="step3">✓</div>
+  </div>
 
-<!-- ┌── FORM CARD ────────────────────────────────────────┐ -->
-<section class="form-card">
-<h1 class="form-title">義工簽到</h1>
-<p class="form-subtitle">請輸入你的名字並簽到</p>
-<form id="checkinForm">
-<div class="form-group">
-<label for="volunteerName">義工名稱 *</label>
-<input id="volunteerName" name="volunteerName" type="text" placeholder="請輸入你的全名" required autocomplete="name" />
-</div>
-<button class="submit-btn" type="submit">簽到</button>
-</form>
-</section>
+  <!-- Panel 1: Search name -->
+  <div class="panel active" id="panel1">
+    <div class="form-group">
+      <label>義工登記名字 Volunteer Name</label>
+      <div class="autocomplete-wrap">
+        <input type="text" id="nameInput" placeholder="輸入名字搜尋... Type to search" autocomplete="off">
+        <div class="dropdown" id="nameDropdown"></div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>電話尾四位 Last 4 digits of phone</label>
+      <input type="tel" id="last4Input" placeholder="例：5678" maxlength="4" pattern="\d{4}">
+    </div>
+    <div class="alert error" id="step1Alert"></div>
+    <button class="btn btn-primary" id="verifyBtn" onclick="verifyVolunteer()">核實身份 Verify</button>
+  </div>
 
-<!-- ┌── JOIN SECTION ─────────────────────────────────────────┐ -->
-<section class="form-card" style="margin-top:0;">
-<h2 class="form-title" style="font-size:1.1rem;">加入義工團隊</h2>
-<p class="form-subtitle" style="margin-bottom:16px;">想成為義工？填寫以下資料，我們會聯絡你！</p>
-<form id="joinForm">
-<div class="form-group">
-<label for="joinName">全名 *</label>
-<input id="joinName" name="joinName" placeholder="請輸入你的全名" required type="text"/>
-</div>
-<div class="form-group">
-<label for="joinWhatsApp">WhatsApp 號碼 *</label>
-<input id="joinWhatsApp" inputmode="tel" name="joinWhatsApp" placeholder="例：07712345678" required type="tel"/>
-</div>
-<div class="form-group">
-<label for="joinNote">備註（選填）</label>
-<input id="joinNote" name="joinNote" placeholder="例：只能週末參與" type="text"/>
-</div>
-<button class="submit-btn" style="background:linear-gradient(135deg,#00d4ff,#b44fff);" type="submit">提交登記</button>
-</form>
-</section>
-</div>
+  <!-- Panel 2: Confirm & check-in/out -->
+  <div class="panel" id="panel2">
+    <div class="vol-card">
+      <div class="vol-name" id="volName"></div>
+      <div class="vol-id" id="volId"></div>
+    </div>
+    <div class="date-row">
+      <label>活動日期：</label>
+      <input type="date" id="eventDate">
+    </div>
+    <p style="font-size:0.9rem;color:#555;margin-bottom:16px;text-align:center;">請選擇：</p>
+    <div class="action-btns">
+      <button class="btn btn-signin"  onclick="doCheckIn('簽到')">✅ 簽到 Check In</button>
+      <button class="btn btn-signout" onclick="doCheckIn('簽退')">🚪 簽退 Check Out</button>
+    </div>
+    <div class="alert error" id="step2Alert"></div>
+    <button class="btn btn-outline" style="margin-top:14px;" onclick="goBack()">← 返回 Back</button>
+  </div>
 
-<!-- Toast -->
-<div class="toast" id="toast"></div>
+  <!-- Panel 3: Success -->
+  <div class="panel" id="panel3">
+    <div class="success-screen">
+      <div class="success-icon" id="successIcon">✅</div>
+      <div class="action-badge" id="actionBadge"></div>
+      <div class="vol-name-big" id="successName"></div>
+      <div class="timestamp" id="successTime"></div>
+      <button class="btn btn-outline" style="margin-top:24px;max-width:200px;margin-left:auto;margin-right:auto;" onclick="reset()">再次打卡 Again</button>
+    </div>
+  </div>
+
+  <div class="reg-link">
+    未登記？<a href="volunteer-register.html">義工登記 →</a>
+  </div>
+</div>
 
 <script>
-// ────────────────────────────────────────────────────────────
-// CONFIG
-// ────────────────────────────────────────────────────────────
-const SHEET_ID = '1pIkC3TMUcMCzMUKqMN-JBfiFnBJSJbvqyiASKHWQR-w';
-const VOLUNTEERS_SHEET = 'Volunteers';
-const CHECKIN_SHEET = 'CheckIns';
-const LEADERBOARD_SHEET = 'Leaderboard';
-const API_BASE = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=`;
+  // ⚠️ 請將下方 URL 換成你的 Apps Script 部署 URL
+  var APPS_SCRIPT_URL = 'YOUR_APPS_SCRIPT_URL_HERE';
 
-// 註：Google Apps Script Web App URL for POST
-const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxc_hf9Dw9QHMRO-X1_HEL7HaO_F6OhkJgSC1CojqLdp6I2yDI5hkbpn4rqXCRAf-q4/exec';
+  var volunteers = [];
+  var selectedVolunteer = null;
 
-// ────────────────────────────────────────────────────────────
-// UTILITIES
-// ────────────────────────────────────────────────────────────
-function parseGoogleSheetsResponse(text) {
-  const jsonString = text.match(/google\.visualization\.Query\.setResponse\((.*)\);/s)?.[1];
-  if (!jsonString) throw new Error('Invalid response format');
-  return JSON.parse(jsonString);
-}
+  // Set today's date as default
+  var today = new Date().toISOString().split('T')[0];
+  document.getElementById('eventDate').value = today;
 
-function showToast(message, type = 'success') {
-  const toast = document.getElementById('toast');
-  toast.textContent = message;
-  toast.className = `toast ${type}`;
-  toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 3000);
-}
+  // Load volunteer list on startup
+  fetch(APPS_SCRIPT_URL + '?action=getVolunteers')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (data.success) volunteers = data.volunteers;
+    })
+    .catch(function() { console.warn('Could not load volunteers'); });
 
-function formatTime() {
-  const now = new Date();
-  return now.toLocaleTimeString('zh-HK', {
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    hour12: false
+  // Autocomplete
+  var nameInput = document.getElementById('nameInput');
+  var dropdown  = document.getElementById('nameDropdown');
+
+  nameInput.addEventListener('input', function() {
+    var q = this.value.trim().toLowerCase();
+    selectedVolunteer = null;
+    if (!q) { dropdown.style.display = 'none'; return; }
+
+    var matches = volunteers.filter(function(v) {
+      return v.name.toLowerCase().includes(q);
+    });
+
+    if (matches.length === 0) { dropdown.style.display = 'none'; return; }
+
+    dropdown.innerHTML = matches.map(function(v) {
+      return '<div class="dropdown-item" onclick="selectVolunteer(' + JSON.stringify(v).replace(/"/g, '&quot;') + ')">' + v.name + '</div>';
+    }).join('');
+    dropdown.style.display = 'block';
   });
-}
 
-function updateClock() {
-  document.getElementById('currentTime').textContent = formatTime();
-}
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('.autocomplete-wrap')) dropdown.style.display = 'none';
+  });
 
-function updateMonthDisplay() {
-  const now = new Date();
-  const monthStr = now.toLocaleDateString('zh-HK', { year: 'numeric', month: 'long' });
-  document.getElementById('currentMonth').textContent = monthStr;
-}
-
-
-
-// ────────────────────────────────────────────────────────────
-// LOAD LEADERBOARD (Top 3)
-// ────────────────────────────────────────────────────────────
-async function loadLeaderboard() {
-  try {
-    const url = API_BASE + encodeURIComponent(LEADERBOARD_SHEET);
-    const res = await fetch(url);
-    const text = await res.text();
-    const data = parseGoogleSheetsResponse(text);
-    const rows = data.table.rows.slice(0, 3); // Top 3 only
-
-    const listEl = document.getElementById('leaderboardList');
-    listEl.innerHTML = '';
-
-    rows.forEach((row, index) => {
-      const rank = index + 1;
-      const name = row.c[0]?.v || '未有資料';
-      const count = row.c[1]?.v || 0;
-
-      const li = document.createElement('li');
-      li.className = 'lb-item';
-      li.setAttribute('data-rank', rank);
-
-      li.innerHTML = `
-        <div class="lb-rank">${rank}</div>
-        <div class="lb-info">
-          <span class="lb-name">${name}</span>
-          <span class="lb-desc">本月簽到次數</span>
-        </div>
-        <div class="lb-score">${count}</div>
-      `;
-      listEl.appendChild(li);
-    });
-  } catch (err) {
-    console.error('Failed to load leaderboard:', err);
-  }
-}
-
-// ────────────────────────────────────────────────────────────
-// SUBMIT CHECK-IN (via Google Apps Script)
-// ────────────────────────────────────────────────────────────
-document.getElementById('checkinForm').addEventListener('submit', async (e) => {
-  e.preventDefault();
-
-  const nameField = document.getElementById('volunteerName');
-  const name = nameField.value.trim();
-
-  if (!name) {
-    showToast('請選擇你的名字', 'error');
-    return;
+  function selectVolunteer(v) {
+    selectedVolunteer = v;
+    nameInput.value = v.name;
+    dropdown.style.display = 'none';
   }
 
-  const btn = e.target.querySelector('.submit-btn');
-  btn.disabled = true;
-  btn.textContent = '簽到中...';
+  // Verify identity
+  function verifyVolunteer() {
+    var alert = document.getElementById('step1Alert');
+    alert.style.display = 'none';
 
-  try {
-    // POST to Google Apps Script
-    const res = await fetch(WEB_APP_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams({
-        volunteerName: name,
-        timestamp: new Date().toISOString()
-      })
+    var name  = nameInput.value.trim();
+    var last4 = document.getElementById('last4Input').value.trim();
+
+    if (!name)  { showAlert('step1Alert', '請輸入義工名字'); return; }
+    if (!last4 || !/^\d{4}$/.test(last4)) { showAlert('step1Alert', '請輸入正確的電話尾四位（4位數字）'); return; }
+
+    // Client-side pre-check
+    var match = volunteers.find(function(v) {
+      return v.name === name && v.phoneLast4 === last4;
     });
 
-    const result = await res.json();
-
-    if (result.status === 'success') {
-      showToast(`✓ 簽到成功！${name}`, 'success');
-      nameField.value = '';
-      // Reload leaderboard after a short delay
-      setTimeout(loadLeaderboard, 1000);
-    } else {
-      showToast(result.message || '簽到失敗', 'error');
+    if (!match && selectedVolunteer && selectedVolunteer.phoneLast4 !== last4) {
+      showAlert('step1Alert', '電話尾四位不符，請重新確認');
+      return;
     }
-  } catch (err) {
-    console.error('Check-in error:', err);
-    showToast('簽到失敗，請稍後再試', 'error');
-  } finally {
-    btn.disabled = false;
-    btn.textContent = '簽到';
-  }
-});
 
-// ────────────────────────────────────────────────────────────
-// INIT
-// ────────────────────────────────────────────────────────────
-updateClock();
-setInterval(updateClock, 1000);
-updateMonthDisplay();
-
-loadLeaderboard();
-// Refresh leaderboard every 30s
-setInterval(loadLeaderboard, 30000);
-
-// ────────────────────────────────────────────────────────────
-// JOIN FORM SUBMISSION
-// ────────────────────────────────────────────────────────────
-document.getElementById('joinForm').addEventListener('submit', async function(e) {
-  e.preventDefault();
-  const name = document.getElementById('joinName').value.trim();
-  const whatsapp = document.getElementById('joinWhatsApp').value.trim();
-  const note = document.getElementById('joinNote').value.trim();
-
-  if (!name || !whatsapp) {
-    showToast('請填寫全名及 WhatsApp 號碼', 'error');
-    return;
-  }
-
-  const btn = e.target.querySelector('.submit-btn');
-  btn.disabled = true;
-  btn.textContent = '提交中...';
-
-  try {
-    const res = await fetch(WEB_APP_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams({
-        action: 'join',
-        name: name,
-        whatsapp: whatsapp,
-        note: note,
-        timestamp: new Date().toLocaleString('zh-HK', { timeZone: 'Europe/London', hour12: false })
-      })
-    });
-
-    const result = await res.json();
-    if (result.status === 'success') {
-      showToast(`✓ 登記成功！我們會盡快聯絡你`, 'success');
-      e.target.reset();
-    } else {
-      showToast(result.message || '登記失敗，請稍後再試', 'error');
+    if (match) {
+      selectedVolunteer = match;
     }
-  } catch (err) {
-    console.error('Join error:', err);
-    showToast('登記失敗，請稍後再試', 'error');
-  } finally {
-    btn.disabled = false;
-    btn.textContent = '提交登記';
+
+    // Move to panel 2
+    setStep(2);
+    document.getElementById('volName').textContent = name;
+    document.getElementById('volId').textContent = selectedVolunteer
+      ? '義工編號：' + selectedVolunteer.id
+      : '義工編號：— ';
   }
-});
+
+  // Do check-in / check-out
+  function doCheckIn(action) {
+    var btn1 = document.querySelector('.btn-signin');
+    var btn2 = document.querySelector('.btn-signout');
+    btn1.disabled = btn2.disabled = true;
+
+    var payload = {
+      action: 'checkIn',
+      name:        nameInput.value.trim(),
+      last4:       document.getElementById('last4Input').value.trim(),
+      checkAction: action,
+      eventDate:   document.getElementById('eventDate').value
+    };
+
+    fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify(payload)
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (data.success) {
+        setStep(3);
+        var isSignIn = action === '簽到';
+        document.getElementById('successIcon').textContent  = isSignIn ? '✅' : '👋';
+        document.getElementById('actionBadge').textContent  = isSignIn ? '✅ 簽到成功' : '🚪 簽退成功';
+        document.getElementById('actionBadge').className    = 'action-badge ' + (isSignIn ? 'badge-signin' : 'badge-signout');
+        document.getElementById('successName').textContent  = data.volunteer.name;
+        document.getElementById('successTime').textContent  = data.timestamp;
+      } else {
+        showAlert('step2Alert', data.error);
+      }
+    })
+    .catch(function() { showAlert('step2Alert', '網絡錯誤，請稍後再試'); })
+    .finally(function() { btn1.disabled = btn2.disabled = false; });
+  }
+
+  function goBack() {
+    setStep(1);
+    document.getElementById('step2Alert').style.display = 'none';
+  }
+
+  function reset() {
+    nameInput.value = '';
+    document.getElementById('last4Input').value = '';
+    selectedVolunteer = null;
+    document.getElementById('step1Alert').style.display = 'none';
+    setStep(1);
+  }
+
+  function setStep(n) {
+    ['panel1','panel2','panel3'].forEach(function(id, i) {
+      document.getElementById(id).className = 'panel' + (i+1 === n ? ' active' : '');
+    });
+    [1,2,3].forEach(function(i) {
+      var el = document.getElementById('step' + i);
+      if (i < n)      el.className = 'step done';
+      else if (i === n) el.className = 'step active';
+      else             el.className = 'step';
+    });
+  }
+
+  function showAlert(id, msg) {
+    var el = document.getElementById(id);
+    el.textContent = '❌ ' + msg;
+    el.style.display = 'block';
+  }
 </script>
 </body>
 </html>
