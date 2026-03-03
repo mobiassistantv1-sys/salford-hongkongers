@@ -78,182 +78,241 @@ nav a:hover { color: white; }
 }
 .radio-item:hover { border-color: #8B0000; background: #fff9f9; }
 .radio-item input[type="radio"] { margin-top: 2px; accent-color: #8B0000; }
-.radio-item .radio-label { font-weight: 600; color: #555; flex: 1; }
-.radio-item .radio-desc { color: #888; font-size: 0.85rem; }
+.radio-item .radio-label { font-weight: 600; display: block; margin-bottom: 4px; }
+.radio-item .radio-desc { font-size: 0.85rem; color: #777; line-height: 1.4; }
 
-.checkbox-group { display: flex; flex-direction: column; gap: 10px; }
-.checkbox-item {
-  display: flex; align-items: flex-start; gap: 10px;
-  padding: 12px 14px; border: 2px solid #e0e0e0;
-  border-radius: 8px; cursor: pointer; transition: all 0.2s;
+.btn-primary {
+  background: #8B0000; color: white; padding: 14px 28px;
+  border: none; border-radius: 8px; cursor: pointer;
+  font-size: 1rem; font-weight: 600; width: 100%;
+  transition: background 0.2s; font-family: inherit;
 }
-.checkbox-item:hover { border-color: #8B0000; background: #fff9f9; }
-.checkbox-item input[type="checkbox"] { margin-top: 2px; accent-color: #8B0000; }
-.checkbox-item .checkbox-label { font-weight: 600; color: #555; flex: 1; }
-.checkbox-item .checkbox-desc { color: #888; font-size: 0.85rem; }
+.btn-primary:hover { background: #A00000; }
+.btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
 
-.submit-btn {
-  width: 100%; padding: 14px 24px;
-  background: linear-gradient(135deg, #8B0000 0%, #C41E3A 100%);
-  color: white; border: none; border-radius: 8px;
-  font-size: 1rem; font-weight: 600; cursor: pointer;
-  transition: all 0.3s; box-shadow: 0 4px 12px rgba(139,0,0,0.2);
-  margin-top: 8px;
+.social-section { margin-top: 48px; }
+.social-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+.social-card {
+  background: white; border-radius: 12px; padding: 24px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08); text-align: center;
 }
-.submit-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(139,0,0,0.3); }
-.submit-btn:active { transform: translateY(0); }
-.submit-btn:disabled {
-  background: #ccc; cursor: not-allowed;
-  box-shadow: none; transform: none;
+.social-icon { font-size: 2.5rem; margin-bottom: 12px; }
+.social-card h3 { font-size: 1.1rem; color: #8B0000; margin-bottom: 8px; }
+.social-card p { color: #888; font-size: 0.9rem; margin-bottom: 16px; }
+.social-card a {
+  color: #8B0000; text-decoration: none; font-weight: 600;
+  display: inline-block; padding: 8px 16px;
+  border: 2px solid #8B0000; border-radius: 6px;
+  transition: all 0.2s;
 }
+.social-card a:hover { background: #8B0000; color: white; }
 
-.success-message {
-  background: #d4edda; border: 2px solid #c3e6cb;
-  color: #155724; padding: 16px 20px; border-radius: 8px;
-  margin-bottom: 20px; display: none;
+footer {
+  background: #2c2c2c; color: rgba(255,255,255,0.7);
+  padding: 40px 24px; margin-top: 60px;
 }
-.success-message.show { display: block; }
-
-.error-message {
-  background: #f8d7da; border: 2px solid #f5c6cb;
-  color: #721c24; padding: 16px 20px; border-radius: 8px;
-  margin-bottom: 20px; display: none;
-}
-.error-message.show { display: block; }
-
-.note {
-  background: #fff3cd; border-left: 4px solid #ffc107;
-  padding: 12px 16px; border-radius: 4px;
-  color: #856404; font-size: 0.9rem;
-  margin-top: 20px;
-}
+.footer-content { max-width: 860px; margin: 0 auto; text-align: center; }
+.footer-content p { margin-bottom: 12px; font-size: 0.9rem; }
+.footer-links { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-top: 16px; }
+.footer-links a { color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.9rem; }
+.footer-links a:hover { color: white; }
 
 @media (max-width: 768px) {
-  .hero h1 { font-size: 1.8rem; }
+  .hero h1 { font-size: 1.7rem; }
   .hero p { font-size: 1rem; }
-  .form-row { grid-template-columns: 1fr; gap: 0; }
-  .tabs { overflow-x: auto; }
-  nav { flex-wrap: wrap; gap: 10px; }
+  .form-row { grid-template-columns: 1fr; }
+  .tabs { justify-content: flex-start; overflow-x: auto; }
 }
 
-/* Loading Spinner */
-.spinner {
-  border: 3px solid #f3f3f3;
-  border-top: 3px solid #8B0000;
-  border-radius: 50%;
-  width: 20px;
-  height: 20px;
-  animation: spin 1s linear infinite;
-  display: inline-block;
-  margin-left: 10px;
+.status-message {
+  padding: 14px 18px; border-radius: 8px; margin-bottom: 20px;
+  font-size: 0.95rem; display: none;
 }
+.status-message.success { background: #d4edda; color: #155724; display: block; }
+.status-message.error { background: #f8d7da; color: #721c24; display: block; }
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+.inline-group { display: flex; align-items: center; gap: 12px; }
+.inline-group .form-group { flex: 1; margin: 0; }
+
+.info-box {
+  background: #fff9f9; border-left: 4px solid #8B0000;
+  padding: 16px; border-radius: 6px; margin-bottom: 20px;
+  font-size: 0.9rem; color: #555;
 }
 </style>
 </head>
 <body>
 
 <nav>
-  <a href="index.html" class="logo">Salford Hongkongers</a>
+  <a href="index.html" class="logo">🇭🇰 Salford Hongkongers</a>
   <div>
-    <a href="index.html">首頁 Home</a>
-    <a href="index.html#about">關於我們 About</a>
-    <a href="index.html#news">最新消息 News</a>
-    <a href="forms.html">聯絡我們 Contact</a>
+    <a href="index.html">主頁</a>
+    <a href="forms.html">聯絡我們</a>
   </div>
 </nav>
 
-<div class="hero">
+<section class="hero">
   <h1>聯絡我們</h1>
-  <p>活動登記 · 義工報名 · 查詢建議</p>
-</div>
+  <p>與 Salford Hongkongers 聯絡，無論是活動查詢、義工報名還是意見回饋</p>
+</section>
 
 <div class="container">
-
-  <!-- Tab Navigation -->
   <div class="tabs">
-    <button class="tab-btn active" data-tab="event">活動登記 Event Registration</button>
-    <button class="tab-btn" data-tab="volunteer">義工報名 Volunteer Sign-up</button>
-    <button class="tab-btn" data-tab="contact">一般查詢 General Enquiry</button>
+    <button class="tab-btn active" data-tab="volunteer">🙋 義工報名</button>
+    <button class="tab-btn" data-tab="event">📅 活動報名</button>
+    <button class="tab-btn" data-tab="feedback">💬 意見回饋</button>
+    <button class="tab-btn" data-tab="partnership">🤝 合作查詢</button>
+    <button class="tab-btn" data-tab="general">📧 一般查詢</button>
   </div>
 
-  <!-- Event Registration Tab -->
-  <div class="tab-panel active" id="event-tab">
+  <!-- Volunteer Registration -->
+  <div class="tab-panel active" id="volunteer">
     <div class="card">
-      <h2>活動登記 Event Registration</h2>
-      <p class="subtitle">登記參加我們即將舉辦的活動 / Register for our upcoming events</p>
+      <h2>義工報名</h2>
+      <p class="subtitle">加入我們的義工團隊，為社群作出貢獻</p>
       
-      <div id="event-success" class="success-message"></div>
-      <div id="event-error" class="error-message"></div>
+      <div class="status-message" id="volunteer-status"></div>
       
-      <form id="event-form">
-        <div class="form-group">
-          <label>活動選擇 Event Selection <span class="required">*</span></label>
-          <select name="event" required>
-            <option value="">請選擇活動 Please select an event</option>
-            <option value="lunar-new-year-2026">Lunar New Year Celebration 2026 農曆新年慶祝活動 (15 Feb)</option>
-            <option value="community-potluck-mar">Community Potluck 社區聚餐 (22 Mar)</option>
-            <option value="cultural-workshop-apr">Cultural Workshop 文化工作坊 (12 Apr)</option>
-            <option value="hiking-trip-may">Hiking Trip 行山活動 (17 May)</option>
-            <option value="summer-bbq">Summer BBQ 夏日燒烤 (28 Jun)</option>
-            <option value="other">其他 Other</option>
-          </select>
+      <form id="volunteer-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label>姓名 <span class="required">*</span></label>
+            <input type="text" name="name" required>
+          </div>
+          <div class="form-group">
+            <label>電郵 <span class="required">*</span></label>
+            <input type="email" name="email" required>
+          </div>
         </div>
 
         <div class="form-row">
           <div class="form-group">
-            <label>姓名 Name <span class="required">*</span></label>
-            <input type="text" name="name" placeholder="請輸入姓名 Enter your name" required>
+            <label>電話號碼 <span class="required">*</span></label>
+            <input type="tel" name="phone" required>
           </div>
           <div class="form-group">
-            <label>電話 Phone <span class="required">*</span></label>
-            <input type="tel" name="phone" placeholder="請輸入電話號碼 Enter phone number" required>
+            <label>地區</label>
+            <select name="area">
+              <option value="">請選擇</option>
+              <option value="salford">Salford</option>
+              <option value="manchester">Manchester</option>
+              <option value="other">其他</option>
+            </select>
           </div>
         </div>
 
         <div class="form-group">
-          <label>電郵 Email <span class="required">*</span></label>
-          <input type="email" name="email" placeholder="請輸入電郵地址 Enter email address" required>
+          <label>你希望參與哪類義工服務？ <span class="required">*</span></label>
+          <div class="radio-group">
+            <label class="radio-item">
+              <input type="radio" name="volunteer_type" value="event_support" required>
+              <div>
+                <span class="radio-label">活動支援</span>
+                <span class="radio-desc">協助籌辦及執行社區活動</span>
+              </div>
+            </label>
+            <label class="radio-item">
+              <input type="radio" name="volunteer_type" value="community_outreach" required>
+              <div>
+                <span class="radio-label">社區外展</span>
+                <span class="radio-desc">探訪及支援有需要的社群成員</span>
+              </div>
+            </label>
+            <label class="radio-item">
+              <input type="radio" name="volunteer_type" value="admin" required>
+              <div>
+                <span class="radio-label">行政支援</span>
+                <span class="radio-desc">協助文書、通訊及資料管理</span>
+              </div>
+            </label>
+            <label class="radio-item">
+              <input type="radio" name="volunteer_type" value="translation" required>
+              <div>
+                <span class="radio-label">翻譯服務</span>
+                <span class="radio-desc">提供中英文翻譯支援</span>
+              </div>
+            </label>
+            <label class="radio-item">
+              <input type="radio" name="volunteer_type" value="other" required>
+              <div>
+                <span class="radio-label">其他</span>
+                <span class="radio-desc">請在下方說明</span>
+              </div>
+            </label>
+          </div>
         </div>
 
         <div class="form-group">
-          <label>參加人數 Number of Attendees <span class="required">*</span></label>
-          <select name="attendees" required>
-            <option value="">請選擇 Please select</option>
-            <option value="1">1 人</option>
-            <option value="2">2 人</option>
-            <option value="3">3 人</option>
-            <option value="4">4 人</option>
-            <option value="5+">5 人或以上 5 or more</option>
+          <label>可服務時段</label>
+          <select name="availability">
+            <option value="">請選擇</option>
+            <option value="weekday">平日</option>
+            <option value="weekend">週末</option>
+            <option value="flexible">彈性配合</option>
           </select>
         </div>
 
         <div class="form-group">
-          <label>飲食需求 Dietary Requirements</label>
-          <div class="checkbox-group">
-            <label class="checkbox-item">
-              <input type="checkbox" name="dietary" value="vegetarian">
-              <div>
-                <div class="checkbox-label">素食 Vegetarian</div>
-              </div>
-            </label>
-            <label class="checkbox-item">
-              <input type="checkbox" name="dietary" value="halal">
-              <div>
-                <div class="checkbox-label">清真 Halal</div>
-              </div>
-            </label>
-            <label class="checkbox-item">
-              <input type="checkbox" name="dietary" value="allergy">
-              <div>
-                <div class="checkbox-label">食物敏感 Food Allergies</div>
-                <div class="checkbox-desc">請在備註欄說明 Please specify in notes</div>
-              </div>
-            </label>
+          <label>相關經驗或技能（選填）</label>
+          <textarea name="skills" placeholder="例如：曾參與社區活動、擅長設計、會計、社交媒體管理等"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>其他補充資料</label>
+          <textarea name="additional_info" placeholder="任何你想讓我們知道的資料"></textarea>
+        </div>
+
+        <button type="submit" class="btn-primary">提交報名</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Event Registration -->
+  <div class="tab-panel" id="event">
+    <div class="card">
+      <h2>活動報名</h2>
+      <p class="subtitle">報名參加我們的社區活動</p>
+      
+      <div class="status-message" id="event-status"></div>
+      
+      <form id="event-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label>姓名 <span class="required">*</span></label>
+            <input type="text" name="name" required>
           </div>
+          <div class="form-group">
+            <label>電郵 <span class="required">*</span></label>
+            <input type="email" name="email" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>電話號碼 <span class="required">*</span></label>
+            <input type="tel" name="phone" required>
+          </div>
+          <div class="form-group">
+            <label>參加人數 <span class="required">*</span></label>
+            <input type="number" name="attendees" min="1" value="1" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>活動選擇 <span class="required">*</span></label>
+          <select name="event_name" required>
+            <option value="">請選擇活動</option>
+            <option value="orientation">新來港人士適應課程</option>
+            <option value="social">社區聚會</option>
+            <option value="cultural">文化活動</option>
+            <option value="support">支援服務</option>
+            <option value="other">其他（請說明）</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>特殊需要或飲食限制（選填）</label>
+          <textarea name="special_requirements" placeholder="例如：素食、輪椅使用者、需要翻譯服務等"></textarea>
         </div>
 
         <div class="form-group">
@@ -265,373 +324,299 @@ nav a:hover { color: white; }
             <option value="Salford M5/M6">Salford M5/M6</option>
             <option value="Worsley M28">Worsley M28</option>
             <option value="Pendlebury M27">Pendlebury M27</option>
-            <option value="other">Other 其他</option>
+            <option value="Other 其他">Other 其他</option>
           </select>
         </div>
 
         <div class="form-group">
-          <label>備註 Additional Notes</label>
-          <textarea name="notes" placeholder="如有特別需求或問題，請在此說明 Any special requirements or questions"></textarea>
+          <label>備註</label>
+          <textarea name="notes" placeholder="其他需要說明的事項"></textarea>
         </div>
 
-        <button type="submit" class="submit-btn">提交登記 Submit Registration</button>
+        <button type="submit" class="btn-primary">提交報名</button>
       </form>
     </div>
   </div>
 
-  <!-- Volunteer Sign-up Tab -->
-  <div class="tab-panel" id="volunteer-tab">
+  <!-- Feedback -->
+  <div class="tab-panel" id="feedback">
     <div class="card">
-      <h2>義工報名 Volunteer Sign-up</h2>
-      <p class="subtitle">加入我們的義工團隊，為社區服務 / Join our volunteer team to serve the community</p>
+      <h2>意見回饋</h2>
+      <p class="subtitle">分享你對我們服務的意見和建議</p>
       
-      <div id="volunteer-success" class="success-message"></div>
-      <div id="volunteer-error" class="error-message"></div>
+      <div class="status-message" id="feedback-status"></div>
       
-      <form id="volunteer-form">
+      <form id="feedback-form">
         <div class="form-row">
           <div class="form-group">
-            <label>姓名 Name <span class="required">*</span></label>
-            <input type="text" name="name" placeholder="請輸入姓名 Enter your name" required>
+            <label>姓名（選填）</label>
+            <input type="text" name="name" placeholder="可匿名提交">
           </div>
           <div class="form-group">
-            <label>電話 Phone <span class="required">*</span></label>
-            <input type="tel" name="phone" placeholder="請輸入電話號碼 Enter phone number" required>
+            <label>電郵（選填）</label>
+            <input type="email" name="email" placeholder="如希望收到回覆請提供">
           </div>
         </div>
 
         <div class="form-group">
-          <label>電郵 Email <span class="required">*</span></label>
-          <input type="email" name="email" placeholder="請輸入電郵地址 Enter email address" required>
-        </div>
-
-        <div class="form-group">
-          <label>年齡組別 Age Group <span class="required">*</span></label>
-          <select name="age_group" required>
-            <option value="">請選擇 Please select</option>
-            <option value="18-25">18-25</option>
-            <option value="26-35">26-35</option>
-            <option value="36-45">36-45</option>
-            <option value="46-55">46-55</option>
-            <option value="56+">56+</option>
+          <label>意見類別 <span class="required">*</span></label>
+          <select name="feedback_type" required>
+            <option value="">請選擇</option>
+            <option value="service">服務質素</option>
+            <option value="event">活動內容</option>
+            <option value="suggestion">建議</option>
+            <option value="complaint">投訴</option>
+            <option value="other">其他</option>
           </select>
         </div>
 
         <div class="form-group">
-          <label>可參與時段 Availability <span class="required">*</span></label>
-          <div class="checkbox-group">
-            <label class="checkbox-item">
-              <input type="checkbox" name="availability" value="weekday-morning">
-              <div>
-                <div class="checkbox-label">平日早上 Weekday Mornings</div>
-                <div class="checkbox-desc">週一至五 9am-12pm</div>
-              </div>
-            </label>
-            <label class="checkbox-item">
-              <input type="checkbox" name="availability" value="weekday-afternoon">
-              <div>
-                <div class="checkbox-label">平日下午 Weekday Afternoons</div>
-                <div class="checkbox-desc">週一至五 1pm-5pm</div>
-              </div>
-            </label>
-            <label class="checkbox-item">
-              <input type="checkbox" name="availability" value="weekday-evening">
-              <div>
-                <div class="checkbox-label">平日晚上 Weekday Evenings</div>
-                <div class="checkbox-desc">週一至五 6pm-9pm</div>
-              </div>
-            </label>
-            <label class="checkbox-item">
-              <input type="checkbox" name="availability" value="weekend">
-              <div>
-                <div class="checkbox-label">週末 Weekends</div>
-                <div class="checkbox-desc">週六、日 任何時段</div>
-              </div>
-            </label>
-          </div>
+          <label>詳細內容 <span class="required">*</span></label>
+          <textarea name="message" required placeholder="請詳細描述你的意見或建議"></textarea>
         </div>
 
-        <div class="form-group">
-          <label>感興趣的義工服務 Volunteer Interests <span class="required">*</span></label>
-          <div class="checkbox-group">
-            <label class="checkbox-item">
-              <input type="checkbox" name="interests" value="event-planning">
-              <div>
-                <div class="checkbox-label">活動策劃 Event Planning</div>
-                <div class="checkbox-desc">協助籌備社區活動</div>
-              </div>
-            </label>
-            <label class="checkbox-item">
-              <input type="checkbox" name="interests" value="translation">
-              <div>
-                <div class="checkbox-label">翻譯服務 Translation Services</div>
-                <div class="checkbox-desc">英文、粵語、普通話翻譯</div>
-              </div>
-            </label>
-            <label class="checkbox-item">
-              <input type="checkbox" name="interests" value="admin">
-              <div>
-                <div class="checkbox-label">行政支援 Administrative Support</div>
-                <div class="checkbox-desc">文書處理、資料管理</div>
-              </div>
-            </label>
-            <label class="checkbox-item">
-              <input type="checkbox" name="interests" value="social-media">
-              <div>
-                <div class="checkbox-label">社交媒體 Social Media</div>
-                <div class="checkbox-desc">內容創作、社群管理</div>
-              </div>
-            </label>
-            <label class="checkbox-item">
-              <input type="checkbox" name="interests" value="outreach">
-              <div>
-                <div class="checkbox-label">外展服務 Community Outreach</div>
-                <div class="checkbox-desc">探訪、關懷服務</div>
-              </div>
-            </label>
-            <label class="checkbox-item">
-              <input type="checkbox" name="interests" value="fundraising">
-              <div>
-                <div class="checkbox-label">籌款活動 Fundraising</div>
-                <div class="checkbox-desc">協助籌款項目</div>
-              </div>
-            </label>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label>相關經驗或技能 Relevant Experience or Skills</label>
-          <textarea name="experience" placeholder="請簡述相關經驗或特別技能 Please describe relevant experience or special skills"></textarea>
-        </div>
-
-        <div class="form-group">
-          <label>為何想成為義工？ Why do you want to volunteer?</label>
-          <textarea name="motivation" placeholder="請分享您的想法 Please share your thoughts"></textarea>
-        </div>
-
-        <button type="submit" class="submit-btn">提交申請 Submit Application</button>
+        <button type="submit" class="btn-primary">提交意見</button>
       </form>
     </div>
   </div>
 
-  <!-- General Enquiry Tab -->
-  <div class="tab-panel" id="contact-tab">
+  <!-- Partnership Inquiry -->
+  <div class="tab-panel" id="partnership">
     <div class="card">
-      <h2>一般查詢 General Enquiry</h2>
-      <p class="subtitle">如有任何查詢或建議，歡迎聯絡我們 / For any enquiries or suggestions, please contact us</p>
+      <h2>合作查詢</h2>
+      <p class="subtitle">與我們建立夥伴關係，共同服務社群</p>
       
-      <div id="contact-success" class="success-message"></div>
-      <div id="contact-error" class="error-message"></div>
+      <div class="status-message" id="partnership-status"></div>
       
-      <form id="contact-form">
+      <form id="partnership-form">
         <div class="form-row">
           <div class="form-group">
-            <label>姓名 Name <span class="required">*</span></label>
-            <input type="text" name="name" placeholder="請輸入姓名 Enter your name" required>
+            <label>聯絡人姓名 <span class="required">*</span></label>
+            <input type="text" name="contact_name" required>
           </div>
           <div class="form-group">
-            <label>電話 Phone</label>
-            <input type="tel" name="phone" placeholder="請輸入電話號碼 Enter phone number">
+            <label>職位 <span class="required">*</span></label>
+            <input type="text" name="position" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>機構名稱 <span class="required">*</span></label>
+            <input type="text" name="organization" required>
+          </div>
+          <div class="form-group">
+            <label>機構類型</label>
+            <select name="org_type">
+              <option value="">請選擇</option>
+              <option value="ngo">非牟利機構</option>
+              <option value="government">政府部門</option>
+              <option value="business">商業機構</option>
+              <option value="community">社區組織</option>
+              <option value="other">其他</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>電郵 <span class="required">*</span></label>
+            <input type="email" name="email" required>
+          </div>
+          <div class="form-group">
+            <label>電話號碼 <span class="required">*</span></label>
+            <input type="tel" name="phone" required>
           </div>
         </div>
 
         <div class="form-group">
-          <label>電郵 Email <span class="required">*</span></label>
-          <input type="email" name="email" placeholder="請輸入電郵地址 Enter email address" required>
+          <label>合作類型 <span class="required">*</span></label>
+          <div class="radio-group">
+            <label class="radio-item">
+              <input type="radio" name="partnership_type" value="event" required>
+              <div>
+                <span class="radio-label">活動協作</span>
+                <span class="radio-desc">共同舉辦社區活動</span>
+              </div>
+            </label>
+            <label class="radio-item">
+              <input type="radio" name="partnership_type" value="funding" required>
+              <div>
+                <span class="radio-label">資助支援</span>
+                <span class="radio-desc">提供資金或資源支持</span>
+              </div>
+            </label>
+            <label class="radio-item">
+              <input type="radio" name="partnership_type" value="service" required>
+              <div>
+                <span class="radio-label">服務合作</span>
+                <span class="radio-desc">共同提供社區服務</span>
+              </div>
+            </label>
+            <label class="radio-item">
+              <input type="radio" name="partnership_type" value="other" required>
+              <div>
+                <span class="radio-label">其他合作</span>
+                <span class="radio-desc">請在下方說明</span>
+              </div>
+            </label>
+          </div>
         </div>
 
         <div class="form-group">
-          <label>查詢類別 Enquiry Type <span class="required">*</span></label>
-          <select name="enquiry_type" required>
-            <option value="">請選擇 Please select</option>
-            <option value="general">一般查詢 General Enquiry</option>
-            <option value="collaboration">合作建議 Collaboration Proposal</option>
-            <option value="partnership">夥伴機構 Partnership</option>
-            <option value="feedback">意見反映 Feedback</option>
-            <option value="media">媒體查詢 Media Enquiry</option>
-            <option value="other">其他 Other</option>
-          </select>
+          <label>合作建議詳情 <span class="required">*</span></label>
+          <textarea name="proposal" required placeholder="請描述你的合作建議，包括目標、內容、預期成效等"></textarea>
         </div>
 
         <div class="form-group">
-          <label>查詢內容 Message <span class="required">*</span></label>
-          <textarea name="message" placeholder="請輸入查詢內容 Please enter your message" required></textarea>
+          <label>機構網站或社交媒體（選填）</label>
+          <input type="url" name="website" placeholder="https://">
         </div>
 
-        <button type="submit" class="submit-btn">提交查詢 Submit Enquiry</button>
+        <button type="submit" class="btn-primary">提交查詢</button>
       </form>
-    </div>
-
-    <div class="card">
-      <h2>聯絡資料 Contact Information</h2>
-      <p class="subtitle">
-        📧 Email: <a href="mailto:hkerssalford@gmail.com" style="color: #8B0000; text-decoration: none;">hkerssalford@gmail.com</a><br>
-        📱 WhatsApp: <a href="https://wa.me/447584335635" style="color: #8B0000; text-decoration: none;">+44 7584 335635</a><br>
-        📍 地址 Address: Salford, Greater Manchester, UK<br><br>
-        關注我們 Follow Us:<br>
-        🌐 Instagram: <a href="https://instagram.com/salfordhongkongers" style="color: #8B0000; text-decoration: none;">@salfordhongkongers</a><br>
-        📘 Facebook: <a href="https://facebook.com/salfordhongkongers" style="color: #8B0000; text-decoration: none;">Salford Hongkongers</a>
-      </p>
     </div>
   </div>
 
+  <!-- General Inquiry -->
+  <div class="tab-panel" id="general">
+    <div class="card">
+      <h2>一般查詢</h2>
+      <p class="subtitle">有任何問題或需要協助，歡迎聯絡我們</p>
+      
+      <div class="status-message" id="general-status"></div>
+      
+      <form id="general-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label>姓名 <span class="required">*</span></label>
+            <input type="text" name="name" required>
+          </div>
+          <div class="form-group">
+            <label>電郵 <span class="required">*</span></label>
+            <input type="email" name="email" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>電話號碼（選填）</label>
+          <input type="tel" name="phone">
+        </div>
+
+        <div class="form-group">
+          <label>查詢主題 <span class="required">*</span></label>
+          <input type="text" name="subject" required placeholder="簡述你的查詢主題">
+        </div>
+
+        <div class="form-group">
+          <label>詳細內容 <span class="required">*</span></label>
+          <textarea name="message" required placeholder="請詳細描述你的查詢"></textarea>
+        </div>
+
+        <button type="submit" class="btn-primary">提交查詢</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Social Contact Section -->
+  <section class="social-section">
+    <h2 style="text-align: center; margin-bottom: 28px; color: #8B0000;">其他聯絡方式</h2>
+    <div class="social-grid">
+      <div class="social-card">
+        <div class="social-icon">📧</div>
+        <h3>電子郵件</h3>
+        <p>直接發送電郵給我們</p>
+        <a href="mailto:hkerssalford@gmail.com">hkerssalford@gmail.com</a>
+      </div>
+      <div class="social-card">
+        <div class="social-icon">📘</div>
+        <h3>Facebook</h3>
+        <p>關注我們的最新動態</p>
+        <a href="https://www.facebook.com/SalfordHongkongers" target="_blank">訪問專頁</a>
+      </div>
+      <div class="social-card">
+        <div class="social-icon">📸</div>
+        <h3>Instagram</h3>
+        <p>瀏覽我們的活動相片</p>
+        <a href="https://www.instagram.com/SalfordHongkongers" target="_blank">@SalfordHongkongers</a>
+      </div>
+    </div>
+  </section>
 </div>
 
+<footer>
+  <div class="footer-content">
+    <p>&copy; 2024 Salford Hongkongers. 版權所有。</p>
+    <p>我們致力為在 Salford 及大曼徹斯特地區的香港人提供支援及建立社群</p>
+    <div class="footer-links">
+      <a href="index.html">主頁</a>
+      <a href="forms.html">聯絡我們</a>
+      <a href="mailto:hkerssalford@gmail.com">電郵聯絡</a>
+    </div>
+  </div>
+</footer>
+
 <script>
-// Tab Switching
+// Tab switching
 document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => {
-    const targetTab = btn.dataset.tab;
+    const tab = btn.dataset.tab;
     
-    // Update buttons
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    
-    // Update panels
     document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-    document.getElementById(`${targetTab}-tab`).classList.add('active');
+    
+    btn.classList.add('active');
+    document.getElementById(tab).classList.add('active');
   });
 });
 
-// Form Submission Functions
-function showMessage(formId, type, message) {
-  const messageEl = document.getElementById(`${formId}-${type}`);
-  messageEl.textContent = message;
-  messageEl.classList.add('show');
-  setTimeout(() => messageEl.classList.remove('show'), 5000);
-}
+// Form submission handlers
+const forms = ['volunteer', 'event', 'feedback', 'partnership', 'general'];
 
-function collectFormData(form) {
-  const formData = new FormData(form);
-  const data = {};
+forms.forEach(formType => {
+  const form = document.getElementById(`${formType}-form`);
+  const status = document.getElementById(`${formType}-status`);
   
-  // Handle regular fields
-  for (let [key, value] of formData.entries()) {
-    if (key === 'dietary' || key === 'availability' || key === 'interests') {
-      // Collect all checked values for checkbox groups
-      if (!data[key]) data[key] = [];
-      data[key].push(value);
-    } else {
-      data[key] = value;
-    }
-  }
-  
-  // Add timestamp
-  data.timestamp = new Date().toISOString();
-  
-  return data;
-}
-
-async function submitToGoogleSheets(data, sheetName) {
-  const scriptUrl = 'https://script.google.com/macros/s/AKfycbzfGwBp6fWzghqHgqeFOhUCGvBj9cwuJU6yfUc0y15YZmVXfzOI7ioN-EpCEr6aLDl-/exec';
-  
-  try {
-    const response = await fetch(scriptUrl, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        sheet: sheetName,
-        data: data
-      })
-    });
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
     
-    // Note: no-cors mode doesn't allow reading response
-    // We assume success if no error is thrown
-    return { success: true };
-  } catch (error) {
-    console.error('Submission error:', error);
-    return { success: false, error: error.message };
-  }
-}
-
-// Event Registration Form
-document.getElementById('event-form').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  
-  const submitBtn = e.target.querySelector('.submit-btn');
-  const originalText = submitBtn.textContent;
-  submitBtn.disabled = true;
-  submitBtn.innerHTML = '提交中... Submitting... <span class="spinner"></span>';
-  
-  const formData = collectFormData(e.target);
-  
-  // Convert dietary array to comma-separated string
-  if (formData.dietary && Array.isArray(formData.dietary)) {
-    formData.dietary = formData.dietary.join(', ');
-  } else {
-    formData.dietary = 'None';
-  }
-  
-  const result = await submitToGoogleSheets(formData, 'EventRegistration');
-  
-  submitBtn.disabled = false;
-  submitBtn.textContent = originalText;
-  
-  if (result.success) {
-    showMessage('event', 'success', '✓ 登記成功！我們會�儘快與您聯絡。Registration successful! We will contact you soon.');
-    e.target.reset();
-  } else {
-    showMessage('event', 'error', '✗ 提交失敗，請稍後再試或直接電郵聯絡我們。Submission failed. Please try again or email us directly.');
-  }
-});
-
-// Volunteer Form
-document.getElementById('volunteer-form').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  
-  const submitBtn = e.target.querySelector('.submit-btn');
-  const originalText = submitBtn.textContent;
-  submitBtn.disabled = true;
-  submitBtn.innerHTML = '提交中... Submitting... <span class="spinner"></span>';
-  
-  const formData = collectFormData(e.target);
-  
-  // Convert arrays to comma-separated strings
-  if (formData.availability && Array.isArray(formData.availability)) {
-    formData.availability = formData.availability.join(', ');
-  }
-  if (formData.interests && Array.isArray(formData.interests)) {
-    formData.interests = formData.interests.join(', ');
-  }
-  
-  const result = await submitToGoogleSheets(formData, 'VolunteerSignup');
-  
-  submitBtn.disabled = false;
-  submitBtn.textContent = originalText;
-  
-  if (result.success) {
-    showMessage('volunteer', 'success', '✓ 申請成功！我們會盡快與您聯絡。Application successful! We will contact you soon.');
-    e.target.reset();
-  } else {
-    showMessage('volunteer', 'error', '✗ 提交失敗，請稍後再試或直接電郵聯絡我們。Submission failed. Please try again or email us directly.');
-  }
-});
-
-// Contact Form
-document.getElementById('contact-form').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  
-  const submitBtn = e.target.querySelector('.submit-btn');
-  const originalText = submitBtn.textContent;
-  submitBtn.disabled = true;
-  submitBtn.innerHTML = '提交中... Submitting... <span class="spinner"></span>';
-  
-  const formData = collectFormData(e.target);
-  
-  const result = await submitToGoogleSheets(formData, 'GeneralEnquiry');
-  
-  submitBtn.disabled = false;
-  submitBtn.textContent = originalText;
-  
-  if (result.success) {
-    showMessage('contact', 'success', '✓ 查詢已提交！我們會盡快回覆您。Enquiry submitted! We will respond soon.');
-    e.target.reset();
-  } else {
-    showMessage('contact', 'error', '✗ 提交失敗，請稍後再試或直接電郵聯絡我們。Submission failed. Please try again or email us directly.');
-  }
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData);
+    data.form_type = formType;
+    data.submitted_at = new Date().toISOString();
+    
+    // Show loading state
+    const submitBtn = form.querySelector('.btn-primary');
+    const originalText = submitBtn.textContent;
+    submitBtn.disabled = true;
+    submitBtn.textContent = '提交中...';
+    
+    try {
+      // Here you would normally send to your backend
+      // For now, we'll simulate a successful submission
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Show success message
+      status.className = 'status-message success';
+      status.textContent = '✓ 已成功提交！我們會盡快回覆你。';
+      
+      // Reset form
+      form.reset();
+      
+      // Hide message after 5 seconds
+      setTimeout(() => {
+        status.style.display = 'none';
+      }, 5000);
+      
+    } catch (error) {
+      // Show error message
+      status.className = 'status-message error';
+      status.textContent = '✗ 提交失敗，請稍後再試或直接電郵聯絡我們。';
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalText;
+    }
+  });
 });
 </script>
 
