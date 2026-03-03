@@ -343,13 +343,11 @@ select {
 <!-- ┌── FORM CARD ────────────────────────────────────────┐ -->
 <section class="form-card">
 <h1 class="form-title">義工簽到</h1>
-<p class="form-subtitle">請選擇你的名字並簽到</p>
+<p class="form-subtitle">請輸入你的名字並簽到</p>
 <form id="checkinForm">
 <div class="form-group">
 <label for="volunteerName">義工名稱 *</label>
-<select id="volunteerName" name="volunteerName" required="">
-<option value="">-- 請選擇你的名字 --</option>
-</select>
+<input id="volunteerName" name="volunteerName" type="text" placeholder="請輸入你的全名" required autocomplete="name" />
 </div>
 <button class="submit-btn" type="submit">簽到</button>
 </form>
@@ -430,34 +428,7 @@ function updateMonthDisplay() {
   document.getElementById('currentMonth').textContent = monthStr;
 }
 
-// ────────────────────────────────────────────────────────────
-// LOAD VOLUNTEERS (for dropdown)
-// ────────────────────────────────────────────────────────────
-async function loadVolunteers() {
-  try {
-    const url = API_BASE + encodeURIComponent(VOLUNTEERS_SHEET);
-    const res = await fetch(url);
-    const text = await res.text();
-    const data = parseGoogleSheetsResponse(text);
-    const rows = data.table.rows;
 
-    const select = document.getElementById('volunteerName');
-    select.innerHTML = '<option value="">-- 請選擇你的名字 --</option>';
-
-    rows.forEach(row => {
-      const name = row.c[0]?.v; // Column A = Name
-      if (name) {
-        const option = document.createElement('option');
-        option.value = name;
-        option.textContent = name;
-        select.appendChild(option);
-      }
-    });
-  } catch (err) {
-    console.error('Failed to load volunteers:', err);
-    showToast('載入義工名單失敗', 'error');
-  }
-}
 
 // ────────────────────────────────────────────────────────────
 // LOAD LEADERBOARD (Top 3)
@@ -552,7 +523,6 @@ updateClock();
 setInterval(updateClock, 1000);
 updateMonthDisplay();
 
-loadVolunteers();
 loadLeaderboard();
 // Refresh leaderboard every 30s
 setInterval(loadLeaderboard, 30000);
