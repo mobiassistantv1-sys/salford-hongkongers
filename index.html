@@ -591,16 +591,6 @@ a.contact-value:hover { color: var(--pink); }
 .venue-item { font-size: 13px; color: var(--text-muted); padding: 10px 14px; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: var(--radius-sm); line-height: 1.5; }
 
 /* ===== IG FEED / NEWS ===== */
-/* MAX DAILY NEWS */
-.news-daily-section { background: rgba(255,255,255,0.07); border-radius: 16px; padding: 1rem; border: 1px solid rgba(255,255,255,0.15); }
-.news-daily-header { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.8rem; }
-.news-daily-icon { font-size: 1.4rem; }
-.news-daily-title { font-size: 1rem; font-weight: 700; color: #fff; margin: 0; flex: 1; }
-.news-daily-badge { font-size: 0.72rem; background: rgba(255,200,0,0.2); color: #ffd700; border-radius: 20px; padding: 2px 10px; border: 1px solid rgba(255,200,0,0.3); }
-.news-daily-content { font-size: 0.85rem; color: rgba(255,255,255,0.88); line-height: 1.7; white-space: pre-wrap; }
-.news-daily-updated { font-size: 0.7rem; color: rgba(255,255,255,0.4); margin-top: 0.6rem; text-align: right; }
-.news-daily-empty { color: rgba(255,255,255,0.4); font-size: 0.85rem; text-align: center; padding: 1rem; }
-
 .ig-feed-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
 .ig-feed-header h2 { font-size: 20px; font-weight: 800; color: var(--text); letter-spacing: -0.3px; }
 .ig-feed-updated { font-size: 11px; color: var(--text-muted); }
@@ -984,17 +974,6 @@ a.contact-value:hover { color: var(--pink); }
 </section>
 <!-- NEWS / IG FEED -->
 <section class="page" id="page-news">
-<!-- MAX DAILY NEWS -->
-<section class="news-daily-section" id="newsDailySection" style="margin-bottom:1.2rem;">
-<div class="news-daily-header">
-<span class="news-daily-icon"><span class="neon-icon"><svg fill="none" filter="url(#glow-blue)" stroke="#00d4ff" stroke-width="1.8" viewbox="0 0 24 24"><path d="M4 4h16v16H4zM4 9h16M9 9v11"></path></svg></span></span>
-<h3 class="news-daily-title">每日新聞簡報</h3>
-<span class="news-daily-badge" id="newsDailyDate"></span>
-</div>
-<div id="newsDailyContainer">
-<div class="ig-loading"><span class="neon-icon"><svg fill="none" filter="url(#glow-purple)" stroke="#bf5fff" stroke-width="1.8" viewbox="0 0 24 24"><path d="M5 2h14M5 22h14M6 2v5l5 5-5 5v5M18 2v5l-5 5 5 5v5"></path></svg></span> 載入中...</div>
-</div>
-</section>
 <div class="ig-feed-header">
 <h2 class="page-title" style="margin-bottom:0;">最新消息</h2>
 <span class="ig-feed-updated" id="igFeedUpdated"></span>
@@ -1268,7 +1247,6 @@ function showPage(pageId) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   const target = document.getElementById('page-' + pageId);
   if (target) target.classList.add('active');
-  if (pageId === 'news') loadDailyNews();
  loadIgFeed();
 
   document.querySelectorAll('.bottom-btn').forEach(b => b.classList.remove('active'));
@@ -1353,23 +1331,6 @@ function resetForm() {
 }
 
 // ===== IG FEED LOADER =====
-async function loadDailyNews() {
-  try {
-    const res = await fetch('news-daily.json?t=' + Date.now());
-    if (!res.ok) throw new Error('not found');
-    const data = await res.json();
-    const el = document.getElementById('newsDailyContainer');
-    const dateEl = document.getElementById('newsDailyDate');
-    if (data.date) dateEl.textContent = data.date;
-    if (data.content) {
-      el.innerHTML = '<div class="news-daily-content">' + data.content.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</div><div class="news-daily-updated">更新時間：' + (data.updated || '') + '</div>';
-    } else {
-      el.innerHTML = '<div class="news-daily-empty">今日新聞簡報暫未更新</div>';
-    }
-  } catch(e) {
-    document.getElementById('newsDailyContainer').innerHTML = '<div class="news-daily-empty">今日新聞簡報暫未更新</div>';
-  }
-}
 
 async function loadIgFeed() {
   const container = document.getElementById('igFeedContainer');
