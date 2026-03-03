@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport"/>
-<title>義工頁面 | Salford Hongkongers</title>
+<title>義工簽到 | Salford Hongkongers</title>
 <style>
 :root {
   --pink: #ff2d78;
@@ -109,562 +109,500 @@ nav .back-btn:hover { color: var(--pink); }
   overflow: hidden;
   background: rgba(255,255,255,0.03);
   border: 1px solid rgba(255,255,255,0.08);
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: all 0.3s;
 }
 .lb-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255,215,0,0.12);
-}
-.lb-item.top-1 {
-  background: linear-gradient(135deg, rgba(255,215,0,0.12), rgba(255,215,0,0.05));
-  border-color: var(--gold);
-  box-shadow: 0 0 14px rgba(255,215,0,0.15);
-}
-.lb-item.top-2 {
-  background: linear-gradient(135deg, rgba(192,192,192,0.1), rgba(192,192,192,0.03));
-  border-color: var(--silver);
-}
-.lb-item.top-3 {
-  background: linear-gradient(135deg, rgba(205,127,50,0.1), rgba(205,127,50,0.03));
-  border-color: var(--bronze);
+  border-color: rgba(255,215,0,0.3);
+  background: rgba(255,215,0,0.05);
+  transform: translateX(2px);
 }
 
+/* Rank badges */
 .lb-rank {
-  font-size: 1.3rem; font-weight: 900; width: 40px;
-  text-align: center; line-height: 1;
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 900; font-size: 0.85rem;
   flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
 }
-.lb-item.top-1 .lb-rank {
-  color: var(--gold);
-  text-shadow: 0 0 8px var(--gold), 0 0 14px rgba(255,215,0,0.4);
-  filter: drop-shadow(0 2px 4px rgba(255,215,0,0.3));
+.lb-item[data-rank="1"] .lb-rank {
+  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  color: #1a1a1a;
+  box-shadow: 0 0 16px rgba(255,215,0,0.6), 0 2px 8px rgba(0,0,0,0.3);
 }
-.lb-item.top-2 .lb-rank {
-  color: var(--silver);
-  text-shadow: 0 0 8px var(--silver);
+.lb-item[data-rank="2"] .lb-rank {
+  background: linear-gradient(135deg, #c0c0c0, #e8e8e8);
+  color: #1a1a1a;
+  box-shadow: 0 0 12px rgba(192,192,192,0.5);
 }
-.lb-item.top-3 .lb-rank {
-  color: var(--bronze);
-  text-shadow: 0 0 8px var(--bronze);
+.lb-item[data-rank="3"] .lb-rank {
+  background: linear-gradient(135deg, #cd7f32, #e09b5f);
+  color: #1a1a1a;
+  box-shadow: 0 0 12px rgba(205,127,50,0.5);
 }
-.lb-rank-badge {
-  font-size: 1.6rem;
-  display: inline-block;
-  filter: drop-shadow(0 2px 6px rgba(255,215,0,0.5));
+.lb-item:not([data-rank="1"]):not([data-rank="2"]):not([data-rank="3"]) .lb-rank {
+  background: rgba(255,255,255,0.08);
+  color: var(--text-muted);
+  font-weight: 700;
+  border: 1px solid rgba(255,255,255,0.12);
 }
 
+.lb-info { flex: 1; min-width: 0; }
 .lb-name {
-  flex: 1;
-  font-weight: 600;
-  font-size: 0.95rem;
-  color: var(--text);
-  letter-spacing: -0.2px;
+  font-weight: 700;
+  font-size: 0.92rem;
+  margin-bottom: 2px;
+  display: block;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
-.lb-item.top-1 .lb-name { color: var(--gold); font-weight: 700; }
-.lb-item.top-2 .lb-name { color: var(--silver); font-weight: 700; }
-.lb-item.top-3 .lb-name { color: var(--bronze); font-weight: 700; }
+.lb-item[data-rank="1"] .lb-name { color: var(--gold); }
+.lb-item[data-rank="2"] .lb-name { color: var(--silver); }
+.lb-item[data-rank="3"] .lb-name { color: var(--bronze); }
+
+.lb-desc {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  display: block;
+}
 
 .lb-score {
-  font-weight: 800;
   font-size: 1.1rem;
-  color: var(--text);
+  font-weight: 900;
+  color: var(--blue);
+  flex-shrink: 0;
+  text-shadow: 0 0 8px rgba(0,212,255,0.5);
   font-variant-numeric: tabular-nums;
-  display: flex;
-  align-items: baseline;
-  gap: 4px;
 }
-.lb-score-num { font-size: 1.25rem; }
-.lb-score-label {
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-.lb-item.top-1 .lb-score { color: var(--gold); }
-.lb-item.top-2 .lb-score { color: var(--silver); }
-.lb-item.top-3 .lb-score { color: var(--bronze); }
+.lb-item[data-rank="1"] .lb-score { color: var(--gold); text-shadow: 0 0 10px rgba(255,215,0,0.6); }
 
-/* ┌── CHECK-IN CARD ─────────────────────────────────────┐ */
-.checkin-card {
+/* ┌── FORM CARD ─────────────────────────────────────────┐ */
+.form-card {
   background: var(--card-bg);
   border: 1px solid var(--card-border);
   border-radius: var(--radius);
-  padding: 22px 20px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  padding: 24px 20px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
 }
-.checkin-title {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--text);
+.form-title {
+  font-size: 1.3rem;
+  font-weight: 800;
   text-align: center;
-  margin-bottom: 18px;
-  letter-spacing: -0.3px;
+  margin-bottom: 6px;
+  background: linear-gradient(135deg, var(--pink), var(--blue));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
-.checkin-title .emoji { font-size: 1.3rem; margin-right: 6px; }
+.form-subtitle {
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+}
 
-.input-group {
-  display: flex; flex-direction: column; gap: 7px;
-  margin-bottom: 16px;
+.form-group {
+  margin-bottom: 20px;
 }
 label {
+  display: block;
   font-size: 0.85rem;
   font-weight: 600;
-  color: var(--text-muted);
-  letter-spacing: 0.3px;
+  margin-bottom: 8px;
+  color: var(--text);
 }
 input, select {
-  background: rgba(255,255,255,0.08);
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 12px;
   border: 1px solid rgba(255,255,255,0.15);
-  border-radius: 10px;
-  padding: 12px 14px;
+  background: rgba(255,255,255,0.05);
   color: var(--text);
   font-size: 0.95rem;
-  outline: none;
-  transition: all 0.2s;
+  transition: all 0.3s;
   font-family: inherit;
 }
 input:focus, select:focus {
-  background: rgba(255,255,255,0.12);
+  outline: none;
   border-color: var(--pink);
+  background: rgba(255,45,120,0.08);
   box-shadow: 0 0 0 3px rgba(255,45,120,0.15);
 }
-select option {
-  background: #1a1a1f;
-  color: #fff;
+select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%23ff2d78' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  padding-right: 44px;
 }
 
-.btn-primary {
-  background: linear-gradient(135deg, var(--pink), var(--purple));
-  color: #fff;
-  font-weight: 700;
-  font-size: 1rem;
-  padding: 14px;
+.submit-btn {
+  width: 100%;
+  padding: 16px;
   border: none;
   border-radius: 12px;
+  background: linear-gradient(135deg, var(--pink), var(--purple));
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
   cursor: pointer;
-  width: 100%;
-  margin-top: 8px;
-  letter-spacing: 0.5px;
   transition: all 0.3s;
-  box-shadow: 0 4px 12px rgba(255,45,120,0.3);
+  box-shadow: 0 4px 16px rgba(255,45,120,0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
-.btn-primary:hover {
+.submit-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255,45,120,0.5);
+  box-shadow: 0 6px 24px rgba(255,45,120,0.45);
 }
-.btn-primary:active {
+.submit-btn:active {
   transform: translateY(0);
 }
-.btn-primary:disabled {
+.submit-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
   transform: none;
 }
 
-/* ┌── HISTORY LOG ─────────────────────────────────────┐ */
-.history-card {
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
-  border-radius: var(--radius);
-  padding: 20px 18px;
-}
-.history-title {
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--text);
-  margin-bottom: 14px;
-  letter-spacing: -0.2px;
-}
-.history-list {
-  display: flex; flex-direction: column; gap: 10px;
-  list-style: none;
-  max-height: 320px;
-  overflow-y: auto;
-}
-.history-item {
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 10px;
-  padding: 12px 14px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  transition: background 0.2s;
-}
-.history-item:hover {
-  background: rgba(255,255,255,0.07);
-}
-.history-info {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-.history-name {
-  font-weight: 600;
-  font-size: 0.9rem;
-  color: var(--text);
-}
-.history-type {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  font-weight: 500;
-}
-.history-time {
-  font-size: 0.75rem;
-  color: var(--blue);
-  font-variant-numeric: tabular-nums;
-  font-weight: 600;
-  text-align: right;
-  text-shadow: 0 0 6px rgba(0,212,255,0.4);
-}
-
-/* ┌── TOAST NOTIFICATION ──────────────────────────────┐ */
+/* Toast */
 .toast {
   position: fixed;
-  bottom: 80px;
+  bottom: 30px;
   left: 50%;
   transform: translateX(-50%) translateY(100px);
-  background: linear-gradient(135deg, var(--pink), var(--purple));
+  background: rgba(10,10,15,0.95);
   color: #fff;
   padding: 14px 24px;
   border-radius: 12px;
-  font-weight: 600;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
   font-size: 0.9rem;
-  box-shadow: 0 6px 24px rgba(255,45,120,0.4);
-  z-index: 999;
+  font-weight: 600;
+  z-index: 1000;
+  border: 1px solid rgba(255,255,255,0.1);
+  backdrop-filter: blur(12px);
   opacity: 0;
-  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-  pointer-events: none;
-  max-width: 90%;
-  text-align: center;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .toast.show {
-  transform: translateX(-50%) translateY(0);
   opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+.toast.success {
+  border-color: var(--green-neon);
+  box-shadow: 0 8px 32px rgba(57,255,20,0.25);
+}
+.toast.error {
+  border-color: var(--pink);
+  box-shadow: 0 8px 32px rgba(255,45,120,0.25);
 }
 </style>
 </head>
 <body>
-
 <nav>
-  <a class="back-btn" href="index.html">
-    <span>←</span> 返回主頁
-  </a>
-  <div class="logo">Salford<span>HK</span></div>
-  <div class="nav-time" id="nav-time">00:00</div>
+<div class="logo">Salford <span>Hongkongers</span></div>
+<div class="nav-time" id="currentTime">00:00</div>
+<a class="back-btn" href="index.html">← 返回主頁</a>
 </nav>
 
 <div class="page">
-  <!-- ┌── LEADERBOARD ──────────────────────────────┐ -->
-  <div class="leaderboard">
-    <div class="lb-header">
-      🏆 義工王者榜 🏆
-      <span class="lb-month" id="lb-month">本月數據</span>
-    </div>
-    <ul class="lb-list" id="lb-list">
-      <!-- populated by JS -->
-    </ul>
-  </div>
+<!-- ┌── TOP 3 LEADERBOARD ────────────────────────────────┐ -->
+<section class="leaderboard">
+<div class="lb-header">
+本月排行榜
+<span class="lb-month" id="currentMonth">2025年3月</span>
+</div>
+<ol class="lb-list" id="leaderboardList">
+<li class="lb-item" data-rank="1">
+<div class="lb-rank">1</div>
+<div class="lb-info">
+<span class="lb-name">載入中...</span>
+<span class="lb-desc">本月簽到次數</span>
+</div>
+<div class="lb-score">0</div>
+</li>
+<li class="lb-item" data-rank="2">
+<div class="lb-rank">2</div>
+<div class="lb-info">
+<span class="lb-name">載入中...</span>
+<span class="lb-desc">本月簽到次數</span>
+</div>
+<div class="lb-score">0</div>
+</li>
+<li class="lb-item" data-rank="3">
+<div class="lb-rank">3</div>
+<div class="lb-info">
+<span class="lb-name">載入中...</span>
+<span class="lb-desc">本月簽到次數</span>
+</div>
+<div class="lb-score">0</div>
+</li>
+</ol>
+</section>
 
-  <!-- ┌── CHECK-IN CARD ────────────────────────────┐ -->
-  <div class="checkin-card">
-    <div class="checkin-title">
-      <span class="emoji">✅</span>
-      義工頁面
-    </div>
-    <form id="checkin-form">
-      <div class="input-group">
-        <label for="name">姓名</label>
-        <input id="name" name="name" placeholder="請輸入你的名字" required="" type="text"/>
-      </div>
-      <div class="input-group">
-        <label for="type">堂吉類別</label>
-        <select id="type" name="type" required="">
-          <option value="">請選擇義工活動類型</option>
-          <option value="活動義工">活動義工 (Event Volunteer)</option>
-          <option value="網站維護">網站維護 (Website Maintenance)</option>
-          <option value="社群管理">社群管理 (Community Management)</option>
-          <option value="內容創作">內容創作 (Content Creation)</option>
-          <option value="活動策劃">活動策劃 (Event Planning)</option>
-          <option value="其他">其他 (Other)</option>
-        </select>
-      </div>
-      <button class="btn-primary" type="submit">
-        提交堂吉
-      </button>
-    </form>
-  </div>
+<!-- ┌── FORM CARD ────────────────────────────────────────┐ -->
+<section class="form-card">
+<h1 class="form-title">義工簽到</h1>
+<p class="form-subtitle">請選擇你的名字並簽到</p>
+<form id="checkinForm">
+<div class="form-group">
+<label for="volunteerName">義工名稱 *</label>
+<select id="volunteerName" name="volunteerName" required="">
+<option value="">-- 請選擇你的名字 --</option>
+</select>
+</div>
+<button class="submit-btn" type="submit">簽到</button>
+</form>
+</section>
 
-  <!-- ┌── HISTORY LOG ──────────────────────────────┐ -->
-  <div class="history-card">
-    <div class="history-title">📋 最近堂吉記錄</div>
-    <ul class="history-list" id="history-list">
-      <!-- populated by JS -->
-    </ul>
-  </div>
+<!-- ┌── JOIN SECTION ─────────────────────────────────────────┐ -->
+<section class="form-card" style="margin-top:0;">
+<h2 class="form-title" style="font-size:1.1rem;">加入義工團隊</h2>
+<p class="form-subtitle" style="margin-bottom:16px;">想成為義工？填寫以下資料，我們會聯絡你！</p>
+<form id="joinForm">
+<div class="form-group">
+<label for="joinName">全名 *</label>
+<input id="joinName" name="joinName" placeholder="請輸入你的全名" required type="text"/>
+</div>
+<div class="form-group">
+<label for="joinWhatsApp">WhatsApp 號碼 *</label>
+<input id="joinWhatsApp" inputmode="tel" name="joinWhatsApp" placeholder="例：07712345678" required type="tel"/>
+</div>
+<div class="form-group">
+<label for="joinNote">備註（選填）</label>
+<input id="joinNote" name="joinNote" placeholder="例：只能週末參與" type="text"/>
+</div>
+<button class="submit-btn" style="background:linear-gradient(135deg,#00d4ff,#b44fff);" type="submit">提交登記</button>
+</form>
+</section>
 </div>
 
+<!-- Toast -->
 <div class="toast" id="toast"></div>
 
 <script>
-// ┌────────────────────────────────────────────────────────────────┐
-// │ CONFIG                                                         │
-// └────────────────────────────────────────────────────────────────┘
-const SHEET_URL = 'https://script.google.com/macros/s/AKfycbzcNCWdXG0qh15qgLohEu18Z3VGwJuZ2RYZSDSuNdRXcuP1-t_8Y23bM-F_esFSKk_h/exec';
-const CACHE_KEY_HISTORY = 'shk_volunteer_history';
-const CACHE_KEY_LEADERBOARD = 'shk_volunteer_leaderboard';
-const CACHE_TTL = 5 * 60 * 1000; // 5 min
+// ────────────────────────────────────────────────────────────
+// CONFIG
+// ────────────────────────────────────────────────────────────
+const SHEET_ID = '1pIkC3TMUcMCzMUKqMN-JBfiFnBJSJbvqyiASKHWQR-w';
+const VOLUNTEERS_SHEET = 'Volunteers';
+const CHECKIN_SHEET = 'CheckIns';
+const LEADERBOARD_SHEET = 'Leaderboard';
+const API_BASE = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=`;
 
-// ┌────────────────────────────────────────────────────────────────┐
-// │ CLOCK                                                          │
-// └────────────────────────────────────────────────────────────────┘
-function updateClock() {
-  const now = new Date();
-  const hh = String(now.getHours()).padStart(2, '0');
-  const mm = String(now.getMinutes()).padStart(2, '0');
-  document.getElementById('nav-time').textContent = `${hh}:${mm}`;
-}
-setInterval(updateClock, 1000);
-updateClock();
+// 註：Google Apps Script Web App URL for POST
+const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxc_hf9Dw9QHMRO-X1_HEL7HaO_F6OhkJgSC1CojqLdp6I2yDI5hkbpn4rqXCRAf-q4/exec';
 
-// ┌────────────────────────────────────────────────────────────────┐
-// │ MONTH DISPLAY                                                  │
-// └────────────────────────────────────────────────────────────────┘
-function updateMonthDisplay() {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = now.getMonth() + 1;
-  document.getElementById('lb-month').textContent = `${year}年${month}月數據`;
-}
-updateMonthDisplay();
-
-// ┌────────────────────────────────────────────────────────────────┐
-// │ CACHE HELPERS                                                  │
-// └────────────────────────────────────────────────────────────────┘
-function getCache(key) {
-  try {
-    const item = localStorage.getItem(key);
-    if (!item) return null;
-    const parsed = JSON.parse(item);
-    if (Date.now() > parsed.expiry) {
-      localStorage.removeItem(key);
-      return null;
-    }
-    return parsed.data;
-  } catch {
-    return null;
-  }
+// ────────────────────────────────────────────────────────────
+// UTILITIES
+// ────────────────────────────────────────────────────────────
+function parseGoogleSheetsResponse(text) {
+  const jsonString = text.match(/google\.visualization\.Query\.setResponse\((.*)\);/s)?.[1];
+  if (!jsonString) throw new Error('Invalid response format');
+  return JSON.parse(jsonString);
 }
 
-function setCache(key, data) {
-  try {
-    const item = {
-      data: data,
-      expiry: Date.now() + CACHE_TTL
-    };
-    localStorage.setItem(key, JSON.stringify(item));
-  } catch (e) {
-    console.warn('Cache write failed:', e);
-  }
-}
-
-// ┌────────────────────────────────────────────────────────────────┐
-// │ TOAST                                                          │
-// └────────────────────────────────────────────────────────────────┘
-function showToast(message, duration = 3000) {
+function showToast(message, type = 'success') {
   const toast = document.getElementById('toast');
   toast.textContent = message;
+  toast.className = `toast ${type}`;
   toast.classList.add('show');
-  setTimeout(() => {
-    toast.classList.remove('show');
-  }, duration);
+  setTimeout(() => toast.classList.remove('show'), 3000);
 }
 
-// ┌────────────────────────────────────────────────────────────────┐
-// │ LEADERBOARD RENDER                                             │
-// └────────────────────────────────────────────────────────────────┘
-function renderLeaderboard(data) {
-  const list = document.getElementById('lb-list');
-  list.innerHTML = '';
-
-  if (!data || data.length === 0) {
-    list.innerHTML = '<li style="text-align:center;color:var(--text-muted);padding:20px;">暫無數據</li>';
-    return;
-  }
-
-  // Sort by count descending
-  const sorted = [...data].sort((a, b) => b.count - a.count);
-
-  sorted.forEach((item, idx) => {
-    const rank = idx + 1;
-    const li = document.createElement('li');
-    li.className = 'lb-item';
-    if (rank === 1) li.classList.add('top-1');
-    if (rank === 2) li.classList.add('top-2');
-    if (rank === 3) li.classList.add('top-3');
-
-    let rankDisplay = `${rank}`;
-    if (rank === 1) rankDisplay = '<span class="lb-rank-badge">🥇</span>';
-    if (rank === 2) rankDisplay = '<span class="lb-rank-badge">🥈</span>';
-    if (rank === 3) rankDisplay = '<span class="lb-rank-badge">🥉</span>';
-
-    li.innerHTML = `
-      <div class="lb-rank">${rankDisplay}</div>
-      <div class="lb-name">${escapeHtml(item.name)}</div>
-      <div class="lb-score">
-        <span class="lb-score-num">${item.count}</span>
-        <span class="lb-score-label">次</span>
-      </div>
-    `;
-    list.appendChild(li);
+function formatTime() {
+  const now = new Date();
+  return now.toLocaleTimeString('zh-HK', {
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false
   });
 }
 
-// ┌────────────────────────────────────────────────────────────────┐
-// │ HISTORY RENDER                                                 │
-// └────────────────────────────────────────────────────────────────┘
-function renderHistory(data) {
-  const list = document.getElementById('history-list');
-  list.innerHTML = '';
-
-  if (!data || data.length === 0) {
-    list.innerHTML = '<li style="text-align:center;color:var(--text-muted);padding:20px;">暫無記錄</li>';
-    return;
-  }
-
-  // Show latest 20
-  const recent = data.slice(0, 20);
-  recent.forEach(item => {
-    const li = document.createElement('li');
-    li.className = 'history-item';
-    li.innerHTML = `
-      <div class="history-info">
-        <div class="history-name">${escapeHtml(item.name)}</div>
-        <div class="history-type">${escapeHtml(item.type)}</div>
-      </div>
-      <div class="history-time">${escapeHtml(item.timestamp)}</div>
-    `;
-    list.appendChild(li);
-  });
+function updateClock() {
+  document.getElementById('currentTime').textContent = formatTime();
 }
 
-// ┌────────────────────────────────────────────────────────────────┐
-// │ FETCH LEADERBOARD                                              │
-// └────────────────────────────────────────────────────────────────┘
-async function fetchLeaderboard() {
-  const cached = getCache(CACHE_KEY_LEADERBOARD);
-  if (cached) {
-    renderLeaderboard(cached);
-    return;
-  }
+function updateMonthDisplay() {
+  const now = new Date();
+  const monthStr = now.toLocaleDateString('zh-HK', { year: 'numeric', month: 'long' });
+  document.getElementById('currentMonth').textContent = monthStr;
+}
 
+// ────────────────────────────────────────────────────────────
+// LOAD VOLUNTEERS (for dropdown)
+// ────────────────────────────────────────────────────────────
+async function loadVolunteers() {
   try {
-    const res = await fetch(`${SHEET_URL}?action=leaderboard&t=${Date.now()}`);
-    const json = await res.json();
-    if (json.status === 'success' && json.data) {
-      setCache(CACHE_KEY_LEADERBOARD, json.data);
-      renderLeaderboard(json.data);
-    } else {
-      console.error('Leaderboard fetch error:', json.message);
-    }
+    const url = API_BASE + encodeURIComponent(VOLUNTEERS_SHEET);
+    const res = await fetch(url);
+    const text = await res.text();
+    const data = parseGoogleSheetsResponse(text);
+    const rows = data.table.rows;
+
+    const select = document.getElementById('volunteerName');
+    select.innerHTML = '<option value="">-- 請選擇你的名字 --</option>';
+
+    rows.forEach(row => {
+      const name = row.c[0]?.v; // Column A = Name
+      if (name) {
+        const option = document.createElement('option');
+        option.value = name;
+        option.textContent = name;
+        select.appendChild(option);
+      }
+    });
   } catch (err) {
-    console.error('Leaderboard fetch failed:', err);
+    console.error('Failed to load volunteers:', err);
+    showToast('載入義工名單失敗', 'error');
   }
 }
 
-// ┌────────────────────────────────────────────────────────────────┐
-// │ FETCH HISTORY                                                  │
-// └────────────────────────────────────────────────────────────────┘
-async function fetchHistory() {
-  const cached = getCache(CACHE_KEY_HISTORY);
-  if (cached) {
-    renderHistory(cached);
-    return;
-  }
-
+// ────────────────────────────────────────────────────────────
+// LOAD LEADERBOARD (Top 3)
+// ────────────────────────────────────────────────────────────
+async function loadLeaderboard() {
   try {
-    const res = await fetch(`${SHEET_URL}?action=history&t=${Date.now()}`);
-    const json = await res.json();
-    if (json.status === 'success' && json.data) {
-      setCache(CACHE_KEY_HISTORY, json.data);
-      renderHistory(json.data);
-    } else {
-      console.error('History fetch error:', json.message);
-    }
+    const url = API_BASE + encodeURIComponent(LEADERBOARD_SHEET);
+    const res = await fetch(url);
+    const text = await res.text();
+    const data = parseGoogleSheetsResponse(text);
+    const rows = data.table.rows.slice(0, 3); // Top 3 only
+
+    const listEl = document.getElementById('leaderboardList');
+    listEl.innerHTML = '';
+
+    rows.forEach((row, index) => {
+      const rank = index + 1;
+      const name = row.c[0]?.v || '未有資料';
+      const count = row.c[1]?.v || 0;
+
+      const li = document.createElement('li');
+      li.className = 'lb-item';
+      li.setAttribute('data-rank', rank);
+
+      li.innerHTML = `
+        <div class="lb-rank">${rank}</div>
+        <div class="lb-info">
+          <span class="lb-name">${name}</span>
+          <span class="lb-desc">本月簽到次數</span>
+        </div>
+        <div class="lb-score">${count}</div>
+      `;
+      listEl.appendChild(li);
+    });
   } catch (err) {
-    console.error('History fetch failed:', err);
+    console.error('Failed to load leaderboard:', err);
   }
 }
 
-// ┌────────────────────────────────────────────────────────────────┐
-// │ SUBMIT CHECK-IN                                                │
-// └────────────────────────────────────────────────────────────────┘
-document.getElementById('checkin-form').addEventListener('submit', async (e) => {
+// ────────────────────────────────────────────────────────────
+// SUBMIT CHECK-IN (via Google Apps Script)
+// ────────────────────────────────────────────────────────────
+document.getElementById('checkinForm').addEventListener('submit', async (e) => {
   e.preventDefault();
-  const btn = e.target.querySelector('button[type="submit"]');
-  const name = document.getElementById('name').value.trim();
-  const type = document.getElementById('type').value.trim();
 
-  if (!name || !type) {
-    showToast('請填寫所有欄位');
+  const nameField = document.getElementById('volunteerName');
+  const name = nameField.value.trim();
+
+  if (!name) {
+    showToast('請選擇你的名字', 'error');
     return;
   }
 
+  const btn = e.target.querySelector('.submit-btn');
+  btn.disabled = true;
+  btn.textContent = '簽到中...';
+
+  try {
+    // POST to Google Apps Script
+    const res = await fetch(WEB_APP_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        volunteerName: name,
+        timestamp: new Date().toISOString()
+      })
+    });
+
+    const result = await res.json();
+
+    if (result.status === 'success') {
+      showToast(`✓ 簽到成功！${name}`, 'success');
+      nameField.value = '';
+      // Reload leaderboard after a short delay
+      setTimeout(loadLeaderboard, 1000);
+    } else {
+      showToast(result.message || '簽到失敗', 'error');
+    }
+  } catch (err) {
+    console.error('Check-in error:', err);
+    showToast('簽到失敗，請稍後再試', 'error');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '簽到';
+  }
+});
+
+// ────────────────────────────────────────────────────────────
+// INIT
+// ────────────────────────────────────────────────────────────
+updateClock();
+setInterval(updateClock, 1000);
+updateMonthDisplay();
+
+loadVolunteers();
+loadLeaderboard();
+// Refresh leaderboard every 30s
+setInterval(loadLeaderboard, 30000);
+
+// ────────────────────────────────────────────────────────────
+// JOIN FORM SUBMISSION
+// ────────────────────────────────────────────────────────────
+document.getElementById('joinForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const name = document.getElementById('joinName').value.trim();
+  const whatsapp = document.getElementById('joinWhatsApp').value.trim();
+  const note = document.getElementById('joinNote').value.trim();
+
+  if (!name || !whatsapp) {
+    showToast('請填寫全名及 WhatsApp 號碼', 'error');
+    return;
+  }
+
+  const btn = e.target.querySelector('.submit-btn');
   btn.disabled = true;
   btn.textContent = '提交中...';
 
   try {
-    const res = await fetch(SHEET_URL, {
+    const res = await fetch(WEB_APP_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: new URLSearchParams({
-        action: 'checkin',
+        action: 'join',
         name: name,
-        type: type,
+        whatsapp: whatsapp,
+        note: note,
         timestamp: new Date().toLocaleString('zh-HK', { timeZone: 'Europe/London', hour12: false })
       })
     });
-    const json = await res.json();
 
-    if (json.status === 'success') {
-      showToast('✅ 堂吉成功！');
-      document.getElementById('checkin-form').reset();
-
-      // Clear cache and refresh
-      localStorage.removeItem(CACHE_KEY_HISTORY);
-      localStorage.removeItem(CACHE_KEY_LEADERBOARD);
-      setTimeout(() => {
-        fetchHistory();
-        fetchLeaderboard();
-      }, 500);
+    const result = await res.json();
+    if (result.status === 'success') {
+      showToast(`✓ 登記成功！我們會盡快聯絡你`, 'success');
+      e.target.reset();
     } else {
-      showToast('❌ ' + (json.message || '提交失敗'));
+      showToast(result.message || '登記失敗，請稍後再試', 'error');
     }
   } catch (err) {
-    console.error('Checkin submit error:', err);
-    showToast('❌ 網絡錯誤，請重試');
+    console.error('Join error:', err);
+    showToast('登記失敗，請稍後再試', 'error');
   } finally {
     btn.disabled = false;
-    btn.textContent = '提交堂吉';
+    btn.textContent = '提交登記';
   }
 });
-
-// ┌────────────────────────────────────────────────────────────────┐
-// │ ESCAPE HTML (prevent XSS)                                      │
-// └────────────────────────────────────────────────────────────────┘
-function escapeHtml(str) {
-  const div = document.createElement('div');
-  div.textContent = str;
-  return div.innerHTML;
-}
-
-// ┌────────────────────────────────────────────────────────────────┐
-// │ INIT                                                           │
-// └────────────────────────────────────────────────────────────────┘
-fetchHistory();
-fetchLeaderboard();
 </script>
-
 </body>
 </html>
