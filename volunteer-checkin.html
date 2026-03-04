@@ -87,7 +87,7 @@
       font-size: 0.95rem;
       border-bottom: 1px solid #f0f0f0;
     }
-    .dropdown-item:hover, .dropdown-item.selected { background: #fdecea; }
+    .dropdown-item:hover, .dropdown-item.selected { background: #fdeeea; }
     .dropdown-item:last-child { border-bottom: none; }
 
     .btn {
@@ -98,290 +98,306 @@
       font-size: 1.05rem;
       font-weight: 600;
       cursor: pointer;
-      transition: background 0.2s;
-      margin-top: 8px;
+      transition: background 0.3s;
     }
     .btn-primary { background: #c0392b; color: #fff; }
-    .btn-primary:hover { background: #a93226; }
-    .btn-primary:disabled { background: #ccc; cursor: not-allowed; }
-    .btn-outline { background: #fff; color: #c0392b; border: 2px solid #c0392b; }
-    .btn-outline:hover { background: #fdecea; }
+    .btn-primary:hover { background: #a0301f; }
+    .btn-secondary { background: #ecf0f1; color: #555; }
+    .btn-secondary:hover { background: #d5dbdc; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-    /* Check-in action buttons */
-    .action-btns { display: flex; gap: 14px; margin-top: 8px; }
-    .action-btns .btn { flex: 1; font-size: 1.1rem; padding: 16px; }
-    .btn-signin  { background: #27ae60; color: #fff; }
-    .btn-signin:hover  { background: #219150; }
-    .btn-signout { background: #e67e22; color: #fff; }
-    .btn-signout:hover { background: #ca6f1e; }
+    .btn-group { display: flex; gap: 12px; margin-top: 20px; }
+    .btn-group .btn { flex: 1; }
 
-    /* Volunteer info card */
-    .vol-card {
-      background: #f8f9fa;
-      border: 1.5px solid #e0e0e0;
-      border-radius: 10px;
-      padding: 16px 18px;
-      margin-bottom: 20px;
+    .summary { margin-bottom: 24px; line-height: 1.9; }
+    .summary-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f0f0f0; }
+    .summary-label { font-weight: 600; color: #555; }
+    .summary-value { color: #1a1a2e; font-weight: 500; }
+
+    .success-icon { text-align: center; font-size: 4rem; margin-bottom: 16px; }
+    .success-msg { text-align: center; color: #27ae60; font-size: 1.2rem; font-weight: 600; margin-bottom: 12px; }
+    .success-detail { text-align: center; color: #666; font-size: 0.9rem; line-height: 1.6; }
+
+    .error { color: #c0392b; font-size: 0.82rem; margin-top: 8px; display: none; }
+    .loading { display: none; text-align: center; padding: 24px; color: #666; }
+
+    @media (max-width: 500px) {
+      .card { padding: 28px 20px; }
+      h1 { font-size: 1.2rem; }
     }
-    .vol-card .vol-name { font-size: 1.2rem; font-weight: 700; color: #1a1a2e; }
-    .vol-card .vol-id   { font-size: 0.85rem; color: #888; margin-top: 2px; }
-
-    /* Success screen */
-    .success-screen {
-      text-align: center;
-      padding: 20px 0;
-    }
-    .success-icon { font-size: 4rem; margin-bottom: 16px; }
-    .success-screen h2 { font-size: 1.5rem; color: #1a1a2e; margin-bottom: 8px; }
-    .success-screen .action-badge {
-      display: inline-block;
-      padding: 6px 18px;
-      border-radius: 20px;
-      font-weight: 700;
-      font-size: 1rem;
-      margin-bottom: 12px;
-    }
-    .badge-signin  { background: #e8f5e9; color: #27ae60; }
-    .badge-signout { background: #fef3e2; color: #e67e22; }
-    .success-screen .vol-name-big { font-size: 1.3rem; font-weight: 700; color: #c0392b; margin-bottom: 6px; }
-    .success-screen .timestamp { font-size: 0.88rem; color: #888; }
-
-    .alert {
-      padding: 12px 16px;
-      border-radius: 8px;
-      font-size: 0.9rem;
-      margin-top: 14px;
-      display: none;
-    }
-    .alert.error { background: #fdecea; color: #c62828; border: 1px solid #ef9a9a; }
-
-    .reg-link { text-align: center; margin-top: 20px; font-size: 0.88rem; color: #666; }
-    .reg-link a { color: #c0392b; text-decoration: none; font-weight: 600; }
-
-    .date-row { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
-    .date-row label { margin-bottom: 0; white-space: nowrap; font-size: 0.85rem; color: #555; }
-    .date-row input { flex: 1; padding: 8px 12px; font-size: 0.9rem; }
   </style>
 </head>
 <body>
+
 <div class="card">
   <div class="logo">
-    <img src="images/logo.png" alt="Salford Hongkongers" onerror="this.style.display='none'">
+    <img src="assets/logo-landscape.svg" alt="Salford Hongkongers">
   </div>
   <h1>義工打卡</h1>
-  <p class="subtitle">Volunteer Check-In / Check-Out<br>Salford Hongkongers CIC</p>
+  <p class="subtitle">Volunteer Check-in</p>
 
-  <!-- Step indicators -->
+  <!-- Step Indicators -->
   <div class="steps">
     <div class="step active" id="step1">1</div>
     <div class="step-line"></div>
     <div class="step" id="step2">2</div>
     <div class="step-line"></div>
-    <div class="step" id="step3">✓</div>
+    <div class="step" id="step3">3</div>
   </div>
 
-  <!-- Panel 1: Search name -->
+  <!-- Panel 1: Name + Event -->
   <div class="panel active" id="panel1">
     <div class="form-group">
-      <label>義工登記名字 Volunteer Name</label>
+      <label for="name">你個名 / Your Name</label>
       <div class="autocomplete-wrap">
-        <input type="text" id="nameInput" placeholder="輸入名字搜尋... Type to search" autocomplete="off">
-        <div class="dropdown" id="nameDropdown"></div>
+        <input type="text" id="name" placeholder="例如: 陳大文" autocomplete="off">
+        <div class="dropdown" id="name-dropdown"></div>
       </div>
     </div>
+
     <div class="form-group">
-      <label>電話尾四位 Last 4 digits of phone</label>
-      <input type="tel" id="last4Input" placeholder="例：5678" maxlength="4" pattern="\d{4}">
+      <label for="event">活動 / Event</label>
+      <div class="autocomplete-wrap">
+        <input type="text" id="event" placeholder="例如: 社區巡邏" autocomplete="off">
+        <div class="dropdown" id="event-dropdown"></div>
+      </div>
     </div>
-    <div class="alert error" id="step1Alert"></div>
-    <button class="btn btn-primary" id="verifyBtn" onclick="verifyVolunteer()">核實身份 Verify</button>
+
+    <button class="btn btn-primary" onclick="goStep2()">下一步 Next</button>
+    <div class="error" id="error1"></div>
   </div>
 
-  <!-- Panel 2: Confirm & check-in/out -->
+  <!-- Panel 2: Hours + Date -->
   <div class="panel" id="panel2">
-    <div class="vol-card">
-      <div class="vol-name" id="volName"></div>
-      <div class="vol-id" id="volId"></div>
+    <div class="form-group">
+      <label for="hours">做咗幾多個鐘 / Hours Served</label>
+      <input type="text" id="hours" placeholder="例如: 2 或 2.5" inputmode="decimal">
     </div>
-    <div class="date-row">
-      <label>活動日期：</label>
-      <input type="date" id="eventDate">
+
+    <div class="form-group">
+      <label for="date">邊日做嘅 / Date</label>
+      <input type="date" id="date">
     </div>
-    <p style="font-size:0.9rem;color:#555;margin-bottom:16px;text-align:center;">請選擇：</p>
-    <div class="action-btns">
-      <button class="btn btn-signin"  onclick="doCheckIn('簽到')">✅ 簽到 Check In</button>
-      <button class="btn btn-signout" onclick="doCheckIn('簽退')">🚪 簽退 Check Out</button>
+
+    <div class="btn-group">
+      <button class="btn btn-secondary" onclick="goStep1()">返上步 Back</button>
+      <button class="btn btn-primary" onclick="goStep3()">下一步 Next</button>
     </div>
-    <div class="alert error" id="step2Alert"></div>
-    <button class="btn btn-outline" style="margin-top:14px;" onclick="goBack()">← 返回 Back</button>
+    <div class="error" id="error2"></div>
   </div>
 
-  <!-- Panel 3: Success -->
+  <!-- Panel 3: Confirm -->
   <div class="panel" id="panel3">
-    <div class="success-screen">
-      <div class="success-icon" id="successIcon">✅</div>
-      <div class="action-badge" id="actionBadge"></div>
-      <div class="vol-name-big" id="successName"></div>
-      <div class="timestamp" id="successTime"></div>
-      <button class="btn btn-outline" style="margin-top:24px;max-width:200px;margin-left:auto;margin-right:auto;" onclick="reset()">再次打卡 Again</button>
+    <div class="summary">
+      <div class="summary-item">
+        <span class="summary-label">名</span>
+        <span class="summary-value" id="sum-name"></span>
+      </div>
+      <div class="summary-item">
+        <span class="summary-label">活動</span>
+        <span class="summary-value" id="sum-event"></span>
+      </div>
+      <div class="summary-item">
+        <span class="summary-label">時數</span>
+        <span class="summary-value" id="sum-hours"></span>
+      </div>
+      <div class="summary-item">
+        <span class="summary-label">日期</span>
+        <span class="summary-value" id="sum-date"></span>
+      </div>
     </div>
+
+    <div class="btn-group">
+      <button class="btn btn-secondary" onclick="goStep2()">返上步 Back</button>
+      <button class="btn btn-primary" onclick="submitCheckin()">確認送出 Submit</button>
+    </div>
+    <div class="error" id="error3"></div>
   </div>
 
-  <div class="reg-link">
-    未登記？<a href="volunteer-register.html">義工登記 →</a>
+  <!-- Panel 4: Success -->
+  <div class="panel" id="panel4">
+    <div class="success-icon">✓</div>
+    <div class="success-msg">打卡成功！</div>
+    <div class="success-detail">
+      已成功記錄你嘅義工時數<br>
+      多謝你嘅付出！<br>
+      <br>
+      <strong>Check-in Success!</strong><br>
+      Your volunteer hours have been recorded.<br>
+      Thank you for your contribution!
+    </div>
+    <button class="btn btn-primary" onclick="reset()" style="margin-top: 28px;">再打卡 Check-in Again</button>
   </div>
+
+  <div class="loading" id="loading">提交中... Submitting...</div>
 </div>
 
 <script>
-  // ⚠️ 請將下方 URL 換成你的 Apps Script 部署 URL
-  var APPS_SCRIPT_URL = 'YOUR_APPS_SCRIPT_URL_HERE';
+const API_URL = 'https://script.google.com/macros/s/AKfycbyU6W8W3vm5R7TGd4A9t2qD3NZp5NI3PaXyptlBiiJawL_SK7LcZqfkX1v4wU-nenw/exec';
 
-  var volunteers = [];
-  var selectedVolunteer = null;
+let volunteers = [];
+let events = [];
 
-  // Set today's date as default
-  var today = new Date().toISOString().split('T')[0];
-  document.getElementById('eventDate').value = today;
+// Load data
+async function loadData() {
+  try {
+    const res = await fetch(API_URL);
+    const data = await res.json();
+    volunteers = data.volunteers || [];
+    events = data.events || [];
+  } catch (err) {
+    console.error('Failed to load data:', err);
+  }
+}
+loadData();
 
-  // Load volunteer list on startup
-  fetch(APPS_SCRIPT_URL + '?action=getVolunteers')
-    .then(function(r) { return r.json(); })
-    .then(function(data) {
-      if (data.success) volunteers = data.volunteers;
-    })
-    .catch(function() { console.warn('Could not load volunteers'); });
+// Autocomplete
+function setupAutocomplete(inputId, dropdownId, dataArray) {
+  const input = document.getElementById(inputId);
+  const dropdown = document.getElementById(dropdownId);
 
-  // Autocomplete
-  var nameInput = document.getElementById('nameInput');
-  var dropdown  = document.getElementById('nameDropdown');
-
-  nameInput.addEventListener('input', function() {
-    var q = this.value.trim().toLowerCase();
-    selectedVolunteer = null;
-    if (!q) { dropdown.style.display = 'none'; return; }
-
-    var matches = volunteers.filter(function(v) {
-      return v.name.toLowerCase().includes(q);
+  input.addEventListener('input', () => {
+    const val = input.value.trim().toLowerCase();
+    dropdown.innerHTML = '';
+    if (!val) {
+      dropdown.style.display = 'none';
+      return;
+    }
+    const matches = dataArray.filter(item => item.toLowerCase().includes(val));
+    if (matches.length === 0) {
+      dropdown.style.display = 'none';
+      return;
+    }
+    matches.forEach(item => {
+      const div = document.createElement('div');
+      div.className = 'dropdown-item';
+      div.textContent = item;
+      div.onclick = () => {
+        input.value = item;
+        dropdown.style.display = 'none';
+      };
+      dropdown.appendChild(div);
     });
-
-    if (matches.length === 0) { dropdown.style.display = 'none'; return; }
-
-    dropdown.innerHTML = matches.map(function(v) {
-      return '<div class="dropdown-item" onclick="selectVolunteer(' + JSON.stringify(v).replace(/"/g, '&quot;') + ')">' + v.name + '</div>';
-    }).join('');
     dropdown.style.display = 'block';
   });
 
-  document.addEventListener('click', function(e) {
-    if (!e.target.closest('.autocomplete-wrap')) dropdown.style.display = 'none';
+  input.addEventListener('focus', () => {
+    if (input.value.trim()) input.dispatchEvent(new Event('input'));
   });
 
-  function selectVolunteer(v) {
-    selectedVolunteer = v;
-    nameInput.value = v.name;
-    dropdown.style.display = 'none';
-  }
-
-  // Verify identity
-  function verifyVolunteer() {
-    var alert = document.getElementById('step1Alert');
-    alert.style.display = 'none';
-
-    var name  = nameInput.value.trim();
-    var last4 = document.getElementById('last4Input').value.trim();
-
-    if (!name)  { showAlert('step1Alert', '請輸入義工名字'); return; }
-    if (!last4 || !/^\d{4}$/.test(last4)) { showAlert('step1Alert', '請輸入正確的電話尾四位（4位數字）'); return; }
-
-    // Client-side pre-check
-    var match = volunteers.find(function(v) {
-      return v.name === name && v.phoneLast4 === last4;
-    });
-
-    if (!match && selectedVolunteer && selectedVolunteer.phoneLast4 !== last4) {
-      showAlert('step1Alert', '電話尾四位不符，請重新確認');
-      return;
+  document.addEventListener('click', (e) => {
+    if (!input.contains(e.target) && !dropdown.contains(e.target)) {
+      dropdown.style.display = 'none';
     }
+  });
+}
 
-    if (match) {
-      selectedVolunteer = match;
-    }
+setupAutocomplete('name', 'name-dropdown', volunteers);
+setupAutocomplete('event', 'event-dropdown', events);
 
-    // Move to panel 2
-    setStep(2);
-    document.getElementById('volName').textContent = name;
-    document.getElementById('volId').textContent = selectedVolunteer
-      ? '義工編號：' + selectedVolunteer.id
-      : '義工編號：— ';
+// Steps
+function goStep1() { switchPanel(1); }
+function goStep2() {
+  const name = document.getElementById('name').value.trim();
+  const event = document.getElementById('event').value.trim();
+  const err = document.getElementById('error1');
+  if (!name || !event) {
+    err.textContent = '請填齊所有資料 / Please fill all fields';
+    err.style.display = 'block';
+    return;
   }
+  err.style.display = 'none';
 
-  // Do check-in / check-out
-  function doCheckIn(action) {
-    var btn1 = document.querySelector('.btn-signin');
-    var btn2 = document.querySelector('.btn-signout');
-    btn1.disabled = btn2.disabled = true;
+  // Set today's date as default
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('date').value = today;
 
-    var payload = {
-      action: 'checkIn',
-      name:        nameInput.value.trim(),
-      last4:       document.getElementById('last4Input').value.trim(),
-      checkAction: action,
-      eventDate:   document.getElementById('eventDate').value
-    };
+  switchPanel(2);
+}
+function goStep3() {
+  const hours = document.getElementById('hours').value.trim();
+  const date = document.getElementById('date').value;
+  const err = document.getElementById('error2');
+  if (!hours || !date) {
+    err.textContent = '請填齊所有資料 / Please fill all fields';
+    err.style.display = 'block';
+    return;
+  }
+  const h = parseFloat(hours);
+  if (isNaN(h) || h <= 0) {
+    err.textContent = '請輸入有效時數 / Please enter valid hours';
+    err.style.display = 'block';
+    return;
+  }
+  err.style.display = 'none';
 
-    fetch(APPS_SCRIPT_URL, {
+  // Update summary
+  document.getElementById('sum-name').textContent = document.getElementById('name').value;
+  document.getElementById('sum-event').textContent = document.getElementById('event').value;
+  document.getElementById('sum-hours').textContent = hours;
+  document.getElementById('sum-date').textContent = date;
+
+  switchPanel(3);
+}
+
+function switchPanel(n) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel' + n).classList.add('active');
+
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active', 'done'));
+  for (let i = 1; i < n; i++) {
+    document.getElementById('step' + i).classList.add('done');
+  }
+  document.getElementById('step' + n).classList.add('active');
+}
+
+async function submitCheckin() {
+  const name = document.getElementById('name').value.trim();
+  const event = document.getElementById('event').value.trim();
+  const hours = document.getElementById('hours').value.trim();
+  const date = document.getElementById('date').value;
+
+  const err = document.getElementById('error3');
+  const loading = document.getElementById('loading');
+
+  loading.style.display = 'block';
+  document.getElementById('panel3').style.display = 'none';
+
+  try {
+    const res = await fetch(API_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify(payload)
-    })
-    .then(function(r) { return r.json(); })
-    .then(function(data) {
-      if (data.success) {
-        setStep(3);
-        var isSignIn = action === '簽到';
-        document.getElementById('successIcon').textContent  = isSignIn ? '✅' : '👋';
-        document.getElementById('actionBadge').textContent  = isSignIn ? '✅ 簽到成功' : '🚪 簽退成功';
-        document.getElementById('actionBadge').className    = 'action-badge ' + (isSignIn ? 'badge-signin' : 'badge-signout');
-        document.getElementById('successName').textContent  = data.volunteer.name;
-        document.getElementById('successTime').textContent  = data.timestamp;
-      } else {
-        showAlert('step2Alert', data.error);
-      }
-    })
-    .catch(function() { showAlert('step2Alert', '網絡錯誤，請稍後再試'); })
-    .finally(function() { btn1.disabled = btn2.disabled = false; });
-  }
-
-  function goBack() {
-    setStep(1);
-    document.getElementById('step2Alert').style.display = 'none';
-  }
-
-  function reset() {
-    nameInput.value = '';
-    document.getElementById('last4Input').value = '';
-    selectedVolunteer = null;
-    document.getElementById('step1Alert').style.display = 'none';
-    setStep(1);
-  }
-
-  function setStep(n) {
-    ['panel1','panel2','panel3'].forEach(function(id, i) {
-      document.getElementById(id).className = 'panel' + (i+1 === n ? ' active' : '');
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        action: 'checkin',
+        name, event, hours, date
+      })
     });
-    [1,2,3].forEach(function(i) {
-      var el = document.getElementById('step' + i);
-      if (i < n)      el.className = 'step done';
-      else if (i === n) el.className = 'step active';
-      else             el.className = 'step';
-    });
-  }
+    const result = await res.json();
+    loading.style.display = 'none';
 
-  function showAlert(id, msg) {
-    var el = document.getElementById(id);
-    el.textContent = '❌ ' + msg;
-    el.style.display = 'block';
+    if (result.success) {
+      switchPanel(4);
+    } else {
+      document.getElementById('panel3').style.display = 'block';
+      err.textContent = '提交失敗，請重試 / Submission failed, please retry';
+      err.style.display = 'block';
+    }
+  } catch (error) {
+    loading.style.display = 'none';
+    document.getElementById('panel3').style.display = 'block';
+    err.textContent = '網絡錯誤，請重試 / Network error, please retry';
+    err.style.display = 'block';
   }
+}
+
+function reset() {
+  document.getElementById('name').value = '';
+  document.getElementById('event').value = '';
+  document.getElementById('hours').value = '';
+  document.getElementById('date').value = '';
+  switchPanel(1);
+}
 </script>
+
 </body>
 </html>
