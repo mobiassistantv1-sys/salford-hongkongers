@@ -1,401 +1,693 @@
 <!DOCTYPE html>
-<html lang="zh-HK">
+<html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>義工打卡 — Salford Hongkongers</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>義工打卡 | Salford Hongkongers</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: #f5f5f5;
+      font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
       min-height: 100vh;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       padding: 20px;
     }
+
+    .logo-area {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .logo-area img {
+      height: 60px;
+      border-radius: 50%;
+    }
+    .logo-area h1 {
+      color: #fff;
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-top: 10px;
+      letter-spacing: 1px;
+    }
+    .logo-area p {
+      color: #a0aec0;
+      font-size: 0.85rem;
+      margin-top: 4px;
+    }
+
     .card {
-      background: #fff;
-      border-radius: 16px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+      background: rgba(255,255,255,0.07);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 20px;
       padding: 36px 32px;
       width: 100%;
-      max-width: 480px;
+      max-width: 420px;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.4);
     }
-    .logo {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    .logo img { height: 52px; object-fit: contain; }
-    h1 { font-size: 1.4rem; color: #1a1a2e; text-align: center; margin-bottom: 4px; }
-    .subtitle { text-align: center; color: #666; font-size: 0.9rem; margin-bottom: 28px; }
 
-    /* Step indicators */
-    .steps {
+    .step-indicator {
       display: flex;
       justify-content: center;
       gap: 8px;
       margin-bottom: 28px;
     }
-    .step {
-      width: 28px; height: 28px;
+    .step-dot {
+      width: 8px; height: 8px;
       border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 0.78rem; font-weight: 700;
-      background: #eee; color: #aaa;
+      background: rgba(255,255,255,0.2);
       transition: all 0.3s;
     }
-    .step.active { background: #c0392b; color: #fff; }
-    .step.done   { background: #27ae60; color: #fff; }
-    .step-line { flex: 1; height: 2px; background: #eee; align-self: center; max-width: 40px; }
+    .step-dot.active { background: #4fc3f7; transform: scale(1.4); }
+    .step-dot.done { background: #66bb6a; }
 
-    /* Panels */
-    .panel { display: none; }
-    .panel.active { display: block; }
+    .step { display: none; }
+    .step.active { display: block; }
 
-    .form-group { margin-bottom: 18px; }
-    label { display: block; font-size: 0.85rem; font-weight: 600; color: #333; margin-bottom: 6px; }
+    h2 {
+      color: #fff;
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .subtitle {
+      color: #90caf9;
+      font-size: 0.85rem;
+      margin-bottom: 24px;
+    }
 
-    /* Autocomplete */
-    .autocomplete-wrap { position: relative; }
-    input[type="text"], input[type="tel"], input[type="date"] {
+    label {
+      display: block;
+      color: #b0bec5;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+    }
+
+    input[type="text"], input[type="tel"] {
       width: 100%;
+      background: rgba(255,255,255,0.08);
+      border: 1.5px solid rgba(255,255,255,0.15);
+      border-radius: 10px;
       padding: 12px 14px;
-      border: 1.5px solid #ddd;
-      border-radius: 8px;
+      color: #fff;
       font-size: 1rem;
       outline: none;
-      transition: border-color 0.2s;
+      transition: border-color 0.2s, background 0.2s;
+      margin-bottom: 18px;
     }
-    input:focus { border-color: #c0392b; }
-    .dropdown {
-      position: absolute;
-      top: 100%; left: 0; right: 0;
-      background: #fff;
-      border: 1.5px solid #ddd;
-      border-top: none;
-      border-radius: 0 0 8px 8px;
+    input[type="text"]:focus, input[type="tel"]:focus {
+      border-color: #4fc3f7;
+      background: rgba(79,195,247,0.08);
+    }
+    input::placeholder { color: rgba(255,255,255,0.3); }
+
+    .autocomplete-wrapper { position: relative; margin-bottom: 18px; }
+    .autocomplete-wrapper input { margin-bottom: 0; }
+    .autocomplete-list {
+      position: absolute; top: 100%; left: 0; right: 0;
+      background: #1e2a3a;
+      border: 1px solid rgba(79,195,247,0.3);
+      border-radius: 0 0 10px 10px;
       max-height: 200px;
       overflow-y: auto;
       z-index: 100;
       display: none;
     }
-    .dropdown-item {
+    .autocomplete-list.open { display: block; }
+    .autocomplete-item {
       padding: 10px 14px;
+      color: #e0e0e0;
+      font-size: 0.9rem;
       cursor: pointer;
-      font-size: 0.95rem;
-      border-bottom: 1px solid #f0f0f0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      transition: background 0.15s;
     }
-    .dropdown-item:hover, .dropdown-item.selected { background: #fdeeea; }
-    .dropdown-item:last-child { border-bottom: none; }
+    .autocomplete-item:hover, .autocomplete-item.selected { background: rgba(79,195,247,0.15); color: #4fc3f7; }
+
+    .verify-result {
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin-bottom: 20px;
+      font-size: 0.9rem;
+      display: none;
+    }
+    .verify-result.success {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(102,187,106,0.15);
+      border: 1px solid rgba(102,187,106,0.4);
+      color: #a5d6a7;
+    }
+    .verify-result.error {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(239,83,80,0.15);
+      border: 1px solid rgba(239,83,80,0.4);
+      color: #ef9a9a;
+    }
+    .verify-icon { font-size: 1.3rem; }
 
     .btn {
       width: 100%;
-      padding: 14px;
       border: none;
-      border-radius: 8px;
-      font-size: 1.05rem;
-      font-weight: 600;
+      border-radius: 12px;
+      padding: 14px;
+      font-size: 1rem;
+      font-weight: 700;
       cursor: pointer;
-      transition: background 0.3s;
+      transition: all 0.25s;
+      letter-spacing: 0.5px;
     }
-    .btn-primary { background: #c0392b; color: #fff; }
-    .btn-primary:hover { background: #a0301f; }
-    .btn-secondary { background: #ecf0f1; color: #555; }
-    .btn-secondary:hover { background: #d5dbdc; }
-    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-primary {
+      background: linear-gradient(135deg, #4fc3f7, #0288d1);
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(79,195,247,0.3);
+    }
+    .btn-primary:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(79,195,247,0.4);
+    }
+    .btn-primary:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .btn-punch-in {
+      background: linear-gradient(135deg, #66bb6a, #2e7d32);
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(102,187,106,0.35);
+      font-size: 1.2rem;
+      padding: 18px;
+      letter-spacing: 2px;
+    }
+    .btn-punch-in:hover:not(:disabled) {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(102,187,106,0.5);
+    }
+    .btn-punch-out {
+      background: linear-gradient(135deg, #ffa726, #e65100);
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(255,167,38,0.35);
+      font-size: 1.2rem;
+      padding: 18px;
+      letter-spacing: 2px;
+    }
+    .btn-punch-out:hover:not(:disabled) {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(255,167,38,0.5);
+    }
+    .btn-secondary {
+      background: rgba(255,255,255,0.07);
+      color: #b0bec5;
+      border: 1px solid rgba(255,255,255,0.12);
+      margin-top: 10px;
+      font-size: 0.9rem;
+    }
+    .btn-secondary:hover { background: rgba(255,255,255,0.12); color: #fff; }
 
-    .btn-group { display: flex; gap: 12px; margin-top: 20px; }
-    .btn-group .btn { flex: 1; }
+    .volunteer-info-card {
+      background: rgba(79,195,247,0.08);
+      border: 1px solid rgba(79,195,247,0.25);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .volunteer-avatar {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #4fc3f7, #0288d1);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .volunteer-name { color: #fff; font-size: 1rem; font-weight: 700; }
+    .volunteer-num { color: #4fc3f7; font-size: 0.8rem; margin-top: 2px; }
 
-    .summary { margin-bottom: 24px; line-height: 1.9; }
-    .summary-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f0f0f0; }
-    .summary-label { font-weight: 600; color: #555; }
-    .summary-value { color: #1a1a2e; font-weight: 500; }
+    .punch-status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+    .badge-not-in {
+      background: rgba(255,255,255,0.07);
+      color: #b0bec5;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+    .badge-in {
+      background: rgba(102,187,106,0.15);
+      color: #a5d6a7;
+      border: 1px solid rgba(102,187,106,0.3);
+    }
+    .badge-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+    }
+    .badge-not-in .badge-dot { background: #607d8b; }
+    .badge-in .badge-dot { background: #66bb6a; animation: pulse 1.5s infinite; }
 
-    .success-icon { text-align: center; font-size: 4rem; margin-bottom: 16px; }
-    .success-msg { text-align: center; color: #27ae60; font-size: 1.2rem; font-weight: 600; margin-bottom: 12px; }
-    .success-detail { text-align: center; color: #666; font-size: 0.9rem; line-height: 1.6; }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
 
-    .error { color: #c0392b; font-size: 0.82rem; margin-top: 8px; display: none; }
-    .loading { display: none; text-align: center; padding: 24px; color: #666; }
+    .checkin-time-display {
+      background: rgba(255,255,255,0.05);
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin-bottom: 20px;
+      font-size: 0.85rem;
+      color: #90caf9;
+    }
+    .checkin-time-display span { color: #fff; font-weight: 600; }
 
-    @media (max-width: 500px) {
+    .success-icon { font-size: 4rem; text-align: center; margin-bottom: 16px; }
+    .success-msg { color: #fff; font-size: 1.1rem; text-align: center; font-weight: 700; margin-bottom: 8px; }
+    .success-sub { color: #90caf9; font-size: 0.85rem; text-align: center; margin-bottom: 24px; line-height: 1.6; }
+    .success-detail {
+      background: rgba(255,255,255,0.05);
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-bottom: 20px;
+    }
+    .success-detail-row {
+      display: flex;
+      justify-content: space-between;
+      color: #b0bec5;
+      font-size: 0.85rem;
+      padding: 4px 0;
+    }
+    .success-detail-row span:last-child { color: #fff; font-weight: 600; }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 18px; height: 18px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      vertical-align: middle;
+      margin-right: 8px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .back-link {
+      text-align: center;
+      margin-top: 20px;
+    }
+    .back-link a {
+      color: #4fc3f7;
+      font-size: 0.85rem;
+      text-decoration: none;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+    .back-link a:hover { opacity: 1; }
+
+    @media (max-width: 480px) {
       .card { padding: 28px 20px; }
-      h1 { font-size: 1.2rem; }
     }
   </style>
 </head>
 <body>
 
+<div class="logo-area">
+  <img src="https://mobiassistantv1-sys.github.io/salford-hongkongers/shklogo.jpg" alt="SHK Logo" onerror="this.style.display='none'">
+  <h1>Salford Hongkongers</h1>
+  <p>義工打卡系統</p>
+</div>
+
 <div class="card">
-  <div class="logo">
-    <img src="assets/logo-landscape.svg" alt="Salford Hongkongers">
-  </div>
-  <h1>義工打卡</h1>
-  <p class="subtitle">Volunteer Check-in</p>
-
-  <!-- Step Indicators -->
-  <div class="steps">
-    <div class="step active" id="step1">1</div>
-    <div class="step-line"></div>
-    <div class="step" id="step2">2</div>
-    <div class="step-line"></div>
-    <div class="step" id="step3">3</div>
+  <div class="step-indicator">
+    <div class="step-dot active" id="dot1"></div>
+    <div class="step-dot" id="dot2"></div>
+    <div class="step-dot" id="dot3"></div>
   </div>
 
-  <!-- Panel 1: Name + Event -->
-  <div class="panel active" id="panel1">
-    <div class="form-group">
-      <label for="name">你個名 / Your Name</label>
-      <div class="autocomplete-wrap">
-        <input type="text" id="name" placeholder="例如: 陳大文" autocomplete="off">
-        <div class="dropdown" id="name-dropdown"></div>
+  <!-- STEP 1: 輸入姓名 + 電話尾4位 -->
+  <div class="step active" id="step1">
+    <h2>身份核對</h2>
+    <p class="subtitle">請輸入你的義工姓名及電話尾4位</p>
+
+    <label>義工姓名</label>
+    <div class="autocomplete-wrapper">
+      <input type="text" id="nameInput" placeholder="輸入姓名搜尋..." autocomplete="off" oninput="onNameInput()" onkeydown="onNameKeydown(event)" />
+      <div class="autocomplete-list" id="autocompleteList"></div>
+    </div>
+
+    <label>電話尾 4 位</label>
+    <input type="tel" id="phoneInput" placeholder="例如：3857" maxlength="4" pattern="[0-9]{4}"
+      oninput="this.value=this.value.replace(/\D/g,'').slice(0,4)" />
+
+    <div class="verify-result" id="verifyResult">
+      <span class="verify-icon" id="verifyIcon"></span>
+      <span id="verifyMsg"></span>
+    </div>
+
+    <button class="btn btn-primary" id="verifyBtn" onclick="verifyIdentity()">核對身份</button>
+  </div>
+
+  <!-- STEP 2: 打卡 -->
+  <div class="step" id="step2">
+    <h2>義工打卡</h2>
+    <p class="subtitle" id="step2Date"></p>
+
+    <div class="volunteer-info-card">
+      <div class="volunteer-avatar" id="avatarInitial">?</div>
+      <div>
+        <div class="volunteer-name" id="confirmedName"></div>
+        <div class="volunteer-num" id="confirmedNum"></div>
       </div>
     </div>
 
-    <div class="form-group">
-      <label for="event">活動 / Event</label>
-      <div class="autocomplete-wrap">
-        <input type="text" id="event" placeholder="例如: 社區巡邏" autocomplete="off">
-        <div class="dropdown" id="event-dropdown"></div>
-      </div>
-    </div>
+    <div id="punchStatusBadge"></div>
+    <div id="checkinTimeDisplay"></div>
 
-    <button class="btn btn-primary" onclick="goStep2()">下一步 Next</button>
-    <div class="error" id="error1"></div>
+    <button class="btn btn-punch-in" id="punchBtn" onclick="doPunch()">PUNCH</button>
+
+    <button class="btn btn-secondary" onclick="resetToStep1()">返回 / 換人</button>
   </div>
 
-  <!-- Panel 2: Hours + Date -->
-  <div class="panel" id="panel2">
-    <div class="form-group">
-      <label for="hours">做咗幾多個鐘 / Hours Served</label>
-      <input type="text" id="hours" placeholder="例如: 2 或 2.5" inputmode="decimal">
-    </div>
-
-    <div class="form-group">
-      <label for="date">邊日做嘅 / Date</label>
-      <input type="date" id="date">
-    </div>
-
-    <div class="btn-group">
-      <button class="btn btn-secondary" onclick="goStep1()">返上步 Back</button>
-      <button class="btn btn-primary" onclick="goStep3()">下一步 Next</button>
-    </div>
-    <div class="error" id="error2"></div>
+  <!-- STEP 3: 成功 -->
+  <div class="step" id="step3">
+    <div class="success-icon" id="successIcon">✅</div>
+    <div class="success-msg" id="successMsg">打卡成功！</div>
+    <div class="success-sub" id="successSub"></div>
+    <div class="success-detail" id="successDetail"></div>
+    <button class="btn btn-primary" onclick="resetToStep1()">完成 / 下一位</button>
   </div>
+</div>
 
-  <!-- Panel 3: Confirm -->
-  <div class="panel" id="panel3">
-    <div class="summary">
-      <div class="summary-item">
-        <span class="summary-label">名</span>
-        <span class="summary-value" id="sum-name"></span>
-      </div>
-      <div class="summary-item">
-        <span class="summary-label">活動</span>
-        <span class="summary-value" id="sum-event"></span>
-      </div>
-      <div class="summary-item">
-        <span class="summary-label">時數</span>
-        <span class="summary-value" id="sum-hours"></span>
-      </div>
-      <div class="summary-item">
-        <span class="summary-label">日期</span>
-        <span class="summary-value" id="sum-date"></span>
-      </div>
-    </div>
-
-    <div class="btn-group">
-      <button class="btn btn-secondary" onclick="goStep2()">返上步 Back</button>
-      <button class="btn btn-primary" onclick="submitCheckin()">確認送出 Submit</button>
-    </div>
-    <div class="error" id="error3"></div>
-  </div>
-
-  <!-- Panel 4: Success -->
-  <div class="panel" id="panel4">
-    <div class="success-icon">✓</div>
-    <div class="success-msg">打卡成功！</div>
-    <div class="success-detail">
-      已成功記錄你嘅義工時數<br>
-      多謝你嘅付出！<br>
-      <br>
-      <strong>Check-in Success!</strong><br>
-      Your volunteer hours have been recorded.<br>
-      Thank you for your contribution!
-    </div>
-    <button class="btn btn-primary" onclick="reset()" style="margin-top: 28px;">再打卡 Check-in Again</button>
-  </div>
-
-  <div class="loading" id="loading">提交中... Submitting...</div>
+<div class="back-link">
+  <a href="index.html">← 返回主頁</a>
 </div>
 
 <script>
-const API_URL = 'https://script.google.com/macros/s/AKfycbyU6W8W3vm5R7TGd4A9t2qD3NZp5NI3PaXyptlBiiJawL_SK7LcZqfkX1v4wU-nenw/exec';
+// ============================================================
+// CONFIG
+// ============================================================
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxVOLUNTEERCHECKIN_REPLACE_ME/exec';
+// Replace the above URL with your deployed Apps Script Web App URL
 
-let volunteers = [];
-let events = [];
+// Volunteer data loaded from Google Sheets (via Apps Script)
+// Format: { name: string, phone_last4: string, rowIndex: number }
+let volunteerData = [];
+let selectedVolunteer = null;
+let currentPunchState = null; // null = not punched in, { time, rowIndex } = punched in
 
-// Load data
-async function loadData() {
+// ============================================================
+// INIT
+// ============================================================
+window.onload = function() {
+  updateStep2Date();
+  loadVolunteerData();
+};
+
+function updateStep2Date() {
+  const now = new Date();
+  const opts = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+  document.getElementById('step2Date').textContent = now.toLocaleDateString('zh-Hant-HK', opts);
+}
+
+async function loadVolunteerData() {
   try {
-    const res = await fetch(API_URL);
-    const data = await res.json();
-    volunteers = data.volunteers || [];
-    events = data.events || [];
-  } catch (err) {
-    console.error('Failed to load data:', err);
-  }
-}
-loadData();
-
-// Autocomplete
-function setupAutocomplete(inputId, dropdownId, dataArray) {
-  const input = document.getElementById(inputId);
-  const dropdown = document.getElementById(dropdownId);
-
-  input.addEventListener('input', () => {
-    const val = input.value.trim().toLowerCase();
-    dropdown.innerHTML = '';
-    if (!val) {
-      dropdown.style.display = 'none';
-      return;
+    const res = await fetch(APPS_SCRIPT_URL + '?action=getVolunteers');
+    const json = await res.json();
+    if (json.volunteers) {
+      volunteerData = json.volunteers;
     }
-    const matches = dataArray.filter(item => item.toLowerCase().includes(val));
-    if (matches.length === 0) {
-      dropdown.style.display = 'none';
-      return;
-    }
-    matches.forEach(item => {
-      const div = document.createElement('div');
-      div.className = 'dropdown-item';
-      div.textContent = item;
-      div.onclick = () => {
-        input.value = item;
-        dropdown.style.display = 'none';
-      };
-      dropdown.appendChild(div);
-    });
-    dropdown.style.display = 'block';
-  });
-
-  input.addEventListener('focus', () => {
-    if (input.value.trim()) input.dispatchEvent(new Event('input'));
-  });
-
-  document.addEventListener('click', (e) => {
-    if (!input.contains(e.target) && !dropdown.contains(e.target)) {
-      dropdown.style.display = 'none';
-    }
-  });
+  } catch(e) {
+    // Fallback: will show error on verify
+    console.warn('Could not load volunteer data:', e);
+  }
 }
 
-setupAutocomplete('name', 'name-dropdown', volunteers);
-setupAutocomplete('event', 'event-dropdown', events);
+// ============================================================
+// AUTOCOMPLETE
+// ============================================================
+let acSelectedIndex = -1;
 
-// Steps
-function goStep1() { switchPanel(1); }
-function goStep2() {
-  const name = document.getElementById('name').value.trim();
-  const event = document.getElementById('event').value.trim();
-  const err = document.getElementById('error1');
-  if (!name || !event) {
-    err.textContent = '請填齊所有資料 / Please fill all fields';
-    err.style.display = 'block';
-    return;
-  }
-  err.style.display = 'none';
+function onNameInput() {
+  const q = document.getElementById('nameInput').value.trim().toLowerCase();
+  const list = document.getElementById('autocompleteList');
+  hideVerifyResult();
 
-  // Set today's date as default
-  const today = new Date().toISOString().split('T')[0];
-  document.getElementById('date').value = today;
+  if (q.length < 1) { list.classList.remove('open'); return; }
 
-  switchPanel(2);
-}
-function goStep3() {
-  const hours = document.getElementById('hours').value.trim();
-  const date = document.getElementById('date').value;
-  const err = document.getElementById('error2');
-  if (!hours || !date) {
-    err.textContent = '請填齊所有資料 / Please fill all fields';
-    err.style.display = 'block';
-    return;
-  }
-  const h = parseFloat(hours);
-  if (isNaN(h) || h <= 0) {
-    err.textContent = '請輸入有效時數 / Please enter valid hours';
-    err.style.display = 'block';
-    return;
-  }
-  err.style.display = 'none';
+  const matches = volunteerData
+    .filter(v => v.name.toLowerCase().includes(q))
+    .slice(0, 8);
 
-  // Update summary
-  document.getElementById('sum-name').textContent = document.getElementById('name').value;
-  document.getElementById('sum-event').textContent = document.getElementById('event').value;
-  document.getElementById('sum-hours').textContent = hours;
-  document.getElementById('sum-date').textContent = date;
+  if (matches.length === 0) { list.classList.remove('open'); return; }
 
-  switchPanel(3);
+  list.innerHTML = matches.map((v, i) =>
+    `<div class="autocomplete-item" data-index="${i}" data-name="${v.name}" onmousedown="selectName('${v.name.replace(/'/g,"\\'")}')">
+      ${v.name}
+    </div>`
+  ).join('');
+  acSelectedIndex = -1;
+  list.classList.add('open');
 }
 
-function switchPanel(n) {
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  document.getElementById('panel' + n).classList.add('active');
+function onNameKeydown(e) {
+  const list = document.getElementById('autocompleteList');
+  const items = list.querySelectorAll('.autocomplete-item');
+  if (!list.classList.contains('open')) return;
 
-  document.querySelectorAll('.step').forEach(s => s.classList.remove('active', 'done'));
-  for (let i = 1; i < n; i++) {
-    document.getElementById('step' + i).classList.add('done');
+  if (e.key === 'ArrowDown') {
+    acSelectedIndex = Math.min(acSelectedIndex + 1, items.length - 1);
+    items.forEach((el, i) => el.classList.toggle('selected', i === acSelectedIndex));
+    e.preventDefault();
+  } else if (e.key === 'ArrowUp') {
+    acSelectedIndex = Math.max(acSelectedIndex - 1, 0);
+    items.forEach((el, i) => el.classList.toggle('selected', i === acSelectedIndex));
+    e.preventDefault();
+  } else if (e.key === 'Enter' && acSelectedIndex >= 0) {
+    selectName(items[acSelectedIndex].dataset.name);
+    e.preventDefault();
+  } else if (e.key === 'Escape') {
+    list.classList.remove('open');
   }
-  document.getElementById('step' + n).classList.add('active');
 }
 
-async function submitCheckin() {
-  const name = document.getElementById('name').value.trim();
-  const event = document.getElementById('event').value.trim();
-  const hours = document.getElementById('hours').value.trim();
-  const date = document.getElementById('date').value;
+function selectName(name) {
+  document.getElementById('nameInput').value = name;
+  document.getElementById('autocompleteList').classList.remove('open');
+  document.getElementById('phoneInput').focus();
+}
 
-  const err = document.getElementById('error3');
-  const loading = document.getElementById('loading');
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.autocomplete-wrapper')) {
+    document.getElementById('autocompleteList').classList.remove('open');
+  }
+});
 
-  loading.style.display = 'block';
-  document.getElementById('panel3').style.display = 'none';
+// ============================================================
+// IDENTITY VERIFICATION
+// ============================================================
+async function verifyIdentity() {
+  const name = document.getElementById('nameInput').value.trim();
+  const phone = document.getElementById('phoneInput').value.trim();
+
+  if (!name) { showVerifyError('請輸入義工姓名'); return; }
+  if (phone.length !== 4) { showVerifyError('請輸入電話尾4位數字'); return; }
+
+  const btn = document.getElementById('verifyBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="loading-spinner"></span>核對中...';
 
   try {
-    const res = await fetch(API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams({
-        action: 'checkin',
-        name, event, hours, date
-      })
-    });
-    const result = await res.json();
-    loading.style.display = 'none';
+    // Check locally first (faster)
+    const match = volunteerData.find(v =>
+      v.name.toLowerCase() === name.toLowerCase() &&
+      v.phone_last4 === phone
+    );
 
-    if (result.success) {
-      switchPanel(4);
+    if (match) {
+      selectedVolunteer = match;
+      // Check existing punch status from server
+      const res = await fetch(`${APPS_SCRIPT_URL}?action=getPunchStatus&name=${encodeURIComponent(match.name)}&date=${getTodayDate()}`);
+      const json = await res.json();
+      currentPunchState = json.punchIn ? { time: json.punchInTime, sheetRow: json.sheetRow } : null;
+      goToStep2();
     } else {
-      document.getElementById('panel3').style.display = 'block';
-      err.textContent = '提交失敗，請重試 / Submission failed, please retry';
-      err.style.display = 'block';
+      // Fallback: verify via server (handles partial matches / phone format variations)
+      const res = await fetch(`${APPS_SCRIPT_URL}?action=verify&name=${encodeURIComponent(name)}&phone=${phone}`);
+      const json = await res.json();
+      if (json.success) {
+        selectedVolunteer = json.volunteer;
+        currentPunchState = json.punchIn ? { time: json.punchInTime, sheetRow: json.sheetRow } : null;
+        goToStep2();
+      } else {
+        showVerifyError('找不到符合的義工記錄，請檢查姓名及電話');
+      }
     }
-  } catch (error) {
-    loading.style.display = 'none';
-    document.getElementById('panel3').style.display = 'block';
-    err.textContent = '網絡錯誤，請重試 / Network error, please retry';
-    err.style.display = 'block';
+  } catch(e) {
+    showVerifyError('連線錯誤，請稍後再試');
+  }
+
+  btn.disabled = false;
+  btn.innerHTML = '核對身份';
+}
+
+function showVerifyError(msg) {
+  const r = document.getElementById('verifyResult');
+  document.getElementById('verifyIcon').textContent = '❌';
+  document.getElementById('verifyMsg').textContent = msg;
+  r.className = 'verify-result error';
+}
+
+function hideVerifyResult() {
+  document.getElementById('verifyResult').className = 'verify-result';
+}
+
+// ============================================================
+// STEP NAVIGATION
+// ============================================================
+function goToStep2() {
+  // Update UI
+  const name = selectedVolunteer.name;
+  document.getElementById('confirmedName').textContent = name;
+  document.getElementById('confirmedNum').textContent = '義工編號 #' + (selectedVolunteer.rowIndex || '–');
+  document.getElementById('avatarInitial').textContent = name.charAt(0).toUpperCase();
+
+  updatePunchUI();
+  setStep(2);
+}
+
+function updatePunchUI() {
+  const badge = document.getElementById('punchStatusBadge');
+  const timeDisplay = document.getElementById('checkinTimeDisplay');
+  const punchBtn = document.getElementById('punchBtn');
+
+  if (currentPunchState) {
+    // Already punched in — show punch OUT
+    badge.innerHTML = `<div class="punch-status-badge badge-in"><div class="badge-dot"></div>已簽到 · 工作中</div>`;
+    timeDisplay.innerHTML = `<div class="checkin-time-display">簽到時間：<span>${currentPunchState.time}</span></div>`;
+    punchBtn.className = 'btn btn-punch-out';
+    punchBtn.textContent = 'PUNCH OUT';
+  } else {
+    // Not punched in
+    badge.innerHTML = `<div class="punch-status-badge badge-not-in"><div class="badge-dot"></div>未簽到</div>`;
+    timeDisplay.innerHTML = '';
+    punchBtn.className = 'btn btn-punch-in';
+    punchBtn.textContent = 'PUNCH IN';
   }
 }
 
-function reset() {
-  document.getElementById('name').value = '';
-  document.getElementById('event').value = '';
-  document.getElementById('hours').value = '';
-  document.getElementById('date').value = '';
-  switchPanel(1);
+function setStep(n) {
+  document.querySelectorAll('.step').forEach((el, i) => el.classList.toggle('active', i === n - 1));
+  document.querySelectorAll('.step-dot').forEach((el, i) => {
+    el.classList.remove('active', 'done');
+    if (i === n - 1) el.classList.add('active');
+    else if (i < n - 1) el.classList.add('done');
+  });
+}
+
+function resetToStep1() {
+  selectedVolunteer = null;
+  currentPunchState = null;
+  document.getElementById('nameInput').value = '';
+  document.getElementById('phoneInput').value = '';
+  hideVerifyResult();
+  setStep(1);
+}
+
+// ============================================================
+// PUNCH ACTION
+// ============================================================
+async function doPunch() {
+  const punchBtn = document.getElementById('punchBtn');
+  punchBtn.disabled = true;
+  const isPunchOut = !!currentPunchState;
+  punchBtn.innerHTML = `<span class="loading-spinner"></span>${isPunchOut ? '簽退中...' : '簽到中...'}`;
+
+  const now = new Date();
+  const timeStr = formatDateTime(now);
+
+  try {
+    const payload = {
+      action: isPunchOut ? 'punchOut' : 'punchIn',
+      name: selectedVolunteer.name,
+      rowIndex: selectedVolunteer.rowIndex,
+      date: getTodayDate(),
+      time: timeStr,
+      sheetRow: isPunchOut ? currentPunchState.sheetRow : null
+    };
+
+    const res = await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify(payload)
+    });
+    const json = await res.json();
+
+    if (json.success) {
+      showSuccess(isPunchOut, timeStr, json);
+    } else {
+      alert('打卡失敗：' + (json.error || '未知錯誤'));
+      punchBtn.disabled = false;
+      punchBtn.innerHTML = isPunchOut ? 'PUNCH OUT' : 'PUNCH IN';
+    }
+  } catch(e) {
+    alert('連線錯誤，請稍後再試');
+    punchBtn.disabled = false;
+    punchBtn.innerHTML = isPunchOut ? 'PUNCH OUT' : 'PUNCH IN';
+  }
+}
+
+function showSuccess(isPunchOut, timeStr, serverData) {
+  if (isPunchOut) {
+    document.getElementById('successIcon').textContent = '🏁';
+    document.getElementById('successMsg').textContent = '簽退成功！多謝你今日的付出！';
+    document.getElementById('successSub').textContent = '你的義工時數已自動記錄，感謝你對 Salford Hongkongers 的貢獻！';
+    document.getElementById('successDetail').innerHTML = `
+      <div class="success-detail-row"><span>義工姓名</span><span>${selectedVolunteer.name}</span></div>
+      <div class="success-detail-row"><span>簽到時間</span><span>${currentPunchState.time}</span></div>
+      <div class="success-detail-row"><span>簽退時間</span><span>${timeStr}</span></div>
+      <div class="success-detail-row"><span>今日工作時長</span><span>${serverData.hours || '計算中...'}</span></div>
+    `;
+  } else {
+    document.getElementById('successIcon').textContent = '✅';
+    document.getElementById('successMsg').textContent = '簽到成功！';
+    document.getElementById('successSub').textContent = '歡迎！打卡記錄已儲存，記得完成後再次 Punch Out。';
+    document.getElementById('successDetail').innerHTML = `
+      <div class="success-detail-row"><span>義工姓名</span><span>${selectedVolunteer.name}</span></div>
+      <div class="success-detail-row"><span>簽到時間</span><span>${timeStr}</span></div>
+      <div class="success-detail-row"><span>日期</span><span>${getTodayDate()}</span></div>
+    `;
+  }
+  setStep(3);
+}
+
+// ============================================================
+// HELPERS
+// ============================================================
+function getTodayDate() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function formatDateTime(d) {
+  return `${getTodayDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}:${String(d.getSeconds()).padStart(2,'0')}`;
 }
 </script>
 
