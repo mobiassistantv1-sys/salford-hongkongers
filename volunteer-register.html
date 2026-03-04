@@ -145,7 +145,7 @@
 
   <script>
     // ⚠️ 請將下方 URL 換成你的 Apps Script 部署 URL
-    var APPS_SCRIPT_URL = 'YOUR_APPS_SCRIPT_URL_HERE';
+    var APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyU6W8W3vm5R7TGd4A9t2qD3NZp5NI3PaXyptlBiiJawL_SK7LcZqfkX1v4wU-nenw/exec';
 
     document.getElementById('regForm').addEventListener('submit', function(e) {
       e.preventDefault();
@@ -156,7 +156,7 @@
       alert.style.display = 'none';
 
       var payload = {
-        action: 'addVolunteer',
+        formType: 'volunteer',
         regName:    document.getElementById('regName').value.trim(),
         firstName:  document.getElementById('firstName').value.trim(),
         surname:    document.getElementById('surname').value.trim(),
