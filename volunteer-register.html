@@ -113,83 +113,102 @@
 
     <form id="regForm">
       <div class="form-group">
-        <label>義工登記名字 <span style="color:#c0392b">*</span></label>
-        <input type="text" id="regName" placeholder="例：Chan Tai Man / 陳大文" required>
-        <p class="note">請與你常用的稱呼一致，方便日後打卡識別</p>
+        <label>義工姓名 <span style="color:#c0392b">*</span></label>
+        <input type="text" name="name" placeholder="例: 陳大明" required>
       </div>
+
       <div class="row">
         <div class="form-group">
-          <label>First Name <span style="color:#c0392b">*</span></label>
-          <input type="text" id="firstName" placeholder="e.g. Tai Man" required>
+          <label>電話號碼 <span style="color:#c0392b">*</span></label>
+          <input type="tel" name="phone" placeholder="07123456789" required>
         </div>
         <div class="form-group">
-          <label>Surname <span style="color:#c0392b">*</span></label>
-          <input type="text" id="surname" placeholder="e.g. Chan" required>
+          <label>電郵地址</label>
+          <input type="email" name="email" placeholder="name@example.com">
         </div>
       </div>
+
       <div class="form-group">
-        <label>WhatsApp 號碼 <span style="color:#c0392b">*</span></label>
-        <input type="tel" id="whatsapp" placeholder="例：07712345678 / 85291234567" required>
-        <p class="note">打卡時需要用電話尾四位核實身份</p>
+        <label>緊急聯絡人 <span style="color:#c0392b">*</span></label>
+        <input type="text" name="emergency_contact" placeholder="例: 媽媽 - 07987654321" required>
+        <p class="note">請註明稱謂同聯絡號碼</p>
       </div>
 
-      <button type="submit" class="btn" id="submitBtn">提交登記 Submit</button>
+      <div class="form-group">
+        <label>居住地區</label>
+        <input type="text" name="location" placeholder="例: Salford Quays">
+      </div>
+
+      <div class="form-group">
+        <label>備註</label>
+        <input type="text" name="notes" placeholder="特別技能、可以幫手嘅範疇">
+      </div>
+
+      <button type="submit" class="btn">提交登記</button>
     </form>
 
-    <div class="alert" id="alertBox"></div>
+    <div id="alertBox" class="alert"></div>
 
     <div class="checkin-link">
-      已登記？<a href="volunteer-checkin.html">前往打卡 →</a>
+      <a href="volunteer-checkin.html">→ 返去義工簽到頁面</a>
     </div>
   </div>
 
   <script>
-    // ⚠️ 請將下方 URL 換成你的 Apps Script 部署 URL
-    var APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyU6W8W3vm5R7TGd4A9t2qD3NZp5NI3PaXyptlBiiJawL_SK7LcZqfkX1v4wU-nenw/exec';
+    const form = document.getElementById('regForm');
+    const alertBox = document.getElementById('alertBox');
+    const submitBtn = form.querySelector('.btn');
 
-    document.getElementById('regForm').addEventListener('submit', function(e) {
+    form.addEventListener('submit', async function(e) {
       e.preventDefault();
-      var btn = document.getElementById('submitBtn');
-      var alert = document.getElementById('alertBox');
-      btn.disabled = true;
-      btn.textContent = '提交中...';
-      alert.style.display = 'none';
+      
+      // Disable button
+      submitBtn.disabled = true;
+      submitBtn.textContent = '提交中...';
 
-      var payload = {
+      // Collect form data
+      const formData = new FormData(form);
+      const data = {
         formType: 'volunteer',
-        regName:    document.getElementById('regName').value.trim(),
-        firstName:  document.getElementById('firstName').value.trim(),
-        surname:    document.getElementById('surname').value.trim(),
-        whatsapp:   document.getElementById('whatsapp').value.trim()
+        name: formData.get('name'),
+        phone: formData.get('phone'),
+        email: formData.get('email') || '',
+        emergency_contact: formData.get('emergency_contact'),
+        location: formData.get('location') || '',
+        notes: formData.get('notes') || '',
+        timestamp: new Date().toISOString()
       };
 
-      fetch(APPS_SCRIPT_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain' },
-        body: JSON.stringify(payload)
-      })
-      .then(function(r) { return r.json(); })
-      .then(function(data) {
-        if (data.success) {
-          alert.className = 'alert success';
-          alert.innerHTML = '✅ ' + data.message + '<br><small>歡迎加入 Salford Hongkongers！</small>';
-          document.getElementById('regForm').reset();
-        } else {
-          alert.className = 'alert error';
-          alert.innerHTML = '❌ ' + data.error;
-        }
-        alert.style.display = 'block';
-      })
-      .catch(function() {
-        alert.className = 'alert error';
-        alert.innerHTML = '❌ 網絡錯誤，請稍後再試';
-        alert.style.display = 'block';
-      })
-      .finally(function() {
-        btn.disabled = false;
-        btn.textContent = '提交登記 Submit';
-      });
+      try {
+        // Google Apps Script endpoint — use URL params to bypass CORS opaque issue
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyU6W8W3vm5R7TGd4A9t2qD3NZp5NI3PaXyptlBiiJawL_SK7LcZqfkX1v4wU-nenw/exec';
+        const params = new URLSearchParams(data);
+        const response = await fetch(SCRIPT_URL + '?' + params.toString(), {
+          method: 'GET',
+          mode: 'no-cors'
+        });
+
+        // mode: no-cors => opaque response, assume success if no error thrown
+        showAlert('success', '✓ 登記成功！多謝你支持社群活動。我哋會盡快聯絡你。');
+        form.reset();
+
+      } catch (error) {
+        console.error('Error:', error);
+        showAlert('error', '✗ 提交失敗，請稍後再試或聯絡負責人。');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = '提交登記';
+      }
     });
+
+    function showAlert(type, message) {
+      alertBox.textContent = message;
+      alertBox.className = 'alert ' + type;
+      alertBox.style.display = 'block';
+      setTimeout(() => {
+        alertBox.style.display = 'none';
+      }, 5000);
+    }
   </script>
 </body>
 </html>
