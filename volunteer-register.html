@@ -157,7 +157,7 @@
       <button type="submit" class="btn" id="submitBtn">提交登記</button>
     </form>
 
-    <div id="alert" class="alert"></div>
+    <div id="alertBox" class="alert"></div>
 
     <div class="checkin-link">
       已登記？<a href="volunteer-checkin.html">前往義工簽到</a>
@@ -165,89 +165,75 @@
   </div>
 
   <script>
-    const form = document.getElementById('regForm');
-    const btn = document.getElementById('submitBtn');
-    const alert = document.getElementById('alert');
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx5XghDdEBG41krkKoD5-860RptJozTLAb6yX4p_k7UIyDR1xdiZlmFLBi9ZXlKhMtU/exec';
+    const regForm  = document.getElementById('regForm');
+    const btn      = document.getElementById('submitBtn');
+    const alertBox = document.getElementById('alertBox');
 
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      const name = document.getElementById('name').value.trim();
+    regForm.addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+
+      const name  = document.getElementById('name').value.trim();
       const email = document.getElementById('email').value.trim();
-      
+
       if (!name || !email) {
         showAlert('請填寫必填欄位（姓名及電郵）', 'error');
         return;
       }
 
-      btn.disabled = true;
+      btn.disabled    = true;
       btn.textContent = '提交中...';
 
-      const formData = {
-        name: name,
-        phone: document.getElementById('phone').value.trim(),
-        whatsapp: document.getElementById('whatsapp').value.trim(),
-        email: email,
-        age: document.getElementById('age').value.trim(),
-        city: document.getElementById('city').value.trim(),
-        skills: document.getElementById('skills').value.trim(),
-        notes: document.getElementById('notes').value.trim(),
+      const payload = {
+        action:    'register',
+        name:      name,
+        phone:     document.getElementById('phone').value.trim(),
+        whatsapp:  document.getElementById('whatsapp').value.trim(),
+        email:     email,
+        age:       document.getElementById('age').value.trim(),
+        city:      document.getElementById('city').value.trim(),
+        skills:    document.getElementById('skills').value.trim(),
+        notes:     document.getElementById('notes').value.trim(),
         timestamp: new Date().toISOString()
       };
 
       try {
-        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx5XghDdEBG41krkKoD5-860RptJozTLAb6yX4p_k7UIyDR1xdiZlmFLBi9ZXlKhMtU/exec';
-
-        // Build payload with action field for the unified script
-        const submitData = Object.assign({ action: 'register' }, formData);
-
-        const fd = new FormData();
-        Object.entries(submitData).forEach(([k, v]) => fd.append(k, v));
-        await fetch(APPS_SCRIPT_URL, {
-          method: 'POST',
-          mode: 'no-cors',
-          body: fd
+        // Use text/plain to avoid CORS preflight; Apps Script reads JSON body
+        const resp = await fetch(APPS_SCRIPT_URL, {
+          method:  'POST',
+          headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+          body:    JSON.stringify(payload)
         });
 
-        // no-cors mode cannot read response, assume success
-        const result = { success: true };
+        const result = await resp.json();
 
         if (result.duplicate) {
           showAlert('你已經登記過了！如有問題請聯絡我們。', 'error');
-          btn.disabled = false;
-          btn.textContent = '提交登記';
           return;
         }
         if (!result.success) {
           showAlert('提交失敗：' + (result.error || result.message || '請稍後再試'), 'error');
-          btn.disabled = false;
-          btn.textContent = '提交登記';
           return;
         }
 
         showAlert('登記成功！歡迎加入 Salford Hongkongers 義工團隊！', 'success');
-        document.getElementById('regForm').reset();
-        
-        setTimeout(() => {
-          window.location.href = 'volunteer-checkin.html';
-        }, 2000);
+        regForm.reset();
+        setTimeout(() => { window.location.href = 'volunteer-checkin.html'; }, 2000);
 
-      } catch (error) {
-        console.error('Error:', error);
+      } catch (err) {
+        console.error(err);
         showAlert('提交失敗，請稍後再試或聯絡我們', 'error');
       } finally {
-        btn.disabled = false;
+        btn.disabled    = false;
         btn.textContent = '提交登記';
       }
     });
 
-    function showAlert(message, type) {
-      alert.textContent = message;
-      alert.className = `alert ${type}`;
-      alert.style.display = 'block';
-      setTimeout(() => {
-        alert.style.display = 'none';
-      }, 5000);
+    function showAlert(msg, type) {
+      alertBox.textContent  = msg;
+      alertBox.className    = 'alert ' + type;
+      alertBox.style.display = 'block';
+      setTimeout(() => { alertBox.style.display = 'none'; }, 5000);
     }
   </script>
 </body>
