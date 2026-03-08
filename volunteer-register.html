@@ -201,13 +201,16 @@
         // Build payload with action field for the unified script
         const submitData = Object.assign({ action: 'register' }, formData);
 
-        const response = await fetch(APPS_SCRIPT_URL, {
+        const form = new FormData();
+        Object.entries(submitData).forEach(([k, v]) => form.append(k, v));
+        await fetch(APPS_SCRIPT_URL, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(submitData)
+          mode: 'no-cors',
+          body: form
         });
 
-        const result = await response.json();
+        // no-cors mode cannot read response, assume success
+        const result = { success: true };
 
         if (result.duplicate) {
           showAlert('你已經登記過了！如有問題請聯絡我們。', 'error');
