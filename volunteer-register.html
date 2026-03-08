@@ -201,12 +201,12 @@
         // Build payload with action field for the unified script
         const submitData = Object.assign({ action: 'register' }, formData);
 
-        const form = new FormData();
-        Object.entries(submitData).forEach(([k, v]) => form.append(k, v));
+        const fd = new FormData();
+        Object.entries(submitData).forEach(([k, v]) => fd.append(k, v));
         await fetch(APPS_SCRIPT_URL, {
           method: 'POST',
           mode: 'no-cors',
-          body: form
+          body: fd
         });
 
         // no-cors mode cannot read response, assume success
@@ -226,7 +226,7 @@
         }
 
         showAlert('登記成功！歡迎加入 Salford Hongkongers 義工團隊！', 'success');
-        form.reset();
+        document.getElementById('regForm').reset();
         
         setTimeout(() => {
           window.location.href = 'volunteer-checkin.html';
