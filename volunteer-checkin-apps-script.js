@@ -24,13 +24,14 @@ function doGet(e) {
 function doPost(e) {
   try {
     let p;
-    const ct = (e.postData.type || '').toLowerCase();
-    if (ct.indexOf('application/json') > -1) {
-      p = JSON.parse(e.postData.contents);
-    } else {
-      // FormData / application/x-www-form-urlencoded
+    // Support both JSON body and URL-encoded / FormData
+    try {
+      const raw = e.postData && e.postData.contents;
+      p = raw ? JSON.parse(raw) : e.parameter;
+    } catch(_) {
       p = e.parameter;
     }
+    if (!p || !p.action) return out({ error: 'missing action' });
     if (p.action === 'register') return out(register(p));
     if (p.action === 'punchIn')  return out(punchIn(p));
     if (p.action === 'punchOut') return out(punchOut(p));
