@@ -23,7 +23,14 @@ function doGet(e) {
 
 function doPost(e) {
   try {
-    const p = JSON.parse(e.postData.contents);
+    let p;
+    const ct = (e.postData.type || '').toLowerCase();
+    if (ct.indexOf('application/json') > -1) {
+      p = JSON.parse(e.postData.contents);
+    } else {
+      // FormData / application/x-www-form-urlencoded
+      p = e.parameter;
+    }
     if (p.action === 'register') return out(register(p));
     if (p.action === 'punchIn')  return out(punchIn(p));
     if (p.action === 'punchOut') return out(punchOut(p));
