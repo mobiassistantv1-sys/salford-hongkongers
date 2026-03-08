@@ -33,8 +33,10 @@ function doPost(e) {
 
 // ── Register ──────────────────────────────────────────────
 function register(p) {
-  const name = (p.name || '').trim();
-  const wa   = (p.whatsapp || p.phone || '').trim();
+  const firstName = (p.firstName || '').trim();
+  const surname   = (p.surname   || '').trim();
+  const name      = (p.name || [firstName, surname].filter(Boolean).join(' ')).trim();
+  const wa        = (p.whatsapp || p.phone || '').trim();
   if (!name) return { success: false, error: '請輸入姓名' };
 
   const sheet = SpreadsheetApp.openById(SS_ID).getSheetByName(VOL);
@@ -45,7 +47,7 @@ function register(p) {
     return { success: false, duplicate: true, message: '此義工已登記' };
 
   const nextId = rows.slice(1).reduce((m, r) => Math.max(m, +r[0] || 0), 0) + 1;
-  sheet.appendRow([nextId, name, p.firstName||'', p.surname||'', p.nickname||name, wa]);
+  sheet.appendRow([nextId, name, firstName, surname, p.nickname||name, wa]);
   return { success: true, id: nextId, message: '登記成功！歡迎加入 Salford Hongkongers！' };
 }
 
