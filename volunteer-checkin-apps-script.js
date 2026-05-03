@@ -1,11 +1,15 @@
 // Salford Hongkongers — Volunteer Apps Script
 // Sheet ID: 1FtfXxl8qktmF-FNUy_ItOVED0nwBM5DdohrwHXimtkM
 // Deploy: Web App | Execute as: Me | Access: Anyone
+// Handles: volunteer register, check-in/out, event registration, enquiry/feedback
 
 const SS_ID   = '1FtfXxl8qktmF-FNUy_ItOVED0nwBM5DdohrwHXimtkM';
 const VOL     = '義工資料'; // cols: 編號 | 名字 | FirstName | Surname | Nickname | WhatsApp
 const LOG     = '2026';    // cols: Month|Date|Day|Time|Hours|Activities|參與|Category|Manpower|Names
 const HRS     = '時數';    // cols: Name | Attendance | Total Hours
+const EVT     = '活動登記'; // cols: 時間戳記|姓名|電郵|電話類型|電話|居住地點|活動|備註
+const ENQ     = '查詢意見'; // cols: 時間戳記|姓名|電郵|電話|類別|主題|訊息
+const NOTIFY  = 'hkerssalford@gmail.com';
 
 function out(d) {
   return ContentService.createTextOutput(JSON.stringify(d)).setMimeType(ContentService.MimeType.JSON);
@@ -24,7 +28,6 @@ function doGet(e) {
 function doPost(e) {
   try {
     let p;
-    // Support both JSON body and URL-encoded / FormData
     try {
       const raw = e.postData && e.postData.contents;
       p = raw ? JSON.parse(raw) : e.parameter;
@@ -32,14 +35,16 @@ function doPost(e) {
       p = e.parameter;
     }
     if (!p || !p.action) return out({ error: 'missing action' });
-    if (p.action === 'register') return out(register(p));
-    if (p.action === 'punchIn')  return out(punchIn(p));
-    if (p.action === 'punchOut') return out(punchOut(p));
+    if (p.action === 'register')       return out(register(p));
+    if (p.action === 'punchIn')        return out(punchIn(p));
+    if (p.action === 'punchOut')       return out(punchOut(p));
+    if (p.action === 'eventRegister')  return out(eventRegister(p));
+    if (p.action === 'enquiry')        return out(handleEnquiry(p));
     return out({ error: 'unknown action' });
   } catch(err) { return out({ error: err.toString() }); }
 }
 
-// ── Register ──────────────────────────────────────────────
+// ── Volunteer Register ────────────────────────────────────
 function register(p) {
   const firstName = (p.firstName || '').trim();
   const surname   = (p.surname   || '').trim();
@@ -56,6 +61,15 @@ function register(p) {
 
   const nextId = rows.slice(1).reduce((m, r) => Math.max(m, +r[0] || 0), 0) + 1;
   sheet.appendRow([nextId, name, firstName, surname, p.nickname||name, wa]);
+
+  // Notify org
+  try {
+    MailApp.sendEmail(NOTIFY,
+      `新義工登記 — ${name}`,
+      `姓名: ${name}\nWhatsApp: ${wa}\n電郵: ${p.email||''}\n興趣技能: ${p.skills||''}\n備註: ${p.notes||''}\n時間: ${new Date()}`
+    );
+  } catch(e) {}
+
   return { success: true, id: nextId, message: '登記成功！歡迎加入 Salford Hongkongers！' };
 }
 
@@ -139,6 +153,111 @@ function addHours(name, h) {
     }
   }
   sheet.appendRow([name, 1, h]);
+}
+
+// ── Event Registration ────────────────────────────────────
+function eventRegister(p) {
+  const name      = (p.name      || '').trim();
+  const email     = (p.email     || '').trim();
+  const phoneType = (p.phoneType || 'UK').trim();
+  const phone     = (p.phone     || '').trim();
+  const postcode  = (p.postcode  || '').trim();
+  const eventName = (p.eventName || '').trim();
+  const notes     = (p.notes     || '').trim();
+
+  if (!name || !email) return { success: false, error: '請填寫姓名及電郵' };
+
+  const ss = SpreadsheetApp.openById(SS_ID);
+  let sheet = ss.getSheetByName(EVT);
+  if (!sheet) {
+    sheet = ss.insertSheet(EVT);
+    sheet.appendRow(['時間戳記','姓名','電郵','電話類型','電話','居住地點','活動','備註']);
+    formatHeader(sheet);
+  }
+  sheet.appendRow([new Date(), name, email, phoneType, phone, postcode, eventName, notes]);
+
+  // Notify org
+  try {
+    MailApp.sendEmail(NOTIFY,
+      `新活動登記 — ${eventName} — ${name}`,
+      `姓名: ${name}\n電郵: ${email}\n電話 (${phoneType}): ${phone}\n居住地點: ${postcode}\n活動: ${eventName}\n備註: ${notes}\n時間: ${new Date()}`
+    );
+  } catch(e) {}
+
+  // Auto-reply to registrant
+  if (email) {
+    try {
+      const htmlBody = `
+        <div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;background:#f9f9f9;padding:24px;border-radius:12px;">
+          <div style="background:#c0392b;padding:16px 24px;border-radius:8px 8px 0 0;text-align:center;">
+            <h1 style="color:#fff;font-size:1.4rem;margin:0;">Salford Hongkongers CIC</h1>
+          </div>
+          <div style="background:#fff;padding:24px;border-radius:0 0 8px 8px;border:1px solid #e0e0e0;">
+            <h2 style="color:#c0392b;">活動登記確認 ✓</h2>
+            <p>親愛的 <strong>${name}</strong>，</p>
+            <p>感謝你報名參加 <strong>「${eventName}」</strong>！我們已成功收到你的登記。</p>
+            <table style="width:100%;border-collapse:collapse;margin:16px 0;">
+              <tr><td style="padding:8px;background:#f5f5f5;font-weight:bold;width:35%;">姓名</td><td style="padding:8px;">${name}</td></tr>
+              <tr><td style="padding:8px;background:#f5f5f5;font-weight:bold;">活動</td><td style="padding:8px;">${eventName}</td></tr>
+              <tr><td style="padding:8px;background:#f5f5f5;font-weight:bold;">居住地區</td><td style="padding:8px;">${postcode || '未填寫'}</td></tr>
+            </table>
+            <p>我們將在活動前以電郵或電話通知你詳情及時間安排。</p>
+            <p>如有任何疑問，請隨時聯絡我們：</p>
+            <p>📧 <a href="mailto:${NOTIFY}" style="color:#c0392b;">${NOTIFY}</a></p>
+            <hr style="border:none;border-top:1px solid #e0e0e0;margin:20px 0;">
+            <p style="color:#888;font-size:0.85rem;text-align:center;">Salford Hongkongers CIC · 沙福香港人社區互助中心<br>salfordhongkongers.co.uk</p>
+          </div>
+        </div>`;
+      MailApp.sendEmail({ to: email, subject: `活動登記確認 — ${eventName} | Salford Hongkongers`, htmlBody });
+    } catch(e) {}
+  }
+
+  return { success: true, message: '登記成功！確認電郵已發送至 ' + email };
+}
+
+// ── Enquiry / Feedback ────────────────────────────────────
+function handleEnquiry(p) {
+  const name     = (p.name     || '匿名').trim();
+  const email    = (p.email    || '').trim();
+  const phone    = (p.phone    || '').trim();
+  const category = (p.category || '').trim();
+  const subject  = (p.subject  || '').trim();
+  const message  = (p.message  || '').trim();
+
+  if (!message) return { success: false, error: '請填寫訊息內容' };
+
+  const ss = SpreadsheetApp.openById(SS_ID);
+  let sheet = ss.getSheetByName(ENQ);
+  if (!sheet) {
+    sheet = ss.insertSheet(ENQ);
+    sheet.appendRow(['時間戳記','姓名','電郵','電話','類別','主題','訊息']);
+    formatHeader(sheet);
+  }
+  sheet.appendRow([new Date(), name, email, phone, category, subject, message]);
+
+  // Forward each case to hkerssalford@gmail.com
+  try {
+    const subjectLine = `新查詢 — [${category || '未分類'}] ${name}`;
+    const body =
+      `姓名: ${name}\n` +
+      `電郵: ${email || '未填寫'}\n` +
+      `電話: ${phone || '未填寫'}\n` +
+      `類別: ${category}\n` +
+      `主題: ${subject}\n` +
+      `訊息:\n${message}\n\n` +
+      `提交時間: ${new Date()}`;
+    MailApp.sendEmail(NOTIFY, subjectLine, body);
+  } catch(e) {}
+
+  return { success: true, message: '訊息已送出，我們將盡快回覆你。' };
+}
+
+// ── Helper ────────────────────────────────────────────────
+function formatHeader(sheet) {
+  const h = sheet.getRange(1, 1, 1, sheet.getLastColumn());
+  h.setBackground('#c0392b');
+  h.setFontColor('#ffffff');
+  h.setFontWeight('bold');
 }
 
 function pad(n) { return n < 10 ? '0'+n : ''+n; }

@@ -6,138 +6,185 @@
 <title>聯絡我們 | Salford Hongkongers</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Segoe UI', sans-serif; background: #f9f9f9; color: #333; }
+body { font-family: 'Segoe UI', sans-serif; background: #0a0a1a; color: #333; }
 
+/* ── Nav ── */
 nav {
-  background: #8B0000;
-  padding: 16px 24px;
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  padding: 14px 24px;
   display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 100;
 }
-nav .logo { color: white; font-size: 1.2rem; font-weight: 700; text-decoration: none; }
-nav a { color: rgba(255,255,255,0.85); text-decoration: none; margin-left: 20px; font-size: 0.95rem; }
-nav a:hover { color: white; }
+nav .logo { color: white; font-size: 1.15rem; font-weight: 700; text-decoration: none; letter-spacing: 0.5px; }
+nav .nav-links a {
+  color: rgba(255,255,255,0.75); text-decoration: none;
+  margin-left: 20px; font-size: 0.9rem; transition: color 0.2s;
+}
+nav .nav-links a:hover { color: #e91e8c; }
 
+/* ── Hero ── */
 .hero {
-  background: linear-gradient(135deg, #8B0000 0%, #C41E3A 50%, #8B0000 100%);
-  color: white; text-align: center; padding: 60px 24px 40px;
+  background: linear-gradient(135deg, #1a0a2e 0%, #0a0a1a 60%);
+  color: white; text-align: center; padding: 56px 24px 40px;
+  border-bottom: 1px solid rgba(233,30,140,0.2);
 }
-.hero h1 { font-size: 2.2rem; margin-bottom: 12px; }
-.hero p { font-size: 1.1rem; opacity: 0.9; max-width: 600px; margin: 0 auto; }
+.hero h1 {
+  font-size: 2rem; margin-bottom: 10px;
+  background: linear-gradient(90deg, #e91e8c, #00e5ff);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.hero p { font-size: 1rem; opacity: 0.75; max-width: 540px; margin: 0 auto; color: #ccc; }
 
-.container { max-width: 860px; margin: 0 auto; padding: 40px 20px; }
+/* ── Container ── */
+.container { max-width: 820px; margin: 0 auto; padding: 36px 20px 60px; }
 
+/* ── Tabs ── */
 .tabs {
-  display: flex; gap: 8px; margin-bottom: 32px;
-  border-bottom: 2px solid #e0e0e0; flex-wrap: wrap;
+  display: flex; gap: 6px; margin-bottom: 28px;
+  border-bottom: 2px solid rgba(255,255,255,0.08); flex-wrap: wrap;
+  padding-bottom: 0;
 }
 .tab-btn {
-  padding: 10px 20px; border: none; background: none;
-  font-size: 0.95rem; cursor: pointer; color: #666;
+  padding: 10px 18px; border: none; background: none;
+  font-size: 0.88rem; cursor: pointer; color: rgba(255,255,255,0.45);
   border-bottom: 3px solid transparent; margin-bottom: -2px;
-  transition: all 0.2s; white-space: nowrap;
+  transition: all 0.2s; white-space: nowrap; font-family: inherit;
 }
-.tab-btn.active { color: #8B0000; border-bottom-color: #8B0000; font-weight: 600; }
-.tab-btn:hover { color: #8B0000; }
-
+.tab-btn.active { color: #e91e8c; border-bottom-color: #e91e8c; font-weight: 600; }
+.tab-btn:hover { color: rgba(233,30,140,0.8); }
 .tab-panel { display: none; }
 .tab-panel.active { display: block; }
 
+/* ── Card ── */
 .card {
-  background: white; border-radius: 12px; padding: 28px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.08); margin-bottom: 24px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 16px; padding: 28px;
+  backdrop-filter: blur(8px);
+  margin-bottom: 20px;
 }
-.card h2 { font-size: 1.3rem; color: #8B0000; margin-bottom: 6px; }
-.card .subtitle { color: #888; font-size: 0.9rem; margin-bottom: 24px; line-height: 1.5; }
+.card h2 { font-size: 1.25rem; color: #e91e8c; margin-bottom: 5px; }
+.card .subtitle { color: rgba(255,255,255,0.5); font-size: 0.88rem; margin-bottom: 22px; line-height: 1.5; }
 
-.form-group { margin-bottom: 16px; }
+/* ── Form elements ── */
+.form-group { margin-bottom: 15px; }
 .form-group label {
   display: block; font-weight: 600; margin-bottom: 6px;
-  color: #555; font-size: 0.9rem;
+  color: rgba(255,255,255,0.75); font-size: 0.85rem; letter-spacing: 0.3px;
 }
-.form-group label .required { color: #C41E3A; }
+.form-group label .req { color: #e91e8c; }
 .form-group input,
 .form-group select,
 .form-group textarea {
-  width: 100%; padding: 12px 14px;
-  border: 2px solid #e0e0e0; border-radius: 8px;
-  font-size: 0.95rem; outline: none;
-  transition: border-color 0.2s; font-family: inherit;
+  width: 100%; padding: 11px 14px;
+  background: rgba(255,255,255,0.06);
+  border: 1.5px solid rgba(255,255,255,0.12);
+  border-radius: 9px; font-size: 0.95rem;
+  color: #fff; outline: none;
+  transition: border-color 0.2s, background 0.2s;
+  font-family: inherit;
 }
+.form-group input::placeholder,
+.form-group textarea::placeholder { color: rgba(255,255,255,0.25); }
 .form-group input:focus,
 .form-group select:focus,
-.form-group textarea:focus { border-color: #8B0000; }
+.form-group textarea:focus {
+  border-color: #e91e8c;
+  background: rgba(233,30,140,0.06);
+}
+.form-group select option { background: #1a1a2e; color: #fff; }
 .form-group textarea { resize: vertical; min-height: 100px; }
 
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 
-.radio-group { display: flex; flex-direction: column; gap: 10px; }
+/* Phone row: type selector + number */
+.phone-row { display: flex; gap: 10px; }
+.phone-row .phone-type { flex: 0 0 140px; }
+.phone-row .phone-num  { flex: 1; }
+
+/* ── Buttons ── */
+.btn-primary {
+  background: linear-gradient(135deg, #e91e8c, #c2185b);
+  color: white; padding: 13px 24px;
+  border: none; border-radius: 10px; cursor: pointer;
+  font-size: 0.95rem; font-weight: 700; width: 100%;
+  transition: all 0.25s; font-family: inherit; margin-top: 6px;
+  letter-spacing: 0.5px;
+}
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(233,30,140,0.4);
+}
+.btn-primary:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+/* ── Status ── */
+.status-msg {
+  padding: 13px 16px; border-radius: 9px; margin-bottom: 16px;
+  font-size: 0.9rem; display: none;
+}
+.status-msg.success {
+  background: rgba(76,175,80,0.15); color: #a5d6a7;
+  border: 1px solid rgba(76,175,80,0.35); display: block;
+}
+.status-msg.error {
+  background: rgba(233,30,140,0.1); color: #f48fb1;
+  border: 1px solid rgba(233,30,140,0.35); display: block;
+}
+
+/* ── Radio items ── */
+.radio-group { display: flex; flex-direction: column; gap: 8px; }
 .radio-item {
   display: flex; align-items: flex-start; gap: 10px;
-  padding: 12px 14px; border: 2px solid #e0e0e0;
-  border-radius: 8px; cursor: pointer; transition: all 0.2s;
+  padding: 11px 14px;
+  border: 1.5px solid rgba(255,255,255,0.1);
+  border-radius: 9px; cursor: pointer; transition: all 0.2s;
+  color: rgba(255,255,255,0.7);
 }
-.radio-item:hover { border-color: #8B0000; background: #fff9f9; }
-.radio-item input[type="radio"] { margin-top: 2px; accent-color: #8B0000; }
-.radio-item .radio-label { font-weight: 600; display: block; margin-bottom: 4px; }
-.radio-item .radio-desc { font-size: 0.85rem; color: #777; line-height: 1.4; }
+.radio-item:hover { border-color: #e91e8c; background: rgba(233,30,140,0.05); }
+.radio-item input[type="radio"] { margin-top: 3px; accent-color: #e91e8c; flex-shrink: 0; }
+.radio-item .rl { font-weight: 600; display: block; margin-bottom: 3px; color: #fff; font-size: 0.9rem; }
+.radio-item .rd { font-size: 0.82rem; color: rgba(255,255,255,0.45); line-height: 1.4; }
 
-.btn-primary {
-  background: #8B0000; color: white; padding: 14px 28px;
-  border: none; border-radius: 8px; cursor: pointer;
-  font-size: 1rem; font-weight: 600; width: 100%;
-  transition: background 0.2s; font-family: inherit;
-}
-.btn-primary:hover { background: #A00000; }
-.btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
-
-.social-section { margin-top: 48px; }
-.social-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+/* ── Social section ── */
+.social-section { margin-top: 44px; }
+.social-section h2 { text-align: center; margin-bottom: 24px; color: #e91e8c; font-size: 1.2rem; }
+.social-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
 .social-card {
-  background: white; border-radius: 12px; padding: 24px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.08); text-align: center;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px; padding: 22px; text-align: center;
 }
-.social-icon { font-size: 2.5rem; margin-bottom: 12px; }
-.social-card h3 { font-size: 1.1rem; color: #8B0000; margin-bottom: 8px; }
-.social-card p { color: #888; font-size: 0.9rem; margin-bottom: 16px; }
+.social-icon { font-size: 2.2rem; margin-bottom: 10px; }
+.social-card h3 { font-size: 1rem; color: #e91e8c; margin-bottom: 6px; }
+.social-card p { color: rgba(255,255,255,0.45); font-size: 0.85rem; margin-bottom: 14px; }
 .social-card a {
-  color: #8B0000; text-decoration: none; font-weight: 600;
-  display: inline-block; padding: 8px 16px;
-  border: 2px solid #8B0000; border-radius: 6px;
-  transition: all 0.2s;
+  color: #e91e8c; text-decoration: none; font-weight: 600;
+  display: inline-block; padding: 7px 16px;
+  border: 1.5px solid #e91e8c; border-radius: 7px;
+  transition: all 0.2s; font-size: 0.88rem;
 }
-.social-card a:hover { background: #8B0000; color: white; }
+.social-card a:hover { background: #e91e8c; color: #fff; }
 
+/* ── Footer ── */
 footer {
-  background: #2c2c2c; color: rgba(255,255,255,0.7);
-  padding: 40px 24px; margin-top: 60px;
+  background: #000; color: rgba(255,255,255,0.4);
+  padding: 36px 24px; margin-top: 48px;
+  border-top: 1px solid rgba(255,255,255,0.07);
 }
-.footer-content { max-width: 860px; margin: 0 auto; text-align: center; }
-.footer-content p { margin-bottom: 12px; font-size: 0.9rem; }
-.footer-links { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-top: 16px; }
-.footer-links a { color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.9rem; }
-.footer-links a:hover { color: white; }
+.footer-content { max-width: 820px; margin: 0 auto; text-align: center; }
+.footer-content p { margin-bottom: 10px; font-size: 0.85rem; }
+.footer-links { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-top: 14px; }
+.footer-links a { color: rgba(255,255,255,0.4); text-decoration: none; font-size: 0.85rem; transition: color 0.2s; }
+.footer-links a:hover { color: #e91e8c; }
 
-@media (max-width: 768px) {
-  .hero h1 { font-size: 1.7rem; }
-  .hero p { font-size: 1rem; }
+@media (max-width: 640px) {
+  .hero h1 { font-size: 1.6rem; }
   .form-row { grid-template-columns: 1fr; }
-  .tabs { justify-content: flex-start; overflow-x: auto; }
-}
-
-.status-message {
-  padding: 14px 18px; border-radius: 8px; margin-bottom: 20px;
-  font-size: 0.95rem; display: none;
-}
-.status-message.success { background: #d4edda; color: #155724; display: block; }
-.status-message.error { background: #f8d7da; color: #721c24; display: block; }
-
-.inline-group { display: flex; align-items: center; gap: 12px; }
-.inline-group .form-group { flex: 1; margin: 0; }
-
-.info-box {
-  background: #fff9f9; border-left: 4px solid #8B0000;
-  padding: 16px; border-radius: 6px; margin-bottom: 20px;
-  font-size: 0.9rem; color: #555;
+  .phone-row { flex-direction: column; }
+  .phone-row .phone-type { flex: none; }
+  .tabs { justify-content: flex-start; overflow-x: auto; -webkit-overflow-scrolling: touch; }
 }
 </style>
 </head>
@@ -145,7 +192,7 @@ footer {
 
 <nav>
   <a href="index.html" class="logo">🇭🇰 Salford Hongkongers</a>
-  <div>
+  <div class="nav-links">
     <a href="index.html">主頁</a>
     <a href="forms.html">聯絡我們</a>
   </div>
@@ -153,200 +200,182 @@ footer {
 
 <section class="hero">
   <h1>聯絡我們</h1>
-  <p>與 Salford Hongkongers 聯絡，無論是活動查詢、義工報名還是意見回饋</p>
+  <p>義工報名、活動登記、意見回饋，以及任何查詢，我們都樂意聆聽</p>
 </section>
 
 <div class="container">
   <div class="tabs">
     <button class="tab-btn active" data-tab="volunteer">🙋 義工報名</button>
-    <button class="tab-btn" data-tab="event">📅 活動報名</button>
-    <button class="tab-btn" data-tab="feedback">💬 意見回饋</button>
+    <button class="tab-btn" data-tab="event">📅 活動登記</button>
+    <button class="tab-btn" data-tab="feedback">💬 意見 / 查詢</button>
     <button class="tab-btn" data-tab="partnership">🤝 合作查詢</button>
-    <button class="tab-btn" data-tab="general">📧 一般查詢</button>
   </div>
 
-  <!-- Volunteer Registration -->
+  <!-- ═══ TAB 1: Volunteer Registration ═══ -->
   <div class="tab-panel active" id="volunteer">
     <div class="card">
-      <h2>義工報名</h2>
-      <p class="subtitle">加入我們的義工團隊，為社群作出貢獻</p>
-      
-      <div class="status-message" id="volunteer-status"></div>
-      
-      <form id="volunteer-form">
+      <h2>🙋 義工報名</h2>
+      <p class="subtitle">加入我們的義工團隊，為 Salford 香港人社群作出貢獻</p>
+      <div class="status-msg" id="vol-status"></div>
+      <form id="vol-form">
         <div class="form-row">
           <div class="form-group">
-            <label>姓名 <span class="required">*</span></label>
-            <input type="text" name="name" required>
+            <label>中文姓名 <span class="req">*</span></label>
+            <input type="text" name="name" placeholder="例：陳大文" required>
           </div>
           <div class="form-group">
-            <label>電郵 <span class="required">*</span></label>
-            <input type="email" name="email" required>
+            <label>英文姓名</label>
+            <input type="text" name="english_name" placeholder="例：David Chan">
           </div>
         </div>
-
+        <div class="form-group">
+          <label>電郵地址 <span class="req">*</span></label>
+          <input type="email" name="email" placeholder="example@email.com" required>
+        </div>
+        <div class="form-group">
+          <label>WhatsApp 號碼 <span class="req">*</span></label>
+          <div class="phone-row">
+            <div class="phone-type">
+              <select name="phoneType">
+                <option value="UK +44">英國 +44</option>
+                <option value="HK +852">香港 +852</option>
+              </select>
+            </div>
+            <div class="phone-num">
+              <input type="tel" name="phone" placeholder="07700 900123" required>
+            </div>
+          </div>
+        </div>
         <div class="form-row">
           <div class="form-group">
-            <label>電話號碼 <span class="required">*</span></label>
-            <input type="tel" name="phone" required>
+            <label>年齡範圍</label>
+            <select name="age">
+              <option value="">請選擇</option>
+              <option>18-25</option>
+              <option>26-35</option>
+              <option>36-45</option>
+              <option>46-55</option>
+              <option>56+</option>
+            </select>
           </div>
           <div class="form-group">
-            <label>地區</label>
-            <select name="area">
+            <label>可服務時段</label>
+            <select name="availability">
               <option value="">請選擇</option>
-              <option value="salford">Salford</option>
-              <option value="manchester">Manchester</option>
-              <option value="other">其他</option>
+              <option value="weekday">平日</option>
+              <option value="weekend">週末</option>
+              <option value="flexible">彈性配合</option>
             </select>
           </div>
         </div>
-
         <div class="form-group">
-          <label>你希望參與哪類義工服務？ <span class="required">*</span></label>
-          <div class="radio-group">
-            <label class="radio-item">
-              <input type="radio" name="volunteer_type" value="event_support" required>
-              <div>
-                <span class="radio-label">活動支援</span>
-                <span class="radio-desc">協助籌辦及執行社區活動</span>
-              </div>
-            </label>
-            <label class="radio-item">
-              <input type="radio" name="volunteer_type" value="community_outreach" required>
-              <div>
-                <span class="radio-label">社區外展</span>
-                <span class="radio-desc">探訪及支援有需要的社群成員</span>
-              </div>
-            </label>
-            <label class="radio-item">
-              <input type="radio" name="volunteer_type" value="admin" required>
-              <div>
-                <span class="radio-label">行政支援</span>
-                <span class="radio-desc">協助文書、通訊及資料管理</span>
-              </div>
-            </label>
-            <label class="radio-item">
-              <input type="radio" name="volunteer_type" value="translation" required>
-              <div>
-                <span class="radio-label">翻譯服務</span>
-                <span class="radio-desc">提供中英文翻譯支援</span>
-              </div>
-            </label>
-            <label class="radio-item">
-              <input type="radio" name="volunteer_type" value="other" required>
-              <div>
-                <span class="radio-label">其他</span>
-                <span class="radio-desc">請在下方說明</span>
-              </div>
-            </label>
-          </div>
+          <label>興趣 / 專長</label>
+          <input type="text" name="skills" placeholder="例：攝影、設計、社交媒體、翻譯、活動策劃">
         </div>
-
-        <div class="form-group">
-          <label>可服務時段</label>
-          <select name="availability">
-            <option value="">請選擇</option>
-            <option value="weekday">平日</option>
-            <option value="weekend">週末</option>
-            <option value="flexible">彈性配合</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label>相關經驗或技能（選填）</label>
-          <textarea name="skills" placeholder="例如：曾參與社區活動、擅長設計、會計、社交媒體管理等"></textarea>
-        </div>
-
-        <div class="form-group">
-          <label>其他補充資料</label>
-          <textarea name="additional_info" placeholder="任何你想讓我們知道的資料"></textarea>
-        </div>
-
-        <button type="submit" class="btn-primary">提交報名</button>
-      </form>
-    </div>
-  </div>
-
-  <!-- Event Registration -->
-  <div class="tab-panel" id="event">
-    <div class="card">
-      <h2>活動報名</h2>
-      <p class="subtitle">報名參加我們的社區活動</p>
-      
-      <div class="status-message" id="event-status"></div>
-      
-      <form id="event-form">
-        <div class="form-row">
-          <div class="form-group">
-            <label>姓名 <span class="required">*</span></label>
-            <input type="text" name="name" required>
-          </div>
-          <div class="form-group">
-            <label>電郵 <span class="required">*</span></label>
-            <input type="email" name="email" required>
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label>電話號碼 <span class="required">*</span></label>
-            <input type="tel" name="phone" required>
-          </div>
-          <div class="form-group">
-            <label>參加人數 <span class="required">*</span></label>
-            <input type="number" name="attendees" min="1" value="1" required>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label>活動選擇 <span class="required">*</span></label>
-          <select name="event_name" required>
-            <option value="">請選擇活動</option>
-            <option value="orientation">新來港人士適應課程</option>
-            <option value="social">社區聚會</option>
-            <option value="cultural">文化活動</option>
-            <option value="support">支援服務</option>
-            <option value="other">其他（請說明）</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label>特殊需要或飲食限制（選填）</label>
-          <textarea name="special_requirements" placeholder="例如：素食、輪椅使用者、需要翻譯服務等"></textarea>
-        </div>
-
-        <div class="form-group">
-          <label>居住區域 Area of Residence</label>
-          <select name="area">
-            <option value="">請選擇 Please select</option>
-            <option value="Swinton M27">Swinton M27</option>
-            <option value="Eccles M30">Eccles M30</option>
-            <option value="Salford M5/M6">Salford M5/M6</option>
-            <option value="Worsley M28">Worsley M28</option>
-            <option value="Pendlebury M27">Pendlebury M27</option>
-            <option value="Other 其他">Other 其他</option>
-          </select>
-        </div>
-
         <div class="form-group">
           <label>備註</label>
-          <textarea name="notes" placeholder="其他需要說明的事項"></textarea>
+          <textarea name="notes" placeholder="任何你想讓我們知道的事"></textarea>
         </div>
-
         <button type="submit" class="btn-primary">提交報名</button>
       </form>
     </div>
   </div>
 
-  <!-- Feedback -->
+  <!-- ═══ TAB 2: Event Registration ═══ -->
+  <div class="tab-panel" id="event">
+    <div class="card">
+      <h2>📅 活動登記</h2>
+      <p class="subtitle">報名參加 Salford Hongkongers 舉辦的社區活動</p>
+      <div class="status-msg" id="evt-status"></div>
+      <form id="evt-form">
+        <div class="form-group">
+          <label>活動選擇 <span class="req">*</span></label>
+          <select name="eventName" required>
+            <option value="">請選擇活動</option>
+            <option value="社群聚會 Community Gathering">社群聚會 Community Gathering</option>
+            <option value="新來港人士適應課程 Newcomer Orientation">新來港人士適應課程 Newcomer Orientation</option>
+            <option value="中秋節活動 Mid-Autumn Festival">中秋節活動 Mid-Autumn Festival</option>
+            <option value="農曆新年活動 Lunar New Year">農曆新年活動 Lunar New Year</option>
+            <option value="文化活動 Cultural Event">文化活動 Cultural Event</option>
+            <option value="支援服務 Support Service">支援服務 Support Service</option>
+            <option value="其他 Other">其他 Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>姓名 Full Name <span class="req">*</span></label>
+          <input type="text" name="name" placeholder="請填寫全名" required>
+        </div>
+        <div class="form-group">
+          <label>電話號碼 Phone Number <span class="req">*</span></label>
+          <div class="phone-row">
+            <div class="phone-type">
+              <select name="phoneType">
+                <option value="UK +44">英國 +44</option>
+                <option value="HK +852">香港 +852</option>
+              </select>
+            </div>
+            <div class="phone-num">
+              <input type="tel" name="phone" placeholder="07700 900123" required>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>電郵地址 Email Address <span class="req">*</span></label>
+          <input type="email" name="email" placeholder="example@email.com" required>
+          <p style="color:rgba(255,255,255,0.35);font-size:0.78rem;margin-top:4px;">確認電郵將發送至此地址 Confirmation will be sent here</p>
+        </div>
+        <div class="form-group">
+          <label>居住地點 Area of Residence <span class="req">*</span></label>
+          <select name="postcode" required>
+            <option value="">請選擇 Please select</option>
+            <optgroup label="Salford">
+              <option value="M3">M3 – Salford City Centre</option>
+              <option value="M5">M5 – Ordsall / Salford</option>
+              <option value="M6">M6 – Weaste / Seedley</option>
+              <option value="M7">M7 – Broughton / Higher Broughton</option>
+              <option value="M27">M27 – Swinton / Pendlebury</option>
+              <option value="M28">M28 – Worsley / Boothstown</option>
+              <option value="M29">M29 – Tyldesley</option>
+              <option value="M30">M30 – Eccles / Winton</option>
+              <option value="M38">M38 – Little Hulton</option>
+              <option value="M44">M44 – Irlam / Cadishead</option>
+              <option value="M50">M50 – Salford Quays / MediaCityUK</option>
+            </optgroup>
+            <optgroup label="Greater Manchester 大曼徹斯特">
+              <option value="M1-M4">M1–M4 (Manchester City Centre)</option>
+              <option value="M8">M8 – Crumpsall / Collyhurst</option>
+              <option value="M9">M9 – Moston / Harpurhey</option>
+              <option value="M14-M16">M14–M16 (Fallowfield / Moss Side / Stretford)</option>
+              <option value="M21-M23">M21–M23 (Chorlton / Didsbury / Wythenshawe)</option>
+              <option value="M32-M34">M32–M34 (Stretford / Urmston / Denton)</option>
+              <option value="M41">M41 – Urmston</option>
+            </optgroup>
+            <optgroup label="其他 Other">
+              <option value="Bolton BL">Bolton BL</option>
+              <option value="Bury BL9">Bury BL9</option>
+              <option value="Rochdale OL">Rochdale OL</option>
+              <option value="Wigan WN">Wigan WN</option>
+              <option value="Warrington WA">Warrington WA</option>
+              <option value="其他 Other">其他 Other</option>
+            </optgroup>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>備註 Notes</label>
+          <textarea name="notes" placeholder="特殊需要、飲食限制或其他補充（選填）"></textarea>
+        </div>
+        <button type="submit" class="btn-primary">提交登記 Register</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ═══ TAB 3: Feedback / Enquiry ═══ -->
   <div class="tab-panel" id="feedback">
     <div class="card">
-      <h2>意見回饋</h2>
-      <p class="subtitle">分享你對我們服務的意見和建議</p>
-      
-      <div class="status-message" id="feedback-status"></div>
-      
-      <form id="feedback-form">
+      <h2>💬 意見 / 查詢</h2>
+      <p class="subtitle">分享你的意見或提出查詢，每個個案我們都會認真跟進</p>
+      <div class="status-msg" id="fb-status"></div>
+      <form id="fb-form">
         <div class="form-row">
           <div class="form-group">
             <label>姓名（選填）</label>
@@ -354,173 +383,101 @@ footer {
           </div>
           <div class="form-group">
             <label>電郵（選填）</label>
-            <input type="email" name="email" placeholder="如希望收到回覆請提供">
+            <input type="email" name="email" placeholder="如希望收到回覆請填寫">
           </div>
         </div>
-
         <div class="form-group">
-          <label>意見類別 <span class="required">*</span></label>
-          <select name="feedback_type" required>
+          <label>電話（選填）</label>
+          <input type="tel" name="phone" placeholder="如方便致電聯絡請填寫">
+        </div>
+        <div class="form-group">
+          <label>類別 <span class="req">*</span></label>
+          <select name="category" required>
             <option value="">請選擇</option>
-            <option value="service">服務質素</option>
-            <option value="event">活動內容</option>
-            <option value="suggestion">建議</option>
-            <option value="complaint">投訴</option>
-            <option value="other">其他</option>
+            <option value="一般查詢">一般查詢 General Enquiry</option>
+            <option value="活動查詢">活動查詢 Event Enquiry</option>
+            <option value="義工查詢">義工查詢 Volunteer Enquiry</option>
+            <option value="服務意見">服務意見 Service Feedback</option>
+            <option value="建議">建議 Suggestion</option>
+            <option value="投訴">投訴 Complaint</option>
+            <option value="媒體查詢">媒體查詢 Media Enquiry</option>
+            <option value="其他">其他 Other</option>
           </select>
         </div>
-
         <div class="form-group">
-          <label>詳細內容 <span class="required">*</span></label>
-          <textarea name="message" required placeholder="請詳細描述你的意見或建議"></textarea>
+          <label>主題</label>
+          <input type="text" name="subject" placeholder="簡述查詢或意見主題">
         </div>
-
-        <button type="submit" class="btn-primary">提交意見</button>
+        <div class="form-group">
+          <label>詳細內容 <span class="req">*</span></label>
+          <textarea name="message" required placeholder="請詳細描述你的意見或查詢" style="min-height:130px;"></textarea>
+        </div>
+        <button type="submit" class="btn-primary">提交 Submit</button>
       </form>
     </div>
   </div>
 
-  <!-- Partnership Inquiry -->
+  <!-- ═══ TAB 4: Partnership ═══ -->
   <div class="tab-panel" id="partnership">
     <div class="card">
-      <h2>合作查詢</h2>
-      <p class="subtitle">與我們建立夥伴關係，共同服務社群</p>
-      
-      <div class="status-message" id="partnership-status"></div>
-      
-      <form id="partnership-form">
+      <h2>🤝 合作查詢</h2>
+      <p class="subtitle">與我們建立夥伴關係，共同服務 Salford 香港人社群</p>
+      <div class="status-msg" id="pt-status"></div>
+      <form id="pt-form">
         <div class="form-row">
           <div class="form-group">
-            <label>聯絡人姓名 <span class="required">*</span></label>
+            <label>聯絡人姓名 <span class="req">*</span></label>
             <input type="text" name="contact_name" required>
           </div>
           <div class="form-group">
-            <label>職位 <span class="required">*</span></label>
-            <input type="text" name="position" required>
+            <label>職位</label>
+            <input type="text" name="position">
           </div>
         </div>
-
         <div class="form-row">
           <div class="form-group">
-            <label>機構名稱 <span class="required">*</span></label>
+            <label>機構名稱 <span class="req">*</span></label>
             <input type="text" name="organization" required>
           </div>
           <div class="form-group">
             <label>機構類型</label>
             <select name="org_type">
               <option value="">請選擇</option>
-              <option value="ngo">非牟利機構</option>
-              <option value="government">政府部門</option>
-              <option value="business">商業機構</option>
-              <option value="community">社區組織</option>
-              <option value="other">其他</option>
+              <option value="非牟利機構">非牟利機構 NGO</option>
+              <option value="政府部門">政府部門 Government</option>
+              <option value="商業機構">商業機構 Business</option>
+              <option value="社區組織">社區組織 Community Org</option>
+              <option value="學術機構">學術機構 Academic</option>
+              <option value="其他">其他 Other</option>
             </select>
           </div>
         </div>
-
         <div class="form-row">
           <div class="form-group">
-            <label>電郵 <span class="required">*</span></label>
+            <label>電郵 <span class="req">*</span></label>
             <input type="email" name="email" required>
           </div>
           <div class="form-group">
-            <label>電話號碼 <span class="required">*</span></label>
+            <label>電話 <span class="req">*</span></label>
             <input type="tel" name="phone" required>
           </div>
         </div>
-
         <div class="form-group">
-          <label>合作類型 <span class="required">*</span></label>
-          <div class="radio-group">
-            <label class="radio-item">
-              <input type="radio" name="partnership_type" value="event" required>
-              <div>
-                <span class="radio-label">活動協作</span>
-                <span class="radio-desc">共同舉辦社區活動</span>
-              </div>
-            </label>
-            <label class="radio-item">
-              <input type="radio" name="partnership_type" value="funding" required>
-              <div>
-                <span class="radio-label">資助支援</span>
-                <span class="radio-desc">提供資金或資源支持</span>
-              </div>
-            </label>
-            <label class="radio-item">
-              <input type="radio" name="partnership_type" value="service" required>
-              <div>
-                <span class="radio-label">服務合作</span>
-                <span class="radio-desc">共同提供社區服務</span>
-              </div>
-            </label>
-            <label class="radio-item">
-              <input type="radio" name="partnership_type" value="other" required>
-              <div>
-                <span class="radio-label">其他合作</span>
-                <span class="radio-desc">請在下方說明</span>
-              </div>
-            </label>
-          </div>
+          <label>合作建議 <span class="req">*</span></label>
+          <textarea name="proposal" required placeholder="請描述你的合作建議，包括目標、內容及預期成效" style="min-height:130px;"></textarea>
         </div>
-
         <div class="form-group">
-          <label>合作建議詳情 <span class="required">*</span></label>
-          <textarea name="proposal" required placeholder="請描述你的合作建議，包括目標、內容、預期成效等"></textarea>
-        </div>
-
-        <div class="form-group">
-          <label>機構網站或社交媒體（選填）</label>
+          <label>機構網站（選填）</label>
           <input type="url" name="website" placeholder="https://">
         </div>
-
         <button type="submit" class="btn-primary">提交查詢</button>
       </form>
     </div>
   </div>
 
-  <!-- General Inquiry -->
-  <div class="tab-panel" id="general">
-    <div class="card">
-      <h2>一般查詢</h2>
-      <p class="subtitle">有任何問題或需要協助，歡迎聯絡我們</p>
-      
-      <div class="status-message" id="general-status"></div>
-      
-      <form id="general-form">
-        <div class="form-row">
-          <div class="form-group">
-            <label>姓名 <span class="required">*</span></label>
-            <input type="text" name="name" required>
-          </div>
-          <div class="form-group">
-            <label>電郵 <span class="required">*</span></label>
-            <input type="email" name="email" required>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label>電話號碼（選填）</label>
-          <input type="tel" name="phone">
-        </div>
-
-        <div class="form-group">
-          <label>查詢主題 <span class="required">*</span></label>
-          <input type="text" name="subject" required placeholder="簡述你的查詢主題">
-        </div>
-
-        <div class="form-group">
-          <label>詳細內容 <span class="required">*</span></label>
-          <textarea name="message" required placeholder="請詳細描述你的查詢"></textarea>
-        </div>
-
-        <button type="submit" class="btn-primary">提交查詢</button>
-      </form>
-    </div>
-  </div>
-
-  <!-- Social Contact Section -->
+  <!-- Social links -->
   <section class="social-section">
-    <h2 style="text-align: center; margin-bottom: 28px; color: #8B0000;">其他聯絡方式</h2>
+    <h2>其他聯絡方式</h2>
     <div class="social-grid">
       <div class="social-card">
         <div class="social-icon">📧</div>
@@ -546,77 +503,211 @@ footer {
 
 <footer>
   <div class="footer-content">
-    <p>&copy; 2024 Salford Hongkongers. 版權所有。</p>
-    <p>我們致力為在 Salford 及大曼徹斯特地區的香港人提供支援及建立社群</p>
+    <p>&copy; 2025 Salford Hongkongers CIC · 沙福香港人社區互助中心</p>
+    <p>為在 Salford 及大曼徹斯特地區的香港人提供支援及建立社群</p>
     <div class="footer-links">
       <a href="index.html">主頁</a>
-      <a href="forms.html">聯絡我們</a>
+      <a href="volunteer-register.html">義工登記</a>
+      <a href="volunteer-checkin.html">義工打卡</a>
       <a href="mailto:hkerssalford@gmail.com">電郵聯絡</a>
     </div>
   </div>
 </footer>
 
 <script>
+// ════════════════════════════════════════════════
+// CONFIG — Google Apps Script deployed URL
+// ════════════════════════════════════════════════
+const APPS_URL = 'https://script.google.com/macros/s/AKfycbx5XghDdEBG41krkKoD5-860RptJozTLAb6yX4p_k7UIyDR1xdiZlmFLBi9ZXlKhMtU/exec';
+
+// ════════════════════════════════════════════════
 // Tab switching
+// ════════════════════════════════════════════════
 document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     const tab = btn.dataset.tab;
-    
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-    
     btn.classList.add('active');
     document.getElementById(tab).classList.add('active');
+    window.scrollTo({ top: 120, behavior: 'smooth' });
   });
 });
 
-// Form submission handlers
-const forms = ['volunteer', 'event', 'feedback', 'partnership', 'general'];
+// Open tab from URL hash e.g. forms.html#event
+const hash = window.location.hash.replace('#','');
+if (hash && document.getElementById(hash)) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelector(`[data-tab="${hash}"]`)?.classList.add('active');
+  document.getElementById(hash).classList.add('active');
+}
 
-forms.forEach(formType => {
-  const form = document.getElementById(`${formType}-form`);
-  const status = document.getElementById(`${formType}-status`);
-  
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    
-    const formData = new FormData(form);
-    const data = Object.fromEntries(formData);
-    data.form_type = formType;
-    data.submitted_at = new Date().toISOString();
-    
-    // Show loading state
-    const submitBtn = form.querySelector('.btn-primary');
-    const originalText = submitBtn.textContent;
-    submitBtn.disabled = true;
-    submitBtn.textContent = '提交中...';
-    
-    try {
-      // Here you would normally send to your backend
-      // For now, we'll simulate a successful submission
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Show success message
-      status.className = 'status-message success';
-      status.textContent = '✓ 已成功提交！我們會盡快回覆你。';
-      
-      // Reset form
-      form.reset();
-      
-      // Hide message after 5 seconds
-      setTimeout(() => {
-        status.style.display = 'none';
-      }, 5000);
-      
-    } catch (error) {
-      // Show error message
-      status.className = 'status-message error';
-      status.textContent = '✗ 提交失敗，請稍後再試或直接電郵聯絡我們。';
-    } finally {
-      submitBtn.disabled = false;
-      submitBtn.textContent = originalText;
-    }
+// ════════════════════════════════════════════════
+// Generic POST helper
+// ════════════════════════════════════════════════
+async function postToScript(payload) {
+  const resp = await fetch(APPS_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+    body: JSON.stringify(payload)
   });
+  return resp.json();
+}
+
+function showStatus(el, msg, type) {
+  el.textContent = msg;
+  el.className = 'status-msg ' + type;
+  el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  if (type === 'success') setTimeout(() => el.classList.remove('success'), 8000);
+}
+
+function setLoading(btn, loading, label) {
+  btn.disabled = loading;
+  btn.textContent = loading ? '提交中...' : label;
+}
+
+// ════════════════════════════════════════════════
+// 1) Volunteer Registration
+// ════════════════════════════════════════════════
+document.getElementById('vol-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const fd   = new FormData(e.target);
+  const d    = Object.fromEntries(fd);
+  const btn  = e.target.querySelector('.btn-primary');
+  const stat = document.getElementById('vol-status');
+
+  setLoading(btn, true, '提交報名');
+  try {
+    const result = await postToScript({
+      action:    'register',
+      name:      d.name,
+      firstName: d.english_name?.split(' ')[0] || '',
+      surname:   d.english_name?.split(' ').slice(1).join(' ') || '',
+      whatsapp:  (d.phoneType || 'UK') + ' ' + d.phone,
+      email:     d.email,
+      age:       d.age,
+      skills:    d.skills,
+      notes:     d.notes,
+      availability: d.availability
+    });
+    if (result.duplicate) {
+      showStatus(stat, '⚠️ 你已登記過了。如有問題請電郵 hkerssalford@gmail.com', 'error');
+    } else if (result.success) {
+      showStatus(stat, '✅ 登記成功！歡迎加入 Salford Hongkongers 義工團隊！', 'success');
+      e.target.reset();
+    } else {
+      showStatus(stat, '❌ 提交失敗：' + (result.error || '請稍後再試'), 'error');
+    }
+  } catch(err) {
+    showStatus(stat, '❌ 連線錯誤，請稍後再試或電郵 hkerssalford@gmail.com', 'error');
+  }
+  setLoading(btn, false, '提交報名');
+});
+
+// ════════════════════════════════════════════════
+// 2) Event Registration
+// ════════════════════════════════════════════════
+document.getElementById('evt-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const fd   = new FormData(e.target);
+  const d    = Object.fromEntries(fd);
+  const btn  = e.target.querySelector('.btn-primary');
+  const stat = document.getElementById('evt-status');
+
+  setLoading(btn, true, '提交登記 Register');
+  try {
+    const result = await postToScript({
+      action:    'eventRegister',
+      name:      d.name,
+      email:     d.email,
+      phoneType: d.phoneType,
+      phone:     d.phone,
+      postcode:  d.postcode,
+      eventName: d.eventName,
+      notes:     d.notes
+    });
+    if (result.success) {
+      showStatus(stat, '✅ ' + result.message, 'success');
+      e.target.reset();
+    } else {
+      showStatus(stat, '❌ ' + (result.error || '提交失敗，請稍後再試'), 'error');
+    }
+  } catch(err) {
+    showStatus(stat, '❌ 連線錯誤，請稍後再試或電郵 hkerssalford@gmail.com', 'error');
+  }
+  setLoading(btn, false, '提交登記 Register');
+});
+
+// ════════════════════════════════════════════════
+// 3) Feedback / Enquiry
+// ════════════════════════════════════════════════
+document.getElementById('fb-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const fd   = new FormData(e.target);
+  const d    = Object.fromEntries(fd);
+  const btn  = e.target.querySelector('.btn-primary');
+  const stat = document.getElementById('fb-status');
+
+  setLoading(btn, true, '提交 Submit');
+  try {
+    const result = await postToScript({
+      action:   'enquiry',
+      name:     d.name,
+      email:    d.email,
+      phone:    d.phone,
+      category: d.category,
+      subject:  d.subject,
+      message:  d.message
+    });
+    if (result.success) {
+      showStatus(stat, '✅ ' + result.message, 'success');
+      e.target.reset();
+    } else {
+      showStatus(stat, '❌ ' + (result.error || '提交失敗，請稍後再試'), 'error');
+    }
+  } catch(err) {
+    showStatus(stat, '❌ 連線錯誤，請稍後再試或電郵 hkerssalford@gmail.com', 'error');
+  }
+  setLoading(btn, false, '提交 Submit');
+});
+
+// ════════════════════════════════════════════════
+// 4) Partnership Enquiry → treated as general enquiry
+// ════════════════════════════════════════════════
+document.getElementById('pt-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const fd   = new FormData(e.target);
+  const d    = Object.fromEntries(fd);
+  const btn  = e.target.querySelector('.btn-primary');
+  const stat = document.getElementById('pt-status');
+
+  setLoading(btn, true, '提交查詢');
+  const msgBody =
+    `機構: ${d.organization} (${d.org_type})\n` +
+    `職位: ${d.position}\n` +
+    `網站: ${d.website || '未填寫'}\n\n` +
+    `合作建議:\n${d.proposal}`;
+  try {
+    const result = await postToScript({
+      action:   'enquiry',
+      name:     d.contact_name,
+      email:    d.email,
+      phone:    d.phone,
+      category: '合作查詢 Partnership',
+      subject:  `合作查詢 — ${d.organization}`,
+      message:  msgBody
+    });
+    if (result.success) {
+      showStatus(stat, '✅ 查詢已成功提交，我們將盡快聯絡你！', 'success');
+      e.target.reset();
+    } else {
+      showStatus(stat, '❌ ' + (result.error || '提交失敗，請稍後再試'), 'error');
+    }
+  } catch(err) {
+    showStatus(stat, '❌ 連線錯誤，請稍後再試或電郵 hkerssalford@gmail.com', 'error');
+  }
+  setLoading(btn, false, '提交查詢');
 });
 </script>
 
