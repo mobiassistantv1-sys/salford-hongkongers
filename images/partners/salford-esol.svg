@@ -1,1 +1,10 @@
-PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgNDAwIDEwMCI+CiAgPCEtLSBTYWxmb3JkIEVTT0wgLSBObyBkZWRpY2F0ZWQgb3JnYW5pc2F0aW9uIGxvZ28gZm91bmQgLS0+CiAgPCEtLSBTYWxmb3JkIEVTT0wgaXMgYSBzZXJ2aWNlIHByb3ZpZGVkIGJ5IFNhbGZvcmQgQ2l0eSBDb3VuY2lsIC8gU2FsZm9yZCBTa2lsbHMgYW5kIFdvcmsgLS0+CiAgPCEtLSBPZmZpY2lhbCBzaXRlczogaHR0cHM6Ly93d3cuc2FsZm9yZC5nb3YudWsgYW5kIGh0dHBzOi8vd3d3LnNhbGZvcmRza2lsbHNhbmR3b3JrLmluZm8gLS0+CiAgPCEtLSBVc2UgU2FsZm9yZCBDaXR5IENvdW5jaWwgbG9nbyAoc2FsZm9yZC1jaXR5LWNvdW5jaWwuc3ZnKSBhcyB0aGUgcmVwcmVzZW50YXRpdmUgbG9nbyAtLT4KICA8cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzAwMzA4NyIgcng9IjgiLz4KICA8dGV4dCB4PSIyMDAiIHk9IjQ1IiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjIiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+U2FsZm9yZCBFU09MPC90ZXh0PgogIDx0ZXh0IHg9IjIwMCIgeT0iNzIiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMyIgZmlsbD0iI2NjZGRmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+RW5nbGlzaCBmb3IgU3BlYWtlcnMgb2YgT3RoZXIgTGFuZ3VhZ2VzPC90ZXh0PgogIDx0ZXh0IHg9IjIwMCIgeT0iOTAiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMCIgZmlsbD0iI2FhYmJlZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+c2FsZm9yZC5nb3YudWs8L3RleHQ+Cjwvc3ZnPg==
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="100" viewBox="0 0 400 100">
+  <!-- Salford ESOL - No dedicated organisation logo found -->
+  <!-- Salford ESOL is a service provided by Salford City Council / Salford Skills and Work -->
+  <!-- Official sites: https://www.salford.gov.uk and https://www.salfordskillsandwork.info -->
+  <!-- Use Salford City Council logo (salford-city-council.svg) as the representative logo -->
+  <rect width="400" height="100" fill="#003087" rx="8"/>
+  <text x="200" y="45" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="white" text-anchor="middle">Salford ESOL</text>
+  <text x="200" y="72" font-family="Arial, sans-serif" font-size="13" fill="#ccddff" text-anchor="middle">English for Speakers of Other Languages</text>
+  <text x="200" y="90" font-family="Arial, sans-serif" font-size="10" fill="#aabbee" text-anchor="middle">salford.gov.uk</text>
+</svg>
