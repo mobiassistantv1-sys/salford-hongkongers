@@ -271,6 +271,10 @@ footer {
           </div>
         </div>
         <div class="form-group">
+          <label>住址（城市）</label>
+          <input type="text" name="city" placeholder="例：Salford, Manchester, Bolton">
+        </div>
+        <div class="form-group">
           <label>興趣 / 專長</label>
           <input type="text" name="skills" placeholder="例：攝影、設計、社交媒體、翻譯、活動策劃">
         </div>
@@ -509,7 +513,7 @@ footer {
     <p>為在 Salford 及大曼徹斯特地區的香港人提供支援及建立社群</p>
     <div class="footer-links">
       <a href="index.html">主頁</a>
-      <a href="volunteer-register.html">義工登記</a>
+      <a href="forms.html#volunteer">義工登記</a>
       <a href="volunteer-checkin.html">義工打卡</a>
       <a href="mailto:hkerssalford@gmail.com">電郵聯絡</a>
     </div>
@@ -591,7 +595,8 @@ document.getElementById('vol-form').addEventListener('submit', async e => {
       age:       d.age,
       skills:    d.skills,
       notes:     d.notes,
-      availability: d.availability
+      availability: d.availability,
+      city: d.city
     });
     if (result.duplicate) {
       showStatus(stat, '⚠️ 你已登記過了。如有問題請電郵 hkerssalford@gmail.com', 'error');
