@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#e91e8c" />
-  <title>ç¾©å·¥æå¡ | Salford Hongkongers</title>
+  <title>義工打卡 | Salford Hongkongers</title>
   <style>
     /* ===== RESET & BASE ===== */
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -355,7 +355,7 @@
         <div class="site-subtitle">CIC</div>
       </div>
     </div>
-    <div class="header-badge">ç¾©å·¥æå¡</div>
+    <div class="header-badge">義工打卡</div>
   </div>
 </header>
 
@@ -368,20 +368,20 @@
       <div class="step-dot" id="dot3"></div>
     </div>
 
-    <!-- STEP 1: è¼¸å¥å§å + é»è©±å°¾4ä½ -->
+    <!-- STEP 1: 輸入姓名 + 電話尾4位 -->
     <div class="step active" id="step1">
-      <h2>èº«ä»½æ ¸å°</h2>
-      <p class="subtitle">è«è¼¸å¥ä½ çç¾©å·¥å§ååé»è©±å°¾4ä½</p>
+      <h2>身份核對</h2>
+      <p class="subtitle">請輸入你的義工姓名及電話尾4位</p>
 
-      <label>ç¾©å·¥å§å</label>
+      <label>義工姓名</label>
       <div class="autocomplete-wrapper">
-        <input type="text" id="nameInput" placeholder="è¼¸å¥å§åæå°..." autocomplete="off"
+        <input type="text" id="nameInput" placeholder="輸入姓名搜尋..." autocomplete="off"
           oninput="onNameInput()" onkeydown="onNameKeydown(event)" />
         <div class="autocomplete-list" id="autocompleteList"></div>
       </div>
 
-      <label>é»è©±å°¾ 4 ä½</label>
-      <input type="tel" id="phoneInput" placeholder="ä¾å¦ï¼3857" maxlength="4" pattern="[0-9]{4}"
+      <label>電話尾 4 位</label>
+      <input type="tel" id="phoneInput" placeholder="例如：3857" maxlength="4" pattern="[0-9]{4}"
         oninput="this.value=this.value.replace(/\D/g,'').slice(0,4)" />
 
       <div class="verify-result" id="verifyResult">
@@ -389,12 +389,12 @@
         <span id="verifyMsg"></span>
       </div>
 
-      <button class="btn btn-primary" id="verifyBtn" onclick="verifyIdentity()">æ ¸å°èº«ä»½</button>
+      <button class="btn btn-primary" id="verifyBtn" onclick="verifyIdentity()">核對身份</button>
     </div>
 
-    <!-- STEP 2: æå¡ -->
+    <!-- STEP 2: 打卡 -->
     <div class="step" id="step2">
-      <h2>ç¾©å·¥æå¡</h2>
+      <h2>義工打卡</h2>
       <p class="subtitle" id="step2Date"></p>
 
       <div class="volunteer-info-card">
@@ -409,16 +409,16 @@
       <div id="checkinTimeDisplay"></div>
 
       <button class="btn btn-punch-in" id="punchBtn" onclick="doPunch()">PUNCH</button>
-      <button class="btn btn-secondary" onclick="resetToStep1()">è¿å / æäºº</button>
+      <button class="btn btn-secondary" onclick="resetToStep1()">返回 / 換人</button>
     </div>
 
-    <!-- STEP 3: æå -->
+    <!-- STEP 3: 成功 -->
     <div class="step" id="step3">
-      <div class="success-icon" id="successIcon">â</div>
-      <div class="success-msg" id="successMsg">æå¡æåï¼</div>
+      <div class="success-icon" id="successIcon">✅</div>
+      <div class="success-msg" id="successMsg">打卡成功！</div>
       <div class="success-sub" id="successSub"></div>
       <div class="success-detail" id="successDetail"></div>
-      <button class="btn btn-primary" onclick="resetToStep1()">å®æ / ä¸ä¸ä½</button>
+      <button class="btn btn-primary" onclick="resetToStep1()">完成 / 下一位</button>
     </div>
   </div>
 </main>
@@ -431,7 +431,7 @@
         <path d="M3 12L12 3l9 9"/><path d="M5 10v9a1 1 0 001 1h4v-4h4v4h4a1 1 0 001-1v-9"/>
       </svg>
     </span></span>
-    <span class="bottom-label">ä¸»é </span>
+    <span class="bottom-label">主頁</span>
   </button>
   <button class="bottom-btn" onclick="location.href='index.html#events'">
     <span class="bottom-icon"><span class="neon-icon">
@@ -440,7 +440,7 @@
         <line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
       </svg>
     </span></span>
-    <span class="bottom-label">æ´»å</span>
+    <span class="bottom-label">活動</span>
   </button>
   <button class="bottom-btn active">
     <span class="bottom-icon"><span class="neon-icon">
@@ -448,7 +448,7 @@
         <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22,4 12,14.01 9,11.01"/>
       </svg>
     </span></span>
-    <span class="bottom-label">ç¾©å·¥</span>
+    <span class="bottom-label">義工</span>
   </button>
   <button class="bottom-btn" onclick="location.href='volunteer-register.html'">
     <span class="bottom-icon"><span class="neon-icon">
@@ -458,7 +458,7 @@
         <path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/>
       </svg>
     </span></span>
-    <span class="bottom-label">ç»è¨</span>
+    <span class="bottom-label">登記</span>
   </button>
   <button class="bottom-btn" onclick="location.href='forms.html'">
     <span class="bottom-icon"><span class="neon-icon">
@@ -468,7 +468,7 @@
         <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
       </svg>
     </span></span>
-    <span class="bottom-label">è¡¨æ ¼</span>
+    <span class="bottom-label">表格</span>
   </button>
 </nav>
 
@@ -578,12 +578,12 @@ async function verifyIdentity() {
   const name = document.getElementById('nameInput').value.trim();
   const phone = document.getElementById('phoneInput').value.trim();
 
-  if (!name) { showVerifyError('è«è¼¸å¥ç¾©å·¥å§å'); return; }
-  if (phone.length !== 4) { showVerifyError('è«è¼¸å¥é»è©±å°¾4ä½æ¸å­'); return; }
+  if (!name) { showVerifyError('請輸入義工姓名'); return; }
+  if (phone.length !== 4) { showVerifyError('請輸入電話尾4位數字'); return; }
 
   const btn = document.getElementById('verifyBtn');
   btn.disabled = true;
-  btn.innerHTML = '<span class="loading-spinner"></span>æ ¸å°ä¸­...';
+  btn.innerHTML = '<span class="loading-spinner"></span>核對中...';
 
   try {
     // Check locally first (faster)
@@ -605,23 +605,27 @@ async function verifyIdentity() {
       const json = await res.json();
       if (json.verified) {
         selectedVolunteer = volunteerData.find(v => v.name === json.name) || { name: json.name, rowIndex: null };
-        currentPunchState = json.punchIn ? { time: json.punchInTime, sheetRow: json.sheetRow } : null;
+        const statusRes = await fetch(APPS_SCRIPT_URL + '?action=getPunchStatus&name=' + encodeURIComponent(json.name) + '&date=' + getTodayDate());
+        const statusJson = await statusRes.json();
+        currentPunchState = statusJson.punchIn ? { time: statusJson.punchInTime, sheetRow: statusJson.sheetRow } : null;
         goToStep2();
       } else {
-        showVerifyError('æ¾ä¸å°ç¬¦åçç¾©å·¥è¨éï¼è«æª¢æ¥å§ååé»è©±');
+        showVerifyError(json.message || '找不到符合的義工記錄，請核查姓名及電話尾4位');
+      } else {
+        showVerifyError('找不到符合的義工記錄，請檢查姓名及電話');
       }
     }
   } catch(e) {
-    showVerifyError('é£ç·é¯èª¤ï¼è«ç¨å¾åè©¦');
+    showVerifyError('連線錯誤，請稍後再試');
   }
 
   btn.disabled = false;
-  btn.innerHTML = 'æ ¸å°èº«ä»½';
+  btn.innerHTML = '核對身份';
 }
 
 function showVerifyError(msg) {
   const r = document.getElementById('verifyResult');
-  document.getElementById('verifyIcon').textContent = 'â';
+  document.getElementById('verifyIcon').textContent = '❌';
   document.getElementById('verifyMsg').textContent = msg;
   r.className = 'verify-result error';
 }
@@ -636,7 +640,7 @@ function hideVerifyResult() {
 function goToStep2() {
   const name = selectedVolunteer.name;
   document.getElementById('confirmedName').textContent = name;
-  document.getElementById('confirmedNum').textContent = 'ç¾©å·¥ç·¨è #' + (selectedVolunteer.rowIndex || 'â');
+  document.getElementById('confirmedNum').textContent = '義工編號 #' + (selectedVolunteer.rowIndex || '–');
   document.getElementById('avatarInitial').textContent = name.charAt(0).toUpperCase();
 
   updatePunchUI();
@@ -649,14 +653,14 @@ function updatePunchUI() {
   const punchBtn = document.getElementById('punchBtn');
 
   if (currentPunchState) {
-    // Already punched in â show punch OUT
-    badge.innerHTML = `<div class="punch-status-badge badge-in"><div class="badge-dot"></div>å·²ç°½å° Â· å·¥ä½ä¸­</div>`;
-    timeDisplay.innerHTML = `<div class="checkin-time-display">ç°½å°æéï¼<span>${currentPunchState.time}</span></div>`;
+    // Already punched in — show punch OUT
+    badge.innerHTML = `<div class="punch-status-badge badge-in"><div class="badge-dot"></div>已簽到 · 工作中</div>`;
+    timeDisplay.innerHTML = `<div class="checkin-time-display">簽到時間：<span>${currentPunchState.time}</span></div>`;
     punchBtn.className = 'btn btn-punch-out';
     punchBtn.textContent = 'PUNCH OUT';
   } else {
     // Not punched in
-    badge.innerHTML = `<div class="punch-status-badge badge-not-in"><div class="badge-dot"></div>æªç°½å°</div>`;
+    badge.innerHTML = `<div class="punch-status-badge badge-not-in"><div class="badge-dot"></div>未簽到</div>`;
     timeDisplay.innerHTML = '';
     punchBtn.className = 'btn btn-punch-in';
     punchBtn.textContent = 'PUNCH IN';
@@ -688,7 +692,7 @@ async function doPunch() {
   const punchBtn = document.getElementById('punchBtn');
   punchBtn.disabled = true;
   const isPunchOut = !!currentPunchState;
-  punchBtn.innerHTML = `<span class="loading-spinner"></span>${isPunchOut ? 'ç°½éä¸­...' : 'ç°½å°ä¸­...'}`;
+  punchBtn.innerHTML = `<span class="loading-spinner"></span>${isPunchOut ? '簽退中...' : '簽到中...'}`;
 
   const now = new Date();
   const timeStr = formatDateTime(now);
@@ -710,15 +714,15 @@ async function doPunch() {
     });
     const json = await res.json();
 
-    if (json.verified) {
+    if (json.success) {
       showSuccess(isPunchOut, timeStr, json);
     } else {
-      alert('æå¡å¤±æï¼' + (json.error || 'æªç¥é¯èª¤'));
+      alert('打卡失敗：' + (json.error || '未知錯誤'));
       punchBtn.disabled = false;
       punchBtn.innerHTML = isPunchOut ? 'PUNCH OUT' : 'PUNCH IN';
     }
   } catch(e) {
-    alert('é£ç·é¯èª¤ï¼è«ç¨å¾åè©¦');
+    alert('連線錯誤，請稍後再試');
     punchBtn.disabled = false;
     punchBtn.innerHTML = isPunchOut ? 'PUNCH OUT' : 'PUNCH IN';
   }
@@ -726,23 +730,23 @@ async function doPunch() {
 
 function showSuccess(isPunchOut, timeStr, serverData) {
   if (isPunchOut) {
-    document.getElementById('successIcon').textContent = 'ð';
-    document.getElementById('successMsg').textContent = 'ç°½éæåï¼å¤è¬ä½ ä»æ¥çä»åºï¼';
-    document.getElementById('successSub').textContent = 'ä½ çç¾©å·¥ææ¸å·²èªåè¨éï¼æè¬ä½ å° Salford Hongkongers çè²¢ç»ï¼';
+    document.getElementById('successIcon').textContent = '🏁';
+    document.getElementById('successMsg').textContent = '簽退成功！多謝你今日的付出！';
+    document.getElementById('successSub').textContent = '你的義工時數已自動記錄，感謝你對 Salford Hongkongers 的貢獻！';
     document.getElementById('successDetail').innerHTML = `
-      <div class="success-detail-row"><span>ç¾©å·¥å§å</span><span>${selectedVolunteer.name}</span></div>
-      <div class="success-detail-row"><span>ç°½å°æé</span><span>${currentPunchState.time}</span></div>
-      <div class="success-detail-row"><span>ç°½éæé</span><span>${timeStr}</span></div>
-      <div class="success-detail-row"><span>ä»æ¥å·¥ä½æé·</span><span>${serverData.hours || 'è¨ç®ä¸­...'}</span></div>
+      <div class="success-detail-row"><span>義工姓名</span><span>${selectedVolunteer.name}</span></div>
+      <div class="success-detail-row"><span>簽到時間</span><span>${currentPunchState.time}</span></div>
+      <div class="success-detail-row"><span>簽退時間</span><span>${timeStr}</span></div>
+      <div class="success-detail-row"><span>今日工作時長</span><span>${serverData.hours || '計算中...'}</span></div>
     `;
   } else {
-    document.getElementById('successIcon').textContent = 'â';
-    document.getElementById('successMsg').textContent = 'ç°½å°æåï¼';
-    document.getElementById('successSub').textContent = 'æ­¡è¿ï¼æå¡è¨éå·²å²å­ï¼è¨å¾å®æå¾åæ¬¡ Punch Outã';
+    document.getElementById('successIcon').textContent = '✅';
+    document.getElementById('successMsg').textContent = '簽到成功！';
+    document.getElementById('successSub').textContent = '歡迎！打卡記錄已儲存，記得完成後再次 Punch Out。';
     document.getElementById('successDetail').innerHTML = `
-      <div class="success-detail-row"><span>ç¾©å·¥å§å</span><span>${selectedVolunteer.name}</span></div>
-      <div class="success-detail-row"><span>ç°½å°æé</span><span>${timeStr}</span></div>
-      <div class="success-detail-row"><span>æ¥æ</span><span>${getTodayDate()}</span></div>
+      <div class="success-detail-row"><span>義工姓名</span><span>${selectedVolunteer.name}</span></div>
+      <div class="success-detail-row"><span>簽到時間</span><span>${timeStr}</span></div>
+      <div class="success-detail-row"><span>日期</span><span>${getTodayDate()}</span></div>
     `;
   }
   setStep(3);
