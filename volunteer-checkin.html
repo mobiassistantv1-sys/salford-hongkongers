@@ -588,7 +588,7 @@ async function verifyIdentity() {
   try {
     // Check locally first (faster)
     const match = volunteerData.find(v =>
-      v.name.toLowerCase() === name.toLowerCase() &&
+      v.name.trim().toLowerCase() === name.trim().toLowerCase() &&
       v.whatsapp && v.whatsapp.toString().replace(/\s/g,'').slice(-4) === phone
     );
 
