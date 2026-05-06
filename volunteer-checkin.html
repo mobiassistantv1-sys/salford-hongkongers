@@ -611,9 +611,6 @@ async function verifyIdentity() {
         goToStep2();
       } else {
         showVerifyError(json.message || '找不到符合的義工記錄，請核查姓名及電話尾4位');
-      } else {
-        showVerifyError('找不到符合的義工記錄，請檢查姓名及電話');
-      }
     }
   } catch(e) {
     showVerifyError('連線錯誤，請稍後再試');
