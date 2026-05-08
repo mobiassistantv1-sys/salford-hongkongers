@@ -751,6 +751,8 @@ a.contact-value:hover { color: var(--pink); }
   height: 100%;
   overflow: visible;
 }
+
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 </style>
 </head>
 <body>
@@ -960,56 +962,11 @@ a.contact-value:hover { color: var(--pink); }
 <!-- EVENTS -->
 <section class="page" id="page-events">
 <h2 class="page-title">即將舉行的活動</h2>
-<div class="event-card upcoming">
-<div class="event-badge" data-zh="即將舉行" data-en="Upcoming">即將舉行</div>
-<div class="event-header">
-<div class="event-date-box">
-<div class="event-month" style="font-size: 0.75rem;" data-zh="每月最後" data-en="Last of each month">每月最後</div>
-<div class="event-day" style="font-size: 0.85rem;" data-zh="星期三" data-en="Wednesday">星期三</div>
-</div>
-<div class="event-info">
-<h3 class="event-title" data-zh="每月社群茶聚" data-en="Monthly Community Tea Gathering">每月社群茶聚</h3>
-<p class="event-detail"><span class="neon-icon"><svg fill="none" filter="url(#glow-yellow)" stroke="#ffe033" stroke-width="1.8" viewbox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"></path><circle cx="12" cy="10" r="3"></circle></svg></span> <span data-zh="Sacred Trinity Church, Chapel St, Salford M3 5DW" data-en="Sacred Trinity Church, Chapel St, Salford M3 5DW">Sacred Trinity Church, Chapel St, Salford M3 5DW</span></p>
-<p class="event-detail"><span class="neon-icon"><svg fill="none" filter="url(#glow-yellow)" stroke="#ffe033" stroke-width="1.8" viewbox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12,6 12,12 16,14"></polyline></svg></span> <span data-zh="11:30 - 14:30" data-en="11:30 - 14:30">11:30 - 14:30</span></p>
-<p class="event-detail"><span class="neon-icon"><svg fill="none" filter="url(#glow-yellow)" stroke="#ffe033" stroke-width="1.8" viewbox="0 0 24 24"><line x1="12" x2="12" y1="1" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"></path></svg></span> 免費入場</p>
-</div>
-</div>
-<p class="event-desc" data-zh="每月定期茶聚，歡迎新移民及舊朋友，一起分享生活點滴，互相支持。" data-en="Monthly tea gathering, welcoming newcomers and old friends to share life experiences and support each other.">每月定期茶聚，歡迎新移民及舊朋友，一起分享生活點滴，互相支持。</p>
-<button class="btn-register" onclick="showPage('register'); setEvent('每月社群茶聚')" data-zh="立即登記" data-en="Register Now">立即登記</button>
-</div>
-<div class="event-card upcoming">
-<div class="event-badge" data-zh="即將舉行" data-en="Upcoming">即將舉行</div>
-<div class="event-header">
-<div class="event-date-box">
-<div class="event-month" style="font-size: 0.75rem;" data-zh="每月最後" data-en="Last of each month">每月最後</div>
-<div class="event-day" style="font-size: 0.85rem;" data-zh="星期六" data-en="Saturday">星期六</div>
-</div>
-<div class="event-info">
-<h3 class="event-title" data-zh="每月 Boardgame 聚" data-en="Monthly Boardgame Gathering">每月 Boardgame 聚</h3>
-<p class="event-detail"><span class="neon-icon"><svg fill="none" filter="url(#glow-yellow)" stroke="#ffe033" stroke-width="1.8" viewbox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"></path><circle cx="12" cy="10" r="3"></circle></svg></span> <span data-zh="Angel Centre, Salford" data-en="Angel Centre, Salford">Angel Centre, Salford</span></p>
-<p class="event-detail"><span class="neon-icon"><svg fill="none" filter="url(#glow-yellow)" stroke="#ffe033" stroke-width="1.8" viewbox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12,6 12,12 16,14"></polyline></svg></span> <span data-zh="15:00 - 18:00" data-en="15:00 - 18:00">15:00 - 18:00</span></p>
-<p class="event-detail"><span class="neon-icon"><svg fill="none" filter="url(#glow-yellow)" stroke="#ffe033" stroke-width="1.8" viewbox="0 0 24 24"><line x1="12" x2="12" y1="1" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"></path></svg></span> <span data-zh="免費入場" data-en="Free Entry">免費入場</span></p>
-</div>
-</div>
-<p class="event-desc" data-zh="每月定期桌遊聚會，歡迎新朋友，一起享受桌遊樂趣，認識新朋友。" data-en="Monthly boardgame meetup, welcoming new friends to enjoy board games and socialize.">每月定期桌遊聚會，歡迎新朋友，一起享受桌遊樂趣，認識新朋友。</p>
-<p class="event-desc" data-zh="活動登記即將開放" data-en="Registration coming soon">活動登記即將開放</p>
-</div>
-<div class="event-card upcoming">
-<div class="event-badge" data-zh="即將舉行" data-en="Upcoming">即將舉行</div>
-<div class="event-header">
-<div class="event-date-box">
-<div class="event-month" style="font-size: 0.75rem;" data-zh="每月第二" data-en="Second of each month">每月第二</div>
-<div class="event-day" style="font-size: 0.85rem;" data-zh="星期三" data-en="Wednesday">星期三</div>
-</div>
-<div class="event-info">
-<h3 class="event-title" data-zh="每月麻雀聚" data-en="Monthly Mahjong Gathering">每月麻雀聚</h3>
-<p class="event-detail"><span class="neon-icon"><svg fill="none" filter="url(#glow-yellow)" stroke="#ffe033" stroke-width="1.8" viewbox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"></path><circle cx="12" cy="10" r="3"></circle></svg></span> <span data-zh="Kargo MKT, Manchester" data-en="Kargo MKT, Manchester">Kargo MKT, Manchester</span></p>
-<p class="event-detail"><span class="neon-icon"><svg fill="none" filter="url(#glow-yellow)" stroke="#ffe033" stroke-width="1.8" viewbox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12,6 12,12 16,14"></polyline></svg></span> <span data-zh="10:00 - 14:00" data-en="10:00 - 14:00">10:00 - 14:00</span></p>
-<p class="event-detail"><span class="neon-icon"><svg fill="none" filter="url(#glow-yellow)" stroke="#ffe033" stroke-width="1.8" viewbox="0 0 24 24"><line x1="12" x2="12" y1="1" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"></path></svg></span> <span data-zh="免費入場" data-en="Free Entry">免費入場</span></p>
-</div>
-</div>
-<p class="event-desc" data-zh="每月定期麻雀聚會，歡迎新朋友，一起打麻雀，輕鬆社交。" data-en="Monthly mahjong meetup, welcoming new friends to play mahjong and socialize.">每月定期麻雀聚會，歡迎新朋友，一起打麻雀，輕鬆社交。</p>
-<p class="event-desc" data-zh="活動登記即將開放" data-en="Registration coming soon">活動登記即將開放</p>
+<div id="events-container">
+  <div style="text-align:center;padding:40px 20px;color:var(--text-muted);">
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation:spin 1s linear infinite;display:inline-block;"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"></circle><path d="M12 2a10 10 0 0 1 10 10"></path></svg>
+    <p style="margin-top:12px;font-size:13px;">載入活動資料中...</p>
+  </div>
 </div>
 <p class="events-note">* 活動詳情或有更改，請留意我們的 Facebook 及 Instagram @SalfordHongkongers</p>
 </section>
@@ -1293,6 +1250,7 @@ function showPage(pageId) {
   const target = document.getElementById('page-' + pageId);
   if (target) target.classList.add('active');
  loadIgFeed();
+  if (pageId === 'events') { eventsLoaded = false; loadEventsFromSheet(); }
 
   document.querySelectorAll('.bottom-btn').forEach(b => b.classList.remove('active'));
   const activeBtn = document.getElementById('btn-' + pageId);
@@ -1373,6 +1331,70 @@ function resetForm() {
   document.getElementById('registerForm').reset();
   document.getElementById('registerForm').classList.remove('hidden');
   document.getElementById('successMsg').classList.add('hidden');
+}
+
+const WEBSITE_CONTENT_SHEET_ID = '1ur5httcwQkfTlyMw3XW42pLjLINhr0d6N4TJKurlX-o';
+const WEBSITE_CONTENT_SHEET_NAME = 'Website Content';
+let eventsLoaded = false;
+
+function escapeHtml(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+function renderEventCard(ev) {
+  const dateObj = ev.date ? new Date(ev.date) : null;
+  const months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+  const month = dateObj && !isNaN(dateObj) ? months[dateObj.getMonth()] : '';
+  const day = dateObj && !isNaN(dateObj) ? dateObj.getDate() : '';
+  return '<div class="event-card upcoming">' +
+    '<span class="event-badge">' + (escapeHtml(ev.type) || '活動') + '</span>' +
+    '<div class="event-header">' +
+      '<div class="event-date-box">' +
+        '<div class="event-month">' + month + '</div>' +
+        '<div class="event-day">' + day + '</div>' +
+      '</div>' +
+      '<div class="event-info">' +
+        '<div class="event-title">' + escapeHtml(ev.title) + '</div>' +
+        (ev.location ? '<div class="event-detail">📍 ' + escapeHtml(ev.location) + '</div>' : '') +
+        (ev.date ? '<div class="event-detail">🗓️ ' + escapeHtml(ev.date) + '</div>' : '') +
+      '</div>' +
+    '</div>' +
+    (ev.description ? '<div class="event-desc">' + escapeHtml(ev.description) + '</div>' : '') +
+  '</div>';
+}
+
+async function loadEventsFromSheet() {
+  if (eventsLoaded) return;
+  const container = document.getElementById('events-container');
+  if (!container) return;
+  try {
+    const url = 'https://docs.google.com/spreadsheets/d/' + WEBSITE_CONTENT_SHEET_ID + '/gviz/tq?tqx=out:json&sheet=' + encodeURIComponent(WEBSITE_CONTENT_SHEET_NAME) + '&t=' + Date.now();
+    const res = await fetch(url);
+    const raw = await res.text();
+    const jsonStart = raw.indexOf('{');
+    const jsonEnd = raw.lastIndexOf('}');
+    const data = JSON.parse(raw.substring(jsonStart, jsonEnd + 1));
+    const rows = (data.table && data.table.rows) ? data.table.rows : [];
+    const events = rows.map(function(row) {
+      return {
+        type: String((row.c && row.c[1] && row.c[1].v) ? row.c[1].v : ''),
+        title: String((row.c && row.c[2] && row.c[2].v) ? row.c[2].v : ''),
+        date: String((row.c && row.c[3] && row.c[3].v) ? row.c[3].v : ''),
+        location: String((row.c && row.c[4] && row.c[4].v) ? row.c[4].v : ''),
+        description: String((row.c && row.c[5] && row.c[5].v) ? row.c[5].v : ''),
+        status: String((row.c && row.c[8] && row.c[8].v) ? row.c[8].v : '').trim(),
+      };
+    }).filter(function(e) { return e.status === '已發布'; });
+    if (events.length === 0) {
+      container.innerHTML = '<div style="text-align:center;padding:40px 20px;color:var(--text-muted);font-size:14px;">暫時沒有即將舉行的活動，請留意我們的社交媒體獲取最新消息。</div>';
+    } else {
+      container.innerHTML = events.map(renderEventCard).join('');
+    }
+    eventsLoaded = true;
+  } catch(err) {
+    console.error('loadEventsFromSheet error:', err);
+    container.innerHTML = '<div style="text-align:center;padding:40px 20px;color:var(--text-muted);font-size:14px;">暫時未能載入活動資料，請稍後再試或查看我們的 Facebook。</div>';
+  }
 }
 
 // ===== IG FEED LOADER =====
