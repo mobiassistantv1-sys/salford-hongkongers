@@ -13,6 +13,7 @@
 //   leaderboard — Top 3 volunteers by hours this month
 //   volunteer   — Join volunteer team form
 //   enquiry     — General enquiry / contact form
+//   getEvents   — Read published events from Website Content sheet
 //
 // All notifications → hkerssalford@gmail.com
 // ===============================================================
@@ -54,6 +55,7 @@ function doGet(e) {
     else if (action === "leaderboard") result = handleLeaderboard(e.parameter);
     else if (action === "volunteer")   result = handleVolunteer(e.parameter);
     else if (action === "enquiry")     result = handleEnquiry(e.parameter);
+    else if (action === "getEvents")   result = handleGetEvents(e.parameter);
     else result = { ok: false, error: "Unknown action: " + action };
   } catch (err) {
     result = { ok: false, error: err.message };
@@ -91,22 +93,11 @@ function handleRegister(params) {
   var timestamp = new Date();
   sheet.appendRow([timestamp, event, name, email, phone, attendees, isNew, notes]);
 
-  // Send notification email
   try {
     var subject = "新活動登記 — " + event;
-    var body = 
-      "活動: " + event + "\n" +
-      "姓名: " + name + "\n" +
-      "電郵: " + email + "\n" +
-      "電話: " + phone + "\n" +
-      "人數: " + attendees + "\n" +
-      "新到港: " + isNew + "\n" +
-      "備註: " + notes + "\n\n" +
-      "時間: " + timestamp;
+    var body = "活動: " + event + "\n" + "姓名: " + name + "\n" + "電郵: " + email + "\n" + "電話: " + phone + "\n" + "人數: " + attendees + "\n" + "新到港: " + isNew + "\n" + "備註: " + notes + "\n\n" + "時間: " + timestamp;
     MailApp.sendEmail(NOTIFY_EMAIL, subject, body);
-  } catch (mailErr) {
-    Logger.log("Email send failed: " + mailErr.message);
-  }
+  } catch (mailErr) { Logger.log("Email send failed: " + mailErr.message); }
 
   return { ok: true, message: "登記成功" };
 }
@@ -116,11 +107,8 @@ function handleRegister(params) {
 // ═══════════════════════════════════════════════════════════════════════════════════════════════════════
 function handleCheckin(params) {
   var name = params.name || "";
-  var type = params.type || "in"; // "in" or "out"
-
-  if (!name) {
-    return { ok: false, error: "Missing name" };
-  }
+  var type = params.type || "in";
+  if (!name) { return { ok: false, error: "Missing name" }; }
 
   var ss    = getSpreadsheet();
   var sheet = ss.getSheetByName(CHECKIN_SHEET);
@@ -130,10 +118,9 @@ function handleCheckin(params) {
     formatHeader(sheet);
   }
 
-  var now       = new Date();
-  var dateStr   = Utilities.formatDate(now, "Europe/London", "yyyy-MM-dd");
-  var timeStr   = Utilities.formatDate(now, "Europe/London", "HH:mm:ss");
-  
+  var now     = new Date();
+  var dateStr = Utilities.formatDate(now, "Europe/London", "yyyy-MM-dd");
+  var timeStr = Utilities.formatDate(now, "Europe/London", "HH:mm:ss");
   sheet.appendRow([now, name, dateStr, timeStr, type]);
 
   var action = (type === "in") ? "簽到" : "簽退";
@@ -141,149 +128,76 @@ function handleCheckin(params) {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════════════════════════════
-// 3) LEADERBOARD — Top volunteers by hours this month
+// 3) LEADERBOARD
 // ═══════════════════════════════════════════════════════════════════════════════════════════════════════
 function handleLeaderboard(params) {
   var ss    = getSpreadsheet();
   var sheet = ss.getSheetByName(CHECKIN_SHEET);
-  
-  if (!sheet) {
-    return { ok: true, leaderboard: [], month: "" };
-  }
+  if (!sheet) { return { ok: true, leaderboard: [], month: "" }; }
 
   var data = sheet.getDataRange().getValues();
-  if (data.length <= 1) {
-    return { ok: true, leaderboard: [], month: "" };
-  }
+  if (data.length <= 1) { return { ok: true, leaderboard: [], month: "" }; }
 
-  // Get current month bounds using Europe/London timezone
   var now        = new Date();
   var yearStr    = Utilities.formatDate(now, "Europe/London", "yyyy");
   var monthStr   = Utilities.formatDate(now, "Europe/London", "MM");
   var year       = parseInt(yearStr);
-  var month      = parseInt(monthStr) - 1; // 0-indexed
-  // Build start/end in UTC to match stored timestamps
+  var month      = parseInt(monthStr) - 1;
   var monthStart = new Date(Date.UTC(year, month, 1, 0, 0, 0));
   var monthEnd   = new Date(Date.UTC(year, month + 1, 0, 23, 59, 59));
 
-  // Parse check-in/out pairs
-  var volunteers = {}; // name → { clockIns: [...], clockOuts: [...] }
-
+  var volunteers = {};
   for (var i = 1; i < data.length; i++) {
-    var row       = data[i];
-    var timestamp = row[0];
-    var vName     = row[1];
-    var vType     = row[4]; // "in" or "out"
-
+    var row = data[i];
+    var timestamp = row[0]; var vName = row[1]; var vType = row[4];
     if (!vName || !timestamp) continue;
-    
     var d = new Date(timestamp);
     if (d < monthStart || d > monthEnd) continue;
-
-    if (!volunteers[vName]) {
-      volunteers[vName] = { clockIns: [], clockOuts: [] };
-    }
-
-    if (vType === "in") {
-      volunteers[vName].clockIns.push(d);
-    } else if (vType === "out") {
-      volunteers[vName].clockOuts.push(d);
-    }
+    if (!volunteers[vName]) { volunteers[vName] = { clockIns: [], clockOuts: [] }; }
+    if (vType === "in") { volunteers[vName].clockIns.push(d); }
+    else if (vType === "out") { volunteers[vName].clockOuts.push(d); }
   }
 
-  // Calculate hours for each volunteer
   var results = [];
   for (var name in volunteers) {
     var v = volunteers[name];
     var totalHours = calculateHours(v.clockIns, v.clockOuts);
-    if (totalHours > 0) {
-      results.push({ name: name, hours: totalHours });
-    }
+    if (totalHours > 0) { results.push({ name: name, hours: totalHours }); }
   }
-
-  // Sort descending by hours, take top 3
   results.sort(function(a, b) { return b.hours - a.hours; });
   var top3 = results.slice(0, 3);
-
   var monthName = Utilities.formatDate(now, "Europe/London", "yyyy年MM月");
-
   return { ok: true, leaderboard: top3, month: monthName };
 }
 
-/**
- * Calculate total hours from arrays of clock-in and clock-out times.
- * Pairs each clock-in with the next clock-out.
- */
 function calculateHours(clockIns, clockOuts) {
-  // Sort both arrays
   clockIns.sort(function(a, b) { return a - b; });
   clockOuts.sort(function(a, b) { return a - b; });
-
-  var totalMs = 0;
-  var inIdx = 0;
-  var outIdx = 0;
-
+  var totalMs = 0; var inIdx = 0; var outIdx = 0;
   while (inIdx < clockIns.length && outIdx < clockOuts.length) {
-    var inTime = clockIns[inIdx];
-    var outTime = clockOuts[outIdx];
-
-    if (inTime < outTime) {
-      // Valid pair
-      totalMs += (outTime - inTime);
-      inIdx++;
-      outIdx++;
-    } else {
-      // Out before In, skip this out
-      outIdx++;
-    }
+    var inTime = clockIns[inIdx]; var outTime = clockOuts[outIdx];
+    if (inTime < outTime) { totalMs += (outTime - inTime); inIdx++; outIdx++; }
+    else { outIdx++; }
   }
-
-  var hours = totalMs / (1000 * 60 * 60);
-  return Math.round(hours * 10) / 10; // 1 decimal place
+  return Math.round((totalMs / (1000 * 60 * 60)) * 10) / 10;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════════════════════════════
 // 4) VOLUNTEER JOIN FORM
 // ═══════════════════════════════════════════════════════════════════════════════════════════════════════
 function handleVolunteer(params) {
-  var name         = params.name         || "";
-  var email        = params.email        || "";
-  var phone        = params.phone        || "";
-  var district     = params.district     || "";
-  var interests    = params.interests    || "";
-  var availability = params.availability || "";
+  var name=params.name||""; var email=params.email||""; var phone=params.phone||"";
+  var district=params.district||""; var interests=params.interests||""; var availability=params.availability||"";
+  if (!name || !email) { return { ok: false, error: "Missing name or email" }; }
 
-  if (!name || !email) {
-    return { ok: false, error: "Missing name or email" };
-  }
+  var ss=getSpreadsheet(); var sheet=ss.getSheetByName(VOLUNTEER_SHEET);
+  if (!sheet) { sheet=ss.insertSheet(VOLUNTEER_SHEET); sheet.appendRow(["Timestamp","Name","Email","Phone","District","Interests","Availability"]); formatHeader(sheet); }
 
-  var ss    = getSpreadsheet();
-  var sheet = ss.getSheetByName(VOLUNTEER_SHEET);
-  if (!sheet) {
-    sheet = ss.insertSheet(VOLUNTEER_SHEET);
-    sheet.appendRow(["Timestamp","Name","Email","Phone","District","Interests","Availability"]);
-    formatHeader(sheet);
-  }
-
-  var timestamp = new Date();
+  var timestamp=new Date();
   sheet.appendRow([timestamp, name, email, phone, district, interests, availability]);
-
-  // Send notification email
   try {
-    var subject = "新義工登記 — " + name;
-    var body = 
-      "姓名: " + name + "\n" +
-      "電郵: " + email + "\n" +
-      "電話: " + phone + "\n" +
-      "地區: " + district + "\n" +
-      "興趣: " + interests + "\n" +
-      "可用時間: " + availability + "\n\n" +
-      "時間: " + timestamp;
-    MailApp.sendEmail(NOTIFY_EMAIL, subject, body);
-  } catch (mailErr) {
-    Logger.log("Email send failed: " + mailErr.message);
-  }
-
+    MailApp.sendEmail(NOTIFY_EMAIL, "新義工登記 — "+name, "姓名: "+name+"\n電郵: "+email+"\n電話: "+phone+"\n地區: "+district+"\n興趣: "+interests+"\n可用時間: "+availability+"\n\n時間: "+timestamp);
+  } catch(mailErr) { Logger.log("Email send failed: "+mailErr.message); }
   return { ok: true, message: "登記成功" };
 }
 
@@ -291,45 +205,52 @@ function handleVolunteer(params) {
 // 5) ENQUIRY / CONTACT FORM
 // ═══════════════════════════════════════════════════════════════════════════════════════════════════════
 function handleEnquiry(params) {
-  var name     = params.name     || "";
-  var email    = params.email    || "";
-  var phone    = params.phone    || "";
-  var category = params.category || "";
-  var subject  = params.subject  || "";
-  var message  = params.message  || "";
+  var name=params.name||""; var email=params.email||""; var phone=params.phone||"";
+  var category=params.category||""; var subject=params.subject||""; var message=params.message||"";
+  if (!name || !email || !message) { return { ok: false, error: "Missing required fields" }; }
 
-  if (!name || !email || !message) {
-    return { ok: false, error: "Missing required fields" };
-  }
+  var ss=getSpreadsheet(); var sheet=ss.getSheetByName(ENQUIRY_SHEET);
+  if (!sheet) { sheet=ss.insertSheet(ENQUIRY_SHEET); sheet.appendRow(["Timestamp","Name","Email","Phone","Category","Subject","Message"]); formatHeader(sheet); }
 
-  var ss    = getSpreadsheet();
-  var sheet = ss.getSheetByName(ENQUIRY_SHEET);
-  if (!sheet) {
-    sheet = ss.insertSheet(ENQUIRY_SHEET);
-    sheet.appendRow(["Timestamp","Name","Email","Phone","Category","Subject","Message"]);
-    formatHeader(sheet);
-  }
-
-  var timestamp = new Date();
+  var timestamp=new Date();
   sheet.appendRow([timestamp, name, email, phone, category, subject, message]);
-
-  // Send notification email
   try {
-    var emailSubject = "新查詢 — " + category + " — " + name;
-    var body = 
-      "姓名: " + name + "\n" +
-      "電郵: " + email + "\n" +
-      "電話: " + phone + "\n" +
-      "類別: " + category + "\n" +
-      "主旨: " + subject + "\n" +
-      "訊息: " + message + "\n\n" +
-      "時間: " + timestamp;
-    MailApp.sendEmail(NOTIFY_EMAIL, emailSubject, body);
-  } catch (mailErr) {
-    Logger.log("Email send failed: " + mailErr.message);
-  }
-
+    MailApp.sendEmail(NOTIFY_EMAIL, "新查詢 — "+category+" — "+name, "姓名: "+name+"\n電郵: "+email+"\n電話: "+phone+"\n類別: "+category+"\n主旨: "+subject+"\n訊息: "+message+"\n\n時間: "+timestamp);
+  } catch(mailErr) { Logger.log("Email send failed: "+mailErr.message); }
   return { ok: true, message: "訊息已送出" };
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════════════════════════════
+// 6) GET PUBLISHED EVENTS from "Website Content" sheet
+// ═══════════════════════════════════════════════════════════════════════════════════════════════════════
+function handleGetEvents(params) {
+  var type = params.type || "";
+  try {
+    var ss    = SpreadsheetApp.openById("1ur5httcwQkfTlyMw3XW42pLjLINhr0d6N4TJKurlX-o");
+    var sheet = ss.getSheetByName("Website Content");
+    if (!sheet) return { ok: true, events: [] };
+
+    var data = sheet.getDataRange().getValues();
+    if (data.length <= 1) return { ok: true, events: [] };
+
+    // Columns: uploadTime(0) type(1) title(2) date(3) location(4) description(5) imageUrl(6) imageFilename(7) status(8)
+    var events = [];
+    for (var i = 1; i < data.length; i++) {
+      var row    = data[i];
+      var status = String(row[8] || "").trim();
+      if (status !== "已發布") continue;
+      if (type && String(row[1] || "").trim() !== type) continue;
+
+      var dateVal = row[3]; var dateStr = "";
+      if (dateVal instanceof Date) { dateStr = Utilities.formatDate(dateVal, "Europe/London", "yyyy-MM-dd"); }
+      else { dateStr = String(dateVal || ""); }
+
+      events.push({ type: String(row[1]||""), title: String(row[2]||""), date: dateStr,
+        location: String(row[4]||""), description: String(row[5]||""), imageUrl: String(row[6]||"") });
+    }
+    events.sort(function(a, b) { return a.date < b.date ? -1 : a.date > b.date ? 1 : 0; });
+    return { ok: true, events: events };
+  } catch (err) { return { ok: false, error: err.message }; }
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════════════════════════════
