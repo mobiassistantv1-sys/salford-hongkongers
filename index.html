@@ -1359,7 +1359,9 @@ function renderEventCard(ev) {
         (ev.date ? '<div class="event-detail">🗓️ ' + escapeHtml(ev.date) + '</div>' : '') +
       '</div>' +
     '</div>' +
-    (ev.description ? '<div class="event-desc">' + escapeHtml(ev.description) + '</div>' : '') +
+    (ev.description ? '<div class="event-desc">' + escapeHtml(ev.description) + '</div>' : '')(ev.imageUrl ? '<img src="' + escapeHtml(ev.imageUrl) + '" style="width:100%;border-radius:8px;margin:8px 0;object-fit:cover;max-height:180px;" alt="" loading="lazy">' : '') +
+  '<button class="btn-register" onclick="showPage(\'register\')">立即登記</button>' +
+   +
   '</div>';
 }
 
@@ -1379,9 +1381,10 @@ async function loadEventsFromSheet() {
       return {
         type: String((row.c && row.c[1] && row.c[1].v) ? row.c[1].v : ''),
         title: String((row.c && row.c[2] && row.c[2].v) ? row.c[2].v : ''),
-        date: String((row.c && row.c[3] && row.c[3].v) ? row.c[3].v : ''),
+        date: (function(cell){if(!cell)return'';var v=String(cell.v||'');if(v.charAt(0)==='D'){var p=v.slice(5,-1).split(',');if(p.length>=3)return new Date(+p[0],+p[1],+p[2]).toISOString().slice(0,10);}return String(cell.f||cell.v||'');})(row.c&&row.c[3]),
         location: String((row.c && row.c[4] && row.c[4].v) ? row.c[4].v : ''),
         description: String((row.c && row.c[5] && row.c[5].v) ? row.c[5].v : ''),
+          imageUrl: String((row.c && row.c[6] && row.c[6].v) ? row.c[6].v : ''),
         status: String((row.c && row.c[8] && row.c[8].v) ? row.c[8].v : '').trim(),
       };
     }).filter(function(e) { return e.status === '已發布'; });
