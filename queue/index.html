@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>åæå°å®¤ æééç¥ç³»çµ± Â· Yau Oi Cafe Queue</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<style>
+body{margin:0;background:#EDE6D3;font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;}
+.pulse{animation:pulse 1.4s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.85;transform:scale(1.02);}}
+input,select,button{font-family:inherit;}
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-thumb{background:#22824C;border-radius:3px;}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+
+const { useState, useEffect, useRef } = React;
+
+const CREAM="#FAF5E6", CREAM2="#F5EFE0", GREEN="#22824C", RED="#D63527", DARK="#281E14", MUTED="#6B5A45";
+const LOGO="./yau_oi_logo_official.png";
+const STORE="yauoi-q2";
+const bc=typeof BroadcastChannel!=="undefined"?new BroadcastChannel("yauoi"):null;
+
+function rd(){try{const r=localStorage.getItem(STORE);if(r)return JSON.parse(r);}catch(e){}return{counter:0,serving:0,queue:[],ann:[]};}
+function wr(s){try{const j=JSON.stringify(s);localStorage.setItem(STORE,j);if(bc)bc.postMessage({type:"u",s});}catch(e){}}
+
+function beep(u=false){try{const c=new(window.AudioContext||window.webkitAudioContext)();const t=(f,s,d)=>{const o=c.createOscillator(),g=c.createGain();o.type="sine";o.frequency.value=f;g.gain.setValueAtTime(0.001,c.currentTime+s);g.gain.linearRampToValueAtTime(0.3,c.currentTime+s+0.03);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+s+d);o.connect(g).connect(c.destination);o.start(c.currentTime+s);o.stop(c.currentTime+s+d+0.05);};if(u){t(880,0,.15);t(880,.2,.15);t(1100,.4,.25);}else{t(660,0,.18);t(880,.22,.25);}}catch(e){}}
+function vib(p){try{navigator.vibrate&&navigator.vibrate(p);}catch(e){}}
+
+function Logo(){return React.createElement("div",{style:{textAlign:"center",marginBottom:20}},React.createElement("img",{src:LOGO,alt:"åæå°å®¤",style:{maxWidth:300,width:"100%",height:"auto"}}));}
+
+function Ann({list}){
+  if(!list||!list.length)return null;
+  return React.createElement("div",{style:{marginBottom:16}},
+    list.slice(0,3).map(a=>React.createElement("div",{key:a.id,style:{background:a.u?RED:"#FFF8E7",color:a.u?"white":DARK,border:a.u?"none":`2px solid ${GREEN}`,borderRadius:14,padding:"10px 16px",marginBottom:8,fontWeight:700,fontSize:18,textAlign:"center"}},"ð¢ "+a.text))
+  );
+}
+
+function Customer(){
+  const [s,setS]=useState(rd);
+  const [tk,setTk]=useState(null);
+  const [form,setForm]=useState({name:"",phone:"",party:"1"});
+  const notRef=useRef(false);
+  useEffect(()=>{const id=setInterval(()=>setS(rd()),2000);if(bc)bc.onmessage=e=>{if(e.data?.type==="u")setS(e.data.s);};return()=>clearInterval(id);},[]);
+  useEffect(()=>{if(!tk)return;if(s.serving>=tk.n&&!notRef.current){notRef.current=true;beep(true);vib([200,100,200,100,400]);}if(s.serving<tk.n)notRef.current=false;},[s.serving,tk]);
+
+  const inp={borderRadius:10,border:`2px solid ${GREEN}`,padding:"12px 16px",fontSize:18,width:"100%",boxSizing:"border-box",marginBottom:14,fontFamily:"inherit"};
+  const lbl={display:"block",fontWeight:700,color:DARK,fontSize:18,marginBottom:4};
+
+  const join=()=>{if(!form.name.trim())return;const c=rd();const n=c.counter+1;const e={n,name:form.name.trim(),phone:form.phone.trim(),party:form.party,ts:Date.now()};const nx={...c,counter:n,queue:[...c.queue,e]};wr(nx);setS(nx);setTk({n,name:e.name});setForm({name:"",phone:"",party:"1"});};
+  const leave=()=>{const c=rd();wr({...c,queue:c.queue.filter(q=>q.n!==tk.n)});setS(rd());setTk(null);notRef.current=false;};
+
+  const pos=tk?Math.max(tk.n-s.serving,0):null;
+  const myTurn=tk&&s.serving>=tk.n;
+
+  if(!tk) return React.createElement("div",{style:{maxWidth:500,margin:"0 auto"}},
+    React.createElement(Logo),
+    React.createElement(Ann,{list:s.ann}),
+    React.createElement("div",{style:{textAlign:"center",color:DARK,fontSize:26,fontWeight:900,marginBottom:2}},"æéç»è¨"),
+    React.createElement("div",{style:{textAlign:"center",color:GREEN,fontSize:18,fontWeight:700,marginBottom:20}},"JOIN THE QUEUE"),
+    React.createElement("label",{style:lbl},"å§å Name ",React.createElement("span",{style:{color:RED}},"*")),
+    React.createElement("input",{style:inp,value:form.name,onChange:e=>setForm({...form,name:e.target.value}),placeholder:"è«è¼¸å¥å§å / Your name"}),
+    React.createElement("label",{style:lbl},"é»è©±èâ
+ Phone ",React.createElement("span",{style:{color:MUTED,fontWeight:500,fontSize:14}},"ï¼é¸å¡« optionalï¼")),
+    React.createElement("input",{style:inp,value:form.phone,onChange:e=>setForm({...form,phone:e.target.value}),placeholder:"åå¡«é½å¾ / Optional"}),
+    React.createElement("label",{style:lbl},"äººæ¸ Party size ",React.createElement("span",{style:{color:RED}},"*")),
+    React.createElement("select",{style:{...inp,background:"white"},value:form.party,onChange:e=>setForm({...form,party:e.target.value})},[1,2,3,4,5,6,"7+"].map(n=>React.createElement("option",{key:n,value:n},n+" ä½ / "+n))),
+    React.createElement("button",{onClick:join,disabled:!form.name.trim(),style:{width:"100%",borderRadius:14,padding:16,fontWeight:900,fontSize:22,background:form.name.trim()?RED:"#bbb",color:"white",border:"none",cursor:form.name.trim()?"pointer":"default",fontFamily:"inherit"}},"å å¥éå Join Queue"),
+    React.createElement("div",{style:{marginTop:14,padding:"10px 14px",background:"#FFF8DC",borderRadius:10,fontSize:13,color:MUTED,lineHeight:1.6}},"ð± iPhone ç¨å®¶ï¼è«åæ Share â å è³ä¸»ç«é¢ (Add to Home Screen)ï¼åå¯ä»¥åºèæ¯æ¶å°éç¥ã")
+  );
+
+  return React.createElement("div",{style:{maxWidth:500,margin:"0 auto",textAlign:"center"}},
+    React.createElement(Logo),
+    React.createElement(Ann,{list:s.ann}),
+    myTurn&&React.createElement("div",{className:"pulse",style:{background:RED,color:"white",borderRadius:20,padding:"24px 16px",marginBottom:18}},
+      React.createElement("div",{style:{fontSize:44,fontWeight:900}},"è¼ªå°ä½ åï¼"),
+      React.createElement("div",{style:{fontSize:26,fontWeight:900}},"YOU'RE NEXT!"),
+      React.createElement("div",{style:{fontSize:15,marginTop:8}},"è«åå¾æ«æª¯ Â· Please come to the counter")
+    ),
+    !myTurn&&React.createElement("div",{style:{color:MUTED,fontSize:20,marginBottom:14}},"ä½ å¥½ï¼"+tk.name+"ï¼è«èå¿ç­å",React.createElement("div",{style:{fontSize:14}},"Hi "+tk.name+", please wait")),
+    React.createElement("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14,marginBottom:18}},
+      React.createElement("div",{style:{borderRadius:18,padding:"18px 8px",background:CREAM2,border:`3px solid ${GREEN}`,textAlign:"center"}},
+        React.createElement("div",{style:{fontSize:13,color:MUTED,fontWeight:700}},"ä½ åç±è Your Number"),
+        React.createElement("div",{style:{fontSize:68,fontWeight:900,color:DARK,lineHeight:1}},tk.n)
+      ),
+      React.createElement("div",{style:{borderRadius:18,padding:"18px 8px",background:CREAM2,border:`3px solid ${RED}`,textAlign:"center"}},
+        React.createElement("div",{style:{fontSize:13,color:MUTED,fontWeight:700}},"ç¾æ­£æå Now Serving"),
+        React.createElement("div",{style:{fontSize:68,fontWeight:900,color:RED,lineHeight:1}},s.serving)
+      )
+    ),
+    React.createElement("div",{style:{fontSize:20,fontWeight:700,color:DARK,marginBottom:16}},
+      pos>0?React.createElement("span",null,"åé¢ä»²æ ",React.createElement("span",{style:{color:RED}},pos)," ä½",React.createElement("div",{style:{fontSize:14,color:MUTED}},pos+" people ahead of you")):React.createElement("span",{style:{fontSize:15,color:MUTED}},"è«ä¿æé é¢éåï¼æåæéç¥ä½  Â· Keep this page open")
+    ),
+    React.createElement("button",{onClick:leave,style:{borderRadius:12,padding:"10px 24px",border:`2px solid ${MUTED}`,background:"white",color:MUTED,fontSize:16,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}},"é¢ééå Leave Queue")
+  );
+}
+
+function Staff(){
+  const [s,setS]=useState(rd);
+  const [msg,setMsg]=useState("");
+  const [urg,setUrg]=useState(false);
+  const [auth,setAuth]=useState(false);
+  const [pw,setPw]=useState("");
+  const PIN="1234";
+  useEffect(()=>{const id=setInterval(()=>setS(rd()),2000);if(bc)bc.onmessage=e=>{if(e.data?.type==="u")setS(e.data.s);};return()=>clearInterval(id);},[]);
+
+  const serveNext=()=>{const c=rd();const nx={...c,serving:c.serving+1};wr(nx);setS(nx);};
+  const remove=n=>{const c=rd();wr({...c,queue:c.queue.filter(q=>q.n!==n)});setS(rd());};
+  const resetAll=()=>{if(!confirm("ç¢ºèªéç½®ææéåæ¸æï¼Reset all?"))return;wr({counter:0,serving:0,queue:[],ann:[]});setS(rd());};
+  const sendAnn=(text,u)=>{if(!text.trim())return;const c=rd();const a={id:Date.now(),text:text.trim(),u,ts:Date.now()};const nx={...c,ann:[a,...c.ann].slice(0,10)};wr(nx);setS(nx);setMsg("");setUrg(false);};
+  const rmAnn=id=>{const c=rd();wr({...c,ann:c.ann.filter(a=>a.id!==id)});setS(rd());};
+
+  const presets=[
+    {text:"æ²ç¹çèéºµå©è¿å°é Â· Satay beef noodles running low",u:false},
+    {text:"è è¿åå·²è³£æ Â· Pineapple buns SOLD OUT",u:true},
+    {text:"éå°¾åå¤§ç´è¦ç­ 45 åé Â· Cocktail buns ~45 min",u:false},
+    {text:"æ«åæ¥åæ°è¨å® Â· Temporarily not taking orders",u:true},
+  ];
+
+  if(!auth) return React.createElement("div",{style:{maxWidth:360,margin:"40px auto",textAlign:"center"}},
+    React.createElement(Logo),
+    React.createElement("div",{style:{fontSize:22,fontWeight:900,color:DARK,marginBottom:16}},"è·å¡ç»å¥ Staff Login"),
+    React.createElement("input",{type:"password",placeholder:"è¼¸å¥ PIN Enter PIN",value:pw,onChange:e=>setPw(e.target.value),onKeyDown:e=>e.key==="Enter"&&(pw===PIN?setAuth(true):alert("PIN é¯èª¤ Wrong PIN")),style:{width:"100%",borderRadius:10,border:`2px solid ${GREEN}`,padding:"12px 16px",fontSize:20,boxSizing:"border-box",marginBottom:12,fontFamily:"inherit"}}),
+    React.createElement("button",{onClick:()=>pw===PIN?setAuth(true):alert("PIN é¯èª¤ Wrong PIN"),style:{width:"100%",background:GREEN,color:"white",border:"none",borderRadius:12,padding:14,fontSize:18,fontWeight:900,cursor:"pointer",fontFamily:"inherit"}},"ç»å¥ Login"),
+    React.createElement("div",{style:{color:MUTED,fontSize:12,marginTop:8}},"é è¨­ PIN: 1234ï¼è«èªè¡ä¿®æ¹ HTML å¥é¢å PIN è®æ¸ï¼")
+  );
+
+  const waiting=s.queue.filter(q=>q.n>s.serving);
+  return React.createElement("div",{style:{maxWidth:600,margin:"0 auto"}},
+    React.createElement(Logo),
+    React.createElement("div",{style:{textAlign:"center",fontWeight:900,fontSize:22,color:DARK,marginBottom:18}},"è·å¡æ§å¶å° Â· STAFF CONSOLE"),
+    React.createElement("div",{style:{display:"flex",gap:16,alignItems:"center",justifyContent:"center",marginBottom:22,flexWrap:"wrap"}},
+      React.createElement("div",{style:{textAlign:"center",borderRadius:18,padding:"16px 28px",background:CREAM2,border:`3px solid ${RED}`}},
+        React.createElement("div",{style:{fontSize:13,color:MUTED,fontWeight:700}},"ç¾æ­£æå Now Serving"),
+        React.createElement("div",{style:{fontSize:70,fontWeight:900,color:RED,lineHeight:1}},s.serving)
+      ),
+      React.createElement("div",null,
+        React.createElement("button",{onClick:serveNext,style:{background:GREEN,color:"white",border:"none",borderRadius:16,padding:"20px 26px",fontSize:24,fontWeight:900,cursor:"pointer",display:"block",marginBottom:8,fontFamily:"inherit"}},"å«ä¸ä¸ä½",React.createElement("div",{style:{fontSize:14}},"Serve Next â")),
+        React.createElement("button",{onClick:resetAll,style:{background:"white",color:MUTED,border:`2px solid ${MUTED}`,borderRadius:10,padding:"7px 14px",fontSize:13,cursor:"pointer",width:"100%",fontFamily:"inherit"}},"éç½® Reset All")
+      )
+    ),
+    React.createElement("div",{style:{marginBottom:22}},
+      React.createElement("div",{style:{fontWeight:700,fontSize:17,color:DARK,marginBottom:8}},"ç­åä¸­ Waiting ("+waiting.length+")"),
+      React.createElement("div",{style:{maxHeight:200,overflowY:"auto"}},
+        waiting.length===0&&React.createElement("div",{style:{color:MUTED,fontSize:15}},"æ«æåäººæé Â· No one waiting"),
+        waiting.map(q=>React.createElement("div",{key:q.n,style:{display:"flex",alignItems:"center",justifyContent:"space-between",background:CREAM2,borderRadius:10,padding:"10px 14px",marginBottom:6}},
+          React.createElement("div",{style:{display:"flex",alignItems:"center",gap:12}},
+            React.createElement("span",{style:{fontSize:22,fontWeight:900,color:RED}},"#"+q.n),
+            React.createElement("span",{style:{fontSize:16,color:DARK}},q.name+" Â· "+q.party+"ä½"+(q.phone?" Â· ð"+q.phone:""))
+          ),
+          React.createElement("button",{onClick:()=>remove(q.n),style:{background:"white",border:`2px solid ${MUTED}`,color:MUTED,borderRadius:8,padding:"4px 10px",fontSize:13,cursor:"pointer",fontFamily:"inherit"}},"ç§»é¤")
+        ))
+      )
+    ),
+    React.createElement("div",null,
+      React.createElement("div",{style:{fontWeight:700,fontSize:17,color:DARK,marginBottom:8}},"ç¼å¬å Announcement"),
+      React.createElement("div",{style:{display:"flex",flexWrap:"wrap",gap:8,marginBottom:10}},
+        presets.map((p,i)=>React.createElement("button",{key:i,onClick:()=>sendAnn(p.text,p.u),style:{borderRadius:10,padding:"7px 11px",border:`2px solid ${p.u?RED:GREEN}`,color:p.u?RED:GREEN,background:"white",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}},p.text))
+      ),
+      React.createElement("div",{style:{display:"flex",gap:8,marginBottom:10,flexWrap:"wrap"}},
+        React.createElement("input",{value:msg,onChange:e=>setMsg(e.target.value),placeholder:"èªè¨å¬å / Custom",style:{flex:1,minWidth:180,borderRadius:10,border:`2px solid ${GREEN}`,padding:"10px 14px",fontSize:15,boxSizing:"border-box",fontFamily:"inherit"}}),
+        React.createElement("label",{style:{display:"flex",alignItems:"center",gap:6,fontWeight:700,color:RED,fontSize:14}},React.createElement("input",{type:"checkbox",checked:urg,onChange:e=>setUrg(e.target.checked)}),"ç·æ¥"),
+        React.createElement("button",{onClick:()=>sendAnn(msg,urg),style:{background:RED,color:"white",border:"none",borderRadius:10,padding:"10px 18px",fontSize:15,fontWeight:900,cursor:"pointer",fontFamily:"inherit"}},"ç¼é")
+      ),
+      s.ann.map(a=>React.createElement("div",{key:a.id,style:{display:"flex",alignItems:"center",justifyContent:"space-between",background:a.u?"#FDECEA":CREAM2,borderRadius:8,padding:"8px 12px",marginBottom:6}},
+        React.createElement("span",{style:{fontSize:14,color:DARK}},a.u&&React.createElement("b",{style:{color:RED}},"[ç·æ¥] "),a.text),
+        React.createElement("button",{onClick:()=>rmAnn(a.id),style:{background:"none",border:"none",color:MUTED,fontSize:16,cursor:"pointer"}},"â")
+      ))
+    )
+  );
+}
+
+function App(){
+  const [tab,setTab]=useState("customer");
+  const btnBase={flex:1,padding:"12px",fontWeight:900,fontSize:16,border:"none",cursor:"pointer",fontFamily:"inherit"};
+  return React.createElement("div",{style:{minHeight:"100vh",padding:"18px 10px",background:"#EDE6D3"}},
+    React.createElement("div",{style:{maxWidth:640,margin:"0 auto"}},
+      React.createElement("div",{style:{display:"flex",borderRadius:14,overflow:"hidden",border:`2px solid ${GREEN}`,marginBottom:10}},
+        React.createElement("button",{onClick:()=>setTab("customer"),style:{...btnBase,background:tab==="customer"?GREEN:"white",color:tab==="customer"?"white":GREEN}},"å®¢äºº Customer"),
+        React.createElement("button",{onClick:()=>setTab("staff"),style:{...btnBase,background:tab==="staff"?RED:"white",color:tab==="staff"?"white":RED}},"è·å¡ Staff")
+      ),
+      React.createElement("div",{style:{background:CREAM,borderRadius:20,padding:"22px 18px",boxShadow:"0 2px 18px rgba(40,30,20,0.1)"}},
+        tab==="customer"?React.createElement(Customer):React.createElement(Staff)
+      ),
+      React.createElement("div",{style:{textAlign:"center",marginTop:8,color:MUTED,fontSize:11}},"â¡ Demo: åä¸çè¦½å¨å©ååé åæ­¥ Â· Production: éè¦ Firebase éç½®")
+    )
+  );
+}
+ReactDOM.render(React.createElement(App),document.getElementById("root"));
+
+</script>
+</body>
+</html>
