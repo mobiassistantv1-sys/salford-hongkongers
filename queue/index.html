@@ -105,7 +105,7 @@ function Staff(){
   const [urg,setUrg]=useState(false);
   const [auth,setAuth]=useState(false);
   const [pw,setPw]=useState("");
-  const PIN="1234";
+  const PIN="0128";
   useEffect(()=>{const id=setInterval(()=>setS(rd()),2000);if(bc)bc.onmessage=e=>{if(e.data?.type==="u")setS(e.data.s);};return()=>clearInterval(id);},[]);
 
   const serveNext=()=>{const c=rd();const nx={...c,serving:c.serving+1};wr(nx);setS(nx);};
@@ -125,8 +125,7 @@ function Staff(){
     React.createElement(Logo),
     React.createElement("div",{style:{fontSize:22,fontWeight:900,color:DARK,marginBottom:16}},"\u8077\u54e1\u767b\u5165 Staff Login"),
     React.createElement("input",{type:"password",placeholder:"\u8f38\u5165 PIN Enter PIN",value:pw,onChange:e=>setPw(e.target.value),onKeyDown:e=>e.key==="Enter"&&(pw===PIN?setAuth(true):alert("PIN \u932f\u8aa4 Wrong PIN")),style:{width:"100%",borderRadius:10,border:`2px solid ${GREEN}`,padding:"12px 16px",fontSize:20,boxSizing:"border-box",marginBottom:12,fontFamily:"inherit"}}),
-    React.createElement("button",{onClick:()=>pw===PIN?setAuth(true):alert("PIN \u932f\u8aa4 Wrong PIN"),style:{width:"100%",background:GREEN,color:"white",border:"none",borderRadius:12,padding:14,fontSize:18,fontWeight:900,cursor:"pointer",fontFamily:"inherit"}},"\u767b\u5165 Login"),
-    React.createElement("div",{style:{color:MUTED,fontSize:12,marginTop:8}},"\u9810\u8a2d PIN: 1234\uff08\u8acb\u81ea\u884c\u4fee\u6539 HTML \u5165\u9762\u5605 PIN \u8b8a\u6578\uff09")
+    React.createElement("button",{onClick:()=>pw===PIN?setAuth(true):alert("PIN \u932f\u8aa4 Wrong PIN"),style:{width:"100%",background:GREEN,color:"white",border:"none",borderRadius:12,padding:14,fontSize:18,fontWeight:900,cursor:"pointer",fontFamily:"inherit"}},"\u767b\u5165 Login")
   );
 
   const waiting=s.queue.filter(q=>q.n>s.serving);
