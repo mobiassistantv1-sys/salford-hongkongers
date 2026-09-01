@@ -65,8 +65,7 @@ function Customer(){
     React.createElement("div",{style:{textAlign:"center",color:GREEN,fontSize:18,fontWeight:700,marginBottom:20}},"JOIN THE QUEUE"),
     React.createElement("label",{style:lbl},"\u59d3\u540d Name ",React.createElement("span",{style:{color:RED}},"*")),
     React.createElement("input",{style:inp,value:form.name,onChange:e=>setForm({...form,name:e.target.value}),placeholder:"\u8acb\u8f38\u5165\u59d3\u540d / Your name"}),
-    React.createElement("label",{style:lbl},"\u96fb\u8a71\u865f\ufffd
- Phone ",React.createElement("span",{style:{color:MUTED,fontWeight:500,fontSize:14}},"\uff08\u9078\u586b optional\uff09")),
+    React.createElement("label",{style:lbl},"\u96fb\u8a71\u865f\u78bc Phone ",React.createElement("span",{style:{color:MUTED,fontWeight:500,fontSize:14}},"\uff08\u9078\u586b optional\uff09")),
     React.createElement("input",{style:inp,value:form.phone,onChange:e=>setForm({...form,phone:e.target.value}),placeholder:"\u5514\u586b\u90fd\u5f97 / Optional"}),
     React.createElement("label",{style:lbl},"\u4eba\u6578 Party size ",React.createElement("span",{style:{color:RED}},"*")),
     React.createElement("select",{style:{...inp,background:"white"},value:form.party,onChange:e=>setForm({...form,party:e.target.value})},[1,2,3,4,5,6,"7+"].map(n=>React.createElement("option",{key:n,value:n},n+" \u4f4d / "+n))),
