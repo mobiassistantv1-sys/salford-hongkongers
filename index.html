@@ -1342,10 +1342,26 @@ function escapeHtml(str) {
 }
 
 function renderEventCard(ev) {
-  const dateObj = ev.date ? new Date(ev.date) : null;
+  var dateStr = ev.date || '';
+  var isRange = dateStr.indexOf(' - ') >= 0;
+  var dateObj = null;
+  if (isRange) {
+    var sp = dateStr.split(' - ')[0].trim().split('/');
+    if (sp.length === 3) dateObj = new Date(+sp[2], +sp[1]-1, +sp[0]);
+  } else if (dateStr) { dateObj = new Date(dateStr); }
   const months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
   const month = dateObj && !isNaN(dateObj) ? months[dateObj.getMonth()] : '';
   const day = dateObj && !isNaN(dateObj) ? dateObj.getDate() : '';
+  var mDisp = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var displayDate = '';
+  if (isRange) {
+    var p1 = dateStr.split(' - ')[0].trim().split('/');
+    var p2 = dateStr.split(' - ')[1].trim().split('/');
+    if (p1.length === 3 && p2.length === 3) {
+      var d1 = new Date(+p1[2],+p1[1]-1,+p1[0]), d2 = new Date(+p2[2],+p2[1]-1,+p2[0]);
+      displayDate = d1.getDate()+' '+mDisp[d1.getMonth()]+' – '+d2.getDate()+' '+mDisp[d2.getMonth()]+' '+d2.getFullYear();
+    } else { displayDate = dateStr; }
+  } else { displayDate = dateStr; }
   return '<div class="event-card upcoming">' +
     '<span class="event-badge">' + (escapeHtml(ev.type) || '活動') + '</span>' +
     '<div class="event-header">' +
@@ -1356,7 +1372,7 @@ function renderEventCard(ev) {
       '<div class="event-info">' +
         '<div class="event-title">' + escapeHtml(ev.title) + '</div>' +
         (ev.location ? '<div class="event-detail">📍 ' + escapeHtml(ev.location) + '</div>' : '') +
-        (ev.date ? '<div class="event-detail">🗓️ ' + escapeHtml(ev.date) + '</div>' : '') +
+        (displayDate ? '<div class="event-detail">🗓️ ' + escapeHtml(displayDate) + '</div>' : '') +
       '</div>' +
     '</div>' +
     (ev.description ? '<div class="event-desc">' + escapeHtml(ev.description) + '</div>' : '')(ev.imageUrl ? '<img src="' + escapeHtml(ev.imageUrl) + '" style="width:100%;border-radius:8px;margin:8px 0;object-fit:cover;max-height:180px;" alt="" loading="lazy">' : '') +
@@ -1387,7 +1403,12 @@ async function loadEventsFromSheet() {
           imageUrl: String((row.c && row.c[6] && row.c[6].v) ? row.c[6].v : ''),
         status: String((row.c && row.c[8] && row.c[8].v) ? row.c[8].v : '').trim(),
       };
-    }).filter(function(e) { return e.status === '已發布'; });
+    }).filter(function(e) { return e.status === '已發布'; }).filter(function(e) {
+      if (!e.date || e.date.indexOf(' - ') < 0) return true;
+      var dp = e.date.split(' - ')[1].trim().split('/');
+      if (dp.length !== 3) return true;
+      return new Date() <= new Date(+dp[2], +dp[1]-1, +dp[0], 23, 59, 59);
+    });
     if (events.length === 0) {
       container.innerHTML = '<div style="text-align:center;padding:40px 20px;color:var(--text-muted);font-size:14px;">暫時沒有即將舉行的活動，請留意我們的社交媒體獲取最新消息。</div>';
     } else {
