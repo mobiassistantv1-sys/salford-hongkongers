@@ -37,9 +37,6 @@ button,input,select,textarea{font:inherit;color:inherit}button{cursor:pointer}
 .statusbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px 0 0;font-size:13px;color:var(--muted)}
 .dot{width:9px;height:9px;border-radius:50%;background:var(--ok);display:inline-block}.dot.off{background:var(--red)}
 .login{max-width:420px;margin:32px auto 0}.login h1{font-size:24px;font-weight:900}.login p{color:var(--muted);margin:4px 0 16px}
-.roles{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.rolebtn{border:2px solid var(--line);background:var(--surface);border-radius:var(--r);padding:16px 12px;text-align:left}
-.rolebtn b{display:block;font-size:18px}.rolebtn span{font-size:12.5px;color:var(--muted)}.rolebtn[aria-pressed="true"]{border-color:var(--green);background:var(--ok-soft)}
 label.f{display:block;font-weight:700;font-size:14px;margin:14px 0 4px}
 input.t{width:100%;border:1.5px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 12px}
 .err{background:var(--red-soft);color:var(--red);border-radius:10px;padding:10px 12px;font-weight:700;margin:10px 0}
@@ -135,7 +132,7 @@ firebase.initializeApp(Y.FIREBASE);
 const auth=firebase.auth(),db=firebase.database();
 let user=null,role=null,authReady=false,online=true,day=Y.dayKey();
 let P={},ORD={},PAY={},LOG={};
-const U={lang:"zh",tab:"orders",pinRole:"staff",loginErr:"",busy:false,billT:null,cash:"",disc:0,discNote:"",armed:null,showSlips:{},seen:{},sound:false};
+const U={lang:"zh",tab:"orders",loginErr:"",busy:false,billT:null,cash:"",disc:0,discNote:"",armed:null,showSlips:{},seen:{},sound:false};
 try{U.lang=localStorage.getItem("yoc_staff_lang")||"zh";}catch(e){}
 
 const $=s=>document.querySelector(s);
@@ -183,9 +180,7 @@ function slipsFor(o){
 
 /* ---------- views ---------- */
 function renderLogin(){
-  const r=U.pinRole;
-  let h='<div class="wrap"><div class="login"><h1>'+t("後台登入","Staff sign-in")+'</h1><p>'+t("只限友愛冰室經理同員工。","For Yau Oi Cafe managers and staff only.")+'</p>';
-  h+='<div class="roles"><button class="rolebtn" data-act="pinrole" data-v="manager" aria-pressed="'+(r==="manager")+'"><b>'+t("經理","Manager")+'</b><span>'+t("餐牌 · 營業額","Menu · takings")+'</span></button><button class="rolebtn" data-act="pinrole" data-v="staff" aria-pressed="'+(r==="staff")+'"><b>'+t("員工","Staff")+'</b><span>'+t("餐牌 · 帳單","Menu · bills")+'</span></button></div>';
+  let h='<div class="wrap"><div class="login"><h1>'+t("後台登入","Staff sign-in")+'</h1>';
   h+='<form id="loginf"><label class="f" for="pw">'+t("密碼","Password")+'</label><input class="t" id="pw" type="password" autocomplete="current-password" required>';
   if(U.loginErr)h+='<div class="err">'+esc(U.loginErr)+'</div>';
   h+='<button class="btn green" type="submit" style="width:100%;margin-top:12px"'+(U.busy?" disabled":"")+'>'+(U.busy?t("登入中…","Signing in…"):t("登入","Sign in"))+'</button></form></div></div>';
@@ -336,8 +331,14 @@ async function doPay(m){
 document.addEventListener("submit",async e=>{
   if(e.target.id!=="loginf")return;e.preventDefault();
   const pw=$("#pw").value;U.busy=true;U.loginErr="";render();
-  try{await auth.signInWithEmailAndPassword(ACCOUNTS[U.pinRole],pw);U.tab="orders";}
-  catch(err){U.loginErr=t("密碼唔啱，或者帳戶未設定。","Wrong password, or the account isn't set up.");}
+  /* The password decides the level: try the manager account first, then staff. Each account has its own password set in Firebase. */
+  let okIn=false,tooMany=false;
+  for(const email of [ACCOUNTS.manager,ACCOUNTS.staff]){
+    try{await auth.signInWithEmailAndPassword(email,pw);okIn=true;break;}
+    catch(err){if(err&&err.code==="auth/too-many-requests")tooMany=true;}
+  }
+  if(okIn)U.tab="orders";
+  else U.loginErr=tooMany?t("試錯太多次，請等幾分鐘再試。","Too many attempts. Wait a few minutes and try again."):t("密碼唔啱。","Wrong password.");
   U.busy=false;render();
 });
 document.addEventListener("click",async e=>{
@@ -345,7 +346,6 @@ document.addEventListener("click",async e=>{
   if(a!=="xline"&&a!=="resetstock")U.armed=null;
   switch(a){
     case "lang":U.lang=v;try{localStorage.setItem("yoc_staff_lang",v);}catch(x){}render();break;
-    case "pinrole":U.pinRole=v;U.loginErr="";render();{const p=$("#pw");if(p)p.focus();}break;
     case "logout":await auth.signOut();U.billT=null;break;
     case "sound":try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();await actx.resume();}catch(x){}U.sound=true;keepAwake();beep();render();break;
     case "tab":U.tab=v;render();window.scrollTo(0,0);break;
