@@ -59,6 +59,7 @@ input.t{width:100%;border:1.5px solid var(--line);background:var(--surface);bord
 .sta{font-size:11.5px;font-weight:900;letter-spacing:.08em;color:var(--muted);margin-top:8px}
 .oline{display:flex;gap:8px;align-items:flex-start;padding:6px 0;border-top:1px dashed var(--line)}
 .oline .q{font-weight:900;min-width:28px}.oline .b{flex:1;min-width:0}.oline .b small{display:block;color:var(--muted)}
+.oline .b .alc{display:block;color:var(--red);font-weight:700;font-size:12px}
 .oline.x .b{text-decoration:line-through;opacity:.5}
 .xbtn{border:1px solid var(--line);background:none;border-radius:6px;font-size:12px;padding:2px 6px;color:var(--muted);white-space:nowrap}
 .xbtn.arm{border-color:var(--red);color:var(--red);font-weight:700}
@@ -211,7 +212,7 @@ function vOrders(){
   os.forEach(o=>{const add=isAddOn(o);const fresh=!o.served&&Date.now()-(o.at||0)<120000;
     h+='<article class="card'+(fresh?" new":"")+'"><div class="ocard-h"><span class="tbl">'+esc(tableLabel(o.table))+'</span><span class="meta">'+no3(o)+' · '+hhmm(o.at)+(o.name?' · '+esc(o.name):'')+'</span>'+(fresh?'<span class="chip newc">'+t("新","New")+'</span>':'')+(add?'<span class="chip add">'+t("加單","Add-on")+'</span>':'')+(o.served?'<span class="chip paid">'+t("已上菜","Served")+'</span>':'')+'</div>';
     linesOf(o).forEach(l=>{const it=byId[l.itemId];const key=o.id+":"+l.i,arm=U.armed===key;
-      h+='<div class="oline'+(l.x?" x":"")+'"><span class="q num">'+l.qty+'×</span><span class="b">'+esc(iname(it))+(l.desc.length?'<small>'+esc(lineDesc(l))+'</small>':'')+'</span>'+(l.x?'<span class="chip">'+t("已取消","Cancelled")+'</span>':'<button class="xbtn'+(arm?" arm":"")+'" data-act="xline" data-o="'+o.id+'" data-i="'+l.i+'">'+(arm?t("確認取消？","Confirm cancel?"):t("取消","Cancel"))+'</button>')+'</div>';});
+      const la=Y.lineAllergens(l.itemId,l.sel);h+='<div class="oline'+(l.x?" x":"")+'"><span class="q num">'+l.qty+'×</span><span class="b">'+esc(iname(it))+(l.desc.length?'<small>'+esc(lineDesc(l))+'</small>':'')+(la.length?'<span class="alc">'+t("含：","Contains: ")+esc(la.map(c=>Y.alName(c,U.lang)).join(EN()?", ":"、"))+'</span>':'')+'</span>'+(l.x?'<span class="chip">'+t("已取消","Cancelled")+'</span>':'<button class="xbtn'+(arm?" arm":"")+'" data-act="xline" data-o="'+o.id+'" data-i="'+l.i+'">'+(arm?t("確認取消？","Confirm cancel?"):t("取消","Cancel"))+'</button>')+'</div>';});
     if(o.allergy)h+='<div class="anote">'+t("過敏：","Allergy: ")+esc(o.allergy)+'</div>';
     if(o.note)h+='<div class="nnote">'+t("備註：","Note: ")+esc(o.note)+'</div>';
     h+='<div class="cardfoot"><button class="btn sm ghost" data-act="slips" data-v="'+o.id+'">'+(U.showSlips[o.id]?t("收起分單","Hide by station"):t("按工作位睇","View by station"))+'</button><button class="btn sm '+(o.served?'ghost':'green')+'" data-act="served" data-v="'+o.id+'">'+(o.served?t("改返未上菜","Mark not served"):t("已上菜","Served"))+'</button><span style="margin-left:auto;font-weight:900" class="num">'+money(orderTotal(o))+'</span></div>';
