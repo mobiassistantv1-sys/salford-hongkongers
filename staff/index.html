@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>友愛冰室 · 後台</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@400;500;700;900&family=Noto+Serif+HK:wght@900&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+:root{--paper:#FCF9E8;--surface:#FFFFFF;--sunk:#F3EED6;--ink:#1E1B12;--muted:#6A6450;--line:#E2DCC2;--green:#027243;--green-ink:#FCF9E8;--red:#C80000;--red-soft:#FBE3DF;--amber:#9A5B00;--amber-soft:#FBEBC8;--ok:#027243;--ok-soft:#DDF0E5;
+  --f-display:"Noto Serif HK","Songti TC",serif;--f-body:"Noto Sans HK","PingFang HK","Microsoft JhengHei",system-ui,sans-serif;--f-mono:"JetBrains Mono","Noto Sans HK",ui-monospace,monospace;--r:12px;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--paper:#15140F;--surface:#1F1D16;--sunk:#29261C;--ink:#F2EEDC;--muted:#A9A189;--line:#3A3627;--green:#2FA06D;--green-ink:#0E130F;--red:#FF6B5B;--red-soft:#3A1915;--amber:#F0B14A;--amber-soft:#3A2C10;--ok:#4CC48A;--ok-soft:#14301F;color-scheme:dark}}
+*{box-sizing:border-box}
+html{padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5;padding:0 max(16px,env(safe-area-inset-right,0px)) 80px max(16px,env(safe-area-inset-left,0px))}
+button,input,select,textarea{font:inherit;color:inherit}button{cursor:pointer}
+:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+[hidden]{display:none!important}
+.num{font-variant-numeric:tabular-nums}h1,h2,h3{margin:0;text-wrap:balance}
+.band{position:sticky;top:0;z-index:20;background:var(--green);color:var(--green-ink);margin:0 calc(-1 * max(16px,env(safe-area-inset-left,0px))) 0 calc(-1 * max(16px,env(safe-area-inset-right,0px)));padding:10px max(16px,env(safe-area-inset-right,0px)) 10px max(16px,env(safe-area-inset-left,0px))}
+.band-in{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:10px 12px;flex-wrap:wrap}
+.wordmark{font-family:var(--f-display);font-size:22px;letter-spacing:.06em;line-height:1}
+.wordmark small{display:block;font-family:var(--f-body);font-size:10.5px;letter-spacing:.18em;font-weight:500;opacity:.85;margin-top:3px}
+.controls{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.seg{display:flex;background:color-mix(in srgb,var(--green-ink) 16%,transparent);border-radius:999px;padding:3px}
+.seg button{border:0;background:transparent;color:var(--green-ink);padding:6px 14px;border-radius:999px;font-weight:700;font-size:14px;white-space:nowrap}
+.seg button[aria-pressed="true"]{background:var(--green-ink);color:var(--green)}
+.seg.lang{background:var(--green-ink);padding:4px;border-radius:12px}
+.seg.lang button{color:var(--green);font-weight:900;font-size:17px;padding:8px 16px;border-radius:9px;min-width:64px;line-height:1.1}
+.seg.lang button[aria-pressed="true"]{background:var(--green);color:var(--green-ink)}
+.rolebadge{background:var(--amber);color:#fff;border-radius:6px;padding:3px 8px;font-size:12px;font-weight:900}
+.wrap{max-width:1100px;margin:0 auto}
+.btn{border:0;border-radius:var(--r);padding:12px 16px;font-weight:700;font-size:16px;background:var(--sunk);color:var(--ink)}
+.btn.primary{background:var(--red);color:#fff}.btn.green{background:var(--green);color:var(--green-ink)}.btn.ghost{background:transparent;border:1.5px solid var(--line)}
+.btn.sm{padding:6px 10px;font-size:13.5px;border-radius:8px}.btn[disabled]{opacity:.45;cursor:not-allowed}
+.statusbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px 0 0;font-size:13px;color:var(--muted)}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--ok);display:inline-block}.dot.off{background:var(--red)}
+.login{max-width:420px;margin:32px auto 0}.login h1{font-size:24px;font-weight:900}.login p{color:var(--muted);margin:4px 0 16px}
+.roles{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.rolebtn{border:2px solid var(--line);background:var(--surface);border-radius:var(--r);padding:16px 12px;text-align:left}
+.rolebtn b{display:block;font-size:18px}.rolebtn span{font-size:12.5px;color:var(--muted)}.rolebtn[aria-pressed="true"]{border-color:var(--green);background:var(--ok-soft)}
+label.f{display:block;font-weight:700;font-size:14px;margin:14px 0 4px}
+input.t{width:100%;border:1.5px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 12px}
+.err{background:var(--red-soft);color:var(--red);border-radius:10px;padding:10px 12px;font-weight:700;margin:10px 0}
+.tabs{display:flex;gap:4px;border-bottom:2px solid var(--ink);margin-top:12px;overflow-x:auto}
+.tabs button{border:0;background:none;padding:10px 14px;font-weight:700;font-size:15px;color:var(--muted);border-radius:8px 8px 0 0;white-space:nowrap}
+.tabs button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.tabs .cnt{display:inline-block;min-width:20px;padding:0 6px;border-radius:999px;background:var(--red);color:#fff;font-size:12px;margin-left:4px}
+.sec{padding:16px 0}.sec-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+.sec-h h2{font-size:18px;font-weight:900}.sec-h p{margin:0;color:var(--muted);font-size:13px}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(270px,1fr))}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px;min-width:0}
+.card.new{border:2px solid var(--red)}
+.ocard-h{display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap}
+.tbl{font-weight:900;font-size:26px;line-height:1}.ocard-h .meta{color:var(--muted);font-size:12.5px;flex:1;min-width:0}
+.chip{font-size:11.5px;font-weight:700;padding:2px 7px;border-radius:6px;background:var(--sunk);color:var(--muted)}
+.chip.add{background:var(--amber-soft);color:var(--amber)}.chip.paid{background:var(--ok-soft);color:var(--ok)}.chip.newc{background:var(--red);color:#fff}
+.sta{font-size:11.5px;font-weight:900;letter-spacing:.08em;color:var(--muted);margin-top:8px}
+.oline{display:flex;gap:8px;align-items:flex-start;padding:6px 0;border-top:1px dashed var(--line)}
+.oline .q{font-weight:900;min-width:28px}.oline .b{flex:1;min-width:0}.oline .b small{display:block;color:var(--muted)}
+.oline.x .b{text-decoration:line-through;opacity:.5}
+.xbtn{border:1px solid var(--line);background:none;border-radius:6px;font-size:12px;padding:2px 6px;color:var(--muted);white-space:nowrap}
+.xbtn.arm{border-color:var(--red);color:var(--red);font-weight:700}
+.anote{background:var(--red);color:#fff;border-radius:8px;padding:6px 8px;font-weight:900;font-size:15px;margin-top:8px}
+.nnote{background:var(--sunk);border-radius:8px;padding:6px 8px;font-size:13.5px;margin-top:6px}
+.cardfoot{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;align-items:center}
+.stock{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.scard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px;display:flex;flex-direction:column;gap:10px}
+.scard .top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}.scard .top b{font-size:17px}.scard .top small{display:block;color:var(--muted);font-size:12px}
+.count{font-size:42px;font-weight:900;line-height:1;font-variant-numeric:tabular-nums}.count.zero{color:var(--red)}.count.low{color:var(--amber)}
+.btnrow{display:flex;gap:6px;flex-wrap:wrap}
+.plus{border:0;background:var(--green);color:var(--green-ink);font-weight:900;border-radius:8px;padding:10px 0;flex:1;min-width:52px;font-size:16px}
+.minus{border:1.5px solid var(--line);background:var(--surface);font-weight:900;border-radius:8px;padding:10px 12px;font-size:16px}
+.inl{display:flex;gap:6px;align-items:center;font-size:13px;color:var(--muted);flex-wrap:wrap}
+.inl input{width:76px;border:1.5px solid var(--line);background:var(--surface);border-radius:8px;padding:6px 8px}.inl input[type=time]{width:auto}
+.toggles{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:0 16px}
+.trow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line)}
+.trow .nm{min-width:0}.trow .nm small{color:var(--muted);margin-left:4px}
+.sw{border:0;border-radius:999px;padding:5px 12px;font-weight:700;font-size:13px;white-space:nowrap;background:var(--ok-soft);color:var(--ok)}.sw.off{background:var(--red-soft);color:var(--red)}
+.mrow{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1.6fr) 80px auto auto;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
+.mrow input{width:100%;border:1.5px solid var(--line);background:var(--surface);border-radius:8px;padding:6px 8px;min-width:0}
+.mrow .cat{grid-column:1/-1;font-weight:900;font-size:13px;color:var(--muted);letter-spacing:.08em;padding-top:10px}
+.mrow .price{font-weight:700;text-align:right}
+@media (max-width:640px){.mrow{grid-template-columns:1fr 1fr}}
+.tables{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px}
+.tbtn{border:1.5px solid var(--line);background:var(--surface);border-radius:var(--r);padding:10px 8px;text-align:center}
+.tbtn b{display:block;font-size:22px;font-weight:900}.tbtn span{font-size:12.5px;color:var(--muted)}
+.tbtn.busy{border-color:var(--red)}.tbtn.busy span{color:var(--red);font-weight:700}
+.tbtn[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}.tbtn[aria-pressed="true"] span{color:var(--paper)}
+.bill{display:grid;gap:16px;grid-template-columns:minmax(0,1fr) minmax(0,1fr);margin-top:16px}@media (max-width:760px){.bill{grid-template-columns:1fr}}
+.total{display:flex;justify-content:space-between;font-weight:900;font-size:22px;padding:12px 0 0}
+.subline{display:flex;justify-content:space-between;color:var(--muted);font-size:14px;padding-top:6px}.subline.d{color:var(--amber);font-weight:700}
+.discs{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 4px}.discs .btn[aria-pressed="true"]{background:var(--amber);color:#fff;border-color:var(--amber)}
+.quick{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}.change{font-size:28px;font-weight:900;color:var(--green)}
+.sqbox{background:var(--sunk);border-radius:10px;padding:12px;margin-top:12px;font-size:14px}
+.sqbox b{font-size:22px}
+.paybtns{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.paybtns .btn{flex:1}
+.kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px}.kpi span{display:block;color:var(--muted);font-size:12.5px}.kpi b{font-size:26px;font-weight:900}
+table.t{width:100%;border-collapse:collapse;font-size:14px}table.t th,table.t td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+table.t th{font-size:12px;color:var(--muted);font-weight:700}table.t .r{text-align:right}
+.scroll{overflow-x:auto}.empty{color:var(--muted);padding:24px;text-align:center;border:1.5px dashed var(--line);border-radius:var(--r)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(24px + env(safe-area-inset-bottom,0px));z-index:50;background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:999px;font-weight:700;font-size:14px;max-width:calc(100% - 32px)}
+.alert{position:fixed;left:0;right:0;top:0;z-index:60;background:var(--red);color:#fff;text-align:center;font-weight:900;font-size:20px;padding:calc(14px + env(safe-area-inset-top,0px)) 16px 14px}
+</style>
+</head>
+<body>
+<header class="band"><div class="band-in">
+  <div class="wordmark">友愛冰室<small id="sub">後台 STAFF</small></div>
+  <div class="controls">
+    <div class="seg lang" role="group" aria-label="Language 語言">
+      <button id="l-zh" data-act="lang" data-v="zh" lang="zh-Hant">中文</button>
+      <button id="l-en" data-act="lang" data-v="en" lang="en">English</button>
+    </div>
+    <span id="who"></span>
+  </div>
+</div></header>
+<main id="app"><div class="wrap"><p style="padding:24px 0;color:var(--muted)">載入中… Loading…</p></div></main>
+<div id="alert" class="alert" hidden role="alert"></div>
+<div id="toast" class="toast" hidden role="status"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<script src="/order/menu.js"></script>
+<script>
+(function(){
+"use strict";
+const Y=window.YO,G=Y.G,CATS=Y.CATS,MENU=Y.MENU,byId=Y.byId,STOCK=Y.STOCK,TABLES=Y.TABLES;
+/* Sign-in accounts (created once in Firebase Console → Authentication). Not secret; the password is. */
+const ACCOUNTS={manager:"cafe-manager@salfordhongkongers.co.uk",staff:"cafe-staff@salfordhongkongers.co.uk"};
+
+firebase.initializeApp(Y.FIREBASE);
+const auth=firebase.auth(),db=firebase.database();
+let user=null,role=null,authReady=false,online=true,day=Y.dayKey();
+let P={},ORD={},PAY={},LOG={};
+const U={lang:"zh",tab:"orders",pinRole:"staff",loginErr:"",busy:false,billT:null,cash:"",disc:0,discNote:"",armed:null,showSlips:{},seen:{},sound:false};
+try{U.lang=localStorage.getItem("yoc_staff_lang")||"zh";}catch(e){}
+
+const $=s=>document.querySelector(s);
+const EN=()=>U.lang==="en";const t=(zh,en)=>EN()?en:zh;
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const money=p=>"£"+(p/100).toFixed(2);
+const nm=o=>EN()?o.en:o.zh;
+const iname=it=>Y.itemName(it,P,U.lang);
+const hhmm=x=>x?new Date(x).toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit",timeZone:"Europe/London"}):"--:--";
+const no3=o=>"#"+String(o.no||0).padStart(3,"0");
+const mgr=()=>role==="manager";
+let toastT;function toast(m){const el=$("#toast");el.textContent=m;el.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>el.hidden=true,2600);}
+let alertT;function flash(m){const el=$("#alert");el.textContent=m;el.hidden=false;clearTimeout(alertT);alertT=setTimeout(()=>el.hidden=true,6000);}
+function logIt(zh,en){db.ref("ordering/log/"+day).push({at:firebase.database.ServerValue.TIMESTAMP,zh,en,by:role}).catch(()=>{});}
+function tableLabel(tb){return tb&&tb.startsWith("W")?t("外賣 ","Takeaway ")+tb:tb;}
+const tableLabelZh=tb=>tb&&tb.startsWith("W")?"外賣 "+tb:tb;
+
+/* ---------- orders helpers (always re-priced from Square prices in P) ---------- */
+function linesOf(o){return (o.lines||[]).map((l,i)=>{const it=byId[l.itemId];if(!it)return null;const ln=Y.mkLine(l.itemId,Math.max(1,Math.min(50,l.qty|0)),l.sel||{},P);ln.i=i;ln.x=!!l.x;return ln;}).filter(Boolean);}
+const lineTotal=l=>l.unit*l.qty;
+const orderTotal=o=>linesOf(o).filter(l=>!l.x).reduce((a,l)=>a+lineTotal(l),0);
+const lineDesc=l=>l.desc.map(d=>EN()?d.en:d.zh).join(EN()?", ":"、");
+function orderList(){return Object.keys(ORD).map(id=>Object.assign({id},ORD[id]));}
+function openOrders(tb){return orderList().filter(o=>!o.paid&&(tb?o.table===tb:true));}
+function isAddOn(o){return orderList().some(x=>x.table===o.table&&x.id!==o.id&&(x.at||0)<(o.at||0)&&!x.paid);}
+function billOf(tb){const g=openOrders(tb).reduce((a,o)=>a+orderTotal(o),0);const d=Math.round(g*U.disc/100);return {g,d,n:g-d};}
+
+/* ---------- sound ---------- */
+let actx=null;
+function beep(){if(!U.sound||!actx)return;try{const now=actx.currentTime;[0,0.25,0.5].forEach((d,i)=>{const o=actx.createOscillator(),g=actx.createGain();o.frequency.value=i===2?1320:988;o.connect(g);g.connect(actx.destination);g.gain.setValueAtTime(0.0001,now+d);g.gain.exponentialRampToValueAtTime(0.4,now+d+0.02);g.gain.exponentialRampToValueAtTime(0.0001,now+d+0.2);o.start(now+d);o.stop(now+d+0.22);});}catch(e){}if(navigator.vibrate)navigator.vibrate([200,100,200]);}
+let wake=null;async function keepAwake(){try{if("wakeLock" in navigator)wake=await navigator.wakeLock.request("screen");}catch(e){}}
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"&&U.sound)keepAwake();});
+
+/* ---------- slips (Chinese, for the kitchen) ---------- */
+function slipsFor(o){
+  const L=linesOf(o).filter(l=>!l.x);const out=[];const head=st=>'<div class="sta">'+st+'</div>';
+  const kit=L.filter(l=>["allday","sandwich"].includes(byId[l.itemId].cat));
+  if(kit.length)out.push(head("廚房 KITCHEN")+kit.map(l=>{const it=byId[l.itemId];const d=l.desc.filter(x=>x.st==="kitchen").map(x=>x.zh).join("、");return '<div class="oline"><span class="q num">'+l.qty+'×</span><span class="b">'+esc(Y.itemName(it,P,"zh"))+(it.cat==="allday"?"（全日早餐）":"")+(d?'<small>'+esc(d)+'</small>':'')+'</span></div>';}).join(""));
+  const bar=[];L.forEach(l=>{const it=byId[l.itemId];if(it.cat==="drinks")bar.push([l.qty,l.desc.filter(x=>x.g==="drink").map(x=>x.zh).join(""),l.desc.filter(x=>x.g==="taste").map(x=>x.zh).join("、")]);else if(it.cat==="allday")bar.push([l.qty,l.desc.filter(x=>x.g==="setdrink").map(x=>x.zh).join(""),[l.desc.filter(x=>x.g==="taste").map(x=>x.zh).join("、"),"跟 "+it.zh+" 全日早餐"].filter(Boolean).join(" · ")]);});
+  if(bar.length)out.push(head("水吧 BAR")+bar.map(b=>'<div class="oline"><span class="q num">'+b[0]+'×</span><span class="b">'+esc(b[1])+(b[2]?'<small>'+esc(b[2])+'</small>':'')+'</span></div>').join(""));
+  const bk=L.filter(l=>byId[l.itemId].cat==="bakery");
+  if(bk.length)out.push(head("樓面 · 麵包 FLOOR")+bk.map(l=>'<div class="oline"><span class="q num">'+l.qty+'×</span><span class="b">'+esc(Y.itemName(byId[l.itemId],P,"zh"))+'</span></div>').join(""));
+  return out.join("");
+}
+
+/* ---------- views ---------- */
+function renderLogin(){
+  const r=U.pinRole;
+  let h='<div class="wrap"><div class="login"><h1>'+t("後台登入","Staff sign-in")+'</h1><p>'+t("只限友愛冰室經理同員工。","For Yau Oi Cafe managers and staff only.")+'</p>';
+  h+='<div class="roles"><button class="rolebtn" data-act="pinrole" data-v="manager" aria-pressed="'+(r==="manager")+'"><b>'+t("經理","Manager")+'</b><span>'+t("餐牌 · 營業額","Menu · takings")+'</span></button><button class="rolebtn" data-act="pinrole" data-v="staff" aria-pressed="'+(r==="staff")+'"><b>'+t("員工","Staff")+'</b><span>'+t("餐牌 · 帳單","Menu · bills")+'</span></button></div>';
+  h+='<form id="loginf"><label class="f" for="pw">'+t("密碼","Password")+'</label><input class="t" id="pw" type="password" autocomplete="current-password" required>';
+  if(U.loginErr)h+='<div class="err">'+esc(U.loginErr)+'</div>';
+  h+='<button class="btn green" type="submit" style="width:100%;margin-top:12px"'+(U.busy?" disabled":"")+'>'+(U.busy?t("登入中…","Signing in…"):t("登入","Sign in"))+'</button></form></div></div>';
+  return h;
+}
+function renderNoRole(){return '<div class="wrap"><div class="login"><h1>'+t("呢個帳戶未有權限","This account has no access")+'</h1><p>'+t("請經理喺 Firebase 設定權限（見設定指南第 4 步）。","Ask the manager to grant access in Firebase (setup guide, step 4).")+'</p><button class="btn ghost" data-act="logout">'+t("登出","Sign out")+'</button></div></div>';}
+function renderStaff(){
+  const openN=openOrders().filter(o=>!o.served).length;
+  if(U.tab==="eod"&&!mgr())U.tab="orders";
+  let h='<div class="wrap"><div class="statusbar"><span class="dot'+(online?"":" off")+'"></span>'+(online?t("已連線","Online"):t("斷線！新單暫時收唔到","Offline — new orders can't arrive"))+' · '+esc(day);
+  h+=U.sound?' · 🔔 '+t("響鈴已開","Alerts on"):' <button class="btn sm green" data-act="sound">🔔 '+t("開啟新單響鈴","Turn on order alerts")+'</button>';
+  h+='</div>';
+  const tabs=[["orders",t("訂單","Orders"),openN],["stock",t("今日供應","Today's stock")],["menu",t("餐牌","Menu")],["bill",t("埋單","Take payment")]];if(mgr())tabs.push(["eod",t("日結 · 營業額","End of day")]);
+  h+='<nav class="tabs">'+tabs.map(x=>'<button data-act="tab" data-v="'+x[0]+'" aria-pressed="'+(U.tab===x[0])+'">'+x[1]+(x[2]?'<span class="cnt num">'+x[2]+'</span>':'')+'</button>').join("")+'</nav>';
+  h+=({orders:vOrders,stock:vStock,menu:vMenu,bill:vBill,eod:vEod})[U.tab]();
+  return h+'</div>';
+}
+function vOrders(){
+  const os=openOrders().sort((a,b)=>(b.at||0)-(a.at||0));
+  let h='<div class="sec"><div class="sec-h"><h2>'+t("未埋單訂單","Unpaid orders")+'</h2><p>'+t("新單會響鈴同閃紅；做好撳「已上菜」。","New orders ring and show red. Tap Served when done.")+'</p></div>';
+  if(!os.length)return h+'<div class="empty">'+t("而家冇未埋單嘅訂單。","No unpaid orders right now.")+'</div></div>';
+  h+='<div class="grid">';
+  os.forEach(o=>{const add=isAddOn(o);const fresh=!o.served&&Date.now()-(o.at||0)<120000;
+    h+='<article class="card'+(fresh?" new":"")+'"><div class="ocard-h"><span class="tbl">'+esc(tableLabel(o.table))+'</span><span class="meta">'+no3(o)+' · '+hhmm(o.at)+(o.name?' · '+esc(o.name):'')+'</span>'+(fresh?'<span class="chip newc">'+t("新","New")+'</span>':'')+(add?'<span class="chip add">'+t("加單","Add-on")+'</span>':'')+(o.served?'<span class="chip paid">'+t("已上菜","Served")+'</span>':'')+'</div>';
+    linesOf(o).forEach(l=>{const it=byId[l.itemId];const key=o.id+":"+l.i,arm=U.armed===key;
+      h+='<div class="oline'+(l.x?" x":"")+'"><span class="q num">'+l.qty+'×</span><span class="b">'+esc(iname(it))+(l.desc.length?'<small>'+esc(lineDesc(l))+'</small>':'')+'</span>'+(l.x?'<span class="chip">'+t("已取消","Cancelled")+'</span>':'<button class="xbtn'+(arm?" arm":"")+'" data-act="xline" data-o="'+o.id+'" data-i="'+l.i+'">'+(arm?t("確認取消？","Confirm cancel?"):t("取消","Cancel"))+'</button>')+'</div>';});
+    if(o.allergy)h+='<div class="anote">'+t("過敏：","Allergy: ")+esc(o.allergy)+'</div>';
+    if(o.note)h+='<div class="nnote">'+t("備註：","Note: ")+esc(o.note)+'</div>';
+    h+='<div class="cardfoot"><button class="btn sm ghost" data-act="slips" data-v="'+o.id+'">'+(U.showSlips[o.id]?t("收起分單","Hide by station"):t("按工作位睇","View by station"))+'</button><button class="btn sm '+(o.served?'ghost':'green')+'" data-act="served" data-v="'+o.id+'">'+(o.served?t("改返未上菜","Mark not served"):t("已上菜","Served"))+'</button><span style="margin-left:auto;font-weight:900" class="num">'+money(orderTotal(o))+'</span></div>';
+    if(U.showSlips[o.id])h+='<div style="margin-top:8px">'+slipsFor(o)+'</div>';
+    h+='</article>';});
+  return h+'</div></div>';
+}
+function vStock(){
+  let h='<div class="sec"><div class="sec-h"><h2>'+t("限量麵包","Limited bakery")+'</h2><p>'+t("出爐按「+」；客人提交訂單即扣數，扣到 0 自動售罄。","Tap + when a batch comes out. Orders deduct stock when placed; 0 means sold out.")+'</p></div><div class="stock">';
+  STOCK.forEach(s=>{const n=(P.stock&&P.stock[s.k])||0;
+    h+='<div class="scard"><div class="top"><div><b>'+nm(s)+'</b>'+(s.nzh?'<small>'+t(s.nzh,s.nen)+'</small>':'')+'</div><span class="count num '+(n<=0?"zero":n<=2?"low":"")+'">'+n+'</span></div>';
+    h+='<div class="btnrow"><button class="minus" data-act="stk" data-k="'+s.k+'" data-v="-1" aria-label="'+esc(nm(s))+' −1">−1</button>'+[4,8,12].map(v=>'<button class="plus" data-act="stk" data-k="'+s.k+'" data-v="'+v+'">+'+v+'</button>').join("")+'</div>';
+    h+='<div class="inl"><label for="c-'+s.k+'">'+t("自訂","Custom")+'</label><input id="c-'+s.k+'" type="number" inputmode="numeric" min="1" max="99"><button class="btn sm ghost" data-act="stkc" data-k="'+s.k+'">'+t("加","Add")+'</button><label for="n-'+s.k+'" style="margin-left:auto">'+t("下一爐","Next batch")+'</label><input id="n-'+s.k+'" type="time" value="'+esc((P.next&&P.next[s.k])||"")+'" data-act="next" data-k="'+s.k+'"></div></div>';});
+  h+='</div></div>';
+  h+='<div class="sec"><div class="sec-h"><h2>'+t("選項上下線","Options on / off")+'</h2><p>'+t("例如午餐肉用完：全日早餐跟配入面變灰。午餐肉雞蛋三文治要喺「餐牌」另外關。","e.g. out of luncheon meat: it greys out as a set side. Switch off the sandwich separately in Menu.")+'</p></div><div class="card"><div class="toggles">';
+  ["noodle","sides"].forEach(gk=>{const g=G[gk];g.choices.forEach(c=>{const o=!!(P.off&&P.off["opt:"+gk+":"+c.id]);h+='<div class="trow"><span class="nm">'+esc(nm(c))+'<small>'+esc(nm(g).replace(/（.*）|\s*\(.*\)/,""))+'</small></span><button class="sw'+(o?" off":"")+'" data-act="optoff" data-g="'+gk+'" data-v="'+c.id+'">'+(o?t("售罄","Sold out"):t("供應中","Available"))+'</button></div>';});});
+  h+='</div></div></div>';
+  if(mgr())h+='<div class="sec"><div class="sec-h"><h2>'+t("限量數字全部歸 0","Reset bakery counts to 0")+'</h2><p>'+t("開店前用。訂單同營業額每日自動分開，唔使清。","Use before opening. Orders and takings are kept per day automatically.")+'</p></div><button class="btn '+(U.armed==="reset"?"primary":"ghost")+'" data-act="resetstock">'+(U.armed==="reset"?t("再按一次確認","Tap again to confirm"):t("全部歸 0","Reset to 0"))+'</button></div>';
+  return h;
+}
+function vMenu(){
+  const sync=P.prices&&P.prices.syncedAt;
+  let h='<div class="sec"><div class="sec-h"><h2>'+t("餐牌","Menu")+'</h2><p>'+t("可以改名同上下線。價錢以 Square 為準，喺 Square 改價後會自動同步。","Edit names and switch items on/off. Prices come from Square and sync automatically.")+'</p></div>';
+  h+='<p style="font-size:13px;margin:0 0 8px;color:'+(sync?'var(--muted)':'var(--red)')+'">'+(sync?t("上次同步 Square 價錢：","Last Square price sync: ")+new Date(sync).toLocaleString("en-GB",{timeZone:"Europe/London"}):t("未同步過 Square 價錢，暫時用預設價。","Square prices not synced yet — using default prices."))+'</p><div class="card">';
+  h+='<div class="mrow" style="font-size:12px;color:var(--muted);font-weight:700"><span>'+t("中文名","Chinese name")+'</span><span>'+t("英文名","English name")+'</span><span class="price">'+t("價錢","Price")+'</span><span></span><span></span></div>';
+  CATS.forEach(c=>{h+='<div class="mrow"><span class="cat">'+nm(c)+'</span></div>';
+    MENU.filter(m=>m.cat===c.id).forEach(m=>{const o=!!(P.off&&P.off[m.id]);
+      h+='<div class="mrow"><input id="mz-'+m.id+'" value="'+esc(Y.itemName(m,P,"zh"))+'" aria-label="'+t("中文名","Chinese name")+'" maxlength="40"><input id="me-'+m.id+'" value="'+esc(Y.itemName(m,P,"en"))+'" aria-label="'+t("英文名","English name")+'" maxlength="60"><span class="price num">'+money(Y.itemPrice(m,P,false))+'</span><button class="btn sm ghost" data-act="msave" data-v="'+m.id+'">'+t("儲存","Save")+'</button><button class="sw'+(o?" off":"")+'" data-act="off" data-v="'+m.id+'">'+(o?t("售罄","Sold out"):t("供應中","Available"))+'</button></div>';});});
+  return h+'</div></div>';
+}
+function vBill(){
+  const ta=[...new Set(openOrders().map(o=>o.table).filter(x=>x&&x.startsWith("W")))].sort();
+  let h='<div class="sec"><div class="sec-h"><h2>'+t("揀枱埋單","Choose a table")+'</h2><p>'+t("紅框 = 有未埋單訂單。","Red border = unpaid orders.")+'</p></div><div class="tables">';
+  TABLES.concat(ta).forEach(x=>{const os=openOrders(x);const tot=os.reduce((a,o)=>a+orderTotal(o),0);
+    h+='<button class="tbtn'+(os.length?" busy":"")+'" data-act="billt" data-v="'+x+'" aria-pressed="'+(U.billT===x)+'"'+(os.length?"":" disabled")+'><b>'+esc(x)+'</b><span class="num">'+(os.length?money(tot):t("空枱","Free"))+'</span></button>';});
+  h+='</div>';
+  const tb=U.billT;const os=tb?openOrders(tb):[];
+  if(!tb||!os.length)return h+'<p style="color:var(--muted);margin-top:14px">'+t("揀一張紅框枱開始埋單。","Choose a table with a red border to take payment.")+'</p></div>';
+  const B=billOf(tb),tot=B.n;
+  h+='<div class="bill"><div class="card"><h3 style="font-size:18px;font-weight:900">'+esc(tableLabel(tb))+' '+t("帳單","bill")+'</h3>';
+  os.forEach(o=>{h+='<div style="color:var(--muted);font-size:12.5px;margin-top:8px">'+no3(o)+' · '+hhmm(o.at)+'</div>';linesOf(o).filter(l=>!l.x).forEach(l=>{h+='<div class="oline"><span class="q num">'+l.qty+'×</span><span class="b">'+esc(iname(byId[l.itemId]))+(l.desc.length?'<small>'+esc(lineDesc(l))+'</small>':'')+'</span><span class="num">'+money(lineTotal(l))+'</span></div>';});});
+  if(B.d)h+='<div class="subline"><span>'+t("小計","Subtotal")+'</span><span class="num">'+money(B.g)+'</span></div><div class="subline d"><span>'+t("折扣 ","Discount ")+U.disc+'%</span><span class="num">−'+money(B.d)+'</span></div>';
+  h+='<div class="total"><span>'+t("應收","To pay")+'</span><span class="num">'+money(tot)+'</span></div></div>';
+  h+='<div class="card"><h3 style="font-size:18px;font-weight:900">'+t("收款","Payment")+'</h3>';
+  h+='<b style="font-size:14px">'+t("優惠","Discount")+'</b><div class="discs">'+[0,20,40,50].map(x=>'<button class="btn sm ghost" data-act="disc" data-v="'+x+'" aria-pressed="'+(U.disc===x)+'">'+(x?x+"% off":t("無折扣","None"))+'</button>').join("")+'</div>';
+  if(U.disc)h+='<input class="t" id="discnote" data-act="discnote" maxlength="60" value="'+esc(U.discNote)+'" placeholder="'+t("原因（可選），例如：義工、熟客","Reason (optional), e.g. volunteer, regular")+'">';
+  h+='<div class="sqbox">'+t("喺 Square POS 用「自訂金額」收：","In Square POS, charge a custom amount of:")+'<br><b class="num">'+money(tot)+'</b></div>';
+  h+='<label class="f" for="cashin">'+t("現金計找續（可選）：客人俾","Cash change helper (optional): received")+'</label><input class="t num" id="cashin" type="number" inputmode="decimal" step="0.01" min="0" value="'+esc(U.cash)+'" data-act="cash" placeholder="'+t("例如 20","e.g. 20")+'">';
+  h+='<div class="quick">'+[["10","£10"],["20","£20"],["50","£50"]].map(q=>'<button class="btn sm ghost" data-act="qcash" data-v="'+q[0]+'">'+q[1]+'</button>').join("")+'</div>';
+  const g=Math.round(parseFloat(U.cash||"0")*100),ch=g-tot;
+  h+='<div style="display:flex;justify-content:space-between;align-items:baseline"><span>'+t("找續","Change")+'</span><span class="change num" id="chg">'+(U.cash&&ch>=0?money(ch):"—")+'</span></div>';
+  h+='<div class="paybtns"><button class="btn green" data-act="pay" data-v="cash"'+(U.busy?" disabled":"")+'>'+t("現金已收","Cash taken")+'</button><button class="btn green" data-act="pay" data-v="card"'+(U.busy?" disabled":"")+'>'+t("卡已收","Card taken")+'</button></div>';
+  h+='<p style="font-size:12.5px;color:var(--muted);margin:8px 0 0">'+t("Square 收款成功之後先撳。撳咗會清枱。","Tap only after Square shows the payment as complete. This clears the table.")+'</p></div></div></div>';
+  return h;
+}
+function vEod(){
+  const pays=Object.keys(PAY).map(k=>PAY[k]).sort((a,b)=>(a.at||0)-(b.at||0));
+  const cash=pays.filter(p=>p.m==="cash").reduce((a,p)=>a+(p.amt||0),0),card=pays.filter(p=>p.m==="card").reduce((a,p)=>a+(p.amt||0),0),disc=pays.reduce((a,p)=>a+(p.discAmt||0),0);
+  const open=openOrders().reduce((a,o)=>a+orderTotal(o),0);
+  let h='<div class="sec"><div class="sec-h"><h2>'+t("今日日結 ","Takings for ")+esc(day)+'</h2><p>'+t("同 Square 當日總數同 Daily Takings 表對數。","Check against Square's daily total and the Daily Takings sheet.")+'</p></div><div class="kpis">';
+  [[t("現金","Cash"),money(cash)],[t("卡","Card"),money(card)],[t("已收合共","Total taken"),money(cash+card)],[t("折扣總額","Discounts given"),money(disc)],[t("未埋單","Unpaid"),money(open)]].forEach(k=>{h+='<div class="kpi"><span>'+k[0]+'</span><b class="num">'+k[1]+'</b></div>';});
+  h+='</div></div>';
+  const sold={};orderList().forEach(o=>linesOf(o).filter(l=>!l.x).forEach(l=>{sold[l.itemId]=(sold[l.itemId]||0)+l.qty;}));
+  const rows=MENU.filter(m=>sold[m.id]).sort((a,b)=>sold[b.id]-sold[a.id]);
+  h+='<div class="sec"><div class="sec-h"><h2>'+t("今日賣出（包括未埋單）","Sold today (incl. unpaid)")+'</h2></div><div class="card scroll"><table class="t"><thead><tr><th>'+t("餐點","Item")+'</th><th class="r">'+t("數量","Qty")+'</th></tr></thead><tbody>'+(rows.length?rows.map(m=>'<tr><td>'+esc(iname(m))+'</td><td class="r num">'+sold[m.id]+'</td></tr>').join(""):'<tr><td colspan="2" style="color:var(--muted)">'+t("今日未有訂單。","No orders yet today.")+'</td></tr>')+'</tbody></table></div></div>';
+  h+='<div class="sec"><div class="sec-h"><h2>'+t("收款記錄","Payments")+'</h2></div><div class="card scroll"><table class="t"><thead><tr><th>'+t("時間","Time")+'</th><th>'+t("枱","Table")+'</th><th>'+t("方式","Method")+'</th><th class="r">'+t("金額","Amount")+'</th></tr></thead><tbody>';
+  h+=pays.length?pays.slice().reverse().map(p=>'<tr><td class="num">'+hhmm(p.at)+'</td><td>'+esc(tableLabel(p.table))+'</td><td>'+(p.m==="cash"?t("現金","Cash"):t("卡","Card"))+(p.disc?'<br><small style="color:var(--amber);font-weight:700">'+p.disc+'% off −'+money(p.discAmt)+' · '+(p.by==="manager"?t("經理","Manager"):t("員工","Staff"))+(p.discNote?' · '+esc(p.discNote):'')+'</small>':'')+'</td><td class="r num">'+money(p.amt)+'</td></tr>').join(""):'<tr><td colspan="4" style="color:var(--muted)">'+t("今日未有收款。","No payments yet today.")+'</td></tr>';
+  h+='</tbody></table></div></div>';
+  const logs=Object.keys(LOG).map(k=>LOG[k]).sort((a,b)=>(b.at||0)-(a.at||0)).slice(0,30);
+  h+='<div class="sec"><div class="sec-h"><h2>'+t("操作記錄","Activity log")+'</h2></div><div class="card scroll"><table class="t"><tbody>'+(logs.length?logs.map(l=>'<tr><td class="num" style="width:64px">'+hhmm(l.at)+'</td><td>'+esc(EN()?l.en:l.zh)+'</td></tr>').join(""):'<tr><td style="color:var(--muted)">—</td></tr>')+'</tbody></table></div></div>';
+  return h;
+}
+function render(){
+  document.documentElement.lang=EN()?"en":"zh-Hant";
+  $("#l-zh").setAttribute("aria-pressed",!EN());$("#l-en").setAttribute("aria-pressed",EN());
+  $("#who").innerHTML=user?(role?'<span class="rolebadge">'+(mgr()?t("經理","MANAGER"):t("員工","STAFF"))+'</span> ':'')+'<button class="btn sm ghost" style="color:var(--green-ink);border-color:currentColor" data-act="logout">'+t("登出","Sign out")+'</button>':"";
+  if(!authReady)return;
+  const ae=document.activeElement,keep=ae&&ae.id&&ae.tagName==="INPUT"?{id:ae.id,s:ae.selectionStart}:null;
+  $("#app").innerHTML=!user?renderLogin():(!role?renderNoRole():renderStaff());
+  if(keep){const el=document.getElementById(keep.id);if(el){el.focus();try{el.setSelectionRange(keep.s,keep.s);}catch(e){}}}
+}
+
+/* ---------- data subscriptions ---------- */
+let subs=[];
+function unsub(){subs.forEach(f=>f());subs=[];ORD={};PAY={};LOG={};U.seen={};}
+function on(ref,ev,fn){ref.on(ev,fn,()=>{});subs.push(()=>ref.off(ev,fn));}
+function subscribe(){
+  unsub();day=Y.dayKey();
+  on(db.ref("ordering/public"),"value",s=>{P=s.val()||{};render();});
+  let initial=true;
+  const oref=db.ref("ordering/orders/"+day);
+  on(oref,"value",s=>{const v=s.val()||{};if(!initial){const fresh=Object.keys(v).filter(k=>!U.seen[k]);if(fresh.length){beep();const o=v[fresh[fresh.length-1]];flash(t("新單！","New order! ")+tableLabel(o.table)+" "+no3(o));}}Object.keys(v).forEach(k=>U.seen[k]=1);initial=false;ORD=v;render();});
+  if(mgr()){on(db.ref("ordering/payments/"+day),"value",s=>{PAY=s.val()||{};if(U.tab==="eod")render();});on(db.ref("ordering/log/"+day),"value",s=>{LOG=s.val()||{};if(U.tab==="eod")render();});}
+}
+setInterval(()=>{if(user&&role&&Y.dayKey()!==day)subscribe();},60000);  /* roll over at midnight */
+db.ref(".info/connected").on("value",s=>{online=!!s.val();if(user&&role)render();});
+auth.onAuthStateChanged(async u=>{
+  user=u;role=null;unsub();
+  if(u&&!u.isAnonymous){try{role=(await db.ref("ordering/roles/"+u.uid).get()).val();}catch(e){role=null;}if(role!=="manager"&&role!=="staff")role=null;if(role)subscribe();}
+  else if(u&&u.isAnonymous){await auth.signOut();return;}
+  authReady=true;render();
+});
+
+/* ---------- actions ---------- */
+async function doPay(m){
+  const tb=U.billT;const os=openOrders(tb);if(!os.length)return;const B=billOf(tb);
+  U.busy=true;render();
+  try{
+    const now=firebase.database.ServerValue.TIMESTAMP,upd={};
+    os.forEach(o=>{upd["ordering/orders/"+day+"/"+o.id+"/paid"]=true;upd["ordering/orders/"+day+"/"+o.id+"/paidBy"]=m;upd["ordering/orders/"+day+"/"+o.id+"/paidAt"]=now;});
+    await db.ref().update(upd);
+    const dn=U.discNote.trim().slice(0,60);
+    await db.ref("ordering/payments/"+day).push({at:now,table:tb,m,amt:B.n,gross:B.g,disc:U.disc,discAmt:B.d,discNote:dn,by:role,uid:user.uid,orders:os.map(o=>o.id)});
+    const who=mgr()?"經理":"員工",whoEn=mgr()?"Manager":"Staff";
+    logIt(tableLabelZh(tb)+" 埋單 "+money(B.n)+"（"+(m==="cash"?"現金":"卡")+"）"+(U.disc?" · "+who+"俾 "+U.disc+"% off −"+money(B.d)+(dn?"（"+dn+"）":""):""),tb+" paid "+money(B.n)+" ("+m+")"+(U.disc?" · "+whoEn+" gave "+U.disc+"% off −"+money(B.d)+(dn?" ("+dn+")":""):""));
+    const g=Math.round(parseFloat(U.cash||"0")*100);
+    toast(t(tableLabel(tb)+" 已收 "+money(B.n)+(m==="cash"&&g>B.n?"，找 "+money(g-B.n):"")+"，已清枱",tableLabel(tb)+": "+money(B.n)+" paid"+(m==="cash"&&g>B.n?", change "+money(g-B.n):"")+". Table cleared."));
+    U.billT=null;U.cash="";U.disc=0;U.discNote="";
+  }catch(e){toast(t("儲存失敗，請再試。","Couldn't save. Try again."));}
+  U.busy=false;render();
+}
+document.addEventListener("submit",async e=>{
+  if(e.target.id!=="loginf")return;e.preventDefault();
+  const pw=$("#pw").value;U.busy=true;U.loginErr="";render();
+  try{await auth.signInWithEmailAndPassword(ACCOUNTS[U.pinRole],pw);U.tab="orders";}
+  catch(err){U.loginErr=t("密碼唔啱，或者帳戶未設定。","Wrong password, or the account isn't set up.");}
+  U.busy=false;render();
+});
+document.addEventListener("click",async e=>{
+  const b=e.target.closest("[data-act]");if(!b)return;const a=b.dataset.act,v=b.dataset.v;
+  if(a!=="xline"&&a!=="resetstock")U.armed=null;
+  switch(a){
+    case "lang":U.lang=v;try{localStorage.setItem("yoc_staff_lang",v);}catch(x){}render();break;
+    case "pinrole":U.pinRole=v;U.loginErr="";render();{const p=$("#pw");if(p)p.focus();}break;
+    case "logout":await auth.signOut();U.billT=null;break;
+    case "sound":try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();await actx.resume();}catch(x){}U.sound=true;keepAwake();beep();render();break;
+    case "tab":U.tab=v;render();window.scrollTo(0,0);break;
+    case "slips":U.showSlips[v]=!U.showSlips[v];render();break;
+    case "served":{const o=ORD[v];if(o)db.ref("ordering/orders/"+day+"/"+v+"/served").set(!o.served);break;}
+    case "xline":{const key=b.dataset.o+":"+b.dataset.i;if(U.armed!==key){U.armed=key;render();break;}
+      U.armed=null;const o=ORD[b.dataset.o];const raw=o&&o.lines&&o.lines[+b.dataset.i];if(!raw||raw.x)break;const it=byId[raw.itemId];
+      await db.ref("ordering/orders/"+day+"/"+b.dataset.o+"/lines/"+b.dataset.i+"/x").set(true);
+      if(it&&it.stock)await db.ref("ordering/public/stock/"+it.stock).transaction(n=>(n||0)+(raw.qty|0));
+      logIt("取消 "+tableLabelZh(o.table)+" "+raw.qty+"×"+it.zh+(it.stock?"（還庫）":""),"Cancelled "+o.table+" "+raw.qty+"× "+it.en+(it.stock?" (restocked)":""));
+      toast(t("已取消","Cancelled"));break;}
+    case "stk":{const k=b.dataset.k,n=Number(v);await db.ref("ordering/public/stock/"+k).transaction(c=>Math.max(0,(c||0)+n));if(n>0)db.ref("ordering/public/next/"+k).remove();const s=STOCK.find(x=>x.k===k);logIt(s.zh+" "+(n>0?"+":"")+n,s.en+" "+(n>0?"+":"")+n);break;}
+    case "stkc":{const k=b.dataset.k,n=parseInt($("#c-"+k).value,10);if(!(n>0&&n<100)){toast(t("請輸入 1–99","Enter 1–99"));break;}await db.ref("ordering/public/stock/"+k).transaction(c=>(c||0)+n);db.ref("ordering/public/next/"+k).remove();const s=STOCK.find(x=>x.k===k);logIt(s.zh+" +"+n,s.en+" +"+n);break;}
+    case "off":{const o=!!(P.off&&P.off[v]);await db.ref("ordering/public/off/"+v).set(o?null:true);const it=byId[v];logIt(it.zh+(o?" 上線":" 下線"),it.en+(o?" on":" off"));break;}
+    case "optoff":{const k="opt:"+b.dataset.g+":"+v;const o=!!(P.off&&P.off[k]);await db.ref("ordering/public/off/"+k).set(o?null:true);break;}
+    case "msave":{const zh=$("#mz-"+v).value.trim(),en=$("#me-"+v).value.trim();if(!zh||!en){toast(t("名唔可以留空","Names are required"));break;}await db.ref("ordering/public/names/"+v).set({zh,en});logIt("改名 "+zh,"Renamed "+en);toast(t("已儲存","Saved"));break;}
+    case "resetstock":if(!mgr())break;if(U.armed!=="reset"){U.armed="reset";render();break;}U.armed=null;await db.ref("ordering/public/stock").set({pineapple:0,cocktail:0,sausage:0,eggtart:0});await db.ref("ordering/public/next").remove();logIt("限量歸 0","Bakery counts reset");toast(t("已歸 0","Reset to 0"));break;
+    case "billt":U.billT=v;U.cash="";U.disc=0;U.discNote="";render();break;
+    case "disc":U.disc=+v;if(!U.disc)U.discNote="";render();break;
+    case "qcash":U.cash=v;render();break;
+    case "pay":doPay(v);break;
+  }
+});
+document.addEventListener("change",e=>{const x=e.target;if(x.dataset.act==="next"){const k=x.dataset.k;db.ref("ordering/public/next/"+k).set(x.value||null);}});
+document.addEventListener("input",e=>{const x=e.target;
+  if(x.dataset.act==="cash"){U.cash=x.value;const tot=billOf(U.billT).n,g=Math.round(parseFloat(U.cash||"0")*100),ch=g-tot;const c=$("#chg");if(c)c.textContent=U.cash&&ch>=0?money(ch):"—";}
+  if(x.dataset.act==="discnote")U.discNote=x.value;});
+render();
+})();
+</script>
+</body>
+</html>
