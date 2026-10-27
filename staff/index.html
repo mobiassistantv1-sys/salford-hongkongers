@@ -37,9 +37,6 @@ button,input,select,textarea{font:inherit;color:inherit}button{cursor:pointer}
 .statusbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px 0 0;font-size:13px;color:var(--muted)}
 .dot{width:9px;height:9px;border-radius:50%;background:var(--ok);display:inline-block}.dot.off{background:var(--red)}
 .login{max-width:420px;margin:32px auto 0}.login h1{font-size:24px;font-weight:900}.login p{color:var(--muted);margin:4px 0 16px}
-.roles{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.rolebtn{border:2px solid var(--line);background:var(--surface);border-radius:var(--r);padding:16px 12px;text-align:left}
-.rolebtn b{display:block;font-size:18px}.rolebtn span{font-size:12.5px;color:var(--muted)}.rolebtn[aria-pressed="true"]{border-color:var(--green);background:var(--ok-soft)}
 label.f{display:block;font-weight:700;font-size:14px;margin:14px 0 4px}
 input.t{width:100%;border:1.5px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 12px}
 .err{background:var(--red-soft);color:var(--red);border-radius:10px;padding:10px 12px;font-weight:700;margin:10px 0}
@@ -125,18 +122,20 @@ table.t th{font-size:12px;color:var(--muted);font-weight:700}table.t .r{text-ali
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 <script src="/order/menu.js"></script>
+<script src="/shk/shk.js"></script>
 <script>
 (function(){
 "use strict";
 const Y=window.YO,G=Y.G,CATS=Y.CATS,MENU=Y.MENU,byId=Y.byId,STOCK=Y.STOCK,TABLES=Y.TABLES;
-/* Sign-in accounts (created once in Firebase Console → Authentication). Not secret; the password is. */
-const ACCOUNTS={manager:"cafe-manager@salfordhongkongers.co.uk",staff:"cafe-staff@salfordhongkongers.co.uk"};
+/* Each person signs in with their own SHK account (WhatsApp number + own password).
+   Café access is set per person in /admin/ and stored at ordering/roles/<uid>. */
+const SHK=window.SHK;
 
 firebase.initializeApp(Y.FIREBASE);
 const auth=firebase.auth(),db=firebase.database();
-let user=null,role=null,authReady=false,online=true,day=Y.dayKey();
+let user=null,role=null,myName="",authReady=false,online=true,day=Y.dayKey();
 let P={},ORD={},PAY={},LOG={};
-const U={lang:"zh",tab:"orders",pinRole:"staff",loginErr:"",busy:false,billT:null,cash:"",disc:0,discNote:"",armed:null,showSlips:{},seen:{},sound:false};
+const U={lang:"zh",tab:"orders",loginErr:"",busy:false,billT:null,cash:"",disc:0,discNote:"",armed:null,showSlips:{},seen:{},sound:false};
 try{U.lang=localStorage.getItem("yoc_staff_lang")||"zh";}catch(e){}
 
 const $=s=>document.querySelector(s);
@@ -150,7 +149,7 @@ const no3=o=>"#"+String(o.no||0).padStart(3,"0");
 const mgr=()=>role==="manager";
 let toastT;function toast(m){const el=$("#toast");el.textContent=m;el.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>el.hidden=true,2600);}
 let alertT;function flash(m){const el=$("#alert");el.textContent=m;el.hidden=false;clearTimeout(alertT);alertT=setTimeout(()=>el.hidden=true,6000);}
-function logIt(zh,en){db.ref("ordering/log/"+day).push({at:firebase.database.ServerValue.TIMESTAMP,zh,en,by:role}).catch(()=>{});}
+function logIt(zh,en){db.ref("ordering/log/"+day).push({at:firebase.database.ServerValue.TIMESTAMP,zh:(myName?myName+"："+zh:zh),en:(myName?myName+": "+en:en),by:role,who:myName}).catch(()=>{});}
 function tableLabel(tb){return tb&&tb.startsWith("W")?t("外賣 ","Takeaway ")+tb:tb;}
 const tableLabelZh=tb=>tb&&tb.startsWith("W")?"外賣 "+tb:tb;
 
@@ -184,15 +183,15 @@ function slipsFor(o){
 
 /* ---------- views ---------- */
 function renderLogin(){
-  const r=U.pinRole;
-  let h='<div class="wrap"><div class="login"><h1>'+t("後台登入","Staff sign-in")+'</h1><p>'+t("只限友愛冰室經理同員工。","For Yau Oi Cafe managers and staff only.")+'</p>';
-  h+='<div class="roles"><button class="rolebtn" data-act="pinrole" data-v="manager" aria-pressed="'+(r==="manager")+'"><b>'+t("經理","Manager")+'</b><span>'+t("餐牌 · 營業額","Menu · takings")+'</span></button><button class="rolebtn" data-act="pinrole" data-v="staff" aria-pressed="'+(r==="staff")+'"><b>'+t("員工","Staff")+'</b><span>'+t("餐牌 · 帳單","Menu · bills")+'</span></button></div>';
-  h+='<form id="loginf"><label class="f" for="pw">'+t("密碼","Password")+'</label><input class="t" id="pw" type="password" autocomplete="current-password" required>';
+  let h='<div class="wrap"><div class="login"><h1>'+t("後台登入","Staff sign-in")+'</h1>';
+  h+='<form id="loginf"><label class="f" for="ph">'+t("WhatsApp 號碼","WhatsApp number")+'</label><input class="t" id="ph" type="tel" inputmode="tel" autocomplete="username" required>';
+  h+='<label class="f" for="pw">'+t("密碼","Password")+'</label><input class="t" id="pw" type="password" autocomplete="current-password" required>';
   if(U.loginErr)h+='<div class="err">'+esc(U.loginErr)+'</div>';
-  h+='<button class="btn green" type="submit" style="width:100%;margin-top:12px"'+(U.busy?" disabled":"")+'>'+(U.busy?t("登入中…","Signing in…"):t("登入","Sign in"))+'</button></form></div></div>';
+  h+='<button class="btn green" type="submit" style="width:100%;margin-top:12px"'+(U.busy?" disabled":"")+'>'+(U.busy?t("登入中…","Signing in…"):t("登入","Sign in"))+'</button></form>';
+  h+='<p style="color:var(--muted);font-size:13px;margin-top:12px">'+t("用你嘅 SHK 帳戶登入。未有帳戶：去 /volunteer/join/ 登記，再請經理開冰室權限。","Use your SHK account. No account yet? Register at /volunteer/join/ and ask the manager for café access.")+'</p></div></div>';
   return h;
 }
-function renderNoRole(){return '<div class="wrap"><div class="login"><h1>'+t("呢個帳戶未有權限","This account has no access")+'</h1><p>'+t("請經理喺 Firebase 設定權限（見設定指南第 4 步）。","Ask the manager to grant access in Firebase (setup guide, step 4).")+'</p><button class="btn ghost" data-act="logout">'+t("登出","Sign out")+'</button></div></div>';}
+function renderNoRole(){return '<div class="wrap"><div class="login"><h1>'+t("呢個帳戶未有權限","This account has no access")+'</h1><p>'+t("請經理喺 SHK 管理頁（/admin/）開冰室權限。","Ask the manager to give you café access in /admin/.")+'</p><button class="btn ghost" data-act="logout">'+t("登出","Sign out")+'</button></div></div>';}
 function renderStaff(){
   const openN=openOrders().filter(o=>!o.served).length;
   if(U.tab==="eod"&&!mgr())U.tab="orders";
@@ -279,7 +278,7 @@ function vEod(){
   const rows=MENU.filter(m=>sold[m.id]).sort((a,b)=>sold[b.id]-sold[a.id]);
   h+='<div class="sec"><div class="sec-h"><h2>'+t("今日賣出（包括未埋單）","Sold today (incl. unpaid)")+'</h2></div><div class="card scroll"><table class="t"><thead><tr><th>'+t("餐點","Item")+'</th><th class="r">'+t("數量","Qty")+'</th></tr></thead><tbody>'+(rows.length?rows.map(m=>'<tr><td>'+esc(iname(m))+'</td><td class="r num">'+sold[m.id]+'</td></tr>').join(""):'<tr><td colspan="2" style="color:var(--muted)">'+t("今日未有訂單。","No orders yet today.")+'</td></tr>')+'</tbody></table></div></div>';
   h+='<div class="sec"><div class="sec-h"><h2>'+t("收款記錄","Payments")+'</h2></div><div class="card scroll"><table class="t"><thead><tr><th>'+t("時間","Time")+'</th><th>'+t("枱","Table")+'</th><th>'+t("方式","Method")+'</th><th class="r">'+t("金額","Amount")+'</th></tr></thead><tbody>';
-  h+=pays.length?pays.slice().reverse().map(p=>'<tr><td class="num">'+hhmm(p.at)+'</td><td>'+esc(tableLabel(p.table))+'</td><td>'+(p.m==="cash"?t("現金","Cash"):t("卡","Card"))+(p.disc?'<br><small style="color:var(--amber);font-weight:700">'+p.disc+'% off −'+money(p.discAmt)+' · '+(p.by==="manager"?t("經理","Manager"):t("員工","Staff"))+(p.discNote?' · '+esc(p.discNote):'')+'</small>':'')+'</td><td class="r num">'+money(p.amt)+'</td></tr>').join(""):'<tr><td colspan="4" style="color:var(--muted)">'+t("今日未有收款。","No payments yet today.")+'</td></tr>';
+  h+=pays.length?pays.slice().reverse().map(p=>'<tr><td class="num">'+hhmm(p.at)+'</td><td>'+esc(tableLabel(p.table))+'</td><td>'+(p.m==="cash"?t("現金","Cash"):t("卡","Card"))+(p.disc?'<br><small style="color:var(--amber);font-weight:700">'+p.disc+'% off −'+money(p.discAmt)+' · '+(p.byName?esc(p.byName):(p.by==="manager"?t("經理","Manager"):t("員工","Staff")))+(p.discNote?' · '+esc(p.discNote):'')+'</small>':'')+'</td><td class="r num">'+money(p.amt)+'</td></tr>').join(""):'<tr><td colspan="4" style="color:var(--muted)">'+t("今日未有收款。","No payments yet today.")+'</td></tr>';
   h+='</tbody></table></div></div>';
   const logs=Object.keys(LOG).map(k=>LOG[k]).sort((a,b)=>(b.at||0)-(a.at||0)).slice(0,30);
   h+='<div class="sec"><div class="sec-h"><h2>'+t("操作記錄","Activity log")+'</h2></div><div class="card scroll"><table class="t"><tbody>'+(logs.length?logs.map(l=>'<tr><td class="num" style="width:64px">'+hhmm(l.at)+'</td><td>'+esc(EN()?l.en:l.zh)+'</td></tr>').join(""):'<tr><td style="color:var(--muted)">—</td></tr>')+'</tbody></table></div></div>';
@@ -288,7 +287,7 @@ function vEod(){
 function render(){
   document.documentElement.lang=EN()?"en":"zh-Hant";
   $("#l-zh").setAttribute("aria-pressed",!EN());$("#l-en").setAttribute("aria-pressed",EN());
-  $("#who").innerHTML=user?(role?'<span class="rolebadge">'+(mgr()?t("經理","MANAGER"):t("員工","STAFF"))+'</span> ':'')+'<button class="btn sm ghost" style="color:var(--green-ink);border-color:currentColor" data-act="logout">'+t("登出","Sign out")+'</button>':"";
+  $("#who").innerHTML=user?(role?'<span class="rolebadge">'+(myName?esc(myName)+' · ':'')+(mgr()?t("經理","MANAGER"):t("員工","STAFF"))+'</span> ':'')+'<button class="btn sm ghost" style="color:var(--green-ink);border-color:currentColor" data-act="logout">'+t("登出","Sign out")+'</button>':"";
   if(!authReady)return;
   const ae=document.activeElement,keep=ae&&ae.id&&ae.tagName==="INPUT"?{id:ae.id,s:ae.selectionStart}:null;
   $("#app").innerHTML=!user?renderLogin():(!role?renderNoRole():renderStaff());
@@ -311,7 +310,7 @@ setInterval(()=>{if(user&&role&&Y.dayKey()!==day)subscribe();},60000);  /* roll 
 db.ref(".info/connected").on("value",s=>{online=!!s.val();if(user&&role)render();});
 auth.onAuthStateChanged(async u=>{
   user=u;role=null;unsub();
-  if(u&&!u.isAnonymous){try{role=(await db.ref("ordering/roles/"+u.uid).get()).val();}catch(e){role=null;}if(role!=="manager"&&role!=="staff")role=null;if(role)subscribe();}
+  if(u&&!u.isAnonymous){try{role=(await db.ref("ordering/roles/"+u.uid).get()).val();}catch(e){role=null;}if(role!=="manager"&&role!=="staff")role=null;myName="";if(role){try{const pid=(await db.ref("shk/uids/"+u.uid).get()).val();if(pid)myName=(await db.ref("shk/people/"+pid+"/name").get()).val()||"";}catch(e){}}if(role)subscribe();}
   else if(u&&u.isAnonymous){await auth.signOut();return;}
   authReady=true;render();
 });
@@ -325,7 +324,7 @@ async function doPay(m){
     os.forEach(o=>{upd["ordering/orders/"+day+"/"+o.id+"/paid"]=true;upd["ordering/orders/"+day+"/"+o.id+"/paidBy"]=m;upd["ordering/orders/"+day+"/"+o.id+"/paidAt"]=now;});
     await db.ref().update(upd);
     const dn=U.discNote.trim().slice(0,60);
-    await db.ref("ordering/payments/"+day).push({at:now,table:tb,m,amt:B.n,gross:B.g,disc:U.disc,discAmt:B.d,discNote:dn,by:role,uid:user.uid,orders:os.map(o=>o.id)});
+    await db.ref("ordering/payments/"+day).push({at:now,table:tb,m,amt:B.n,gross:B.g,disc:U.disc,discAmt:B.d,discNote:dn,by:role,byName:myName,uid:user.uid,orders:os.map(o=>o.id)});
     const who=mgr()?"經理":"員工",whoEn=mgr()?"Manager":"Staff";
     logIt(tableLabelZh(tb)+" 埋單 "+money(B.n)+"（"+(m==="cash"?"現金":"卡")+"）"+(U.disc?" · "+who+"俾 "+U.disc+"% off −"+money(B.d)+(dn?"（"+dn+"）":""):""),tb+" paid "+money(B.n)+" ("+m+")"+(U.disc?" · "+whoEn+" gave "+U.disc+"% off −"+money(B.d)+(dn?" ("+dn+")":""):""));
     const g=Math.round(parseFloat(U.cash||"0")*100);
@@ -336,9 +335,9 @@ async function doPay(m){
 }
 document.addEventListener("submit",async e=>{
   if(e.target.id!=="loginf")return;e.preventDefault();
-  const pw=$("#pw").value;U.busy=true;U.loginErr="";render();
-  try{await auth.signInWithEmailAndPassword(ACCOUNTS[U.pinRole],pw);U.tab="orders";}
-  catch(err){U.loginErr=t("密碼唔啱，或者帳戶未設定。","Wrong password, or the account isn't set up.");}
+  const ph=$("#ph").value,pw=$("#pw").value;U.busy=true;U.loginErr="";render();
+  try{await SHK.signInPhone(auth,db,ph,pw);U.tab="orders";}
+  catch(err){U.loginErr=SHK.authErrorText(err,EN());}
   U.busy=false;render();
 });
 document.addEventListener("click",async e=>{
@@ -346,7 +345,6 @@ document.addEventListener("click",async e=>{
   if(a!=="xline"&&a!=="resetstock")U.armed=null;
   switch(a){
     case "lang":U.lang=v;try{localStorage.setItem("yoc_staff_lang",v);}catch(x){}render();break;
-    case "pinrole":U.pinRole=v;U.loginErr="";render();{const p=$("#pw");if(p)p.focus();}break;
     case "logout":await auth.signOut();U.billT=null;break;
     case "sound":try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();await actx.resume();}catch(x){}U.sound=true;keepAwake();beep();render();break;
     case "tab":U.tab=v;render();window.scrollTo(0,0);break;
