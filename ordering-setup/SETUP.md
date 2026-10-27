@@ -63,7 +63,7 @@ Realtime Database → Data → 喺根目錄撳 ⋮ → **Import JSON** 只會覆
 4. 喺上面揀 function 再撳 **Run**，順序：
    - `importVolunteers` — 第一次會叫你批准權限。完成後 Execution log 會列出冇電話或者重複電話嘅人，要手動補。
    - `pushCategories` — 將活動類別帶入管理頁。
-   - `setupHourlyTrigger` — 之後每個鐘自動同步。
+   - `setupHourlyTrigger` — 之後每個鐘自動同步，同埋每日凌晨 3 點自動清理（私隱政策第 6 條）：刪除前一日嘅排隊記錄；30 日前嘅冰室訂單清走名、過敏備註同其他備註，訂單內容同收款保留。
 5. 如果 `importVolunteers` 出 401／403 錯誤：Firebase → Project settings → Users and permissions，確認呢個 Google 帳戶係 Owner 或 Editor。仲唔得就話 Claude 知，改用 service account。
 
 同步做咩：

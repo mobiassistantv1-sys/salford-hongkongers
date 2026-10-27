@@ -27,10 +27,10 @@ const YEAR_HEADER = ['Month', 'Date', 'Day', 'Time', 'Hours', 'Activities', '參
 const DETAIL_HEADER = ['日期 Date', '活動 Event', '類別 Category', '義工編號 ID', '名字 Name', '打卡入 In', '打卡出 Out', '時數 Hours', '備註 Note', 'Event ID'];
 
 // ── Firebase REST (signed in as the account running this script) ─────────
-function fb_(method, path, body) {
+function fb_(method, path, body, shallow) {
   const opt = { method: method, muteHttpExceptions: true, contentType: 'application/json', headers: { Authorization: 'Bearer ' + ScriptApp.getOAuthToken() } };
   if (body !== undefined) opt.payload = JSON.stringify(body);
-  const res = UrlFetchApp.fetch(DB + '/' + path + '.json', opt);
+  const res = UrlFetchApp.fetch(DB + '/' + path + '.json' + (shallow ? '?shallow=true' : ''), opt);
   const code = res.getResponseCode(), text = res.getContentText();
   if (code >= 300) throw new Error(method + ' /' + path + ' → ' + code + ' ' + text.slice(0, 300));
   return text ? JSON.parse(text) : null;
@@ -212,8 +212,40 @@ function pushHours_(ss, people) {
   fb_('put', 'shk/hours', out);
 }
 
+// ── 4. Daily privacy clean-up (privacy policy section 6) ──
+// Café queue: entries from before today are deleted.
+// QR orders older than ALLERGY_DAYS: allergy note, name and free-text note are blanked;
+// the order lines and payments stay for the accounts.
+const ALLERGY_DAYS = 30;
+function dailyCleanup() {
+  const today = Utilities.formatDate(new Date(), TZ, 'yyyy-MM-dd');
+  const q = fb_('get', 'queue') || {};
+  const qdel = {};
+  Object.keys(q).forEach(k => {
+    const at = q[k] && q[k].joinedAt;
+    if (!at || Utilities.formatDate(new Date(at), TZ, 'yyyy-MM-dd') < today) qdel['queue/' + k] = null;
+  });
+  if (Object.keys(qdel).length) fbPatchChunked_(qdel);
+
+  const cutoff = Utilities.formatDate(new Date(Date.now() - ALLERGY_DAYS * 864e5), TZ, 'yyyy-MM-dd');
+  const done = fb_('get', 'ordering/meta/cleanedThrough') || '';
+  const days = Object.keys(fb_('get', 'ordering/orders', undefined, true) || {}).filter(d => d < cutoff && d > done).sort();
+  let n = 0;
+  days.forEach(d => {
+    const orders = fb_('get', 'ordering/orders/' + d) || {};
+    const upd = {};
+    Object.keys(orders).forEach(id => ['allergy', 'name', 'note'].forEach(f => {
+      if (orders[id][f]) { upd['ordering/orders/' + d + '/' + id + '/' + f] = null; n++; }
+    }));
+    if (Object.keys(upd).length) fbPatchChunked_(upd);
+    fb_('put', 'ordering/meta/cleanedThrough', d);
+  });
+  Logger.log('排隊刪除 ' + Object.keys(qdel).length + ' 個；訂單清走 ' + n + ' 項個人備註（' + days.length + ' 日）。');
+}
+
 function setupHourlyTrigger() {
-  ScriptApp.getProjectTriggers().filter(t => t.getHandlerFunction() === 'syncAll').forEach(t => ScriptApp.deleteTrigger(t));
+  ScriptApp.getProjectTriggers().filter(t => ['syncAll', 'dailyCleanup'].indexOf(t.getHandlerFunction()) >= 0).forEach(t => ScriptApp.deleteTrigger(t));
   ScriptApp.newTrigger('syncAll').timeBased().everyHours(1).create();
-  Logger.log('已設定每小時同步一次。');
+  ScriptApp.newTrigger('dailyCleanup').timeBased().atHour(3).everyDays(1).inTimezone(TZ).create();
+  Logger.log('已設定每小時同步一次，同埋每日凌晨 3 點清理排隊同過敏備註。');
 }
