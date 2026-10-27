@@ -30,6 +30,7 @@ input[type=tel],input[type=text],input[type=email],input[type=password]{width:10
 .err{background:var(--red-soft);color:var(--red);border-radius:10px;padding:10px 12px;font-weight:700;margin-top:12px}
 .found{background:var(--ok-soft);color:var(--ok);border-radius:10px;padding:12px;font-weight:700;margin-top:12px}
 .small{font-size:13px;color:var(--muted)}
+.notice{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px;margin-top:16px;font-size:14px;line-height:1.6}
 a{color:var(--red);font-weight:700}
 </style>
 </head>
@@ -75,7 +76,8 @@ function render(){
     h+='<label for="em">電郵 <span>Email (optional)</span></label><input id="em" type="email" maxlength="100" autocomplete="email" value="'+esc(V.email)+'">';
     h+='<label for="p1">設定密碼 <span>Password, at least 8 characters</span></label><input id="p1" type="password" autocomplete="new-password" minlength="8" required>';
     h+='<label for="p2">再輸入一次 <span>Repeat password</span></label><input id="p2" type="password" autocomplete="new-password" minlength="8" required>';
-    h+='<label class="check"><input id="ok" type="checkbox" required><span>我同意 Salford Hongkongers CIC 保存我嘅名、WhatsApp 號碼、電郵同義工出勤時數，用嚟安排義工工作、計算時數同撰寫資助報告。<br><span class="small">I agree that SHK keeps my name, phone, email and volunteering hours to organise volunteering, count hours and report to funders.</span></span></label>';
+    h+='<div class="notice"><b>私隱說明</b><br>Salford Hongkongers CIC 會保存你嘅名、WhatsApp 號碼、電郵（如有填）同義工出勤記錄，用嚟安排義工工作、計算時數、每年義工頒獎禮，同埋向資助機構報告義工總時數。報告只用總數，唔會列你個名，除非事先問過你。資料存放喺 Google（Firebase 同 Google Sheets），我哋唔會出售或者交俾其他機構。你可以隨時要求睇、改或者刪除你嘅資料：<a href="mailto:salfordhongkongers@gmail.com">salfordhongkongers@gmail.com</a>。'+'<span class="small" style="display:block;margin-top:6px">SHK keeps your name, phone, email (if given) and attendance to organise volunteering, count hours, run our annual volunteer awards and report total hours to funders (no names unless we ask you first). Data is stored with Google (Firebase and Google Sheets) and never sold or shared. Ask us anytime to see, correct or delete it.</span>'+'<a href="/privacy/" target="_blank" rel="noopener">私隱政策全文 Full privacy policy</a></div>';
+    h+='<label class="check"><input id="ok" type="checkbox" required><span>我已閱讀以上私隱說明<br><span class="small">I have read this privacy notice</span></span></label>';
     if(err)h+='<div class="err">'+esc(err)+'</div>';
     h+='<button class="btn" type="submit"'+(busy?" disabled":"")+'>'+(busy?"處理中…":(imported?"啟用帳戶 Activate":"提交登記 Register"))+'</button>';
     h+='<button class="btn ghost" type="button" data-act="back">返回 Back</button></form>';
