@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>SHK 管理</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@400;500;700;900&display=swap">
+<style>
+:root{--bg:#F7F4F1;--card:#FFFFFF;--sunk:#EFE9E3;--ink:#1F1A17;--muted:#6E645C;--line:#E2D8CE;--red:#B8322A;--red-ink:#FFFFFF;--red-soft:#FBE4E1;--ok:#1E7A4C;--ok-soft:#DFF1E7;--amber:#94600A;--amber-soft:#FBEFD5;
+  --f:"Noto Sans HK","PingFang HK","Microsoft JhengHei",system-ui,sans-serif;--r:12px;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--bg:#151211;--card:#201B19;--sunk:#2A2421;--ink:#F3ECE6;--muted:#AFA39A;--line:#3A322D;--red:#E5675C;--red-ink:#1A0F0D;--red-soft:#3B1C19;--ok:#54C48B;--ok-soft:#14301F;--amber:#EDB458;--amber-soft:#3A2C10;color-scheme:dark}}
+*{box-sizing:border-box}
+html{padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f);font-size:15px;line-height:1.5;padding:0 max(16px,env(safe-area-inset-right,0px)) 60px max(16px,env(safe-area-inset-left,0px))}
+button,input,select{font:inherit;color:inherit}button{cursor:pointer}
+:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+[hidden]{display:none!important}
+.num{font-variant-numeric:tabular-nums}
+.band{background:var(--red);color:var(--red-ink);margin:0 calc(-1 * max(16px,env(safe-area-inset-left,0px))) 0 calc(-1 * max(16px,env(safe-area-inset-right,0px)));padding:12px max(16px,env(safe-area-inset-right,0px)) 12px max(16px,env(safe-area-inset-left,0px))}
+.band-in{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:12px}
+.band b{font-size:19px;font-weight:900}
+.band button{margin-left:auto;background:transparent;border:1.5px solid currentColor;color:inherit;border-radius:999px;padding:4px 12px;font-size:13.5px;font-weight:700}
+.wrap{max-width:1100px;margin:0 auto}
+.login{max-width:420px;margin:32px auto 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px;min-width:0}
+h1{font-size:22px;margin:0 0 6px;font-weight:900}h2{font-size:18px;margin:0;font-weight:900}
+label{display:block;font-weight:700;font-size:14px;margin:12px 0 4px}
+input.t,select.t{width:100%;border:1.5px solid var(--line);background:var(--card);border-radius:10px;padding:10px 12px}
+.btn{border:0;border-radius:10px;padding:10px 16px;font-weight:700;background:var(--sunk);color:var(--ink)}
+.btn.red{background:var(--red);color:var(--red-ink)}.btn.green{background:var(--ok);color:#fff}.btn.ghost{background:transparent;border:1.5px solid var(--line)}
+.btn.sm{padding:5px 10px;font-size:13px;border-radius:8px}.btn.arm{background:var(--red);color:var(--red-ink)}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.err{background:var(--red-soft);color:var(--red);border-radius:10px;padding:10px 12px;font-weight:700;margin-top:10px}
+.tabs{display:flex;gap:4px;border-bottom:2px solid var(--ink);margin-top:14px;overflow-x:auto}
+.tabs button{border:0;background:none;padding:10px 14px;font-weight:700;font-size:15px;color:var(--muted);border-radius:8px 8px 0 0;white-space:nowrap}
+.tabs button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.cnt{display:inline-block;min-width:20px;padding:0 6px;border-radius:999px;background:var(--red);color:#fff;font-size:12px;margin-left:4px}
+.sec{padding:16px 0;display:flex;flex-direction:column;gap:12px}
+.sec-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}.sec-h p{margin:0;color:var(--muted);font-size:13px}
+.prow{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,2.6fr);gap:8px 16px;padding:12px 0;border-top:1px solid var(--line);align-items:start}
+.prow:first-child{border-top:0}
+@media (max-width:700px){.prow{grid-template-columns:1fr}}
+.pname b{font-size:16px}.pname small{display:block;color:var(--muted);font-size:12.5px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.tog{border:1.5px solid var(--line);background:var(--card);border-radius:999px;padding:4px 10px;font-size:13px;font-weight:700}
+.tog[aria-pressed="true"]{background:var(--ok);border-color:var(--ok);color:#fff}
+.tog.mgr[aria-pressed="true"]{background:var(--amber);border-color:var(--amber)}
+.tog.adm[aria-pressed="true"]{background:var(--red);border-color:var(--red)}
+.st{font-size:12px;font-weight:900;padding:2px 8px;border-radius:6px}
+.st.active{background:var(--ok-soft);color:var(--ok)}.st.pending{background:var(--amber-soft);color:var(--amber)}.st.disabled{background:var(--sunk);color:var(--muted)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:0 12px}
+.ev{display:flex;flex-direction:column;gap:10px}
+.ev-h{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}.ev-h .meta{color:var(--muted);font-size:13px}
+.open{background:var(--ok-soft);color:var(--ok)}.closed{background:var(--sunk);color:var(--muted)}
+table.t{width:100%;border-collapse:collapse;font-size:14px}table.t th,table.t td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:middle}
+table.t th{font-size:12px;color:var(--muted)}.scroll{overflow-x:auto}
+.qrbox{display:flex;gap:16px;align-items:center;flex-wrap:wrap}.qrbox svg{width:180px;height:180px;background:#fff;padding:6px;border-radius:8px}
+.empty{color:var(--muted);padding:20px;text-align:center;border:1.5px dashed var(--line);border-radius:var(--r)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:50;background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:999px;font-weight:700;font-size:14px}
+#print{display:none}
+@media print{
+  body{background:#fff;padding:0}.band,.wrap,.toast{display:none!important}
+  #print{display:flex!important;flex-direction:column;align-items:center;justify-content:center;gap:18px;min-height:95vh;text-align:center;color:#000;font-family:var(--f)}
+  #print h1{font-size:34pt;margin:0}#print .m{font-size:16pt}#print svg{width:12cm;height:12cm}#print .i{font-size:18pt;font-weight:700}
+}
+</style>
+</head>
+<body>
+<header class="band"><div class="band-in"><b>SHK 管理</b><button id="out" data-act="logout" hidden>登出</button></div></header>
+<main class="wrap" id="app"><p style="padding:24px 0;color:var(--muted)">載入中…</p></main>
+<div id="print"></div>
+<div id="toast" class="toast" hidden role="status"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<script src="/shk/shk.js"></script>
+<script>
+(function(){
+"use strict";
+const S=window.SHK,esc=S.esc;
+firebase.initializeApp(S.FIREBASE);
+const auth=firebase.auth(),db=firebase.database();
+const $=s=>document.querySelector(s);
+let user=null,isAdmin=false,ready=false,err="",busy=false;
+let PEOPLE={},EVENTS={},TOKENS={},ATT={},CATS=[];
+/* Volunteer check-in (events tab) is switched on in the volunteer check-in release. */
+const EVENTS_ON=false;
+const U={tab:"pending",q:"",armed:null,openEv:null,showQr:{}};
+let toastT;function toast(m){const el=$("#toast");el.textContent=m;el.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>el.hidden=true,2600);}
+const NOW=()=>firebase.database.ServerValue.TIMESTAMP;
+
+/* London wall-clock date + time → timestamp */
+function londonTs(date,time){
+  const [y,m,d]=date.split("-").map(Number),[hh,mm]=time.split(":").map(Number);
+  let guess=Date.UTC(y,m-1,d,hh,mm);
+  for(let i=0;i<2;i++){const p=S.londonParts(guess);const shown=Date.UTC(+p.year,+p.month-1,+p.day,+p.hour%24,+p.minute);guess+=Date.UTC(y,m-1,d,hh,mm)-shown;}
+  return guess;
+}
+function eventUrl(eid){return location.origin+"/volunteer/?e="+encodeURIComponent(eid)+"&k="+encodeURIComponent(TOKENS[eid]||"");}
+function qrSvg(text,cell){if(!window.qrcode)return '<p class="err">QR 載入失敗，請重新整理。</p>';const q=window.qrcode(0,"M");q.addData(text);q.make();return q.createSvgTag({cellSize:cell||5,margin:2,scalable:true});}
+function people(){return Object.keys(PEOPLE).map(pid=>Object.assign({pid},PEOPLE[pid]));}
+function nameOf(pid){return (PEOPLE[pid]&&PEOPLE[pid].name)||pid;}
+
+/* ---------- views ---------- */
+function vLogin(){
+  let h='<div class="login card"><h1>SHK 管理登入</h1><form id="lf"><label for="ph">WhatsApp 號碼</label><input class="t" id="ph" type="tel" autocomplete="username" required><label for="pw">密碼</label><input class="t" id="pw" type="password" autocomplete="current-password" required>';
+  if(err)h+='<div class="err">'+esc(err)+'</div>';
+  return h+'<button class="btn red" type="submit" style="width:100%;margin-top:14px"'+(busy?" disabled":"")+'>登入</button></form><p style="color:var(--muted);font-size:13px;margin-top:12px">未有帳戶：先去 <a href="/volunteer/join/">/volunteer/join/</a> 登記，再喺 Firebase 設定做管理員（設定指南第 4 步）。</p></div>';
+}
+function roleChips(p){
+  const r=p.roles||{},c=r.cafe||"";
+  return '<div class="chips">'
+   +'<button class="tog" data-act="role" data-pid="'+p.pid+'" data-r="volunteer" aria-pressed="'+!!r.volunteer+'">義工</button>'
+   +'<button class="tog" data-act="cafe" data-pid="'+p.pid+'" data-v="staff" aria-pressed="'+(c==="staff")+'">冰室員工</button>'
+   +'<button class="tog mgr" data-act="cafe" data-pid="'+p.pid+'" data-v="manager" aria-pressed="'+(c==="manager")+'">冰室經理</button>'
+   +'<button class="tog adm" data-act="role" data-pid="'+p.pid+'" data-r="admin" aria-pressed="'+!!r.admin+'">管理員</button></div>';
+}
+function personRow(p,pendingView){
+  const st=p.status||"pending",stz={active:"使用中",pending:"等待批核",disabled:"已停用"}[st]||st;
+  let h='<div class="prow"><div class="pname"><b>'+esc(p.name)+'</b> <span class="st '+esc(st)+'">'+stz+'</span><small>'+esc(S.prettyPhone(p.pid))+(p.legacyId?' · 編號 '+esc(p.legacyId):'')+(p.uid?' · 已啟用帳戶':' · 未啟用')+(p.email?' · '+esc(p.email):'')+'</small>'+((p.first||p.surname)?'<small>'+esc([p.first,p.surname].filter(Boolean).join(" "))+'</small>':'')+'</div><div style="display:flex;flex-direction:column;gap:8px">';
+  if(pendingView)h+='<div class="chips"><button class="btn green sm" data-act="approve" data-pid="'+p.pid+'">批准</button><button class="btn ghost sm" data-act="reject" data-pid="'+p.pid+'">拒絕</button></div>';
+  else{
+    h+=roleChips(p);
+    const ka="reset:"+p.pid;
+    h+='<div class="chips">'+(st==="disabled"?'<button class="btn ghost sm" data-act="enable" data-pid="'+p.pid+'">重新啟用</button>':'<button class="btn ghost sm" data-act="disable" data-pid="'+p.pid+'">停用</button>')
+      +(p.uid?'<button class="btn sm '+(U.armed===ka?"arm":"ghost")+'" data-act="reset" data-pid="'+p.pid+'">'+(U.armed===ka?"再撳一次確認重設":"重設帳戶（唔記得密碼）")+'</button>':'')+'</div>';
+  }
+  return h+'</div></div>';
+}
+function vPending(){
+  const list=people().filter(p=>p.status==="pending").sort((a,b)=>(a.createdAt||0)-(b.createdAt||0));
+  let h='<div class="sec"><div class="sec-h"><h2>等待批核</h2><p>新登記嘅人。批准之後先可以打卡；冰室同管理權限喺「人員」設定。</p></div>';
+  if(!list.length)return h+'<div class="empty">冇人等緊批核。</div></div>';
+  return h+'<div class="card">'+list.map(p=>personRow(p,true)).join("")+'</div></div>';
+}
+function vPeople(){
+  const q=U.q.trim().toLowerCase(),qd=q.replace(/\D/g,"");
+  let list=people().filter(p=>p.status!=="pending");
+  if(q)list=list.filter(p=>[p.name,p.first,p.surname,p.email].join(" ").toLowerCase().includes(q)||(qd.length>=3&&p.pid.includes(qd))||String(p.legacyId||"")===q);
+  list.sort((a,b)=>(+a.legacyId||9999)-(+b.legacyId||9999)||String(a.name).localeCompare(String(b.name)));
+  const claimed=people().filter(p=>p.uid).length;
+  let h='<div class="sec"><div class="sec-h"><h2>人員（'+people().length+' 人，'+claimed+' 人已啟用帳戶）</h2><p>綠色 = 有呢個權限。撳一下就開／關。</p></div>';
+  h+='<input class="t" id="q" data-act="q" placeholder="搵名、電話尾數或編號" value="'+esc(U.q)+'">';
+  if(!list.length)return h+'<div class="empty">搵唔到。</div></div>';
+  return h+'<div class="card">'+list.slice(0,200).map(p=>personRow(p,false)).join("")+'</div></div>';
+}
+function vEvents(){
+  const today=S.dateKey();
+  let h='<div class="sec"><div class="sec-h"><h2>新增活動</h2><p>每個活動有自己嘅打卡 QR code，要喺現場掃先打到卡。</p></div><form id="ef" class="card"><div class="grid2">';
+  h+='<div><label for="et">活動名稱</label><input class="t" id="et" required maxlength="80" placeholder="例如 Board Games Day - Nov"></div>';
+  h+='<div><label for="ec">類別</label><select class="t" id="ec">'+CATS.map(c=>'<option>'+esc(c)+'</option>').join("")+'<option value="__new">＋ 新類別…</option></select></div>';
+  h+='<div><label for="ed">日期</label><input class="t" id="ed" type="date" value="'+today+'" required></div>';
+  h+='<div><label for="es">開始</label><input class="t" id="es" type="time" required></div>';
+  h+='<div><label for="ee">結束</label><input class="t" id="ee" type="time" required></div>';
+  h+='<div><label for="ep">地點</label><input class="t" id="ep" maxlength="80" placeholder="例如 Angel Centre"></div>';
+  h+='</div><button class="btn red" type="submit" style="margin-top:14px"'+(busy?" disabled":"")+'>建立活動同 QR code</button></form></div>';
+  const evs=Object.keys(EVENTS).map(id=>Object.assign({id},EVENTS[id])).sort((a,b)=>(b.date||"").localeCompare(a.date||"")||(b.start||"").localeCompare(a.start||""));
+  h+='<div class="sec"><div class="sec-h"><h2>活動</h2><p>活動完咗撳「結束打卡」，每小時會自動寫入 Google Sheet「2026」同「打卡明細」。</p></div>';
+  if(!evs.length)return h+'<div class="empty">未有活動。喺上面建立第一個。</div></div>';
+  evs.forEach(e=>{
+    const att=ATT[e.id]||{},rows=Object.keys(att).map(pid=>Object.assign({pid},att[pid])).sort((a,b)=>(a.in||0)-(b.in||0));
+    const notOut=rows.filter(r=>r.in&&!r.out).length;
+    h+='<div class="card ev"><div class="ev-h"><h2>'+esc(e.title)+'</h2><span class="st '+(e.open?"open":"closed")+'">'+(e.open?"打卡開放中":"已結束")+'</span><span class="meta">'+esc(e.date)+' · '+esc(e.start||"")+'–'+esc(e.end||"")+' · '+esc(e.category||"")+(e.place?' · '+esc(e.place):'')+(e.syncedAt?' · 已寫入 Sheet':'')+'</span></div>';
+    h+='<div class="chips">'+(e.open?'<button class="btn sm '+(notOut&&U.armed==="close:"+e.id?"arm":"ghost")+'" data-act="close" data-v="'+e.id+'">'+(notOut&&U.armed==="close:"+e.id?"仲有 "+notOut+" 人未落班，再撳確認":"結束打卡")+'</button>':'<button class="btn ghost sm" data-act="reopen" data-v="'+e.id+'">重新開放</button>')
+      +'<button class="btn ghost sm" data-act="qr" data-v="'+e.id+'">'+(U.showQr[e.id]?"收起 QR":"顯示 QR")+'</button><button class="btn ghost sm" data-act="print" data-v="'+e.id+'">列印 QR</button>'
+      +'<label style="margin:0;font-weight:400">參與人數 <input class="t num" style="width:90px;display:inline-block;padding:4px 8px" type="number" min="0" id="pc-'+e.id+'" value="'+esc(e.participants||"")+'"></label><button class="btn ghost sm" data-act="pcount" data-v="'+e.id+'">儲存</button></div>';
+    if(U.showQr[e.id])h+='<div class="qrbox">'+qrSvg(eventUrl(e.id),5)+'<div><b>義工用手機相機掃呢個 QR 打卡</b><p style="color:var(--muted);font-size:12.5px;word-break:break-all;margin:6px 0 0">'+esc(eventUrl(e.id))+'</p></div></div>';
+    h+='<div class="scroll"><table class="t"><thead><tr><th>義工</th><th>上班</th><th>落班</th><th class="num">時數</th><th></th></tr></thead><tbody>';
+    if(!rows.length)h+='<tr><td colspan="5" style="color:var(--muted)">未有人打卡。</td></tr>';
+    rows.forEach(r=>{h+='<tr><td>'+esc(nameOf(r.pid))+(r.edited?' <span class="st pending">補打</span>':'')+'</td><td class="num">'+S.hhmm(r.in)+'</td><td class="num">'+(r.out?S.hhmm(r.out):'<input type="time" id="fo-'+e.id+'-'+r.pid+'" style="padding:2px 4px"> <button class="btn sm ghost" data-act="fixout" data-v="'+e.id+'" data-pid="'+r.pid+'">補打落班</button>')+'</td><td class="num">'+(r.out?S.roundedHours(r.in,r.out):"—")+'</td><td>'+(U.armed==="del:"+e.id+":"+r.pid?'<button class="btn sm arm" data-act="delatt" data-v="'+e.id+'" data-pid="'+r.pid+'">確認刪除</button>':'<button class="btn sm ghost" data-act="delatt" data-v="'+e.id+'" data-pid="'+r.pid+'">刪除</button>')+'</td></tr>';});
+    h+='</tbody></table></div>';
+    h+='<details><summary style="cursor:pointer;font-weight:700">代人打卡（例如冇手機嘅義工）</summary><div class="grid2"><div><label for="mp-'+e.id+'">義工</label><input class="t" id="mp-'+e.id+'" list="plist" placeholder="打名或編號"></div><div><label for="mi-'+e.id+'">上班</label><input class="t" id="mi-'+e.id+'" type="time" value="'+esc(e.start||"")+'"></div><div><label for="mo-'+e.id+'">落班</label><input class="t" id="mo-'+e.id+'" type="time" value="'+esc(e.end||"")+'"></div></div><button class="btn ghost sm" style="margin-top:8px" data-act="manual" data-v="'+e.id+'">加入</button></details>';
+    h+='</div>';
+  });
+  h+='<datalist id="plist">'+people().filter(p=>p.status==="active").map(p=>'<option value="'+esc(p.name)+' #'+esc(p.pid)+'">').join("")+'</datalist>';
+  return h+'</div>';
+}
+function render(){
+  $("#out").hidden=!user;
+  if(!ready)return;
+  if(!user){$("#app").innerHTML=vLogin();return;}
+  if(!isAdmin){$("#app").innerHTML='<div class="login card"><h1>你唔係管理員</h1><p>請用管理員帳戶登入。</p></div>';return;}
+  const pend=people().filter(p=>p.status==="pending").length;
+  const ae=document.activeElement,keep=ae&&ae.id?{id:ae.id,s:ae.selectionStart}:null;
+  $("#app").innerHTML='<nav class="tabs">'+[["pending","等待批核",pend],["people","人員"]].concat(EVENTS_ON?[["events","活動打卡"]]:[]).map(t=>'<button data-act="tab" data-v="'+t[0]+'" aria-pressed="'+(U.tab===t[0])+'">'+t[1]+(t[2]?'<span class="cnt num">'+t[2]+'</span>':'')+'</button>').join("")+'</nav>'+({pending:vPending,people:vPeople,events:vEvents})[U.tab]();
+  if(keep){const el=document.getElementById(keep.id);if(el&&el.tagName==="INPUT"&&el.type!=="time"){el.focus();try{el.setSelectionRange(keep.s,keep.s);}catch(e){}}}
+}
+
+/* ---------- data ---------- */
+let subs=[];
+function on(path,fn){const r=db.ref(path),f=s=>{fn(s.val()||{});render();};r.on("value",f,()=>{});subs.push(()=>r.off("value",f));}
+function subscribe(){subs.forEach(f=>f());subs=[];
+  on("shk/people",v=>PEOPLE=v);
+  if(EVENTS_ON){on("shk/events",v=>EVENTS=v);on("shk/eventTokens",v=>TOKENS=v);on("shk/attendance",v=>ATT=v);}
+  if(EVENTS_ON)on("shk/categories",v=>{CATS=Array.isArray(v)?v.filter(Boolean):Object.values(v);if(!CATS.length)CATS=["本地義工服務","單次活動","茶聚","友愛冰室"];});
+}
+auth.onAuthStateChanged(async u=>{
+  user=u&&!u.isAnonymous?u:null;isAdmin=false;subs.forEach(f=>f());subs=[];
+  if(user){try{isAdmin=(await db.ref("shk/admins/"+user.uid).get()).val()===true;}catch(e){}if(isAdmin)subscribe();}
+  ready=true;render();
+});
+
+/* ---------- actions ---------- */
+async function setCafe(pid,v){
+  const p=PEOPLE[pid];const cur=(p.roles||{}).cafe||null;const nv=cur===v?null:v;
+  const upd={};upd["shk/people/"+pid+"/roles/cafe"]=nv;if(p.uid)upd["ordering/roles/"+p.uid]=(p.status==="active")?nv:null;
+  await db.ref().update(upd);toast(p.name+"："+(nv==="manager"?"冰室經理":nv==="staff"?"冰室員工":"冇冰室權限"));
+}
+async function setRole(pid,r){
+  const p=PEOPLE[pid];const nv=!((p.roles||{})[r]);const upd={};upd["shk/people/"+pid+"/roles/"+r]=nv||null;
+  if(r==="admin"&&p.uid)upd["shk/admins/"+p.uid]=(nv&&p.status==="active")?true:null;
+  if(r==="admin"&&!nv&&p.uid===user.uid){toast("唔可以取消自己嘅管理員權限");return;}
+  await db.ref().update(upd);
+}
+async function setStatus(pid,st){
+  const p=PEOPLE[pid];const r=p.roles||{};const upd={};upd["shk/people/"+pid+"/status"]=st;
+  if(st==="active"&&!r.volunteer&&!r.cafe&&!r.admin)upd["shk/people/"+pid+"/roles/volunteer"]=true;
+  if(p.uid){upd["ordering/roles/"+p.uid]=st==="active"?(r.cafe||null):null;upd["shk/admins/"+p.uid]=(st==="active"&&r.admin)?true:null;}
+  if(p.uid===user.uid&&st!=="active"){toast("唔可以停用自己");return;}
+  await db.ref().update(upd);
+}
+async function resetAccount(pid){
+  const p=PEOPLE[pid];const gen=((await db.ref("shk/directory/"+pid+"/gen").get()).val()||0)+1;
+  const upd={};upd["shk/directory/"+pid+"/gen"]=gen;upd["shk/directory/"+pid+"/claimed"]=false;upd["shk/directory/"+pid+"/imported"]=true;upd["shk/people/"+pid+"/uid"]=null;
+  if(p.uid){upd["shk/uids/"+p.uid]=null;upd["ordering/roles/"+p.uid]=null;upd["shk/admins/"+p.uid]=null;}
+  await db.ref().update(upd);toast(p.name+" 已重設：請佢去 /volunteer/join/ 用同一個電話重新設定密碼");
+}
+function pickPid(text){const m=/#(\d{10,15})\s*$/.exec(text||"");if(m&&PEOPLE[m[1]])return m[1];const t=(text||"").trim().toLowerCase();const hit=people().filter(p=>String(p.name).toLowerCase()===t||String(p.legacyId)===t);return hit.length===1?hit[0].pid:null;}
+document.addEventListener("submit",async e=>{
+  e.preventDefault();
+  if(e.target.id==="lf"){const ph=$("#ph").value,pw=$("#pw").value;busy=true;err="";render();try{await S.signInPhone(auth,db,ph,pw);}catch(x){err=S.authErrorText(x,false);}busy=false;render();return;}
+  if(e.target.id==="ef"){
+    const ecn=$("#ecn");let cat=ecn?ecn.value.trim():$("#ec").value;
+    const title=$("#et").value.trim(),date=$("#ed").value,start=$("#es").value,end=$("#ee").value,place=$("#ep").value.trim();
+    if(cat==="__new"||!cat){toast("請揀或者輸入類別");return;}
+    if(CATS.indexOf(cat)<0)await db.ref("shk/categories").set(CATS.concat([cat]));
+    if(!title||!date||!start||!end){toast("請填齊名稱、日期同時間");return;}
+    busy=true;render();
+    const ref=db.ref("shk/events").push();const tok=Array.from(crypto.getRandomValues(new Uint8Array(9))).map(b=>"abcdefghjkmnpqrstuvwxyz23456789"[b%31]).join("");
+    const upd={};upd["shk/events/"+ref.key]={title,category:cat,date,start,end,place,open:true,createdAt:NOW(),createdBy:user.uid};upd["shk/eventTokens/"+ref.key]=tok;
+    await db.ref().update(upd);U.showQr[ref.key]=true;busy=false;toast("已建立：「"+title+"」");render();
+  }
+});
+document.addEventListener("change",e=>{if(e.target.id==="ec"&&e.target.value==="__new"){const box=document.createElement("input");box.className="t";box.id="ecn";box.maxLength=60;box.placeholder="新類別名稱";e.target.replaceWith(box);box.focus();}});
+document.addEventListener("input",e=>{if(e.target.dataset.act==="q"){U.q=e.target.value;render();}});
+document.addEventListener("click",async e=>{
+  const b=e.target.closest("[data-act]");if(!b)return;const a=b.dataset.act,v=b.dataset.v,pid=b.dataset.pid;
+  if(!["reset","close","delatt"].includes(a))U.armed=null;
+  try{switch(a){
+    case "logout":await auth.signOut();break;
+    case "tab":U.tab=v;render();break;
+    case "approve":await setStatus(pid,"active");toast(PEOPLE[pid].name+" 已批准");break;
+    case "reject":await setStatus(pid,"disabled");break;
+    case "disable":await setStatus(pid,"disabled");break;
+    case "enable":await setStatus(pid,"active");break;
+    case "role":await setRole(pid,b.dataset.r);break;
+    case "cafe":await setCafe(pid,v);break;
+    case "reset":if(U.armed!=="reset:"+pid){U.armed="reset:"+pid;render();break;}U.armed=null;await resetAccount(pid);break;
+    case "qr":U.showQr[v]=!U.showQr[v];render();break;
+    case "print":{const ev=EVENTS[v];$("#print").innerHTML='<h1>'+esc(ev.title)+'</h1><div class="m">'+esc(ev.date)+' · '+esc(ev.start)+'–'+esc(ev.end)+(ev.place?' · '+esc(ev.place):'')+'</div>'+qrSvg(eventUrl(v),8)+'<div class="i">義工打卡：用手機相機掃描<br>Volunteers: scan to check in / out</div><div class="m">Salford Hongkongers CIC</div>';window.print();break;}
+    case "close":{const att=ATT[v]||{};const notOut=Object.values(att).filter(r=>r.in&&!r.out).length;if(notOut&&U.armed!=="close:"+v){U.armed="close:"+v;render();break;}U.armed=null;await db.ref("shk/events/"+v+"/open").set(false);toast("已結束打卡");break;}
+    case "reopen":await db.ref("shk/events/"+v).update({open:true,syncedAt:null});break;
+    case "pcount":{const n=parseInt($("#pc-"+v).value,10);await db.ref("shk/events/"+v+"/participants").set(n>=0?n:null);toast("已儲存參與人數");break;}
+    case "fixout":{const ev=EVENTS[v],t=$("#fo-"+v+"-"+pid).value;if(!t){toast("請揀落班時間");break;}const ts=londonTs(ev.date,t);const inTs=(ATT[v][pid]||{}).in||0;if(ts<=inTs){toast("落班時間要遲過上班");break;}await db.ref("shk/attendance/"+v+"/"+pid).update({out:ts,edited:true});toast("已補打落班");break;}
+    case "delatt":{const k="del:"+v+":"+pid;if(U.armed!==k){U.armed=k;render();break;}U.armed=null;await db.ref("shk/attendance/"+v+"/"+pid).remove();toast("已刪除");break;}
+    case "manual":{const ev=EVENTS[v];const p=pickPid($("#mp-"+v).value);const ti=$("#mi-"+v).value,to=$("#mo-"+v).value;if(!p){toast("搵唔到呢個義工，請喺清單揀");break;}if(!ti||!to){toast("請填上班同落班時間");break;}const a1=londonTs(ev.date,ti),a2=londonTs(ev.date,to);if(a2<=a1){toast("落班要遲過上班");break;}await db.ref("shk/attendance/"+v+"/"+p).set({in:a1,out:a2,edited:true,k:"admin"});toast("已加入 "+nameOf(p));break;}
+  }}catch(x){toast("儲存失敗："+((x&&x.message)||"請再試"));}
+});
+render();
+})();
+</script>
+</body>
+</html>
