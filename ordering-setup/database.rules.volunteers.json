@@ -1,0 +1,32 @@
+{
+  "_comment": "義工系統規則。將 'volunteers': {...} 整段加入 Firebase Realtime Database 現有 'rules' 入面，同 'queue' / 'ordering' 並排。唔好覆蓋現有規則。改前先備份。",
+  "rules": {
+    "volunteers": {
+      "profiles": {
+        "$uid": {
+          ".read": "auth != null && (auth.uid === $uid || root.child('ordering/roles/' + auth.uid).val() === 'manager')",
+          ".write": "auth != null && auth.uid === $uid",
+          ".validate": "newData.hasChildren(['nickname','phone'])"
+        }
+      },
+      "checkins": {
+        ".read": "auth != null && root.child('ordering/roles/' + auth.uid).val() === 'manager'",
+        "$date": {
+          "$uid": {
+            ".read": "auth != null && (auth.uid === $uid || root.child('ordering/roles/' + auth.uid).val() === 'manager')",
+            "$cid": {
+              ".write": "auth != null && auth.uid === $uid && (!data.exists() || !data.child('outAt').exists())",
+              ".validate": "newData.child('event').isString() && root.child('volunteers/events/' + newData.child('event').val() + '/token').val() === newData.child('token').val()"
+            }
+          }
+        }
+      },
+      "events": {
+        ".read": "auth != null",
+        "$eid": {
+          ".write": "auth != null && root.child('ordering/roles/' + auth.uid).val() === 'manager'"
+        }
+      }
+    }
+  }
+}
