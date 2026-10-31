@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>義工登記 · Salford Hongkongers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@400;500;700;900&display=swap">
+<style>
+:root{--bg:#FBF7F2;--card:#FFFFFF;--ink:#1F1A17;--muted:#6E645C;--line:#E6DCD2;--red:#C00878;--red-ink:#FFFFFF;--red-soft:#FBDBED;--ok:#1E7A4C;--ok-soft:#DFF1E7;--amber:#94600A;--amber-soft:#FBEFD5;
+  --f:"Noto Sans HK","PingFang HK","Microsoft JhengHei",system-ui,sans-serif;--r:14px;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--bg:#151211;--card:#201B19;--ink:#F3ECE6;--muted:#AFA39A;--line:#3A322D;--red:#E6249A;--red-ink:#1A0F0D;--red-soft:#3A1430;--ok:#54C48B;--ok-soft:#14301F;--amber:#EDB458;--amber-soft:#3A2C10;color-scheme:dark}}
+*{box-sizing:border-box}
+html{padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f);font-size:16px;line-height:1.5;padding:0 max(16px,env(safe-area-inset-right,0px)) 48px max(16px,env(safe-area-inset-left,0px))}
+button,input{font:inherit;color:inherit}button{cursor:pointer}
+:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.band{background:var(--red);color:var(--red-ink);margin:0 calc(-1 * max(16px,env(safe-area-inset-left,0px))) 0 calc(-1 * max(16px,env(safe-area-inset-right,0px)));padding:14px max(16px,env(safe-area-inset-right,0px)) 14px max(16px,env(safe-area-inset-left,0px))}
+.band-in{max-width:520px;margin:0 auto}.band b{font-size:19px;font-weight:900}.band small{display:block;font-size:12px;opacity:.85}
+.wrap{max-width:520px;margin:0 auto;padding-top:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px}
+h1{font-size:22px;margin:0 0 4px;font-weight:900}p{margin:4px 0;color:var(--muted)}
+label{display:block;font-weight:700;font-size:14.5px;margin:14px 0 4px}label span{font-weight:400;color:var(--muted);font-size:13px}
+input[type=tel],input[type=text],input[type=email],input[type=password]{width:100%;border:1.5px solid var(--line);background:var(--card);border-radius:10px;padding:12px;font-size:17px}
+.check{display:flex;gap:10px;align-items:flex-start;font-weight:400;font-size:14px;color:var(--ink)}.check input{width:22px;height:22px;margin-top:2px;flex:none}
+.btn{display:block;width:100%;border:0;border-radius:12px;padding:14px;font-weight:900;font-size:18px;background:var(--red);color:var(--red-ink);margin-top:16px}
+.btn.ghost{background:transparent;border:1.5px solid var(--line);color:var(--ink);font-weight:700;font-size:16px}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.err{background:var(--red-soft);color:var(--red);border-radius:10px;padding:10px 12px;font-weight:700;margin-top:12px}
+.found{background:var(--ok-soft);color:var(--ok);border-radius:10px;padding:12px;font-weight:700;margin-top:12px}
+.small{font-size:13px;color:var(--muted)}
+.notice{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px;margin-top:16px;font-size:14px;line-height:1.6}
+a{color:var(--red);font-weight:700}
+.band .logo-chip{background:#fff;border-radius:8px;padding:3px 5px;display:inline-flex;align-items:center;vertical-align:middle;margin-right:8px}.band .logo-chip img{height:26px;display:block}</style>
+</head>
+<body>
+<header class="band"><div class="band-in"><span class="logo-chip"><img src="/assets/shk-logo-icon.png" alt="SHK"></span><b>義工登記 / 啟用帳戶</b><small>Salford Hongkongers · Register or activate</small></div></header>
+<main class="wrap"><div class="card" id="app"></div></main>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<script src="/shk/shk.js"></script>
+<script>
+(function(){
+"use strict";
+const S=window.SHK,esc=S.esc;
+firebase.initializeApp(S.FIREBASE);
+const auth=firebase.auth(),db=firebase.database();
+const $=s=>document.querySelector(s);
+const back="/volunteer/"+location.search;
+let step="phone",pid=null,dir=null,err="",busy=false;
+const V={phone:"",name:"",first:"",surname:"",email:""};
+
+function render(){
+  let h="";
+  if(step==="phone"){
+    h='<h1>第一步：你嘅 WhatsApp 號碼</h1><p>我哋會用呢個號碼搵你以前嘅義工記錄。<span class="small"> We use this number to find your existing volunteer record.</span></p>';
+    h+='<form id="f1"><label for="ph">WhatsApp 號碼 <span>Phone</span></label><input id="ph" type="tel" inputmode="tel" autocomplete="tel" placeholder="07… 或 852…" value="'+esc(V.phone)+'" required>';
+    if(err)h+='<div class="err">'+esc(err)+'</div>';
+    h+='<button class="btn" type="submit"'+(busy?" disabled":"")+'>下一步 Next</button></form><p style="margin-top:14px"><a href="'+esc(back)+'">已經有帳戶？登入</a></p>';
+  }else if(step==="claimed"){
+    h='<h1>呢個號碼已經登記咗</h1><p>請直接登入。唔記得密碼就請聯絡 SHK 負責人重設。</p><p class="small">This number is already registered. Please sign in, or ask an organiser to reset your password.</p><a class="btn" style="text-align:center;text-decoration:none" href="'+esc(back)+'">去登入 Sign in</a>';
+  }else{
+    const imported=step==="activate";
+    h='<h1>'+(imported?'第二步：設定密碼':'第二步：填寫資料')+'</h1>';
+    if(imported)h+='<div class="found">搵到你嘅義工記錄'+(dir&&dir.legacyId?'（編號 '+esc(dir.legacyId)+'）':'')+' ✓<br><span style="font-weight:400">設定密碼之後就可以直接打卡，唔使重新填資料。</span></div>';
+    else h+='<p>新義工登記，SHK 批核之後就可以打卡。<span class="small"> New volunteers are approved by SHK before they can check in.</span></p>';
+    h+='<form id="f2">';
+    if(!imported){
+      h+='<label for="nm">登記名字 <span>Name used at SHK, e.g. Siu Lam / 陳太</span></label><input id="nm" type="text" maxlength="60" autocomplete="name" value="'+esc(V.name)+'" required>';
+      h+='<label for="fn">英文名 <span>First name (optional)</span></label><input id="fn" type="text" maxlength="60" autocomplete="given-name" value="'+esc(V.first)+'">';
+      h+='<label for="sn">英文姓 <span>Surname (optional)</span></label><input id="sn" type="text" maxlength="60" autocomplete="family-name" value="'+esc(V.surname)+'">';
+    }
+    h+='<label for="em">電郵 <span>Email (optional)</span></label><input id="em" type="email" maxlength="100" autocomplete="email" value="'+esc(V.email)+'">';
+    h+='<label for="p1">設定密碼 <span>Password, at least 8 characters</span></label><input id="p1" type="password" autocomplete="new-password" minlength="8" required>';
+    h+='<label for="p2">再輸入一次 <span>Repeat password</span></label><input id="p2" type="password" autocomplete="new-password" minlength="8" required>';
+    h+='<div class="notice"><b>私隱說明</b><br>Salford Hongkongers CIC 會保存你嘅名、WhatsApp 號碼、電郵（如有填）同義工出勤記錄，用嚟安排義工工作、計算時數、每年義工頒獎禮，同埋向資助機構報告義工總時數。報告只用總數，唔會列你個名，除非事先問過你。資料存放喺 Google（Firebase 同 Google Sheets），我哋唔會出售或者交俾其他機構。你可以隨時要求睇、改或者刪除你嘅資料：<a href="mailto:salfordhongkongers@gmail.com">salfordhongkongers@gmail.com</a>。'+'<span class="small" style="display:block;margin-top:6px">SHK keeps your name, phone, email (if given) and attendance to organise volunteering, count hours, run our annual volunteer awards and report total hours to funders (no names unless we ask you first). Data is stored with Google (Firebase and Google Sheets) and never sold or shared. Ask us anytime to see, correct or delete it.</span>'+'<a href="/privacy/" target="_blank" rel="noopener">私隱政策全文 Full privacy policy</a></div>';
+    h+='<label class="check"><input id="ok" type="checkbox" required><span>我已閱讀以上私隱說明<br><span class="small">I have read this privacy notice</span></span></label>';
+    if(err)h+='<div class="err">'+esc(err)+'</div>';
+    h+='<button class="btn" type="submit"'+(busy?" disabled":"")+'>'+(busy?"處理中…":(imported?"啟用帳戶 Activate":"提交登記 Register"))+'</button>';
+    h+='<button class="btn ghost" type="button" data-act="back">返回 Back</button></form>';
+  }
+  $("#app").innerHTML=h;
+}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-act]");if(b&&b.dataset.act==="back"){step="phone";err="";render();}});
+document.addEventListener("submit",async e=>{
+  e.preventDefault();
+  if(e.target.id==="f1"){
+    V.phone=$("#ph").value;pid=S.normPhone(V.phone);err="";
+    if(!pid){err="請輸入正確嘅 WhatsApp 號碼，例如 07123 456789 或 852 91234567。";render();return;}
+    busy=true;render();
+    try{dir=(await db.ref("shk/directory/"+pid).get()).val();}catch(x){dir=null;err="網絡連唔到，請再試。";busy=false;render();return;}
+    step=dir&&dir.claimed?"claimed":(dir&&dir.imported?"activate":"new");busy=false;render();return;
+  }
+  if(e.target.id==="f2"){
+    const imported=step==="activate";
+    if(!imported){V.name=$("#nm").value.trim();V.first=$("#fn").value.trim();V.surname=$("#sn").value.trim();}
+    V.email=$("#em").value.trim();
+    const p1=$("#p1").value,p2=$("#p2").value;err="";
+    if(p1.length<8){err="密碼最少 8 個字。";render();return;}
+    if(p1!==p2){err="兩次輸入嘅密碼唔一樣。";render();return;}
+    if(!imported&&!V.name){err="請填寫登記名字。";render();return;}
+    busy=true;render();
+    try{
+      const gen=(dir&&dir.gen)||0,email=S.authEmail(pid,gen);
+      let cred;
+      try{cred=await auth.createUserWithEmailAndPassword(email,p1);}
+      catch(x){
+        /* an earlier attempt may have created the sign-in but stopped before linking: finish it */
+        if(x&&x.code==="auth/email-already-in-use"&&!(dir&&dir.claimed)){cred=await auth.signInWithEmailAndPassword(email,p1);}
+        else throw x;
+      }
+      const uid=cred.user.uid,now=firebase.database.ServerValue.TIMESTAMP;
+      const linked=(await db.ref("shk/uids/"+uid).get()).val();
+      if(!linked)await db.ref("shk/uids/"+uid).set(pid);
+      if(imported){
+        await db.ref("shk/people/"+pid).update(Object.assign({uid,claimedAt:now},V.email?{email:V.email}:{}));
+        await db.ref("shk/directory/"+pid+"/claimed").set(true);
+      }else{
+        await db.ref("shk/directory/"+pid).set({gen:0,claimed:true});
+        await db.ref("shk/people/"+pid).set({name:V.name,first:V.first,surname:V.surname,email:V.email,phone:pid,status:"pending",uid,createdAt:now});
+      }
+      location.href=back;return;
+    }catch(x){
+      busy=false;
+      err=(x&&(x.code==="auth/email-already-in-use"||x.code==="auth/wrong-password"||x.code==="auth/invalid-credential"||x.code==="auth/invalid-login-credentials"))?"呢個號碼已經登記咗，請直接登入。":(x&&x.code==="auth/weak-password")?"密碼太簡單，請用最少 8 個字。":"登記失敗，請再試或者搵 SHK 負責人幫手。";
+      render();
+    }
+  }
+});
+render();
+})();
+</script>
+</body>
+</html>
