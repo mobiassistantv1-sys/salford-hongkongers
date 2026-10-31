@@ -216,78 +216,13 @@ footer {
   <!-- ═══ TAB 1: Volunteer Registration ═══ -->
   <div class="tab-panel active" id="volunteer">
     <div class="card">
-      <h2>🙋 義工報名</h2>
-      <p class="subtitle">加入我們的義工團隊，為 Salford 香港人社群作出貢獻</p>
-      <div class="status-msg" id="vol-status"></div>
-      <form id="vol-form">
-        <div class="form-row">
-          <div class="form-group">
-            <label>登記名稱 <span class="req">*</span></label>
-            <input type="text" name="name" placeholder="例：陳大文" required>
-          </div>
-          <div class="form-group">
-            <label>英文姓名（請提供護照名字，達到義工目標時數會有義工證明提供）</label>
-            <input type="text" name="english_name" placeholder="例：David Chan">
-          </div>
-        </div>
-        <div class="form-group">
-          <label>電郵地址 <span class="req">*</span></label>
-          <input type="email" name="email" placeholder="example@email.com" required>
-        </div>
-        <div class="form-group">
-          <label>WhatsApp 號碼 <span class="req">*</span></label>
-          <div class="phone-row">
-            <div class="phone-type">
-              <select name="phoneType">
-                <option value="UK +44">英國 +44</option>
-                <option value="HK +852">香港 +852</option>
-              </select>
-            </div>
-            <div class="phone-num">
-              <input type="tel" name="phone" placeholder="07700 900123" required>
-            </div>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>年齡範圍</label>
-            <select name="age">
-              <option value="">請選擇</option>
-              <option>18-25</option>
-              <option>26-35</option>
-              <option>36-45</option>
-              <option>46-55</option>
-              <option>56+</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>可服務時段</label>
-            <select name="availability">
-              <option value="">請選擇</option>
-              <option value="weekday">平日</option>
-              <option value="weekend">週末</option>
-              <option value="flexible">彈性配合</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-group">
-          <label>住址（城市）</label>
-          <input type="text" name="city" placeholder="例：Salford, Manchester, Bolton">
-        </div>
-        <div class="form-group">
-          <label>興趣 / 專長</label>
-          <input type="text" name="skills" placeholder="例：攝影、設計、社交媒體、翻譯、活動策劃">
-        </div>
-        <div class="form-group">
-          <label>備註</label>
-          <textarea name="notes" placeholder="任何你想讓我們知道的事"></textarea>
-        </div>
-        <button type="submit" class="btn-primary">提交報名</button>
-      </form>
+      <h2>🙋 義工報名已升級</h2>
+      <p class="subtitle">我哋改用咗全新嘅義工系統：用你嘅 WhatsApp 號碼登記，之後可以喺活動現場用手機打卡、查看自己嘅義工時數。</p>
+      <a href="/volunteer/join/" class="btn-primary" style="display:block;text-align:center;text-decoration:none;margin-top:16px;">前往新義工登記 →</a>
+      <p style="margin-top:14px;font-size:0.9rem;opacity:0.8;">已經有帳戶？<a href="/volunteer/" style="color:#e91e8c;font-weight:700;">義工登入 / 打卡</a></p>
     </div>
   </div>
 
-  <!-- ═══ TAB 2: Event Registration ═══ -->
   <div class="tab-panel" id="event">
     <div class="card">
       <h2>📅 活動登記</h2>
@@ -513,7 +448,7 @@ footer {
     <p>為在 Salford 及大曼徹斯特地區的香港人提供支援及建立社群</p>
     <div class="footer-links">
       <a href="index.html">主頁</a>
-      <a href="forms.html#volunteer">義工登記</a>
+      <a href="/volunteer/join/">義工登記</a>
       <a href="volunteer-checkin.html">義工打卡</a>
       <a href="mailto:hkerssalford@gmail.com">電郵聯絡</a>
     </div>
