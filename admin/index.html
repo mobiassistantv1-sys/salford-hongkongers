@@ -216,8 +216,9 @@ async function setRole(pid,r){
 async function setStatus(pid,st){
   const p=PEOPLE[pid];const r=p.roles||{};const upd={};upd["shk/people/"+pid+"/status"]=st;
   if(st==="active"&&!r.volunteer&&!r.cafe&&!r.admin)upd["shk/people/"+pid+"/roles/volunteer"]=true;
-  if(p.uid){upd["ordering/roles/"+p.uid]=st==="active"?(r.cafe||null):null;upd["shk/admins/"+p.uid]=(st==="active"&&r.admin)?true:null;}
   if(p.uid===user.uid&&st!=="active"){toast("唔可以停用自己");return;}
+  const isMe=p.uid===user.uid;if(isMe)upd["shk/people/"+pid+"/roles/admin"]=true; // never strip your own admin access
+  if(p.uid){upd["ordering/roles/"+p.uid]=st==="active"?(r.cafe||null):null;upd["shk/admins/"+p.uid]=(st==="active"&&(r.admin||isMe))?true:null;}
   await db.ref().update(upd);
 }
 async function resetAccount(pid){
