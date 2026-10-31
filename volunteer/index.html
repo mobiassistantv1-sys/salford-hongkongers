@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>義工打卡 · Salford Hongkongers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@400;500;700;900&display=swap">
+<style>
+:root{--bg:#FBF7F2;--card:#FFFFFF;--sunk:#F2EBE3;--ink:#1F1A17;--muted:#6E645C;--line:#E6DCD2;--red:#B8322A;--red-ink:#FFFFFF;--red-soft:#FBE4E1;--ok:#1E7A4C;--ok-soft:#DFF1E7;--amber:#94600A;--amber-soft:#FBEFD5;
+  --f:"Noto Sans HK","PingFang HK","Microsoft JhengHei",system-ui,sans-serif;--r:14px;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--bg:#151211;--card:#201B19;--sunk:#2A2421;--ink:#F3ECE6;--muted:#AFA39A;--line:#3A322D;--red:#E5675C;--red-ink:#1A0F0D;--red-soft:#3B1C19;--ok:#54C48B;--ok-soft:#14301F;--amber:#EDB458;--amber-soft:#3A2C10;color-scheme:dark}}
+*{box-sizing:border-box}
+html{padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f);font-size:16px;line-height:1.5;padding:0 max(16px,env(safe-area-inset-right,0px)) 48px max(16px,env(safe-area-inset-left,0px))}
+button,input{font:inherit;color:inherit}button{cursor:pointer}
+:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+[hidden]{display:none!important}
+.num{font-variant-numeric:tabular-nums}
+.band{background:var(--red);color:var(--red-ink);margin:0 calc(-1 * max(16px,env(safe-area-inset-left,0px))) 0 calc(-1 * max(16px,env(safe-area-inset-right,0px)));padding:14px max(16px,env(safe-area-inset-right,0px)) 14px max(16px,env(safe-area-inset-left,0px))}
+.band-in{max-width:520px;margin:0 auto;display:flex;align-items:center;gap:12px}
+.band b{font-size:19px;font-weight:900;letter-spacing:.02em}.band small{display:block;font-size:12px;opacity:.85}
+.band button{margin-left:auto;background:transparent;border:1.5px solid currentColor;color:inherit;border-radius:999px;padding:4px 12px;font-size:13.5px;font-weight:700}
+.wrap{max-width:520px;margin:0 auto;padding-top:18px;display:flex;flex-direction:column;gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px}
+.card h1{font-size:22px;margin:0 0 4px;font-weight:900}.card h2{font-size:18px;margin:0 0 8px;font-weight:900}
+.card p{margin:4px 0;color:var(--muted)}
+label{display:block;font-weight:700;font-size:14.5px;margin:14px 0 4px}label span{font-weight:400;color:var(--muted);font-size:13px}
+input{width:100%;border:1.5px solid var(--line);background:var(--card);border-radius:10px;padding:12px;font-size:17px}
+.btn{display:block;width:100%;border:0;border-radius:12px;padding:14px;font-weight:900;font-size:18px;background:var(--red);color:var(--red-ink);margin-top:16px}
+.btn.ghost{background:transparent;border:1.5px solid var(--line);color:var(--ink);font-weight:700;font-size:16px}
+.btn.big{padding:22px;font-size:24px}
+.btn.green{background:var(--ok);color:#fff}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.err{background:var(--red-soft);color:var(--red);border-radius:10px;padding:10px 12px;font-weight:700;margin-top:12px}
+.note{background:var(--amber-soft);color:var(--amber);border-radius:10px;padding:10px 12px;font-weight:700}
+.ok{background:var(--ok-soft);color:var(--ok);border-radius:10px;padding:12px;font-weight:900;font-size:18px;text-align:center}
+.event{border-left:6px solid var(--red)}
+.event .meta{color:var(--muted);font-size:14.5px}
+.row{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-top:1px solid var(--line)}
+.row:first-child{border-top:0}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:6px 0 10px}
+.kpi{background:var(--sunk);border-radius:12px;padding:12px}.kpi span{display:block;color:var(--muted);font-size:13px}.kpi b{font-size:28px;font-weight:900}
+a{color:var(--red);font-weight:700}
+.small{font-size:13px;color:var(--muted)}
+</style>
+</head>
+<body>
+<header class="band"><div class="band-in"><div><b>義工打卡</b><small>Salford Hongkongers · Volunteer check-in</small></div><button id="out" data-act="logout" hidden>登出</button></div></header>
+<main class="wrap" id="app"><div class="card"><p>載入中… Loading…</p></div></main>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<script src="/shk/shk.js"></script>
+<script>
+(function(){
+"use strict";
+const S=window.SHK,esc=S.esc;
+firebase.initializeApp(S.FIREBASE);
+const auth=firebase.auth(),db=firebase.database();
+const qs=new URLSearchParams(location.search);
+const EID=qs.get("e")||"",EK=qs.get("k")||"";
+const $=s=>document.querySelector(s);
+let user=null,pid=null,me=null,ev=null,att=null,hours=null,ready=false,err="",busy=false,stateErr="";
+
+function eventCard(){
+  if(!EID)return "";
+  if(!ev)return '<div class="card event"><h2>活動打卡</h2><p>搵唔到呢個活動，請重新掃描現場 QR code。</p><p class="small">Event not found. Please scan the QR code again.</p></div>';
+  let h='<div class="card event"><h2>'+esc(ev.title)+'</h2><div class="meta">'+esc(ev.date)+(ev.start?' · '+esc(ev.start)+(ev.end?'–'+esc(ev.end):''):'')+(ev.place?' · '+esc(ev.place):'')+'</div>';
+  const today=S.dateKey();
+  if(!me){h+='<p style="margin-top:10px">登入之後就可以打卡。<span class="small"> Sign in to check in.</span></p>';return h+'</div>';}
+  if(me.status!=="active"||!(me.roles&&me.roles.volunteer)){h+='<div class="note" style="margin-top:12px">你嘅帳戶未批核，暫時未可以打卡。</div>';return h+'</div>';}
+  if(!ev.open){h+='<div class="note" style="margin-top:12px">呢個活動而家未開放打卡。<br><span class="small">Check-in is not open for this event.</span></div>';return h+'</div>';}
+  if(ev.date!==today){h+='<div class="note" style="margin-top:12px">呢個活動唔係今日（'+esc(ev.date)+'）。</div>';return h+'</div>';}
+  if(stateErr)h+='<div class="err">'+esc(stateErr)+'</div>';
+  if(!att||!att.in){
+    h+='<button class="btn big" data-act="in"'+(busy?" disabled":"")+'>上班打卡<br><span style="font-size:15px;font-weight:700">Check in</span></button>';
+  }else if(!att.out){
+    h+='<p style="margin-top:12px">上班時間 Checked in：<b class="num" style="color:var(--ink);font-size:20px">'+S.hhmm(att.in)+'</b></p>';
+    h+='<button class="btn big green" data-act="out"'+(busy?" disabled":"")+'>落班打卡<br><span style="font-size:15px;font-weight:700">Check out</span></button>';
+    h+='<p class="small" style="margin-top:8px">走之前記得撳落班打卡。Remember to check out before you leave.</p>';
+  }else{
+    h+='<div class="ok" style="margin-top:12px">已完成 ✓ '+S.hhmm(att.in)+'–'+S.hhmm(att.out)+' · <span class="num">'+S.roundedHours(att.in,att.out)+'</span> 小時</div><p class="small" style="margin-top:8px">多謝你嘅幫手！Thank you for volunteering.</p>';
+  }
+  return h+'</div>';
+}
+function loginCard(){
+  let h='<div class="card"><h1>登入</h1><p>用你嘅 WhatsApp 號碼同密碼登入。<span class="small"> Sign in with your WhatsApp number and password.</span></p>';
+  h+='<form id="lf"><label for="ph">WhatsApp 號碼 <span>Phone</span></label><input id="ph" type="tel" inputmode="tel" autocomplete="username" placeholder="07… 或 852…" required>';
+  h+='<label for="pw">密碼 <span>Password</span></label><input id="pw" type="password" autocomplete="current-password" required>';
+  if(err)h+='<div class="err">'+esc(err)+'</div>';
+  h+='<button class="btn" type="submit"'+(busy?" disabled":"")+'>'+(busy?"登入中…":"登入 Sign in")+'</button></form>';
+  h+='<p style="margin-top:16px">第一次用？<a href="/volunteer/join/'+location.search+'">登記 / 啟用帳戶</a><br><span class="small">First time? Register or activate your account.</span></p>';
+  h+='<p class="small" style="margin-top:10px">唔記得密碼：請聯絡 SHK 負責人重設。Forgot your password? Ask an SHK organiser to reset it.</p></div>';
+  return h;
+}
+function homeCard(){
+  if(!me)return '<div class="card"><h2>帳戶未完成登記</h2><p>請去 <a href="/volunteer/join/'+location.search+'">登記頁</a> 完成。</p></div>';
+  let h='<div class="card"><h1>你好，'+esc(me.name)+'</h1>';
+  if(me.status==="pending")h+='<div class="note" style="margin-top:8px">已收到你嘅登記，等待 SHK 批核。批核之後就可以打卡。<br><span class="small">Waiting for approval.</span></div>';
+  else if(me.status==="disabled")h+='<div class="note" style="margin-top:8px">帳戶已停用，如有疑問請聯絡 SHK。</div>';
+  else if(!EID)h+='<p>到咗活動現場，用手機相機掃描活動 QR code 就可以打卡。<span class="small"> At the event, scan the event QR code with your camera.</span></p>';
+  h+='</div>';
+  if(hours){
+    h+='<div class="card"><h2>我嘅義工時數 My hours</h2><div class="kpis"><div class="kpi"><span>總時數 Hours</span><b class="num">'+(hours.total||0)+'</b></div><div class="kpi"><span>出席次數 Sessions</span><b class="num">'+(hours.count||0)+'</b></div></div>';
+    (hours.recent||[]).slice(0,8).forEach(r=>{h+='<div class="row"><span>'+esc(r.date)+' · '+esc(r.title)+'</span><b class="num">'+r.hours+'</b></div>';});
+    h+='<p class="small" style="margin-top:8px">每小時同 SHK 紀錄表同步一次。Updated hourly.</p></div>';
+  }
+  return h;
+}
+function render(){
+  $("#out").hidden=!user;
+  if(!ready)return;
+  $("#app").innerHTML=eventCard()+(user?homeCard():loginCard());
+}
+async function loadEvent(){
+  if(!EID){ev=null;return;}
+  try{ev=(await db.ref("shk/events/"+EID).get()).val();}catch(e){ev=null;}
+}
+async function loadMe(){
+  me=null;att=null;hours=null;pid=null;
+  if(!user)return;
+  try{pid=(await db.ref("shk/uids/"+user.uid).get()).val();}catch(e){}
+  if(!pid)return;
+  try{me=(await db.ref("shk/people/"+pid).get()).val();}catch(e){}
+  try{hours=(await db.ref("shk/hours/"+pid).get()).val();}catch(e){}
+  if(EID){await loadEvent();try{att=(await db.ref("shk/attendance/"+EID+"/"+pid).get()).val();}catch(e){}}
+}
+auth.onAuthStateChanged(async u=>{
+  if(u&&u.isAnonymous){await auth.signOut();return;}
+  user=u;
+  if(!u)await loadEvent();
+  await loadMe();ready=true;render();
+});
+document.addEventListener("submit",async e=>{
+  if(e.target.id!=="lf")return;e.preventDefault();
+  const ph=$("#ph").value,pw=$("#pw").value;busy=true;err="";render();
+  try{await S.signInPhone(auth,db,ph,pw);}catch(x){err=S.authErrorText(x,false);}
+  busy=false;render();
+});
+document.addEventListener("click",async e=>{
+  const b=e.target.closest("[data-act]");if(!b)return;const a=b.dataset.act;
+  if(a==="logout"){await auth.signOut();return;}
+  if(a==="in"||a==="out"){
+    busy=true;stateErr="";render();
+    try{
+      const ref=db.ref("shk/attendance/"+EID+"/"+pid);
+      if(a==="in")await ref.set({in:firebase.database.ServerValue.TIMESTAMP,k:EK});
+      else await ref.update({out:firebase.database.ServerValue.TIMESTAMP,k:EK});
+      att=(await ref.get()).val();
+    }catch(x){stateErr="打卡失敗：請確認係掃描咗現場 QR code，或者搵負責人幫手。Check-in failed — please rescan the event QR code or ask an organiser.";}
+    busy=false;render();
+  }
+});
+})();
+</script>
+</body>
+</html>
