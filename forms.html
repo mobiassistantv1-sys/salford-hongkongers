@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>聯絡我們 | Salford Hongkongers</title>
+<title data-en="Contact us | Salford Hongkongers">聯絡我們 | Salford Hongkongers</title>
 <meta name="theme-color" content="#C00878">
 <link rel="icon" href="/assets/shk-logo-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -54,44 +54,45 @@ textarea{min-height:96px;resize:vertical}
 <header class="site-header">
   <div class="wrap nav">
     <a class="brand" href="/"><img src="/assets/shk-logo-icon.png" alt="" width="27" height="44"><span class="wm"><b><span class="mg">Salford</span> <span class="gd">Hongkongers</span></b><small>Community Interest Company</small></span></a>
-    <button class="menu-btn" aria-expanded="false" aria-controls="site-nav" aria-label="選單">☰</button>
-    <nav id="site-nav" class="site-nav" aria-label="主選單">
-      <a href="/#about">關於我們</a><a href="/#events">活動</a><a href="/volunteer/">義工</a><a href="/forms.html" aria-current="page">聯絡</a><a class="nav-support" href="/donate.html">支持我們</a>
+    <nav id="site-nav" class="site-nav" aria-label="Main">
+      <a href="/#about" data-en="About">關於我們</a><a href="/#events" data-en="Events">活動</a><a href="/volunteer/" data-en="Volunteer">義工</a><a href="/forms.html" aria-current="page" data-en="Contact">聯絡</a><a class="nav-support" href="/donate.html" data-en="Support us">支持我們</a>
     </nav>
+    <button class="lang-btn" type="button">EN</button>
+    <button class="menu-btn" aria-expanded="false" aria-controls="site-nav" aria-label="Menu">☰</button>
   </div>
 </header>
 
 <section class="hero">
-  <h1>聯絡我們</h1>
-  <p>義工報名、活動登記、意見回饋，以及任何查詢，我們都樂意聆聽</p>
+  <h1 data-en="Contact us">聯絡我們</h1>
+  <p data-en="Event registration, feedback, partnerships or any other questions: we would love to hear from you.">義工報名、活動登記、意見回饋，以及任何查詢，我們都樂意聆聽</p>
 </section>
 
 <div class="container">
   <div class="tabs">
-    <button class="tab-btn active" data-tab="volunteer">義工報名</button>
-    <button class="tab-btn" data-tab="event">活動登記</button>
-    <button class="tab-btn" data-tab="feedback">意見 / 查詢</button>
-    <button class="tab-btn" data-tab="partnership">合作查詢</button>
+    <button class="tab-btn active" data-tab="volunteer" data-en="Volunteer">義工報名</button>
+    <button class="tab-btn" data-tab="event" data-en="Event registration">活動登記</button>
+    <button class="tab-btn" data-tab="feedback" data-en="Feedback / enquiry">意見 / 查詢</button>
+    <button class="tab-btn" data-tab="partnership" data-en="Partnerships">合作查詢</button>
   </div>
 
   <!-- ═══ TAB 1: Volunteer Registration ═══ -->
   <div class="tab-panel active" id="volunteer">
     <div class="card">
-      <h2>義工報名已升級</h2>
-      <p class="subtitle">我哋改用咗全新嘅義工系統：用你嘅 WhatsApp 號碼登記，之後可以喺活動現場用手機打卡、查看自己嘅義工時數。</p>
-      <a href="/volunteer/join/" class="btn-primary" style="display:block;text-align:center;text-decoration:none;margin-top:16px;">前往新義工登記 →</a>
-      <p style="margin-top:14px;font-size:0.9rem;opacity:0.8;">已經有帳戶？<a href="/volunteer/" style="color:var(--magenta);font-weight:700;">義工登入 / 打卡</a></p>
+      <h2 data-en="Volunteer sign-up has moved">義工報名已升級</h2>
+      <p class="subtitle" data-en="We now use a new volunteer system: sign up with your WhatsApp number, then check in on your phone at events and see your volunteering hours.">我哋改用咗全新嘅義工系統：用你嘅 WhatsApp 號碼登記，之後可以喺活動現場用手機打卡、查看自己嘅義工時數。</p>
+      <a href="/volunteer/join/" class="btn-primary" style="display:block;text-align:center;text-decoration:none;margin-top:16px;" data-en="Go to volunteer sign-up →">前往新義工登記 →</a>
+      <p style="margin-top:14px;font-size:0.9rem;opacity:0.8;" data-en-html="Already registered? <a href=&quot;/volunteer/&quot; style=&quot;color:var(--magenta);font-weight:700;&quot;>Volunteer login / check-in</a>">已經有帳戶？<a href="/volunteer/" style="color:var(--magenta);font-weight:700;">義工登入 / 打卡</a></p>
     </div>
   </div>
 
   <div class="tab-panel" id="event">
     <div class="card">
-      <h2>活動登記</h2>
-      <p class="subtitle">報名參加 Salford Hongkongers 舉辦的社區活動</p>
+      <h2 data-en="Event registration">活動登記</h2>
+      <p class="subtitle" data-en="Sign up for community events run by Salford Hongkongers">報名參加 Salford Hongkongers 舉辦的社區活動</p>
       <div class="status-msg" id="evt-status"></div>
       <form id="evt-form">
         <div class="form-group">
-          <label>活動選擇 <span class="req">*</span></label>
+          <label data-en-html="Event <span class=&quot;req&quot;>*</span>">活動選擇 <span class="req">*</span></label>
           <select name="eventName" required>
             <option value="">請選擇活動</option>
             <option value="社群聚會 Community Gathering">社群聚會 Community Gathering</option>
@@ -105,7 +106,7 @@ textarea{min-height:96px;resize:vertical}
         </div>
         <div class="form-group">
           <label>姓名 Full Name <span class="req">*</span></label>
-          <input type="text" name="name" placeholder="請填寫全名" required>
+          <input type="text" name="name" placeholder="請填寫全名" data-en-ph="Your full name" required>
         </div>
         <div class="form-group">
           <label>電話號碼 Phone Number <span class="req">*</span></label>
@@ -164,7 +165,7 @@ textarea{min-height:96px;resize:vertical}
         </div>
         <div class="form-group">
           <label>備註 Notes</label>
-          <textarea name="notes" placeholder="特殊需要、飲食限制或其他補充（選填）"></textarea>
+          <textarea name="notes" placeholder="特殊需要、飲食限制或其他補充（選填）" data-en-ph="Access needs, dietary requirements or anything else (optional)"></textarea>
         </div>
         <button type="submit" class="btn-primary">提交登記 Register</button>
       </form>
@@ -174,26 +175,26 @@ textarea{min-height:96px;resize:vertical}
   <!-- ═══ TAB 3: Feedback / Enquiry ═══ -->
   <div class="tab-panel" id="feedback">
     <div class="card">
-      <h2>意見 / 查詢</h2>
-      <p class="subtitle">分享你的意見或提出查詢，每個個案我們都會認真跟進</p>
+      <h2 data-en="Feedback / enquiry">意見 / 查詢</h2>
+      <p class="subtitle" data-en="Share your feedback or ask us anything. We follow up every message.">分享你的意見或提出查詢，每個個案我們都會認真跟進</p>
       <div class="status-msg" id="fb-status"></div>
       <form id="fb-form">
         <div class="form-row">
           <div class="form-group">
-            <label>姓名（選填）</label>
-            <input type="text" name="name" placeholder="可匿名提交">
+            <label data-en="Name (optional)">姓名（選填）</label>
+            <input type="text" name="name" placeholder="可匿名提交" data-en-ph="You can stay anonymous">
           </div>
           <div class="form-group">
-            <label>電郵（選填）</label>
-            <input type="email" name="email" placeholder="如希望收到回覆請填寫">
+            <label data-en="Email (optional)">電郵（選填）</label>
+            <input type="email" name="email" placeholder="如希望收到回覆請填寫" data-en-ph="Add this if you would like a reply">
           </div>
         </div>
         <div class="form-group">
-          <label>電話（選填）</label>
-          <input type="tel" name="phone" placeholder="如方便致電聯絡請填寫">
+          <label data-en="Phone (optional)">電話（選填）</label>
+          <input type="tel" name="phone" placeholder="如方便致電聯絡請填寫" data-en-ph="Add this if we can call you">
         </div>
         <div class="form-group">
-          <label>類別 <span class="req">*</span></label>
+          <label data-en-html="Category <span class=&quot;req&quot;>*</span>">類別 <span class="req">*</span></label>
           <select name="category" required>
             <option value="">請選擇</option>
             <option value="一般查詢">一般查詢 General Enquiry</option>
@@ -207,12 +208,12 @@ textarea{min-height:96px;resize:vertical}
           </select>
         </div>
         <div class="form-group">
-          <label>主題</label>
-          <input type="text" name="subject" placeholder="簡述查詢或意見主題">
+          <label data-en="Subject">主題</label>
+          <input type="text" name="subject" placeholder="簡述查詢或意見主題" data-en-ph="What is it about?">
         </div>
         <div class="form-group">
-          <label>詳細內容 <span class="req">*</span></label>
-          <textarea name="message" required placeholder="請詳細描述你的意見或查詢" style="min-height:130px;"></textarea>
+          <label data-en-html="Details <span class=&quot;req&quot;>*</span>">詳細內容 <span class="req">*</span></label>
+          <textarea name="message" required placeholder="請詳細描述你的意見或查詢" data-en-ph="Tell us more" style="min-height:130px;"></textarea>
         </div>
         <button type="submit" class="btn-primary">提交 Submit</button>
       </form>
@@ -222,27 +223,27 @@ textarea{min-height:96px;resize:vertical}
   <!-- ═══ TAB 4: Partnership ═══ -->
   <div class="tab-panel" id="partnership">
     <div class="card">
-      <h2>合作查詢</h2>
-      <p class="subtitle">與我們建立夥伴關係，共同服務 Salford 香港人社群</p>
+      <h2 data-en="Partnerships">合作查詢</h2>
+      <p class="subtitle" data-en="Work with us to serve the Hong Kong community in Salford">與我們建立夥伴關係，共同服務 Salford 香港人社群</p>
       <div class="status-msg" id="pt-status"></div>
       <form id="pt-form">
         <div class="form-row">
           <div class="form-group">
-            <label>聯絡人姓名 <span class="req">*</span></label>
+            <label data-en-html="Contact name <span class=&quot;req&quot;>*</span>">聯絡人姓名 <span class="req">*</span></label>
             <input type="text" name="contact_name" required>
           </div>
           <div class="form-group">
-            <label>職位</label>
+            <label data-en="Job title">職位</label>
             <input type="text" name="position">
           </div>
         </div>
         <div class="form-row">
           <div class="form-group">
-            <label>機構名稱 <span class="req">*</span></label>
+            <label data-en-html="Organisation <span class=&quot;req&quot;>*</span>">機構名稱 <span class="req">*</span></label>
             <input type="text" name="organization" required>
           </div>
           <div class="form-group">
-            <label>機構類型</label>
+            <label data-en="Organisation type">機構類型</label>
             <select name="org_type">
               <option value="">請選擇</option>
               <option value="非牟利機構">非牟利機構 NGO</option>
@@ -256,35 +257,35 @@ textarea{min-height:96px;resize:vertical}
         </div>
         <div class="form-row">
           <div class="form-group">
-            <label>電郵 <span class="req">*</span></label>
+            <label data-en-html="Email <span class=&quot;req&quot;>*</span>">電郵 <span class="req">*</span></label>
             <input type="email" name="email" required>
           </div>
           <div class="form-group">
-            <label>電話 <span class="req">*</span></label>
+            <label data-en-html="Phone <span class=&quot;req&quot;>*</span>">電話 <span class="req">*</span></label>
             <input type="tel" name="phone" required>
           </div>
         </div>
         <div class="form-group">
-          <label>合作建議 <span class="req">*</span></label>
-          <textarea name="proposal" required placeholder="請描述你的合作建議，包括目標、內容及預期成效" style="min-height:130px;"></textarea>
+          <label data-en-html="Your proposal <span class=&quot;req&quot;>*</span>">合作建議 <span class="req">*</span></label>
+          <textarea name="proposal" required placeholder="請描述你的合作建議，包括目標、內容及預期成效" data-en-ph="Describe your proposal, including aims, activities and expected outcomes" style="min-height:130px;"></textarea>
         </div>
         <div class="form-group">
-          <label>機構網站（選填）</label>
+          <label data-en="Website (optional)">機構網站（選填）</label>
           <input type="url" name="website" placeholder="https://">
         </div>
-        <button type="submit" class="btn-primary">提交查詢</button>
+        <button type="submit" class="btn-primary" data-en="Send enquiry">提交查詢</button>
       </form>
     </div>
   </div>
 
   <!-- Social links -->
   <section class="social-section">
-    <h2>其他聯絡方式</h2>
+    <h2 data-en="Other ways to reach us">其他聯絡方式</h2>
     <div class="social-grid">
-      <div class="social-card"><div class="social-icon"><svg viewBox="0 0 24 24"><path d="M3 5h18a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zm1 2.2V17h16V7.2l-8 5.3-8-5.3zM5.3 7 12 11.4 18.7 7H5.3z"/></svg></div><h3>電子郵件</h3><p>直接發送電郵給我們</p><a href="mailto:salfordhongkongers@gmail.com">salfordhongkongers@gmail.com</a></div>
-      <div class="social-card"><div class="social-icon"><svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 0 0-7.7 13.6L3 21l4.5-1.2A9 9 0 1 0 12 3Zm0 2a7 7 0 0 1 5.9 10.8l-.3.5.6 2.2-2.3-.6-.5.3A7 7 0 1 1 12 5Zm-2.3 3c-.2 0-.5.1-.7.4-.3.3-.9.9-.9 2.1s.9 2.4 1 2.6c.1.2 1.7 2.8 4.3 3.8 2.1.8 2.6.7 3 .6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2 0-.1-.2-.2-.5-.3l-1.7-.8c-.2-.1-.4-.1-.6.1l-.7.9c-.1.2-.3.2-.5.1-.7-.3-1.5-.7-2.3-1.7-.6-.7-1-1.5-1.1-1.7-.1-.2 0-.4.1-.5l.5-.6c.1-.2.2-.3.3-.5 0-.2 0-.3-.1-.5l-.8-1.8c-.2-.3-.3-.3-.6-.3Z"/></svg></div><h3>WhatsApp</h3><p>有問題可以直接 WhatsApp</p><a href="https://wa.me/447999338006">+44 7999 338006</a></div>
-      <div class="social-card"><div class="social-icon"><svg viewBox="0 0 24 24"><path d="M14 8.5V6.8c0-.8.5-1 1-1h2V2.5h-2.8C11.1 2.5 10 4.6 10 6.6v1.9H7.5V12H10v9.5h4V12h2.7l.4-3.5H14z"/></svg></div><h3>Facebook</h3><p>關注我們的最新動態</p><a href="https://www.facebook.com/profile.php?id=100078299000811" target="_blank" rel="noopener">訪問專頁</a></div>
-      <div class="social-card"><div class="social-icon"><svg viewBox="0 0 24 24" fill-rule="evenodd"><path d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9a5.5 5.5 0 0 1-5.5 5.5h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm5.3-3.3a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4z"/></svg></div><h3>Instagram</h3><p>瀏覽我們的活動相片</p><a href="https://www.instagram.com/salfordhongkongerscic/" target="_blank" rel="noopener">@salfordhongkongerscic</a></div>
+      <div class="social-card"><div class="social-icon"><svg viewBox="0 0 24 24"><path d="M3 5h18a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zm1 2.2V17h16V7.2l-8 5.3-8-5.3zM5.3 7 12 11.4 18.7 7H5.3z"/></svg></div><h3 data-en="Email">電子郵件</h3><p data-en="Send us an email">直接發送電郵給我們</p><a href="mailto:salfordhongkongers@gmail.com">salfordhongkongers@gmail.com</a></div>
+      <div class="social-card"><div class="social-icon"><svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 0 0-7.7 13.6L3 21l4.5-1.2A9 9 0 1 0 12 3Zm0 2a7 7 0 0 1 5.9 10.8l-.3.5.6 2.2-2.3-.6-.5.3A7 7 0 1 1 12 5Zm-2.3 3c-.2 0-.5.1-.7.4-.3.3-.9.9-.9 2.1s.9 2.4 1 2.6c.1.2 1.7 2.8 4.3 3.8 2.1.8 2.6.7 3 .6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2 0-.1-.2-.2-.5-.3l-1.7-.8c-.2-.1-.4-.1-.6.1l-.7.9c-.1.2-.3.2-.5.1-.7-.3-1.5-.7-2.3-1.7-.6-.7-1-1.5-1.1-1.7-.1-.2 0-.4.1-.5l.5-.6c.1-.2.2-.3.3-.5 0-.2 0-.3-.1-.5l-.8-1.8c-.2-.3-.3-.3-.6-.3Z"/></svg></div><h3>WhatsApp</h3><p data-en="Message us on WhatsApp">有問題可以直接 WhatsApp</p><a href="https://wa.me/447999338006">+44 7999 338006</a></div>
+      <div class="social-card"><div class="social-icon"><svg viewBox="0 0 24 24"><path d="M14 8.5V6.8c0-.8.5-1 1-1h2V2.5h-2.8C11.1 2.5 10 4.6 10 6.6v1.9H7.5V12H10v9.5h4V12h2.7l.4-3.5H14z"/></svg></div><h3>Facebook</h3><p data-en="Follow our latest news">關注我們的最新動態</p><a href="https://www.facebook.com/profile.php?id=100078299000811" target="_blank" rel="noopener" data-en="Visit our page">訪問專頁</a></div>
+      <div class="social-card"><div class="social-icon"><svg viewBox="0 0 24 24" fill-rule="evenodd"><path d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9a5.5 5.5 0 0 1-5.5 5.5h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm5.3-3.3a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4z"/></svg></div><h3>Instagram</h3><p data-en="See photos from our events">瀏覽我們的活動相片</p><a href="https://www.instagram.com/salfordhongkongerscic/" target="_blank" rel="noopener">@salfordhongkongerscic</a></div>
     </div>
   </section>
 </div>
@@ -293,31 +294,31 @@ textarea{min-height:96px;resize:vertical}
   <div class="wrap">
     <div class="foot">
       <div>
-        <h4>聯絡我們</h4>
+        <h4 data-en="Contact us">聯絡我們</h4>
         <p><a href="mailto:salfordhongkongers@gmail.com">salfordhongkongers@gmail.com</a></p>
         <p><a href="https://wa.me/447999338006">WhatsApp +44 7999 338006</a></p>
         <p>Salford, Greater Manchester</p>
       </div>
       <div>
-        <h4>快速連結</h4>
-        <p><a href="/#events">活動</a></p>
-        <p><a href="/volunteer/join/">加入義工隊</a></p>
-        <p><a href="/volunteer/">義工登入 / 打卡</a></p>
-        <p><a href="/forms.html">查詢 / 合作</a></p>
-        <p><a href="/privacy/">私隱政策</a></p>
+        <h4 data-en="Quick links">快速連結</h4>
+        <p><a href="/#events" data-en="Events">活動</a></p>
+        <p><a href="/volunteer/join/" data-en="Volunteer with us">加入義工隊</a></p>
+        <p><a href="/volunteer/" data-en="Volunteer login / check-in">義工登入 / 打卡</a></p>
+        <p><a href="/forms.html" data-en="Enquiries / partnerships">查詢 / 合作</a></p>
+        <p><a href="/privacy/" data-en="Privacy policy">私隱政策</a></p>
       </div>
       <div>
-        <h4>追蹤我們</h4>
+        <h4 data-en="Follow us">追蹤我們</h4>
         <div class="socials">
           <a href="https://www.facebook.com/profile.php?id=100078299000811" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M14 8.5V6.8c0-.8.5-1 1-1h2V2.5h-2.8C11.1 2.5 10 4.6 10 6.6v1.9H7.5V12H10v9.5h4V12h2.7l.4-3.5H14z"/></svg></a>
           <a href="https://www.instagram.com/salfordhongkongerscic/" aria-label="Instagram"><svg viewBox="0 0 24 24" fill-rule="evenodd"><path d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9a5.5 5.5 0 0 1-5.5 5.5h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm5.3-3.3a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4z"/></svg></a>
           <a href="https://wa.me/447999338006" aria-label="WhatsApp"><svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 0 0-7.7 13.6L3 21l4.5-1.2A9 9 0 1 0 12 3Zm0 2a7 7 0 0 1 5.9 10.8l-.3.5.6 2.2-2.3-.6-.5.3A7 7 0 1 1 12 5Zm-2.3 3c-.2 0-.5.1-.7.4-.3.3-.9.9-.9 2.1s.9 2.4 1 2.6c.1.2 1.7 2.8 4.3 3.8 2.1.8 2.6.7 3 .6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2 0-.1-.2-.2-.5-.3l-1.7-.8c-.2-.1-.4-.1-.6.1l-.7.9c-.1.2-.3.2-.5.1-.7-.3-1.5-.7-2.3-1.7-.6-.7-1-1.5-1.1-1.7-.1-.2 0-.4.1-.5l.5-.6c.1-.2.2-.3.3-.5 0-.2 0-.3-.1-.5l-.8-1.8c-.2-.3-.3-.3-.6-.3Z"/></svg></a>
           <a href="https://www.threads.com/@salfordhongkongerscic" aria-label="Threads"><svg class="stroke" viewBox="0 0 24 24"><path d="M12 21c-4.5 0-7-3-7-9s2.5-9 7-9c3 0 5 1.4 6 3.8M9.5 13c0-1.6 1.2-2.6 3-2.6s3 1 3 3.2-1.5 3.4-3.5 3.4c-1.6 0-2.5-1-2.5-2 0-1.3 1.2-1.9 2.6-1.9 2.4 0 4.4 1.4 4.4 4"/></svg></a>
         </div>
-        <p><a href="https://whatsapp.com/channel/0029VaSj6Bk8kyyHDVnHkx2E">追蹤 WhatsApp 頻道</a></p>
+        <p><a href="https://whatsapp.com/channel/0029VaSj6Bk8kyyHDVnHkx2E" data-en="Follow our WhatsApp channel">追蹤 WhatsApp 頻道</a></p>
       </div>
     </div>
-    <div class="legal"><span>© 2026 Salford Hongkongers CIC</span><span>公司編號 13877472</span><span>Salford, Greater Manchester</span></div>
+    <div class="legal"><span>© 2026 Salford Hongkongers CIC</span><span data-en="Company No. 13877472">公司編號 13877472</span><span>Salford, Greater Manchester</span></div>
   </div>
 </footer>
 
@@ -371,7 +372,8 @@ function showStatus(el, msg, type) {
 
 function setLoading(btn, loading, label) {
   btn.disabled = loading;
-  btn.textContent = loading ? '提交中...' : label;
+  if (loading) { btn.dataset.label = btn.textContent; btn.textContent = '提交中… Sending…'; }
+  else btn.textContent = btn.dataset.label || label;
 }
 
 // ════════════════════════════════════════════════
@@ -400,10 +402,10 @@ document.getElementById('evt-form').addEventListener('submit', async e => {
       showStatus(stat, '✅ ' + result.message, 'success');
       e.target.reset();
     } else {
-      showStatus(stat, '❌ ' + (result.error || '提交失敗，請稍後再試'), 'error');
+      showStatus(stat, '❌ ' + (result.error || '提交失敗，請稍後再試 Submission failed, please try again'), 'error');
     }
   } catch(err) {
-    showStatus(stat, '❌ 連線錯誤，請稍後再試或電郵 salfordhongkongers@gmail.com', 'error');
+    showStatus(stat, '❌ 連線錯誤，請稍後再試或電郵 / Connection error, please try again or email salfordhongkongers@gmail.com', 'error');
   }
   setLoading(btn, false, '提交登記 Register');
 });
@@ -433,10 +435,10 @@ document.getElementById('fb-form').addEventListener('submit', async e => {
       showStatus(stat, '✅ ' + result.message, 'success');
       e.target.reset();
     } else {
-      showStatus(stat, '❌ ' + (result.error || '提交失敗，請稍後再試'), 'error');
+      showStatus(stat, '❌ ' + (result.error || '提交失敗，請稍後再試 Submission failed, please try again'), 'error');
     }
   } catch(err) {
-    showStatus(stat, '❌ 連線錯誤，請稍後再試或電郵 salfordhongkongers@gmail.com', 'error');
+    showStatus(stat, '❌ 連線錯誤，請稍後再試或電郵 / Connection error, please try again or email salfordhongkongers@gmail.com', 'error');
   }
   setLoading(btn, false, '提交 Submit');
 });
@@ -471,10 +473,10 @@ document.getElementById('pt-form').addEventListener('submit', async e => {
       showStatus(stat, '✅ 查詢已成功提交，我們將盡快聯絡你！', 'success');
       e.target.reset();
     } else {
-      showStatus(stat, '❌ ' + (result.error || '提交失敗，請稍後再試'), 'error');
+      showStatus(stat, '❌ ' + (result.error || '提交失敗，請稍後再試 Submission failed, please try again'), 'error');
     }
   } catch(err) {
-    showStatus(stat, '❌ 連線錯誤，請稍後再試或電郵 salfordhongkongers@gmail.com', 'error');
+    showStatus(stat, '❌ 連線錯誤，請稍後再試或電郵 / Connection error, please try again or email salfordhongkongers@gmail.com', 'error');
   }
   setLoading(btn, false, '提交查詢');
 });

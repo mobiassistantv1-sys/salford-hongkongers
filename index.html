@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Salford Hongkongers CIC</title>
-<meta name="description" content="Salford Hongkongers CIC — 扎根 Salford 的香港人社區組織，提供支援、文化活動與社群連結。">
+<meta name="description" content="Salford Hongkongers CIC — 扎根 Salford 的香港人社區組織，提供支援、文化活動與社群連結。A Hong Kong community organisation in Salford, Greater Manchester.">
 <meta name="theme-color" content="#C00878">
 <meta property="og:title" content="Salford Hongkongers CIC">
-<meta property="og:description" content="凝聚香港人，共建互助社群 — Salford 及大曼徹斯特香港人社區組織">
+<meta property="og:description" content="凝聚香港人，共建互助社群 — Uniting Hongkongers in Salford and Greater Manchester">
 <meta property="og:image" content="https://salfordhongkongers.co.uk/assets/shk-logo-full.png">
 <link rel="icon" href="/assets/shk-logo-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,10 +18,11 @@
 .hero{padding-block:64px 34px}
 .kicker{display:inline-flex;align-items:center;gap:9px;font-size:13px;color:var(--muted);border:1px solid var(--line-2);border-radius:999px;padding:6px 14px;margin-bottom:24px}
 .kicker i{width:7px;height:7px;border-radius:50%;background:var(--gold-bright)}
-.hero h1{font-size:clamp(2.5rem,9vw,4.4rem);line-height:1.1}
+.hero h1{font-size:clamp(2.4rem,8.5vw,4.4rem);line-height:1.1}
 .hero h1 .l2{color:var(--magenta)}
 .hero h1 .l2::after{content:"";display:block;width:132px;max-width:60%;height:4px;margin-top:16px;border-radius:3px;background:linear-gradient(90deg,var(--magenta) 0 62%,var(--gold-bright) 62% 100%)}
-.lede{margin-top:22px;font-size:clamp(1.02rem,2.6vw,1.2rem);color:var(--muted);max-width:32ch}
+.lede{margin-top:22px;font-size:clamp(1.02rem,2.6vw,1.2rem);color:var(--muted);max-width:34ch}
+html[lang="en-GB"] .lede{max-width:44ch}
 .cta-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
 .trust{margin-top:38px;display:flex;flex-wrap:wrap;gap:8px 22px;font-size:12.5px;color:var(--faint);border-top:1px solid var(--line);padding-top:20px}
 .trust b{color:var(--muted);font-weight:500}
@@ -34,7 +35,7 @@
 
 .about-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:38px;align-items:start}
 .about h2{font-size:clamp(1.7rem,5vw,2.4rem)}
-.about p{color:var(--muted);margin-top:16px;max-width:52ch}
+.about p{color:var(--muted);margin-top:16px;max-width:56ch}
 .mission{list-style:none;display:grid;gap:14px}
 .mission li{display:flex;gap:13px;align-items:flex-start;font-size:15px}
 .mission li::before{content:"";margin-top:9px;width:7px;height:7px;flex:none;border-radius:2px;background:var(--gold-bright);transform:rotate(45deg)}
@@ -45,6 +46,7 @@
 .svc svg{width:30px;height:30px;flex:none;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
 .svc b{font-family:var(--serif);font-size:16px;display:block}
 .svc small{display:block;color:var(--faint);font-size:12px;letter-spacing:.06em}
+html[lang="en-GB"] .svc small{display:none}
 
 .events{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:32px}
 .ev{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column}
@@ -60,11 +62,21 @@
 .ev .go{margin-top:auto;padding-top:6px;font-size:14px;font-weight:700;color:var(--magenta);text-decoration:none}
 .ev .go:hover{text-decoration:underline}
 .note{margin-top:24px;font-size:12.5px;color:var(--faint)}
+.note a{color:var(--magenta);font-weight:700;text-decoration:none}
+
+.news{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:28px}
+.post{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column;text-decoration:none;transition:border-color .15s}
+.post:hover{border-color:var(--line-2)}
+.post img{width:100%;aspect-ratio:4/3;object-fit:cover;background:var(--surface-2)}
+.post .pb{padding:16px 18px;display:flex;flex-direction:column;gap:8px;flex:1}
+.post time{font-size:12px;color:var(--gold)}
+.post p{font-size:14px;white-space:pre-line;display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden}
+.post .more{margin-top:auto;padding-top:4px;font-size:14px;font-weight:700;color:var(--magenta)}
 
 .involve{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:clamp(26px,5vw,44px)}
 .involve .in{display:grid;grid-template-columns:1.2fr 1fr;gap:30px;align-items:center}
 .involve h2{font-size:clamp(1.6rem,5vw,2.2rem)}
-.involve p{color:var(--muted);margin-top:12px;max-width:44ch}
+.involve p{color:var(--muted);margin-top:12px;max-width:48ch}
 .involve .acts{display:flex;flex-direction:column;gap:12px}
 
 .partners{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:22px}
@@ -79,17 +91,18 @@
 .support .link{display:inline-block;margin-top:22px;font-weight:700;color:var(--gold);text-decoration:none;border-bottom:1px solid var(--gold);padding-bottom:2px}
 
 @media(max-width:860px){.about-grid,.involve .in{grid-template-columns:1fr;gap:26px}}
-@media(max-width:620px){.stats,.svc,.events{grid-template-columns:1fr}.hero{padding-top:44px}}
+@media(max-width:620px){.stats,.svc,.events,.news{grid-template-columns:1fr}.hero{padding-top:44px}}
 </style>
 </head>
 <body>
 <header class="site-header">
   <div class="wrap nav">
     <a class="brand" href="/"><img src="/assets/shk-logo-icon.png" alt="" width="27" height="44"><span class="wm"><b><span class="mg">Salford</span> <span class="gd">Hongkongers</span></b><small>Community Interest Company</small></span></a>
-    <button class="menu-btn" aria-expanded="false" aria-controls="site-nav" aria-label="選單">☰</button>
-    <nav id="site-nav" class="site-nav" aria-label="主選單">
-      <a href="#about">關於我們</a><a href="#events">活動</a><a href="/volunteer/">義工</a><a href="/forms.html">聯絡</a><a class="nav-support" href="/donate.html">支持我們</a>
+    <nav id="site-nav" class="site-nav" aria-label="Main">
+      <a href="#about" data-en="About">關於我們</a><a href="#events" data-en="Events">活動</a><a href="/volunteer/" data-en="Volunteer">義工</a><a href="/forms.html" data-en="Contact">聯絡</a><a class="nav-support" href="/donate.html" data-en="Support us">支持我們</a>
     </nav>
+    <button class="lang-btn" type="button">EN</button>
+    <button class="menu-btn" aria-expanded="false" aria-controls="site-nav" aria-label="Menu">☰</button>
   </div>
 </header>
 
@@ -97,45 +110,45 @@
 
   <section class="hero" id="top">
     <span class="kicker"><i></i> Salford · Greater Manchester</span>
-    <h1><span>凝聚香港人</span><br><span class="l2">共建互助社群</span></h1>
-    <p class="lede">我們是扎根 Salford 的香港人社區組織，陪伴新來港家庭適應生活，連結彼此，一起把異鄉過成家。</p>
+    <h1 data-en-html='<span>Uniting Hongkongers,</span><br><span class="l2">building community together</span>'><span>凝聚香港人</span><br><span class="l2">共建互助社群</span></h1>
+    <p class="lede" data-en="We are a Hong Kong community organisation rooted in Salford. We help newly arrived families settle in, bring people together, and make a new place feel like home.">我們是扎根 Salford 的香港人社區組織，陪伴新來港家庭適應生活，連結彼此，一起把異鄉過成家。</p>
     <div class="cta-row">
-      <a class="btn btn-solid" href="#events"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4.5" width="18" height="17" rx="2.5"/><path d="M8 2.5v4M16 2.5v4M3 10h18"/></svg>睇即將活動</a>
-      <a class="btn btn-line" href="/volunteer/join/">加入義工隊</a>
-      <a class="btn btn-line" href="#about">了解我們</a>
+      <a class="btn btn-solid" href="#events"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4.5" width="18" height="17" rx="2.5"/><path d="M8 2.5v4M16 2.5v4M3 10h18"/></svg><span data-en="See upcoming events">睇即將活動</span></a>
+      <a class="btn btn-line" href="/volunteer/join/" data-en="Volunteer with us">加入義工隊</a>
+      <a class="btn btn-line" href="#about" data-en="About us">了解我們</a>
     </div>
     <div class="trust">
-      <span><b>社群利益公司（CIC）</b></span>
-      <span>公司編號 <b>13877472</b></span>
-      <span>2022 年 1 月成立</span>
-      <span>由義工運作</span>
+      <span><b data-en="Community Interest Company (CIC)">社群利益公司（CIC）</b></span>
+      <span data-en-html="Company No. <b>13877472</b>">公司編號 <b>13877472</b></span>
+      <span data-en="Founded January 2022">2022 年 1 月成立</span>
+      <span data-en="Run by volunteers">由義工運作</span>
     </div>
   </section>
 
-  <section class="section" aria-label="成果">
+  <section class="section">
     <div class="stats">
-      <div class="stat"><b>1,200+</b><span>社群成員</span></div>
-      <div class="stat g"><b>100+</b><span>舉辦活動</span></div>
-      <div class="stat"><b>2022</b><span>成立年份</span></div>
+      <div class="stat"><b>1,200+</b><span data-en="Community members">社群成員</span></div>
+      <div class="stat g"><b>100+</b><span data-en="Events held">舉辦活動</span></div>
+      <div class="stat"><b>2022</b><span data-en="Year founded">成立年份</span></div>
     </div>
   </section>
 
   <section class="section" id="about">
     <div class="about-grid">
       <div class="about">
-        <div class="eyebrow">關於我們</div>
-        <h2>把香港帶到<br>大曼徹斯特</h2>
-        <p>Salford's Hongkongers CIC（SHK CIC）於 2022 年 1 月成立，是在英國公司註冊處登記的社群利益公司（Community Interest Company），由義工運作。</p>
-        <p>Salford 現有逾 2,000 名香港居民，是全英其中一個最大的香港人聚居地，被稱為「小香港」。我們在這裡提供支援、保存文化，也為香港人發聲。</p>
+        <div class="eyebrow" data-en="About us">關於我們</div>
+        <h2 data-en-html="Bringing Hong Kong<br>to Greater Manchester">把香港帶到<br>大曼徹斯特</h2>
+        <p data-en="Salford's Hongkongers CIC (SHK CIC) was founded in January 2022. It is a Community Interest Company registered at Companies House and run by volunteers.">Salford's Hongkongers CIC（SHK CIC）於 2022 年 1 月成立，是在英國公司註冊處登記的社群利益公司（Community Interest Company），由義工運作。</p>
+        <p data-en="Salford is home to more than 2,000 Hongkongers, one of the largest Hong Kong communities in the UK, often called “Little Hong Kong”. Here we offer support, keep our culture alive, and speak up for Hongkongers.">Salford 現有逾 2,000 名香港居民，是全英其中一個最大的香港人聚居地，被稱為「小香港」。我們在這裡提供支援、保存文化，也為香港人發聲。</p>
       </div>
       <div>
-        <div class="eyebrow">我們的使命</div>
+        <div class="eyebrow" data-en="Our mission">我們的使命</div>
         <ul class="mission">
-          <li>協助香港新移民適應英國生活</li>
-          <li>保存及推廣香港文化身份認同</li>
-          <li>促進社區凝聚力與互助精神</li>
-          <li>為香港人發聲，倡議社區權益</li>
-          <li>支援個人及家庭的整體發展</li>
+          <li data-en="Helping new arrivals from Hong Kong settle into life in the UK">協助香港新移民適應英國生活</li>
+          <li data-en="Preserving and promoting Hong Kong culture and identity">保存及推廣香港文化身份認同</li>
+          <li data-en="Building community spirit and mutual support">促進社區凝聚力與互助精神</li>
+          <li data-en="Speaking up for Hongkongers and their rights">為香港人發聲，倡議社區權益</li>
+          <li data-en="Supporting the wellbeing of individuals and families">支援個人及家庭的整體發展</li>
         </ul>
       </div>
     </div>
@@ -143,79 +156,88 @@
 
   <section class="section" id="services">
     <div class="sec-head">
-      <div class="eyebrow">我們提供</div>
-      <h2>由落腳到落地生根</h2>
-      <p>無論你剛到埗，還是已住一段時間，都能在這裡找到支援與同行的人。有需要可以直接向我們查詢。</p>
+      <div class="eyebrow" data-en="What we offer">我們提供</div>
+      <h2 data-en="From arriving to putting down roots">由落腳到落地生根</h2>
+      <p data-en="Whether you have just arrived or have lived here for a while, you will find support and people to walk alongside you. Get in touch whenever you need help.">無論你剛到埗，還是已住一段時間，都能在這裡找到支援與同行的人。有需要可以直接向我們查詢。</p>
     </div>
     <div class="svc">
-      <a href="/forms.html#feedback"><svg viewBox="0 0 24 24" stroke="#C00878"><circle cx="9" cy="8" r="3.2"/><path d="M15.5 5.5a3 3 0 0 1 0 5.6M3.5 20c.5-3.3 2.8-5 5.5-5s5 1.7 5.5 5M16 15c2.4.2 4 1.9 4.4 5"/></svg><span><b>社群支援</b><small>COMMUNITY</small></span></a>
-      <a href="/forms.html#feedback"><svg viewBox="0 0 24 24" stroke="#9c6f0d"><path d="M6 3.5h3l1.5 4-2 1.5a12 12 0 0 0 6 6l1.5-2 4 1.5v3a2 2 0 0 1-2.2 2A16.5 16.5 0 0 1 4 5.7 2 2 0 0 1 6 3.5Z"/></svg><span><b>熱線服務</b><small>HELPLINE</small></span></a>
-      <a href="#events"><svg viewBox="0 0 24 24" stroke="#C00878"><path d="M12 3c2 2.2 2 4.3 0 6.5S10 14 12 16m-5-9c-3 3-3 8 .5 11.5a9 9 0 0 0 11-1.5c-2 .5-4 0-4-2 0-1.6 1.4-2 1.4-4"/></svg><span><b>文化活動</b><small>CULTURE</small></span></a>
-      <a href="/forms.html#feedback"><svg viewBox="0 0 24 24" stroke="#9c6f0d"><rect x="3" y="7.5" width="18" height="12" rx="2"/><path d="M8.5 7.5V6a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v1.5M3 12.5h18"/></svg><span><b>就業支援</b><small>EMPLOYMENT</small></span></a>
-      <a href="/forms.html#feedback"><svg viewBox="0 0 24 24" stroke="#C00878"><path d="M4 11 12 4l8 7M6 9.5V20h12V9.5M10 20v-5h4v5"/></svg><span><b>住屋資訊</b><small>HOUSING</small></span></a>
-      <a href="/forms.html#feedback"><svg viewBox="0 0 24 24" stroke="#9c6f0d"><path d="M3 6.5 12 4l9 2.5M5 8v7.5c0 1.6 3 3 7 3s7-1.4 7-3V8M12 10.5v5"/></svg><span><b>教育資源</b><small>EDUCATION</small></span></a>
+      <a href="/forms.html#feedback"><svg viewBox="0 0 24 24" stroke="#C00878"><circle cx="9" cy="8" r="3.2"/><path d="M15.5 5.5a3 3 0 0 1 0 5.6M3.5 20c.5-3.3 2.8-5 5.5-5s5 1.7 5.5 5M16 15c2.4.2 4 1.9 4.4 5"/></svg><span><b data-en="Community support">社群支援</b><small>COMMUNITY</small></span></a>
+      <a href="/forms.html#feedback"><svg viewBox="0 0 24 24" stroke="#9c6f0d"><path d="M6 3.5h3l1.5 4-2 1.5a12 12 0 0 0 6 6l1.5-2 4 1.5v3a2 2 0 0 1-2.2 2A16.5 16.5 0 0 1 4 5.7 2 2 0 0 1 6 3.5Z"/></svg><span><b data-en="Helpline">熱線服務</b><small>HELPLINE</small></span></a>
+      <a href="#events"><svg viewBox="0 0 24 24" stroke="#C00878"><path d="M12 3c2 2.2 2 4.3 0 6.5S10 14 12 16m-5-9c-3 3-3 8 .5 11.5a9 9 0 0 0 11-1.5c-2 .5-4 0-4-2 0-1.6 1.4-2 1.4-4"/></svg><span><b data-en="Cultural events">文化活動</b><small>CULTURE</small></span></a>
+      <a href="/forms.html#feedback"><svg viewBox="0 0 24 24" stroke="#9c6f0d"><rect x="3" y="7.5" width="18" height="12" rx="2"/><path d="M8.5 7.5V6a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v1.5M3 12.5h18"/></svg><span><b data-en="Employment support">就業支援</b><small>EMPLOYMENT</small></span></a>
+      <a href="/forms.html#feedback"><svg viewBox="0 0 24 24" stroke="#C00878"><path d="M4 11 12 4l8 7M6 9.5V20h12V9.5M10 20v-5h4v5"/></svg><span><b data-en="Housing information">住屋資訊</b><small>HOUSING</small></span></a>
+      <a href="/forms.html#feedback"><svg viewBox="0 0 24 24" stroke="#9c6f0d"><path d="M3 6.5 12 4l9 2.5M5 8v7.5c0 1.6 3 3 7 3s7-1.4 7-3V8M12 10.5v5"/></svg><span><b data-en="Education resources">教育資源</b><small>EDUCATION</small></span></a>
     </div>
   </section>
 
   <section class="section" id="events">
     <div class="sec-head">
-      <div class="eyebrow">定期活動</div>
-      <h2>每個月，我們都有約</h2>
-      <p>定期聚會，不收入場費。帶上你自己，或者帶埋朋友一齊嚟。</p>
+      <div class="eyebrow" data-en="Regular events">定期活動</div>
+      <h2 data-en="Something on every month">每個月，我們都有約</h2>
+      <p data-en="Regular gatherings, free to attend. Come along on your own or bring a friend.">定期聚會，不收入場費。帶上你自己，或者帶埋朋友一齊嚟。</p>
     </div>
     <div class="events">
       <article class="ev">
-        <div class="top"><div class="when">每月最後<b>星期三</b></div><span class="free">免費入場</span></div>
-        <div class="body"><h3>社群茶聚</h3>
+        <div class="top"><div class="when" data-en-html="Monthly, last<b>Wednesday</b>">每月最後<b>星期三</b></div><span class="free" data-en="Free entry">免費入場</span></div>
+        <div class="body"><h3 data-en="Community tea gathering">社群茶聚</h3>
           <div class="meta">
             <div><svg viewBox="0 0 24 24"><path d="M12 21s-7-5.2-7-10a7 7 0 0 1 14 0c0 4.8-7 10-7 10Z"/><circle cx="12" cy="11" r="2.5"/></svg>Sacred Trinity Church, Chapel St, Salford M3 5DW</div>
             <div><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>11:30 – 14:30</div>
           </div>
-          <a class="go" href="/forms.html#event">立即登記</a>
+          <a class="go" href="/forms.html#event" data-en="Register">立即登記</a>
         </div>
       </article>
       <article class="ev">
-        <div class="top"><div class="when">每月最後<b>星期六</b></div><span class="free">免費入場</span></div>
-        <div class="body"><h3>Boardgame 桌遊聚</h3>
+        <div class="top"><div class="when" data-en-html="Monthly, last<b>Saturday</b>">每月最後<b>星期六</b></div><span class="free" data-en="Free entry">免費入場</span></div>
+        <div class="body"><h3 data-en="Board games afternoon">Boardgame 桌遊聚</h3>
           <div class="meta">
             <div><svg viewBox="0 0 24 24"><path d="M12 21s-7-5.2-7-10a7 7 0 0 1 14 0c0 4.8-7 10-7 10Z"/><circle cx="12" cy="11" r="2.5"/></svg>Angel Centre, Salford</div>
             <div><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>15:00 – 18:00</div>
           </div>
-          <a class="go" href="/boardgame/">立即登記</a>
+          <a class="go" href="/boardgame/" data-en="Register">立即登記</a>
         </div>
       </article>
       <article class="ev">
-        <div class="top"><div class="when">每月第二<b>星期三</b></div><span class="free">免費入場</span></div>
-        <div class="body"><h3>麻雀耍樂</h3>
+        <div class="top"><div class="when" data-en-html="Monthly, 2nd<b>Wednesday</b>">每月第二<b>星期三</b></div><span class="free" data-en="Free entry">免費入場</span></div>
+        <div class="body"><h3 data-en="Mahjong">麻雀耍樂</h3>
           <div class="meta">
             <div><svg viewBox="0 0 24 24"><path d="M12 21s-7-5.2-7-10a7 7 0 0 1 14 0c0 4.8-7 10-7 10Z"/><circle cx="12" cy="11" r="2.5"/></svg>Kargo MKT, Manchester</div>
             <div><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>10:00 – 14:00</div>
           </div>
-          <a class="go" href="/mahjong/">立即登記</a>
+          <a class="go" href="/mahjong/" data-en="Register">立即登記</a>
         </div>
       </article>
     </div>
-    <p class="note">活動詳情或有更改，請留意我們的 Facebook 及 Instagram @salfordhongkongerscic。</p>
+    <p class="note" data-en="Details may change. Follow us on Facebook and Instagram @salfordhongkongerscic.">活動詳情或有更改，請留意我們的 Facebook 及 Instagram @salfordhongkongerscic。</p>
+  </section>
+
+  <section class="section" id="news" hidden>
+    <div class="sec-head">
+      <div class="eyebrow" data-en="Latest news">最新消息</div>
+      <h2 data-en="From our Facebook">Facebook 最新動態</h2>
+    </div>
+    <div class="news" id="news-list"></div>
+    <p class="note"><a href="https://www.facebook.com/profile.php?id=100078299000811" target="_blank" rel="noopener" data-en="More on our Facebook page →">去我們的 Facebook 專頁睇更多 →</a></p>
   </section>
 
   <section class="section" id="volunteer">
     <div class="involve">
       <div class="in">
         <div>
-          <div class="eyebrow">義工專區</div>
-          <h2>一雙手，撐起一個社區</h2>
-          <p>我們所有活動都靠義工支撐。用 WhatsApp 號碼登記之後，就可以喺活動現場用手機打卡、查看自己嘅義工時數；每年服務滿 10 小時，可獲發義工服務證明。</p>
+          <div class="eyebrow" data-en="Volunteers">義工專區</div>
+          <h2 data-en="Many hands make a community">一雙手，撐起一個社區</h2>
+          <p data-en="All our events are run by volunteers. Sign up with your WhatsApp number to check in on your phone at events and see your volunteering hours. Volunteers who give 10 or more hours a year can receive a volunteer service certificate.">我們所有活動都靠義工支撐。用 WhatsApp 號碼登記之後，就可以喺活動現場用手機打卡、查看自己嘅義工時數；每年服務滿 10 小時，可獲發義工服務證明。</p>
         </div>
         <div class="acts">
-          <a class="btn btn-solid" href="/volunteer/join/">加入義工隊</a>
-          <a class="btn btn-line" href="/volunteer/">義工登入 / 打卡</a>
+          <a class="btn btn-solid" href="/volunteer/join/" data-en="Volunteer with us">加入義工隊</a>
+          <a class="btn btn-line" href="/volunteer/" data-en="Volunteer login / check-in">義工登入 / 打卡</a>
         </div>
       </div>
     </div>
   </section>
 
   <section class="section" id="partners">
-    <div class="eyebrow">合作單位</div>
+    <div class="eyebrow" data-en="Our partners">合作單位</div>
     <div class="partners">
       <div class="partner"><img src="/images/partners/salford-city-council.svg" alt="Salford City Council" loading="lazy"></div>
       <div class="partner"><img src="/images/partners/national-lottery-community-fund.png" alt="National Lottery Community Fund" loading="lazy"></div>
@@ -229,11 +251,11 @@
 
   <section class="section" id="support">
     <div class="support">
-      <div class="eyebrow" style="color:var(--gold)">支持我們</div>
-      <h2>如果這裡幫到你，或你身邊的人</h2>
-      <p>Salford Hongkongers CIC 不收取會費，由義工運作。我們的運作經費來自各項資助、捐款，以及社區成員的支持。每一份心意，都會直接用在社區上：</p>
-      <div class="uses"><span>舉辦社區活動</span><span>提供支援服務</span><span>維護網站及通訊平台</span><span>購買活動物資</span><span>協助有需要的香港人</span></div>
-      <a class="link" href="/donate.html">了解如何支持我們 →</a>
+      <div class="eyebrow" style="color:var(--gold)" data-en="Support us">支持我們</div>
+      <h2 data-en="If we've helped you, or someone you know">如果這裡幫到你，或你身邊的人</h2>
+      <p data-en="Salford Hongkongers CIC charges no membership fees and is run by volunteers. Our work is funded by grants, donations and support from the community. Every contribution goes straight back into the community:">Salford Hongkongers CIC 不收取會費，由義工運作。我們的運作經費來自各項資助、捐款，以及社區成員的支持。每一份心意，都會直接用在社區上：</p>
+      <div class="uses"><span data-en="Community events">舉辦社區活動</span><span data-en="Support services">提供支援服務</span><span data-en="Website and communication channels">維護網站及通訊平台</span><span data-en="Event supplies">購買活動物資</span><span data-en="Helping Hongkongers in need">協助有需要的香港人</span></div>
+      <a class="link" href="/donate.html" data-en="How you can support us →">了解如何支持我們 →</a>
     </div>
   </section>
 
@@ -243,33 +265,59 @@
   <div class="wrap">
     <div class="foot">
       <div>
-        <h4>聯絡我們</h4>
+        <h4 data-en="Contact us">聯絡我們</h4>
         <p><a href="mailto:salfordhongkongers@gmail.com">salfordhongkongers@gmail.com</a></p>
         <p><a href="https://wa.me/447999338006">WhatsApp +44 7999 338006</a></p>
         <p>Salford, Greater Manchester</p>
       </div>
       <div>
-        <h4>快速連結</h4>
-        <p><a href="#events">活動</a></p>
-        <p><a href="/volunteer/join/">加入義工隊</a></p>
-        <p><a href="/volunteer/">義工登入 / 打卡</a></p>
-        <p><a href="/forms.html">查詢 / 合作</a></p>
-        <p><a href="/privacy/">私隱政策</a></p>
+        <h4 data-en="Quick links">快速連結</h4>
+        <p><a href="/#events" data-en="Events">活動</a></p>
+        <p><a href="/volunteer/join/" data-en="Volunteer with us">加入義工隊</a></p>
+        <p><a href="/volunteer/" data-en="Volunteer login / check-in">義工登入 / 打卡</a></p>
+        <p><a href="/forms.html" data-en="Enquiries / partnerships">查詢 / 合作</a></p>
+        <p><a href="/privacy/" data-en="Privacy policy">私隱政策</a></p>
       </div>
       <div>
-        <h4>追蹤我們</h4>
+        <h4 data-en="Follow us">追蹤我們</h4>
         <div class="socials">
           <a href="https://www.facebook.com/profile.php?id=100078299000811" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M14 8.5V6.8c0-.8.5-1 1-1h2V2.5h-2.8C11.1 2.5 10 4.6 10 6.6v1.9H7.5V12H10v9.5h4V12h2.7l.4-3.5H14z"/></svg></a>
           <a href="https://www.instagram.com/salfordhongkongerscic/" aria-label="Instagram"><svg viewBox="0 0 24 24" fill-rule="evenodd"><path d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9a5.5 5.5 0 0 1-5.5 5.5h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm5.3-3.3a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4z"/></svg></a>
           <a href="https://wa.me/447999338006" aria-label="WhatsApp"><svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 0 0-7.7 13.6L3 21l4.5-1.2A9 9 0 1 0 12 3Zm0 2a7 7 0 0 1 5.9 10.8l-.3.5.6 2.2-2.3-.6-.5.3A7 7 0 1 1 12 5Zm-2.3 3c-.2 0-.5.1-.7.4-.3.3-.9.9-.9 2.1s.9 2.4 1 2.6c.1.2 1.7 2.8 4.3 3.8 2.1.8 2.6.7 3 .6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2 0-.1-.2-.2-.5-.3l-1.7-.8c-.2-.1-.4-.1-.6.1l-.7.9c-.1.2-.3.2-.5.1-.7-.3-1.5-.7-2.3-1.7-.6-.7-1-1.5-1.1-1.7-.1-.2 0-.4.1-.5l.5-.6c.1-.2.2-.3.3-.5 0-.2 0-.3-.1-.5l-.8-1.8c-.2-.3-.3-.3-.6-.3Z"/></svg></a>
           <a href="https://www.threads.com/@salfordhongkongerscic" aria-label="Threads"><svg class="stroke" viewBox="0 0 24 24"><path d="M12 21c-4.5 0-7-3-7-9s2.5-9 7-9c3 0 5 1.4 6 3.8M9.5 13c0-1.6 1.2-2.6 3-2.6s3 1 3 3.2-1.5 3.4-3.5 3.4c-1.6 0-2.5-1-2.5-2 0-1.3 1.2-1.9 2.6-1.9 2.4 0 4.4 1.4 4.4 4"/></svg></a>
         </div>
-        <p><a href="https://whatsapp.com/channel/0029VaSj6Bk8kyyHDVnHkx2E">追蹤 WhatsApp 頻道</a></p>
+        <p><a href="https://whatsapp.com/channel/0029VaSj6Bk8kyyHDVnHkx2E" data-en="Follow our WhatsApp channel">追蹤 WhatsApp 頻道</a></p>
       </div>
     </div>
-    <div class="legal"><span>© 2026 Salford Hongkongers CIC</span><span>公司編號 13877472</span><span>Salford, Greater Manchester</span></div>
+    <div class="legal"><span>© 2026 Salford Hongkongers CIC</span><span data-en="Company No. 13877472">公司編號 13877472</span><span>Salford, Greater Manchester</span></div>
   </div>
 </footer>
 <script src="/assets/site.js" defer></script>
+<script>
+/* Latest Facebook posts, written to /data/fb-feed.json by the "Sync Facebook posts" GitHub Action.
+   The section stays hidden until the file has posts. */
+(function () {
+  var sec = document.getElementById("news"), list = document.getElementById("news-list"), posts = null;
+  function esc(s) { return String(s || "").replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+  function render() {
+    var en = window.SHK_LANG === "en";
+    list.innerHTML = posts.slice(0, 3).map(function (p) {
+      var d = new Date(p.date), ds = isNaN(d) ? "" : d.toLocaleDateString(en ? "en-GB" : "zh-HK", { day: "numeric", month: "long", year: "numeric" });
+      return '<a class="post" href="' + esc(p.link) + '" target="_blank" rel="noopener">' +
+        (p.image ? '<img src="' + esc(p.image) + '" alt="" loading="lazy">' : "") +
+        '<div class="pb"><time datetime="' + esc(p.date) + '">' + esc(ds) + "</time><p>" + esc(p.text) + "</p>" +
+        '<span class="more">' + (en ? "Read on Facebook" : "喺 Facebook 睇全文") + "</span></div></a>";
+    }).join("");
+    sec.hidden = false;
+  }
+  /* read straight from GitHub so new posts show without waiting for a Pages rebuild; fall back to the site copy */
+  var RAW = "https://raw.githubusercontent.com/mobiassistantv1-sys/salford-hongkongers/main/data/fb-feed.json";
+  function get(u) { return fetch(u, { cache: "no-cache" }).then(function (r) { if (!r.ok) throw 0; return r.json(); }); }
+  get(RAW).catch(function () { return get("/data/fb-feed.json"); })
+    .then(function (d) { if (d && d.posts && d.posts.length) { posts = d.posts; render(); } })
+    .catch(function () {});
+  document.addEventListener("shk:lang", function () { if (posts) render(); });
+})();
+</script>
 </body>
 </html>
