@@ -7,9 +7,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@400;500;700;900&display=swap">
 <style>
-:root{--bg:#FBF7F2;--card:#FFFFFF;--ink:#1F1A17;--muted:#6E645C;--line:#E6DCD2;--red:#B8322A;--red-ink:#FFFFFF;--sunk:#F3ECE4;--amber:#94600A;
+:root{--bg:#FBF7F2;--card:#FFFFFF;--ink:#1F1A17;--muted:#6E645C;--line:#E6DCD2;--red:#C00878;--red-ink:#FFFFFF;--sunk:#F3ECE4;--amber:#94600A;
   --f:"Noto Sans HK","PingFang HK","Microsoft JhengHei",system-ui,sans-serif;color-scheme:light}
-@media (prefers-color-scheme:dark){:root{--bg:#151211;--card:#201B19;--ink:#F3ECE6;--muted:#AFA39A;--line:#3A322D;--red:#E5675C;--red-ink:#1A0F0D;--sunk:#2A2421;--amber:#EDB458;color-scheme:dark}}
+@media (prefers-color-scheme:dark){:root{--bg:#151211;--card:#201B19;--ink:#F3ECE6;--muted:#AFA39A;--line:#3A322D;--red:#E6249A;--red-ink:#1A0F0D;--sunk:#2A2421;--amber:#EDB458;color-scheme:dark}}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f);font-size:16px;line-height:1.65;padding:0 16px 56px}
 .band{background:var(--red);color:var(--red-ink);margin:0 -16px;padding:14px 16px}
@@ -32,10 +32,10 @@ html[lang="en"] [data-l="zh"]{display:none}
 html[lang="en"] [data-l="en"]{display:block}
 html[lang="en"] tr[data-l="en"]{display:table-row}
 @media (max-width:560px){.tbl,.tbl tbody,.tbl tr,.tbl td{display:block;width:100%}.tbl thead{display:none}.tbl tr{border:1px solid var(--line);border-radius:10px;margin:0 0 10px;padding:4px 0}.tbl td{border:0;padding:4px 10px}.tbl td::before{content:attr(data-h);display:block;font-weight:700;font-size:12.5px;color:var(--muted)}html[lang="en"] tr[data-l="en"]{display:block}}
-</style>
+.band .logo-chip{background:#fff;border-radius:8px;padding:3px 5px;display:inline-flex;align-items:center;vertical-align:middle;margin-right:8px}.band .logo-chip img{height:26px;display:block}</style>
 </head>
 <body>
-<header class="band"><div class="band-in"><div><b data-l="zh">私隱政策</b><b data-l="en">Privacy Policy</b><small>Salford Hongkongers CIC · 友愛冰室 Yau Oi Cafe</small></div><button class="lang" id="lang" type="button" aria-label="Switch language">EN</button></div></header>
+<header class="band"><div class="band-in"><span class="logo-chip"><img src="/assets/shk-logo-icon.png" alt="SHK"></span><div><b data-l="zh">私隱政策</b><b data-l="en">Privacy Policy</b><small>Salford Hongkongers CIC · 友愛冰室 Yau Oi Cafe</small></div><button class="lang" id="lang" type="button" aria-label="Switch language">EN</button></div></header>
 <main>
 
 <!-- ============ 中文 ============ -->

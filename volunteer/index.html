@@ -8,9 +8,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@400;500;700;900&display=swap">
 <style>
-:root{--bg:#FBF7F2;--card:#FFFFFF;--sunk:#F2EBE3;--ink:#1F1A17;--muted:#6E645C;--line:#E6DCD2;--red:#B8322A;--red-ink:#FFFFFF;--red-soft:#FBE4E1;--ok:#1E7A4C;--ok-soft:#DFF1E7;--amber:#94600A;--amber-soft:#FBEFD5;
+:root{--bg:#FBF7F2;--card:#FFFFFF;--sunk:#F2EBE3;--ink:#1F1A17;--muted:#6E645C;--line:#E6DCD2;--red:#C00878;--red-ink:#FFFFFF;--red-soft:#FBDBED;--ok:#1E7A4C;--ok-soft:#DFF1E7;--amber:#94600A;--amber-soft:#FBEFD5;
   --f:"Noto Sans HK","PingFang HK","Microsoft JhengHei",system-ui,sans-serif;--r:14px;color-scheme:light}
-@media (prefers-color-scheme:dark){:root{--bg:#151211;--card:#201B19;--sunk:#2A2421;--ink:#F3ECE6;--muted:#AFA39A;--line:#3A322D;--red:#E5675C;--red-ink:#1A0F0D;--red-soft:#3B1C19;--ok:#54C48B;--ok-soft:#14301F;--amber:#EDB458;--amber-soft:#3A2C10;color-scheme:dark}}
+@media (prefers-color-scheme:dark){:root{--bg:#151211;--card:#201B19;--sunk:#2A2421;--ink:#F3ECE6;--muted:#AFA39A;--line:#3A322D;--red:#E6249A;--red-ink:#1A0F0D;--red-soft:#3A1430;--ok:#54C48B;--ok-soft:#14301F;--amber:#EDB458;--amber-soft:#3A2C10;color-scheme:dark}}
 *{box-sizing:border-box}
 html{padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f);font-size:16px;line-height:1.5;padding:0 max(16px,env(safe-area-inset-right,0px)) 48px max(16px,env(safe-area-inset-left,0px))}
@@ -44,10 +44,10 @@ input{width:100%;border:1.5px solid var(--line);background:var(--card);border-ra
 .kpi{background:var(--sunk);border-radius:12px;padding:12px}.kpi span{display:block;color:var(--muted);font-size:13px}.kpi b{font-size:28px;font-weight:900}
 a{color:var(--red);font-weight:700}
 .small{font-size:13px;color:var(--muted)}
-</style>
+.band .logo-chip{background:#fff;border-radius:8px;padding:3px 5px;display:inline-flex;align-items:center;vertical-align:middle;margin-right:8px}.band .logo-chip img{height:26px;display:block}</style>
 </head>
 <body>
-<header class="band"><div class="band-in"><div><b>義工打卡</b><small>Salford Hongkongers · Volunteer check-in</small></div><button id="out" data-act="logout" hidden>登出</button></div></header>
+<header class="band"><div class="band-in"><span class="logo-chip"><img src="/assets/shk-logo-icon.png" alt="SHK"></span><div><b>義工打卡</b><small>Salford Hongkongers · Volunteer check-in</small></div><button id="out" data-act="logout" hidden>登出</button></div></header>
 <main class="wrap" id="app"><div class="card"><p>載入中… Loading…</p></div></main>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
