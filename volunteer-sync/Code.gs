@@ -213,7 +213,7 @@ function pushHours_(ss, people) {
 }
 
 // ── 4. Daily privacy clean-up (privacy policy section 6) ──
-// Café queue: entries from before today are deleted.
+// Café queue: entries (and their names/phones in queuePrivate) from before today are deleted.
 // QR orders older than ALLERGY_DAYS: allergy note, name and free-text note are blanked;
 // the order lines and payments stay for the accounts.
 const ALLERGY_DAYS = 30;
@@ -223,7 +223,7 @@ function dailyCleanup() {
   const qdel = {};
   Object.keys(q).forEach(k => {
     const at = q[k] && q[k].joinedAt;
-    if (!at || Utilities.formatDate(new Date(at), TZ, 'yyyy-MM-dd') < today) qdel['queue/' + k] = null;
+    if (!at || Utilities.formatDate(new Date(at), TZ, 'yyyy-MM-dd') < today) { qdel['queue/' + k] = null; qdel['queuePrivate/' + k] = null; }
   });
   if (Object.keys(qdel).length) fbPatchChunked_(qdel);
 

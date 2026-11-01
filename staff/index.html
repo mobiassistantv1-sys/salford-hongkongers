@@ -191,7 +191,7 @@ function renderLogin(){
   h+='<p style="color:var(--muted);font-size:13px;margin-top:12px">'+t("用你嘅 SHK 帳戶登入。未有帳戶：去 /volunteer/join/ 登記，再請經理開冰室權限。","Use your SHK account. No account yet? Register at /volunteer/join/ and ask the manager for café access.")+'</p></div></div>';
   return h;
 }
-function renderNoRole(){return '<div class="wrap"><div class="login"><h1>'+t("呢個帳戶未有權限","This account has no access")+'</h1><p>'+t("請經理喺 SHK 管理頁（/admin/）開冰室權限。","Ask the manager to give you café access in /admin/.")+'</p><button class="btn ghost" data-act="logout">'+t("登出","Sign out")+'</button></div></div>';}
+function renderNoRole(){return '<div class="wrap"><div class="login"><h1>'+t("呢個帳戶未有權限","This account has no access")+'</h1><p>'+t("你嘅帳戶未批核做義工。請 SHK 負責人喺管理頁（/admin/）批核。","Ask the manager to give you café access in /admin/.")+'</p><button class="btn ghost" data-act="logout">'+t("登出","Sign out")+'</button></div></div>';}
 function renderStaff(){
   const openN=openOrders().filter(o=>!o.served).length;
   if(U.tab==="eod"&&!mgr())U.tab="orders";
@@ -310,7 +310,13 @@ setInterval(()=>{if(user&&role&&Y.dayKey()!==day)subscribe();},60000);  /* roll 
 db.ref(".info/connected").on("value",s=>{online=!!s.val();if(user&&role)render();});
 auth.onAuthStateChanged(async u=>{
   user=u;role=null;unsub();
-  if(u&&!u.isAnonymous){try{role=(await db.ref("ordering/roles/"+u.uid).get()).val();}catch(e){role=null;}if(role!=="manager"&&role!=="staff")role=null;myName="";if(role){try{const pid=(await db.ref("shk/uids/"+u.uid).get()).val();if(pid)myName=(await db.ref("shk/people/"+pid+"/name").get()).val()||"";}catch(e){}}if(role)subscribe();}
+  if(u&&!u.isAnonymous){
+    try{role=(await db.ref("ordering/roles/"+u.uid).get()).val();}catch(e){role=null;}
+    if(role!=="manager"&&role!=="staff")role=null;myName="";
+    /* Every active volunteer has staff level with the same login; manager is only set in /admin/. */
+    try{const pid=(await db.ref("shk/uids/"+u.uid).get()).val();const p=pid?(await db.ref("shk/people/"+pid).get()).val():null;
+      if(p){myName=p.name||"";if(!role&&p.status==="active"&&p.roles&&p.roles.volunteer===true)role="staff";}}catch(e){}
+    if(role)subscribe();}
   else if(u&&u.isAnonymous){await auth.signOut();return;}
   authReady=true;render();
 });
