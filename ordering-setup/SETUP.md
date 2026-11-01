@@ -6,7 +6,8 @@ Firebase 專案用排隊系統嗰個：**yauoicafequeue**。
 | 頁面 | 網址 | 邊個用 |
 |---|---|---|
 | 客人落單 | `salfordhongkongers.co.uk/qr/T1` … `/qr/T9`、`/qr/TA`（外賣） | 客人 scan 枱上 QR |
-| 冰室後台 | `salfordhongkongers.co.uk/staff/` | 冰室員工、經理（個人帳戶登入） |
+| 冰室後台 | `salfordhongkongers.co.uk/staff/` | 已批核義工（員工）、經理（個人帳戶登入） |
+| 排隊 | `salfordhongkongers.co.uk/queue/` | 客人取號；職員分頁用 SHK 帳戶登入 |
 | 登記／啟用帳戶 | `salfordhongkongers.co.uk/volunteer/join/` | 所有人第一次用 |
 | SHK 管理 | `salfordhongkongers.co.uk/admin/` | Manson（批核新帳戶、設冰室權限） |
 
@@ -87,7 +88,8 @@ GitHub 上面嘅 Pull Request 撳 **Merge**，大約 1 分鐘後網站就會更�
 
 ### 員工點開帳戶
 - 叫佢開 `/volunteer/join/` 輸入 WhatsApp 號碼、填名、設密碼，然後等你喺 `/admin/` → 等待批核 批准。
-- 冰室員工：喺 `/admin/` → 人員 → 搵佢 → 撳「冰室員工」或「冰室經理」。
+- 冰室員工：所有已批核嘅義工用同一個帳戶就可以登入 `/staff/` 同排隊頁職員版，唔使另外設。
+- 冰室經理（睇到日結）：只可以由你喺 `/admin/` → 人員 → 搵佢 → 撳「冰室經理」。
 - 唔記得密碼：`/admin/` → 人員 → 搵佢 → 「重設帳戶」（撳兩下確認），佢再用同一個號碼去 `/volunteer/join/` 設新密碼。舊記錄唔會冇。
 - 有人走咗：撳「停用」，即刻入唔到冰室後台。
 
