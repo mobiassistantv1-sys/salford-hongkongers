@@ -47,20 +47,16 @@ Realtime Database → **Rules**。
 4. 開 `/admin/` 用電話 + 密碼登入，見到「SHK 管理」就成功。之後所有人嘅層級都喺呢度設，唔使再入 Firebase。
 
 ## 4. 設定 QR 碼、限量數字
-Realtime Database → Data → 喺根目錄撳 ⋮ → **Import JSON** 只會覆蓋成個資料庫，**唔好用**。改為：
-1. 喺 `ordering` 加 `qrTokens`，內容跟 Claude 另外俾你嘅 `qrTokens.json`（10 個隨機碼，同已經整好嘅 QR 卡一致）
-2. 喺 `ordering` → `public` 加 `stock`：`pineapple: 0`、`cocktail: 0`、`sausage: 0`、`eggtart: 0`
+資料庫已經有 `shk`（帳戶資料），**千祈唔好喺最頂層 Import JSON**，會清晒所有帳戶。改為：
+1. Realtime Database → Data，網址加 `/ordering`，即係開 `…/data/~2Fordering`，見到 `ordering: null`。
+2. 撳嗰行右邊 **⋮** → **Import JSON** → 揀 Claude 俾你嘅 `ordering_import.json`（10 個 QR 碼 + 限量數字）→ **Import**。
+3. 應該見到 `ordering` → `qrTokens`（T1–T9、TA）同 `public` → `stock`。
+4. 匯入之後先去 `/admin/` 設冰室員工／經理（匯入會覆蓋成個 `ordering`，包括 `roles`）。
 
-> `qrTokens.json` 唔可以放入 GitHub（呢個 repo 係公開嘅）。
+> `ordering_import.json` 唔可以放入 GitHub（呢個 repo 係公開嘅）。
 
-## 4b. 每日私隱清理（Apps Script）
-私隱政策承諾：排隊記錄每日刪除；訂單上嘅名、過敏備註 30 日後刪除。用**擁有 Firebase 專案嘅 Google 帳戶**做：
-1. 開 `script.google.com` → **New project**，改名「友愛冰室 每日清理」。
-2. 將 `ordering-setup/cleanup/Code.gs` 成個貼入 `Code.gs`。
-3. Project Settings → 剔 **Show "appsscript.json" manifest file**，再將 `ordering-setup/cleanup/appsscript.json` 貼入去。
-4. 揀 `dailyCleanup` → **Run**（第一次會叫你批准權限），Execution log 見到「排隊刪除…」就成功。
-5. 揀 `setupDailyTrigger` → **Run**。之後每日凌晨 3 點自動做。
-6. 如果出 401／403 錯誤：Firebase → Project settings → Users and permissions，確認呢個 Google 帳戶係 Owner 或 Editor。
+## 4b. 每日私隱清理
+已經包埋喺義工同步嘅 Apps Script（`volunteer-sync/Code.gs` 嘅 `dailyCleanup`）。跑過 `setupHourlyTrigger` 就會每日凌晨 3 點自動做：刪除前一日嘅排隊記錄；30 日前嘅冰室訂單清走名、過敏備註同其他備註。
 
 ## 5. Square 價錢自動同步
 GitHub → repo → Settings → Secrets and variables → Actions → **New repository secret**，加 3 個：
