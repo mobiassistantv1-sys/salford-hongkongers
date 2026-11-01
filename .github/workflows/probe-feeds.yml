@@ -1,0 +1,28 @@
+name: Probe community feeds (temporary)
+on:
+  push:
+    branches: [probe/feeds]
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          for u in \
+            "https://news.salford.gov.uk/news/rss" \
+            "https://www.gov.uk/search/news-and-communications.atom?keywords=hong+kong" \
+            "https://www.gov.uk/search/news-and-communications.atom?keywords=salford" \
+            "https://www.gov.uk/search/news-and-communications.atom?keywords=BN(O)" \
+            "https://salfordcommunityleisure.co.uk/feed/?post_type=event" \
+            "https://salfordcommunityleisure.co.uk/wp-json/wp/v2/types" \
+            "https://salfordcommunityleisure.co.uk/wp-json/wp/v2/event?per_page=3" \
+            "https://salfordmuseum.com/feed/?post_type=event" \
+            "https://salfordmuseum.com/wp-json/wp/v2/event?per_page=3" \
+            "https://www.metoffice.gov.uk/public/data/PWSCache/WarningsRSS/Region/nw" \
+            "https://www.greatermanchester-ca.gov.uk/news/rss" \
+            "https://www.greatermanchester-ca.gov.uk/rss" \
+            "https://www.salford.gov.uk/rss" \
+            "https://www.thelowry.com/whats-on/" ; do
+            echo "=== $u"
+            curl -sS -L -m 20 -A "Mozilla/5.0 (SHK community feed)" -o f -w "HTTP %{http_code} %{content_type} %{size_download}B\n" "$u" || true
+            head -c 900 f | tr '\n' ' ' | sed 's/  */ /g'; echo
+          done
