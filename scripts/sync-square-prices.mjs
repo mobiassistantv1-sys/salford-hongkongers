@@ -11,9 +11,9 @@ if (!SQUARE_ACCESS_TOKEN || !FIREBASE_SERVICE_ACCOUNT || !FIREBASE_DB_URL) {
   process.exit(1);
 }
 
-// Load the shared menu (order/menu.js) without a browser.
+// Load the shared menu (yauoicafe/order/menu.js) without a browser.
 const sandbox = { window: {}, Intl };
-vm.runInNewContext(fs.readFileSync(new URL("../order/menu.js", import.meta.url), "utf8"), sandbox);
+vm.runInNewContext(fs.readFileSync(new URL("../yauoicafe/order/menu.js", import.meta.url), "utf8"), sandbox);
 const Y = sandbox.window.YO;
 
 const wanted = new Map(); // squareId -> [{kind, key}]
