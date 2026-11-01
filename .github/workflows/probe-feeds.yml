@@ -8,20 +8,8 @@ jobs:
     steps:
       - run: |
           UA="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36"
-          for u in \
-            "https://news.salford.gov.uk/news/rss" \
-            "https://www.gov.uk/search/news-and-communications.atom?keywords=%22Hong+Kong%22&order=updated-newest" \
-            "https://salfordcvs.co.uk/rss.xml" \
-            "https://salfordcvs.co.uk/feed" \
-            "https://salfordnow.co.uk/feed/" ; do
-            echo "=== $u"
-            curl -sS -L -m 20 -A "$UA" -H "Accept: text/html,application/xml;q=0.9,*/*;q=0.8" -H "Accept-Language: en-GB" -o f -w "HTTP %{http_code} %{content_type} %{size_download}B\n" "$u" || true
-            head -c 600 f | tr '\n' ' ' | sed 's/  */ /g'; echo
-            grep -o '<title>[^<]*</title>' f | head -8
+          for u in "https://www.salford.gov.uk/" "https://www.salfordcvs.co.uk/" "https://www.citizensadvicesalford.org.uk/" "https://www.citizensadvice.org.uk/" "https://www.gov.uk/guidance/hong-kong-uk-welcome-programme" "https://www.gov.uk/british-national-overseas-bno-visa" "https://www.report-it.org.uk/" "https://www.salford.gov.uk/contact-us" "https://www.salford.gov.uk/council-tax" "https://www.salford.gov.uk/bins-and-recycling" "https://www.salford.gov.uk/bins" "https://www.salford.gov.uk/housing" "https://www.salford.gov.uk/housing/homelessness" "https://www.salfordhomesearch.co.uk/" "https://england.shelter.org.uk/" "https://www.gov.uk/tenancy-deposit-protection" "https://findajob.dwp.gov.uk/" "https://nationalcareers.service.gov.uk/" "https://www.salford.gov.uk/jobs" "https://www.salford.gov.uk/adult-learning" "https://www.salfordcvs.co.uk/jobs" "https://www.gov.uk/contact-jobcentre-plus" "https://www.salford.gov.uk/schools-and-education" "https://www.salford.gov.uk/school-admissions" "https://www.childcarechoices.gov.uk/" "https://www.salfordcc.ac.uk/" "https://www.salford.ac.uk/" "https://salfordcommunityleisure.co.uk/our-libraries" "https://salfordcommunityleisure.co.uk/whats-on" "https://salfordmuseum.com/" "https://ordsallhall.com/" "https://www.thelowry.com/" "https://news.salford.gov.uk/salford100" "https://www.nhs.uk/nhs-services/gps/how-to-register-with-a-gp-surgery/" "https://111.nhs.uk/" "https://www.samaritans.org/" "https://giveusashout.org/" "https://www.nationaldahelpline.org.uk/" "https://www.metoffice.gov.uk/weather/warnings-and-advice/uk-warnings" "https://tfgm.com/" "https://www.salford.gov.uk/esol" "https://www.salford.gov.uk/cost-of-living"; do
+            r=$(curl -sS -L -m 20 -A "$UA" -o f -w "%{http_code} %{url_effective}" "$u" 2>&1 | tail -1)
+            t=$(grep -o -m1 '<title>[^<]*' f | head -1 | cut -c8-90)
+            echo "LINK $u => $r | $t"
           done
-          echo "=== SCL event sample"
-          curl -sS -m 20 "https://salfordcommunityleisure.co.uk/wp-json/wp/v2/event?per_page=2&_fields=id,link,title,acf,meta,event_type,location_category,date" | head -c 2500; echo
-          echo "=== SCL taxonomies"
-          curl -sS -m 20 "https://salfordcommunityleisure.co.uk/wp-json/wp/v2/taxonomies" | grep -o '"slug":"[^"]*"' | tr '\n' ' '; echo
-          echo "=== Museum event sample"
-          curl -sS -m 20 "https://salfordmuseum.com/wp-json/wp/v2/event?per_page=1" | head -c 3000; echo
