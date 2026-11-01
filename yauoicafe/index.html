@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>友愛冰室 Yau Oi Cafe · Salford</title>
+<meta name="description" content="友愛冰室 Yau Oi Cafe — Salford 嘅香港冰室，由 Salford Hongkongers CIC 義工營運。A Hong Kong-style café in Salford run by volunteers.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@400;500;700;900&display=swap">
+<style>
+:root{--green:#0F6B3A;--red:#D62828;--gold:#FFC83D;--cream:#FFF7E1;--card:#FFFFFF;--ink:#1F1A17;--muted:#5E554D;--line:#EADFC8;
+  --f:"Noto Sans HK","PingFang HK","Microsoft JhengHei",system-ui,sans-serif;color-scheme:light}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:var(--f);font-size:17px;line-height:1.65}
+a{color:var(--green);font-weight:700}
+.wrap{max-width:880px;margin:0 auto;padding:0 16px}
+.top{background:var(--green);color:#fff}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:10px;padding-bottom:10px}
+.top a{color:#fff;text-decoration:none;font-size:14px;font-weight:500;opacity:.9}
+.lang{border:1.5px solid #fff;background:transparent;color:#fff;border-radius:10px;padding:5px 12px;font:inherit;font-size:14px;font-weight:700;cursor:pointer}
+.hero{text-align:center;padding:36px 0 28px}
+.hero img{width:100%;max-width:420px;height:auto;border-radius:14px;box-shadow:0 6px 24px rgba(15,107,58,.15)}
+.hero h1{font-size:clamp(28px,6vw,40px);font-weight:900;color:var(--red);margin:22px 0 6px;line-height:1.25}
+.hero p{margin:0 auto;max-width:560px;color:var(--muted)}
+.cta{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:22px}
+.btn{display:inline-block;text-decoration:none;border-radius:12px;padding:13px 22px;font-weight:900;font-size:17px}
+.btn.red{background:var(--red);color:#fff}
+.btn.ghost{background:var(--card);color:var(--green);border:2px solid var(--green)}
+section{padding:26px 0;border-top:2px solid var(--line)}
+h2{font-size:24px;font-weight:900;color:var(--green);margin:0 0 12px}
+h2 span{display:inline-block;background:var(--gold);color:var(--ink);border-radius:8px;padding:0 8px;margin-right:8px;font-size:18px;vertical-align:2px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
+.card b{display:block;color:var(--red);font-size:18px;margin-bottom:4px}
+.card p{margin:0;color:var(--muted);font-size:15.5px}
+.info dl{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;margin:0}
+.info dt{font-weight:700;color:var(--green)}
+.info dd{margin:0}
+.note{background:#FFF0D2;border-left:5px solid var(--gold);border-radius:10px;padding:12px 14px;font-size:15.5px}
+footer{background:var(--green);color:#fff;padding:22px 0 30px;margin-top:20px;font-size:14px}
+footer a{color:#fff}
+html:not([lang="en"]) [data-l="en"],html[lang="en"] [data-l="zh"]{display:none!important}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a href="/" data-l="zh">← Salford Hongkongers CIC</a><a href="/" data-l="en">← Salford Hongkongers CIC</a>
+  <button class="lang" id="lang" type="button" aria-label="Switch language">EN</button>
+</div></header>
+
+<main class="wrap">
+  <div class="hero">
+    <img src="/yauoicafe/assets/yau-oi-logo-800.jpg" alt="友愛冰室 Yau Oi Cafe" width="800" height="396">
+    <h1 data-l="zh">一杯奶茶，一份人情味</h1>
+    <h1 data-l="en">A cup of milk tea, a taste of home</h1>
+    <p data-l="zh">友愛冰室係 Salford 嘅香港冰室，由 Salford Hongkongers CIC 同一班義工一齊營運。我哋想喺 Salford 留住香港冰室嘅味道同人情味，畀新來嘅港人、街坊同朋友有個地方坐低、食餐好、傾吓偈。</p>
+    <p data-l="en">Yau Oi Cafe is a Hong Kong-style café in Salford, run by Salford Hongkongers CIC and a team of volunteers. We want to keep the taste and warmth of a Hong Kong <i>bing sutt</i> alive here — a place for new arrivals, neighbours and friends to sit down, eat well and chat.</p>
+    <div class="cta">
+      <a class="btn red" href="/yauoicafe/order/"><span data-l="zh">睇餐牌</span><span data-l="en">See the menu</span></a>
+      <a class="btn ghost" href="/yauoicafe/queue/"><span data-l="zh">網上排隊</span><span data-l="en">Join the queue</span></a>
+    </div>
+  </div>
+
+  <section>
+    <h2><span>01</span><b data-l="zh">我哋嘅理念</b><b data-l="en">What we stand for</b></h2>
+    <div class="grid">
+      <div class="card"><b data-l="zh">香港味道</b><b data-l="en">Taste of Hong Kong</b>
+        <p data-l="zh">港式早餐、通粉、三文治、即日焗嘅菠蘿包同蛋撻，配一杯絲襪奶茶。</p>
+        <p data-l="en">Hong Kong breakfasts, macaroni soup, sandwiches, freshly baked pineapple buns and egg tarts, with a proper milk tea.</p></div>
+      <div class="card"><b data-l="zh">社區聚腳點</b><b data-l="en">A community meeting place</b>
+        <p data-l="zh">唔止係食飯，係一個識新朋友、互相照應嘅地方。</p>
+        <p data-l="en">More than a meal — a place to meet people and look out for each other.</p></div>
+      <div class="card"><b data-l="zh">義工營運</b><b data-l="en">Run by volunteers</b>
+        <p data-l="zh">由 Salford Hongkongers CIC 嘅義工落手落腳打理，收益用返喺社區。</p>
+        <p data-l="en">Run hands-on by Salford Hongkongers CIC volunteers; what we earn goes back into the community.</p></div>
+    </div>
+  </section>
+
+  <section class="info">
+    <h2><span>02</span><b data-l="zh">開放時間同地址</b><b data-l="en">Opening hours &amp; address</b></h2>
+    <dl>
+      <dt data-l="zh">時間</dt><dt data-l="en">Hours</dt>
+      <dd data-l="zh">星期五至日 9:30am – 2:30pm（公眾假期或者活動日可能有變，請留意 Facebook／IG 公告）</dd>
+      <dd data-l="en">Friday to Sunday, 9:30am – 2:30pm (may change on holidays or event days — check our Facebook / Instagram)</dd>
+      <dt data-l="zh">地址</dt><dt data-l="en">Address</dt>
+      <dd>The Angel Centre, 1 St Philip's Place, Salford M3 6FA</dd>
+    </dl>
+  </section>
+
+  <section>
+    <h2><span>03</span><b data-l="zh">點樣落單</b><b data-l="en">How to order</b></h2>
+    <div class="grid">
+      <div class="card"><b data-l="zh">堂食</b><b data-l="en">Eat in</b>
+        <p data-l="zh">坐低之後用手機 scan 枱上嘅 QR code 落單，食完先埋單（現金或者卡）。</p>
+        <p data-l="en">Sit down, scan the QR code on your table to order, and pay at the end (cash or card).</p></div>
+      <div class="card"><b data-l="zh">外賣</b><b data-l="en">Takeaway</b>
+        <p data-l="zh">scan 門口嘅外賣 QR code 落單，取餐時付款。</p>
+        <p data-l="en">Scan the takeaway QR code at the entrance and pay when you collect.</p></div>
+      <div class="card"><b data-l="zh">人多要等位</b><b data-l="en">Busy?</b>
+        <p data-l="zh">用網上排隊取號，輪到你手機會響。</p>
+        <p data-l="en">Take a number with the online queue — your phone alerts you when it's your turn.</p></div>
+    </div>
+    <p class="note" data-l="zh"><b>食物過敏？</b> 每樣餐點嘅過敏原都寫喺餐牌上。落單前請話俾員工知，或者喺訂單「過敏備註」寫低。</p>
+    <p class="note" data-l="en"><b>Food allergy?</b> Allergens are listed for every item on the menu. Please tell staff before ordering, or add an allergy note to your order.</p>
+  </section>
+</main>
+
+<footer><div class="wrap">
+  <p data-l="zh">友愛冰室由 <a href="/">Salford Hongkongers CIC</a>（公司編號 13877472）營運。 · <a href="/privacy/">私隱政策</a> · <a href="/yauoicafe/staff/">員工登入</a></p>
+  <p data-l="en">Yau Oi Cafe is run by <a href="/">Salford Hongkongers CIC</a> (company no. 13877472). · <a href="/privacy/">Privacy</a> · <a href="/yauoicafe/staff/">Staff sign-in</a></p>
+</div></footer>
+<script>
+(function(){
+  var h=document.documentElement,b=document.getElementById("lang");
+  function set(l){h.lang=l==="en"?"en":"zh-Hant";b.textContent=l==="en"?"中文":"EN";try{localStorage.setItem("shk_lang",l)}catch(e){}}
+  var s=null;try{s=localStorage.getItem("shk_lang")}catch(e){}
+  if(s==="en"||/[?&]lang=en/.test(location.search))set("en");
+  b.addEventListener("click",function(){set(h.lang==="en"?"zh":"en")});
+})();
+</script>
+</body>
+</html>
