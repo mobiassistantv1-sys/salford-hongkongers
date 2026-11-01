@@ -7,22 +7,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
+          UA="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36"
           for u in \
             "https://news.salford.gov.uk/news/rss" \
-            "https://www.gov.uk/search/news-and-communications.atom?keywords=hong+kong" \
-            "https://www.gov.uk/search/news-and-communications.atom?keywords=salford" \
-            "https://www.gov.uk/search/news-and-communications.atom?keywords=BN(O)" \
-            "https://salfordcommunityleisure.co.uk/feed/?post_type=event" \
-            "https://salfordcommunityleisure.co.uk/wp-json/wp/v2/types" \
-            "https://salfordcommunityleisure.co.uk/wp-json/wp/v2/event?per_page=3" \
-            "https://salfordmuseum.com/feed/?post_type=event" \
-            "https://salfordmuseum.com/wp-json/wp/v2/event?per_page=3" \
-            "https://www.metoffice.gov.uk/public/data/PWSCache/WarningsRSS/Region/nw" \
-            "https://www.greatermanchester-ca.gov.uk/news/rss" \
-            "https://www.greatermanchester-ca.gov.uk/rss" \
-            "https://www.salford.gov.uk/rss" \
-            "https://www.thelowry.com/whats-on/" ; do
+            "https://www.gov.uk/search/news-and-communications.atom?keywords=%22Hong+Kong%22&order=updated-newest" \
+            "https://salfordcvs.co.uk/rss.xml" \
+            "https://salfordcvs.co.uk/feed" \
+            "https://salfordnow.co.uk/feed/" ; do
             echo "=== $u"
-            curl -sS -L -m 20 -A "Mozilla/5.0 (SHK community feed)" -o f -w "HTTP %{http_code} %{content_type} %{size_download}B\n" "$u" || true
-            head -c 900 f | tr '\n' ' ' | sed 's/  */ /g'; echo
+            curl -sS -L -m 20 -A "$UA" -H "Accept: text/html,application/xml;q=0.9,*/*;q=0.8" -H "Accept-Language: en-GB" -o f -w "HTTP %{http_code} %{content_type} %{size_download}B\n" "$u" || true
+            head -c 600 f | tr '\n' ' ' | sed 's/  */ /g'; echo
+            grep -o '<title>[^<]*</title>' f | head -8
           done
+          echo "=== SCL event sample"
+          curl -sS -m 20 "https://salfordcommunityleisure.co.uk/wp-json/wp/v2/event?per_page=2&_fields=id,link,title,acf,meta,event_type,location_category,date" | head -c 2500; echo
+          echo "=== SCL taxonomies"
+          curl -sS -m 20 "https://salfordcommunityleisure.co.uk/wp-json/wp/v2/taxonomies" | grep -o '"slug":"[^"]*"' | tr '\n' ' '; echo
+          echo "=== Museum event sample"
+          curl -sS -m 20 "https://salfordmuseum.com/wp-json/wp/v2/event?per_page=1" | head -c 3000; echo
