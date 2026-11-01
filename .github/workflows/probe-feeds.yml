@@ -6,7 +6,10 @@ jobs:
   probe:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: { node-version: "20" }
-      - run: node scripts/sync-community.mjs && echo "JSONSTART" && cat data/community.json
+      - run: |
+          UA="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36"
+          for u in https://england.shelter.org.uk/ https://findajob.dwp.gov.uk/ https://fonts.googleapis.com https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@700;900&family=Noto+Sans+TC:wght@400;500;700&display=swap https://fonts.gstatic.com https://nationalcareers.service.gov.uk/ https://news.salford.gov.uk/salford100 https://ordsallhall.com/ https://salfordcommunityleisure.co.uk/whats-on https://salfordmuseum.com/ https://wa.me/447999338006 https://whatsapp.com/channel/0029VaSj6Bk8kyyHDVnHkx2E https://www.childcarechoices.gov.uk/ https://www.citizensadvice.org.uk/about-us/contact-us/local-citizens-advice/0014K000009EMMmQAO https://www.facebook.com/profile.php?id=100078299000811 https://www.gov.uk/contact-jobcentre-plus https://www.gov.uk/guidance/welcome-a-guide-for-hong-kong-british-national-overseas-visa-holders-in-the-uk https://www.gov.uk/tenancy-deposit-protection https://www.instagram.com/salfordhongkongerscic/ https://www.nhs.uk/nhs-services/gps/how-to-register-with-a-gp-surgery/ https://www.report-it.org.uk/ https://www.salford.ac.uk/ https://www.salford.gov.uk/advice-and-support/support-with-the-cost-of-living/emergency-assistance https://www.salford.gov.uk/applyforschool https://www.salford.gov.uk/bins https://www.salford.gov.uk/costofliving https://www.salford.gov.uk/council-tax https://www.salford.gov.uk/housing/housing-advice-and-support/currently-homeless/worried-about-keeping-your-home-homeless-or-may-become-homeless https://www.salford.gov.uk/housing/housing-advice-and-support/salford-housing-options-point-shop/ https://www.salford.gov.uk/jobs https://www.salford.gov.uk/jobs-skills-and-work/learning-in-salford/ https://www.salford.gov.uk/schools-and-learning/adult-learning/ https://www.salford.gov.uk/schools-and-learning/schools-admissions/primary/moving-school/ https://www.salfordcc.ac.uk/ https://www.salfordcvs.co.uk/ https://www.salfordhomesearch.co.uk/ https://www.thelowry.com/ https://www.threads.com/@salfordhongkongerscic ; do
+            r=$(curl -sS -L -m 20 -A "$UA" -o f -w "%{http_code} %{url_effective}" "$u" 2>&1 | tail -1)
+            t=$(grep -o -m1 '<title>[^<]*' f | head -1 | cut -c8-80)
+            echo "LINK $u => $r | $t"
+          done
