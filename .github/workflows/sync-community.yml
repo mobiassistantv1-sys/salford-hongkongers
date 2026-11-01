@@ -1,0 +1,34 @@
+name: Sync Salford community info to website
+
+on:
+  workflow_dispatch: {}
+  schedule:
+    # 11:07 and 12:07 UTC — the script only runs on the one that is 12:07 UK time (GMT or BST)
+    - cron: "7 11,12 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: community-info
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: node scripts/sync-community.mjs
+      - name: Commit if changed
+        run: |
+          if [ -z "$(git status --porcelain -- data/community.json)" ]; then echo "No change"; exit 0; fi
+          git config user.name "shk-feed-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/community.json
+          git commit -m "Update Salford community info"
+          git pull --rebase -q origin main
+          git push
