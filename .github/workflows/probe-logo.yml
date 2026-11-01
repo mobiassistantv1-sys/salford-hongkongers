@@ -1,0 +1,15 @@
+name: Probe logo (temporary)
+on:
+  push:
+    branches: [probe/logo]
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          UA="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36"
+          for u in https://www.salford.gov.uk/assets/images/scc.png https://www.salford.gov.uk/assets/images/scc.svg; do
+            curl -sS -L -m 20 -A "$UA" -o f -w "FILE $u %{http_code} %{content_type} %{size_download}\n" "$u"
+            file f
+            if [ "$(stat -c %s f)" -lt 60000 ]; then echo "B64START"; base64 -w0 f; echo; echo "B64END"; fi
+          done
