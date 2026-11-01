@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title data-en="Community information | Salford Hongkongers CIC">社區資訊 | Salford Hongkongers CIC</title>
+<meta name="description" content="Salford 社區資訊：市政府公告、區內活動、熱線電話、就業、住屋、教育。Community information for Hongkongers in Salford.">
+<meta name="theme-color" content="#C00878">
+<link rel="icon" href="/assets/shk-logo-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@700;900&family=Noto+Sans+TC:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="/assets/site.css">
+<style>
+.hero{padding-block:52px 8px}
+.hero h1{font-size:clamp(1.9rem,6.5vw,3rem)}
+.hero p{color:var(--muted);margin-top:14px;max-width:56ch}
+.hero .upd{font-size:13px;color:var(--faint);margin-top:8px}
+.warn{margin-top:16px;border:1px solid #e3b53a;background:#fff6dc;border-radius:12px;padding:12px 14px;font-size:14.5px}
+.warn a{font-weight:700;color:#7a5600}
+.jump{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.jump a{border:1px solid var(--line-2);background:var(--surface);border-radius:999px;padding:6px 14px;font-size:14px;font-weight:500;text-decoration:none}
+.jump a:hover{border-color:var(--magenta);color:var(--magenta)}
+.block{margin-top:34px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:clamp(18px,4vw,30px)}
+.bh{display:flex;gap:14px;align-items:flex-start}
+.bh svg{width:34px;height:34px;flex:none;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;margin-top:2px}
+.bh h2{font-size:clamp(1.35rem,4.5vw,1.7rem)}
+.bh p{color:var(--muted);font-size:15px;margin-top:2px}
+.links{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:18px}
+.links a{display:block;text-decoration:none;border:1px solid var(--line);border-radius:12px;padding:12px 38px 12px 14px;position:relative;background:var(--bg)}
+.links a::after{content:"↗";position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--faint)}
+.links a.own::after{content:"→"}
+.links a:hover{border-color:var(--magenta)}
+.links b{display:block;font-weight:700;font-size:15px;line-height:1.4}
+.links small,.it small{display:block;color:var(--faint);font-size:12.5px;margin-top:2px}
+.links a.own{border-color:rgba(192,8,120,.35)}
+.phones{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:18px}
+.ph{display:flex;gap:12px;align-items:center;text-decoration:none;border:1px solid var(--line);border-radius:12px;padding:11px 14px;background:var(--bg)}
+.ph:hover{border-color:var(--gold)}
+.ph .n{font-family:var(--serif);font-weight:900;font-size:17px;color:var(--gold);min-width:7.6em;white-space:nowrap;flex:none}
+.ph b{font-weight:500;font-size:14.5px;line-height:1.4;display:block}
+.ph.urgent{border-color:#d9534f;background:#fdeeee}.ph.urgent .n{color:#b02a26;font-size:22px}
+.ph.shk .n{color:var(--magenta)}
+.live{margin-top:24px}
+.live[hidden]{display:none}
+.live h3{font-family:var(--sans);font-size:15px;font-weight:700;color:var(--magenta);display:flex;align-items:center;gap:8px}
+.live h3::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--magenta)}
+.items{margin-top:8px;border-top:1px solid var(--line)}
+.it{display:block;text-decoration:none;padding:12px 0;border-bottom:1px solid var(--line)}
+.it:hover b{color:var(--magenta)}
+.it b{display:block;font-weight:700;font-size:15px;line-height:1.45}
+.it p{color:var(--muted);font-size:14px;margin-top:3px;line-height:1.55}
+.en-note{font-size:12px;color:var(--faint);margin-top:8px}
+.note{color:var(--faint);font-size:13px;margin:26px 0 10px}
+@media(max-width:700px){.links,.phones{grid-template-columns:1fr}.ph{flex-direction:column;align-items:flex-start;gap:0}.ph .n{min-width:0;font-size:18px}.ph.urgent .n{font-size:22px}}
+</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap nav">
+    <a class="brand" href="/"><img src="/assets/shk-logo-icon.png" alt="" width="27" height="44"><span class="wm"><b><span class="mg">Salford</span> <span class="gd">Hongkongers</span></b><small>Community Interest Company</small></span></a>
+    <nav id="site-nav" class="site-nav" aria-label="Main">
+      <a href="/#about" data-en="About">關於我們</a><a href="/#events" data-en="Events">活動</a><a href="/volunteer/" data-en="Volunteer">義工</a><a href="/info/" aria-current="page" data-en="Community info">社區資訊</a><a href="/forms.html" data-en="Contact">聯絡</a><a class="nav-support" href="/donate.html" data-en="Support us">支持我們</a>
+    </nav>
+    <button class="lang-btn" type="button">EN</button>
+    <button class="menu-btn" aria-expanded="false" aria-controls="site-nav" aria-label="Menu">☰</button>
+  </div>
+</header>
+
+
+<main class="wrap">
+  <section class="hero">
+    <div class="eyebrow" data-en="Community information">社區資訊</div>
+    <h1 data-en="Living in Salford: where to find help">喺 Salford 生活，搵資料、搵幫手</h1>
+    <p data-en="Contacts and links from Salford City Council, the NHS, GOV.UK and local organisations. The latest news and events update automatically at 12 noon every day.">整合 Salford 市政府、NHS、英國政府同本地機構嘅聯絡同連結。最新公告同活動每日中午 12 點自動更新。</p>
+    <p class="upd"><span data-en="Last updated:">最後更新：</span> <time id="upd">—</time></p>
+    <div id="warn" class="warn" hidden></div>
+    <nav class="jump" aria-label="Sections">
+      <a href="#community" data-en="Community">社群支援</a><a href="#helpline" data-en="Helplines">熱線電話</a><a href="#culture" data-en="Culture">文化活動</a><a href="#employment" data-en="Jobs">就業</a><a href="#housing" data-en="Housing">住屋</a><a href="#education" data-en="Education">教育</a>
+    </nav>
+  </section>
+
+  <!-- 社群支援 -->
+  <section class="block" id="community">
+    <div class="bh"><svg viewBox="0 0 24 24" stroke="#C00878"><circle cx="9" cy="8" r="3.2"/><path d="M15.5 5.5a3 3 0 0 1 0 5.6M3.5 20c.5-3.3 2.8-5 5.5-5s5 1.7 5.5 5M16 15c2.4.2 4 1.9 4.4 5"/></svg><div><h2 data-en="Community support">社群支援</h2><p data-en="Just arrived, or need a hand? Start here.">剛到埗或者需要幫手？由呢度開始。</p></div></div>
+    <div class="links">
+      <a href="https://www.gov.uk/guidance/welcome-a-guide-for-hong-kong-british-national-overseas-visa-holders-in-the-uk"><b data-en="Welcome guide for BN(O) visa holders">BN(O) 簽證持有人生活指南</b><small>GOV.UK</small></a>
+      <a href="https://www.salford.gov.uk/costofliving"><b data-en="Cost of living support">生活開支支援</b><small>Salford City Council</small></a>
+      <a href="https://www.salford.gov.uk/advice-and-support/support-with-the-cost-of-living/emergency-assistance"><b data-en="Salford Assist: crisis help (food, energy, essentials)">Salford Assist 緊急援助（食物、電費、必需品）</b><small>Salford City Council</small></a>
+      <a href="https://www.citizensadvice.org.uk/about-us/contact-us/local-citizens-advice/0014K000009EMMmQAO"><b data-en="Free advice: benefits, debt, work, rights">免費諮詢：福利、債務、工作、權益</b><small>Citizens Advice Salford</small></a>
+      <a href="https://www.nhs.uk/nhs-services/gps/how-to-register-with-a-gp-surgery/"><b data-en="Register with a GP">登記家庭醫生 (GP)</b><small>NHS</small></a>
+      <a href="https://www.salfordcvs.co.uk/"><b data-en="Local charities and volunteering">本地慈善及義工機構</b><small>Salford CVS</small></a>
+      <a href="https://www.report-it.org.uk/"><b data-en="Report a hate crime">舉報仇恨罪行</b><small>True Vision (Police)</small></a>
+    </div>
+    <div class="live" data-feed="council"><h3 data-en="Latest from Salford City Council">Salford 市政府最新公告</h3><div class="items"></div></div>
+    <div class="live" data-feed="cvs"><h3 data-en="Local voluntary sector news">本地社福機構消息</h3><div class="items"></div></div>
+    <div class="live" data-feed="hk"><h3 data-en="UK Government news on Hong Kong">英國政府涉港消息</h3><div class="items"></div></div>
+  </section>
+
+  <!-- 熱線電話 -->
+  <section class="block" id="helpline">
+    <div class="bh"><svg viewBox="0 0 24 24" stroke="#9c6f0d"><path d="M6 3.5h3l1.5 4-2 1.5a12 12 0 0 0 6 6l1.5-2 4 1.5v3a2 2 0 0 1-2.2 2A16.5 16.5 0 0 1 4 5.7 2 2 0 0 1 6 3.5Z"/></svg><div><h2 data-en="Helplines">熱線電話</h2><p data-en="Tap a number to call. In an emergency, always call 999.">撳號碼就可以直接打。有危險一定先打 999。</p></div></div>
+    <div class="phones">
+      <a class="ph urgent" href="tel:999"><span class="n">999</span><span><b data-en="Emergency: police, ambulance, fire">緊急：警察、救護車、消防</b></span></a>
+      <a class="ph" href="tel:101"><span class="n">101</span><span><b data-en="Police, non-emergency">警察（非緊急）</b></span></a>
+      <a class="ph" href="tel:111"><span class="n">111</span><span><b data-en="NHS 111: urgent medical advice, 24 hours">NHS 111：醫療意見，24 小時</b></span></a>
+      <a class="ph" href="tel:116123"><span class="n">116 123</span><span><b data-en="Samaritans: someone to talk to, free, 24 hours">Samaritans：情緒支援，免費，24 小時</b></span></a>
+      <a class="ph" href="sms:85258?body=SHOUT"><span class="n">85258</span><span><b data-en="Shout: text SHOUT for mental health support, 24 hours">Shout：短訊 SHOUT，精神健康支援，24 小時</b></span></a>
+      <a class="ph" href="tel:08082000247"><span class="n">0808 2000 247</span><span><b data-en="National Domestic Abuse Helpline, free, 24 hours">全國家暴求助熱線，免費，24 小時</b></span></a>
+      <a class="ph" href="tel:01617932500"><span class="n">0161 793 2500</span><span><b data-en="Salford City Council, Mon–Fri 8:30am–4:30pm">Salford 市政府，星期一至五 8:30–16:30</b></span></a>
+      <a class="ph" href="tel:01617948888"><span class="n">0161 794 8888</span><span><b data-en="Council emergencies out of hours (evenings, weekends)">市政府緊急事故（夜晚、週末）</b></span></a>
+      <a class="ph" href="tel:08006943695"><span class="n">0800 694 3695</span><span><b data-en="Salford Assist crisis help, free, Mon–Fri 10–12 and 2–4">Salford Assist 緊急援助，免費，星期一至五 10–12、2–4</b></span></a>
+      <a class="ph" href="tel:08001448848"><span class="n">0800 144 8848</span><span><b data-en="Citizens Advice Adviceline, free">Citizens Advice 諮詢熱線，免費</b></span></a>
+      <a class="ph shk" href="https://wa.me/447999338006"><span class="n">WhatsApp</span><span><b data-en="Salford Hongkongers CIC: ask us in Cantonese">Salford Hongkongers CIC：用廣東話問我哋</b></span></a>
+    </div>
+  </section>
+
+  <!-- 文化活動 -->
+  <section class="block" id="culture">
+    <div class="bh"><svg viewBox="0 0 24 24" stroke="#C00878"><path d="M12 3c2 2.2 2 4.3 0 6.5S10 14 12 16m-5-9c-3 3-3 8 .5 11.5a9 9 0 0 0 11-1.5c-2 .5-4 0-4-2 0-1.6 1.4-2 1.4-4"/></svg><div><h2 data-en="Culture and events">文化活動</h2><p data-en="Our own monthly gatherings, plus what's on across Salford.">我哋自己嘅定期聚會，同埋 Salford 區內活動。</p></div></div>
+    <div class="links">
+      <a href="/#events" class="own"><b data-en="Our monthly events: tea gathering, board games, mahjong">我哋每月活動：茶聚、Boardgame、麻雀</b><small>Salford Hongkongers CIC</small></a>
+      <a href="https://salfordcommunityleisure.co.uk/whats-on"><b data-en="What's on: libraries, leisure, museums">區內活動：圖書館、康樂、博物館</b><small>Salford Community Leisure</small></a>
+      <a href="https://news.salford.gov.uk/salford100"><b data-en="Salford 100: centenary celebrations">Salford 100：建市百週年活動</b><small>Salford City Council</small></a>
+      <a href="https://salfordmuseum.com/"><b data-en="Salford Museum &amp; Art Gallery (free)">Salford 博物館及美術館（免費）</b><small>Salford Museum</small></a>
+      <a href="https://ordsallhall.com/"><b data-en="Ordsall Hall: Tudor manor house">Ordsall Hall 都鐸莊園</b><small>Ordsall Hall</small></a>
+      <a href="https://www.thelowry.com/"><b data-en="The Lowry: theatre and galleries, Salford Quays">The Lowry 劇院及展覽（Salford Quays）</b><small>The Lowry</small></a>
+    </div>
+    <div class="live" data-feed="events"><h3 data-en="Newly announced in Salford">Salford 最新公佈活動</h3><div class="items"></div></div>
+  </section>
+
+  <!-- 就業 -->
+  <section class="block" id="employment">
+    <div class="bh"><svg viewBox="0 0 24 24" stroke="#9c6f0d"><rect x="3" y="7.5" width="18" height="12" rx="2"/><path d="M8.5 7.5V6a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v1.5M3 12.5h18"/></svg><div><h2 data-en="Employment support">就業支援</h2><p data-en="Job searching, careers advice and training.">搵工、職業諮詢同進修。</p></div></div>
+    <div class="links">
+      <a href="https://findajob.dwp.gov.uk/"><b data-en="Find a job (government job board)">Find a job 政府搵工網</b><small>DWP</small></a>
+      <a href="https://nationalcareers.service.gov.uk/"><b data-en="Free careers advice">免費職業諮詢</b><small>National Careers Service</small></a>
+      <a href="https://www.gov.uk/contact-jobcentre-plus"><b data-en="Contact Jobcentre Plus">聯絡 Jobcentre Plus</b><small>GOV.UK</small></a>
+      <a href="https://www.salford.gov.uk/jobs"><b data-en="Jobs at Salford City Council">Salford 市政府職位空缺</b><small>Salford City Council</small></a>
+      <a href="https://www.salfordskillsandwork.info/support-for-salford-residents/adult-learning-in-salford/"><b data-en="Courses and skills in Salford">Salford 進修及技能課程</b><small>Salford Skills &amp; Work</small></a>
+      <a href="/volunteer/join/" class="own"><b data-en="Volunteer with us: build UK experience">做我哋義工，累積英國經驗</b><small>Salford Hongkongers CIC</small></a>
+    </div>
+  </section>
+
+  <!-- 住屋 -->
+  <section class="block" id="housing">
+    <div class="bh"><svg viewBox="0 0 24 24" stroke="#C00878"><path d="M4 11 12 4l8 7M6 9.5V20h12V9.5M10 20v-5h4v5"/></svg><div><h2 data-en="Housing information">住屋資訊</h2><p data-en="Renting, social housing, council tax and bins.">租屋、社會房屋、市政稅同垃圾收集。</p></div></div>
+    <div class="links">
+      <a href="https://www.salfordhomesearch.co.uk/"><b data-en="Apply for social housing">申請社會房屋</b><small>Salford Home Search</small></a>
+      <a href="https://www.salford.gov.uk/housing"><b data-en="Housing advice and support">住屋諮詢及支援</b><small>Salford City Council</small></a>
+      <a href="https://www.salford.gov.uk/housing/housing-advice-and-support/currently-homeless/worried-about-keeping-your-home-homeless-or-may-become-homeless"><b data-en="Worried about losing your home?">擔心冇屋住？</b><small>Salford City Council</small></a>
+      <a href="https://www.gov.uk/tenancy-deposit-protection"><b data-en="Is your deposit protected?">租屋按金有冇受保障？</b><small>GOV.UK</small></a>
+      <a href="https://england.shelter.org.uk/"><b data-en="Housing rights advice">住屋權益諮詢</b><small>Shelter</small></a>
+      <a href="https://www.salford.gov.uk/council-tax"><b data-en="Council tax">市政稅 Council Tax</b><small>Salford City Council</small></a>
+      <a href="https://www.salford.gov.uk/bins"><b data-en="Bins and recycling">垃圾及回收</b><small>Salford City Council</small></a>
+    </div>
+  </section>
+
+  <!-- 教育 -->
+  <section class="block" id="education">
+    <div class="bh"><svg viewBox="0 0 24 24" stroke="#9c6f0d"><path d="M3 6.5 12 4l9 2.5M5 8v7.5c0 1.6 3 3 7 3s7-1.4 7-3V8M12 10.5v5"/></svg><div><h2 data-en="Education resources">教育資源</h2><p data-en="School places, childcare and learning for adults.">子女入學、托兒同成人進修。</p></div></div>
+    <div class="links">
+      <a href="https://www.salford.gov.uk/applyforschool"><b data-en="Apply for a school place">申請學位</b><small>Salford City Council</small></a>
+      <a href="https://www.salford.gov.uk/schools-and-learning/schools-admissions/moving-school-during-the-school-year/"><b data-en="Moving school mid-year">年中轉校</b><small>Salford City Council</small></a>
+      <a href="https://www.childcarechoices.gov.uk/"><b data-en="Help paying for childcare">托兒費用資助</b><small>GOV.UK</small></a>
+      <a href="https://www.salford.gov.uk/schools-and-learning/adult-learning/"><b data-en="Adult learning, including English classes">成人課程（包括英文班）</b><small>Salford City Council</small></a>
+      <a href="https://www.salfordcc.ac.uk/"><b data-en="Salford City College">Salford City College 學院</b><small>Salford City College</small></a>
+      <a href="https://www.salford.ac.uk/"><b data-en="University of Salford">Salford 大學</b><small>University of Salford</small></a>
+    </div>
+  </section>
+
+  <p class="note" data-en="Information comes from each organisation's own website; their website is always the final word. Spotted something wrong? Tell us on WhatsApp.">資料來自各機構官方網站，一切以原網站為準。見到錯漏，歡迎 WhatsApp 話我哋知。</p>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <h4 data-en="Contact us">聯絡我們</h4>
+        <p><a href="mailto:salfordhongkongers@gmail.com">salfordhongkongers@gmail.com</a></p>
+        <p><a href="https://wa.me/447999338006">WhatsApp +44 7999 338006</a></p>
+        <p>Salford, Greater Manchester</p>
+      </div>
+      <div>
+        <h4 data-en="Quick links">快速連結</h4>
+        <p><a href="/#events" data-en="Events">活動</a></p>
+        <p><a href="/volunteer/join/" data-en="Volunteer with us">加入義工隊</a></p>
+        <p><a href="/volunteer/" data-en="Volunteer login / check-in">義工登入 / 打卡</a></p>
+        <p><a href="/info/" data-en="Community info">社區資訊</a></p>
+        <p><a href="/forms.html" data-en="Enquiries / partnerships">查詢 / 合作</a></p>
+        <p><a href="/privacy/" data-en="Privacy policy">私隱政策</a></p>
+      </div>
+      <div>
+        <h4 data-en="Follow us">追蹤我們</h4>
+        <div class="socials">
+          <a href="https://www.facebook.com/profile.php?id=100078299000811" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M14 8.5V6.8c0-.8.5-1 1-1h2V2.5h-2.8C11.1 2.5 10 4.6 10 6.6v1.9H7.5V12H10v9.5h4V12h2.7l.4-3.5H14z"/></svg></a>
+          <a href="https://www.instagram.com/salfordhongkongerscic/" aria-label="Instagram"><svg viewBox="0 0 24 24" fill-rule="evenodd"><path d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9a5.5 5.5 0 0 1-5.5 5.5h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm5.3-3.3a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4z"/></svg></a>
+          <a href="https://wa.me/447999338006" aria-label="WhatsApp"><svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 0 0-7.7 13.6L3 21l4.5-1.2A9 9 0 1 0 12 3Zm0 2a7 7 0 0 1 5.9 10.8l-.3.5.6 2.2-2.3-.6-.5.3A7 7 0 1 1 12 5Zm-2.3 3c-.2 0-.5.1-.7.4-.3.3-.9.9-.9 2.1s.9 2.4 1 2.6c.1.2 1.7 2.8 4.3 3.8 2.1.8 2.6.7 3 .6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2 0-.1-.2-.2-.5-.3l-1.7-.8c-.2-.1-.4-.1-.6.1l-.7.9c-.1.2-.3.2-.5.1-.7-.3-1.5-.7-2.3-1.7-.6-.7-1-1.5-1.1-1.7-.1-.2 0-.4.1-.5l.5-.6c.1-.2.2-.3.3-.5 0-.2 0-.3-.1-.5l-.8-1.8c-.2-.3-.3-.3-.6-.3Z"/></svg></a>
+          <a href="https://www.threads.com/@salfordhongkongerscic" aria-label="Threads"><svg class="stroke" viewBox="0 0 24 24"><path d="M12 21c-4.5 0-7-3-7-9s2.5-9 7-9c3 0 5 1.4 6 3.8M9.5 13c0-1.6 1.2-2.6 3-2.6s3 1 3 3.2-1.5 3.4-3.5 3.4c-1.6 0-2.5-1-2.5-2 0-1.3 1.2-1.9 2.6-1.9 2.4 0 4.4 1.4 4.4 4"/></svg></a>
+        </div>
+        <p><a href="https://whatsapp.com/channel/0029VaSj6Bk8kyyHDVnHkx2E" data-en="Follow our WhatsApp channel">追蹤 WhatsApp 頻道</a></p>
+      </div>
+    </div>
+    <div class="legal"><span>© 2026 Salford Hongkongers CIC</span><span data-en="Company No. 13877472">公司編號 13877472</span><span>Salford, Greater Manchester</span></div>
+  </div>
+</footer>
+<script src="/assets/site.js" defer></script>
+<script>
+/* Live items from /data/community.json, refreshed daily at 12:00 UK time by the
+   "Sync Salford community info" GitHub Action. Blocks with no items stay hidden. */
+(function () {
+  var data = null;
+  function esc(s) { return String(s || "").replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+  function day(s, en) { var d = new Date(s); return isNaN(d) ? "" : d.toLocaleDateString(en ? "en-GB" : "zh-HK", { timeZone: "Europe/London", day: "numeric", month: "short", year: "numeric" }); }
+  function safe(u) { return /^https:\/\//.test(u || "") ? u : "#"; }
+  function render() {
+    var en = window.SHK_LANG === "en", n = { council: 5, cvs: 4, hk: 3, events: 6 };
+    document.querySelectorAll(".live").forEach(function (box) {
+      var key = box.getAttribute("data-feed"), list = (data[key] || []).slice(0, n[key] || 5);
+      box.hidden = !list.length;
+      box.querySelector(".items").innerHTML = list.map(function (i) {
+        return '<a class="it" href="' + esc(safe(i.link)) + '" target="_blank" rel="noopener"><b>' + esc(i.title) + "</b>" +
+          (i.text ? "<p>" + esc(i.text) + "</p>" : "") + "<small>" + esc([i.source, day(i.date, en)].filter(Boolean).join(" · ")) + "</small></a>";
+      }).join("") + (en ? "" : '<p class="en-note">內容來自原網站（英文）</p>');
+    });
+    var w = data.warnings || [], wb = document.getElementById("warn");
+    wb.hidden = !w.length;
+    wb.innerHTML = w.slice(0, 3).map(function (i) {
+      return "⚠️ " + (en ? "" : "天氣警告：") + esc(i.title) + ' · <a href="' + esc(safe(i.link)) + '" target="_blank" rel="noopener">Met Office</a>';
+    }).join("<br>");
+    var u = document.getElementById("upd"), d = new Date(data.updated);
+    if (!isNaN(d)) { u.dateTime = data.updated; u.textContent = d.toLocaleString(en ? "en-GB" : "zh-HK", { timeZone: "Europe/London", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }); }
+  }
+  document.querySelectorAll(".live").forEach(function (b) { b.hidden = true; });
+  var RAW = "https://raw.githubusercontent.com/mobiassistantv1-sys/salford-hongkongers/main/data/community.json";
+  function get(u) { return fetch(u, { cache: "no-cache" }).then(function (r) { if (!r.ok) throw 0; return r.json(); }); }
+  get(RAW).catch(function () { return get("/data/community.json"); })
+    .then(function (d) { if (d && d.updated) { data = d; render(); } })
+    .catch(function () {});
+  document.addEventListener("shk:lang", function () { if (data) render(); });
+  /* external links open in a new tab */
+  document.querySelectorAll('.links a[href^="http"]').forEach(function (a) { a.target = "_blank"; a.rel = "noopener"; });
+})();
+</script>
+</body>
+</html>
