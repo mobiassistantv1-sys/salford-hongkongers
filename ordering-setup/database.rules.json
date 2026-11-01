@@ -242,6 +242,59 @@
       ".read": true,
       ".write": "auth != null && (root.child('ordering/roles/' + auth.uid).exists() || (root.child('shk/uids/' + auth.uid).exists() && root.child('shk/people/' + root.child('shk/uids/' + auth.uid).val() + '/status').val() === 'active' && root.child('shk/people/' + root.child('shk/uids/' + auth.uid).val() + '/roles/volunteer').val() === true))",
       ".validate": "newData.isString() && newData.val().length <= 200"
+    },
+    "yauoicafe": {
+      "queue": {
+        ".read": true,
+        "$k": {
+          ".write": "auth != null && (root.child('ordering/roles/' + auth.uid).exists() || (root.child('shk/uids/' + auth.uid).exists() && root.child('shk/people/' + root.child('shk/uids/' + auth.uid).val() + '/status').val() === 'active' && root.child('shk/people/' + root.child('shk/uids/' + auth.uid).val() + '/roles/volunteer').val() === true)) || (auth != null && !data.exists() && newData.child('uid').val() === auth.uid)",
+          ".validate": "newData.hasChildren(['number','party','status','joinedAt','uid'])",
+          "number": {
+            ".validate": "newData.isNumber() && newData.val() <= root.child('yauoicafe/counter').val()"
+          },
+          "party": {
+            ".validate": "newData.isNumber() && newData.val() >= 1 && newData.val() <= 20"
+          },
+          "status": {
+            ".validate": "newData.val() === 'waiting' || (auth != null && (root.child('ordering/roles/' + auth.uid).exists() || (root.child('shk/uids/' + auth.uid).exists() && root.child('shk/people/' + root.child('shk/uids/' + auth.uid).val() + '/status').val() === 'active' && root.child('shk/people/' + root.child('shk/uids/' + auth.uid).val() + '/roles/volunteer').val() === true)) && (newData.val() === 'called' || newData.val() === 'done'))"
+          },
+          "joinedAt": {
+            ".validate": "newData.val() === now || newData.val() === data.val()"
+          },
+          "uid": {
+            ".validate": "newData.val() === data.val() || !data.exists()"
+          },
+          "$other": {
+            ".validate": false
+          }
+        }
+      },
+      "queuePrivate": {
+        ".read": "auth != null && (root.child('ordering/roles/' + auth.uid).exists() || (root.child('shk/uids/' + auth.uid).exists() && root.child('shk/people/' + root.child('shk/uids/' + auth.uid).val() + '/status').val() === 'active' && root.child('shk/people/' + root.child('shk/uids/' + auth.uid).val() + '/roles/volunteer').val() === true))",
+        "$k": {
+          ".write": "auth != null && (root.child('ordering/roles/' + auth.uid).exists() || (root.child('shk/uids/' + auth.uid).exists() && root.child('shk/people/' + root.child('shk/uids/' + auth.uid).val() + '/status').val() === 'active' && root.child('shk/people/' + root.child('shk/uids/' + auth.uid).val() + '/roles/volunteer').val() === true)) || (auth != null && !data.exists() && root.child('yauoicafe/queue/' + $k + '/uid').val() === auth.uid)",
+          ".validate": "newData.hasChildren(['name','phone'])",
+          "name": {
+            ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 40"
+          },
+          "phone": {
+            ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 20"
+          },
+          "$other": {
+            ".validate": false
+          }
+        }
+      },
+      "counter": {
+        ".read": true,
+        ".write": "auth != null && (root.child('ordering/roles/' + auth.uid).exists() || (root.child('shk/uids/' + auth.uid).exists() && root.child('shk/people/' + root.child('shk/uids/' + auth.uid).val() + '/status').val() === 'active' && root.child('shk/people/' + root.child('shk/uids/' + auth.uid).val() + '/roles/volunteer').val() === true)) || (auth != null && newData.val() === (data.exists() ? data.val() : 0) + 1)",
+        ".validate": "newData.isNumber()"
+      },
+      "announcement": {
+        ".read": true,
+        ".write": "auth != null && (root.child('ordering/roles/' + auth.uid).exists() || (root.child('shk/uids/' + auth.uid).exists() && root.child('shk/people/' + root.child('shk/uids/' + auth.uid).val() + '/status').val() === 'active' && root.child('shk/people/' + root.child('shk/uids/' + auth.uid).val() + '/roles/volunteer').val() === true))",
+        ".validate": "newData.isString() && newData.val().length <= 200"
+      }
     }
   }
 }

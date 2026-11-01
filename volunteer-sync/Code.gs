@@ -219,11 +219,13 @@ function pushHours_(ss, people) {
 const ALLERGY_DAYS = 30;
 function dailyCleanup() {
   const today = Utilities.formatDate(new Date(), TZ, 'yyyy-MM-dd');
-  const q = fb_('get', 'queue') || {};
   const qdel = {};
-  Object.keys(q).forEach(k => {
-    const at = q[k] && q[k].joinedAt;
-    if (!at || Utilities.formatDate(new Date(at), TZ, 'yyyy-MM-dd') < today) { qdel['queue/' + k] = null; qdel['queuePrivate/' + k] = null; }
+  ['', 'yauoicafe/'].forEach(pre => {   // SHK queue (top level) and café queue
+    const q = fb_('get', pre + 'queue') || {};
+    Object.keys(q).forEach(k => {
+      const at = q[k] && q[k].joinedAt;
+      if (!at || Utilities.formatDate(new Date(at), TZ, 'yyyy-MM-dd') < today) { qdel[pre + 'queue/' + k] = null; qdel[pre + 'queuePrivate/' + k] = null; }
+    });
   });
   if (Object.keys(qdel).length) fbPatchChunked_(qdel);
 
