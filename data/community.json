@@ -1,6 +1,13 @@
 {
-  "updated": "2026-11-01T00:37:38.400Z",
+  "updated": "2026-11-02T20:43:15.098Z",
   "council": [
+    {
+      "title": "Two Salford takeaways fined £25,000 for mouse infestations",
+      "text": "Two neighbouring takeaway businesses in Salford have been ordered to pay more than £25,000.",
+      "link": "https://news.salford.gov.uk/news/two-salford-takeaways-fined-25-000-for-mouse-infestations/",
+      "date": "2026-11-02T09:30:00.000Z",
+      "source": "Salford City Council"
+    },
     {
       "title": "Salford organisations unite for Day of Action in Lower Broughton",
       "text": "Council officers joined partners for a multi-agency Day of Action in Lower Broughton.",
@@ -49,57 +56,29 @@
       "link": "https://news.salford.gov.uk/news/salford-museum-and-art-gallery-wins-best-medium-museum-in-family-friendly-museum-award-2026-1/",
       "date": "2026-10-21T10:00:00.000Z",
       "source": "Salford City Council"
-    },
-    {
-      "title": "Salford Design Review Forum celebrates a year of shaping major development proposals",
-      "text": "Salford's Design Review Forum has completed its first year in operation, reviewing emerging major development schemes and helping to shape some of the city's most…",
-      "link": "https://news.salford.gov.uk/news/salford-design-review-forum-celebrates-a-year-of-shaping-major-development-proposals/",
-      "date": "2026-10-19T10:00:00.000Z",
-      "source": "Salford City Council"
     }
   ],
   "events": [
     {
-      "title": "Uncurbed Collective Take Over Salford Libraries",
-      "text": "Uncurbed Collective is coming to Salford libraries! As part of Salford’s centenary celebrations, we’re welcoming disabled-led performance company Uncurbed Collective to…",
-      "link": "https://salfordcommunityleisure.co.uk/event/uncurbed-collective-height/",
-      "date": "2026-10-30T09:19:26Z",
+      "title": "Infant Orchestra",
+      "text": "Our Infant Orchestra is the first step on a young musician’s journey.",
+      "link": "https://salfordcommunityleisure.co.uk/event/infant-orchestra-36/",
+      "date": "2026-11-02T13:40:59Z",
       "source": "Salford Community Leisure"
     },
     {
       "title": "Here We Stand by Steven Speed",
       "text": "Steven Speed presents a mix of portraiture and landscape photography focusing on areas in and around Salford.",
       "link": "https://salfordmuseum.com/event/here-we-stand/",
-      "date": "2026-10-29T12:32:18Z",
+      "date": "2026-10-29T12:32:17Z",
       "source": "Salford Museum & Art Gallery"
     },
     {
       "title": "Young Shoots Social Club by Liz Lock and Salford Youth Service",
       "text": "Young Shoots Social Club was a year-long project led by socially-engaged photographer Liz Lock with Salford Youth Service. Around 50 young people aged 11-18 took part…",
       "link": "https://salfordmuseum.com/event/young-shoots-social-club/",
-      "date": "2026-10-29T12:14:26Z",
+      "date": "2026-10-29T12:14:25Z",
       "source": "Salford Museum & Art Gallery"
-    },
-    {
-      "title": "Social Storynook Glow Session",
-      "text": "This session contains additional sensory resources, such as adjustable lighting and projections, available at our monthly Glow sessions.",
-      "link": "https://salfordcommunityleisure.co.uk/event/social-storynook-glow-session-18/",
-      "date": "2026-10-28T10:28:38Z",
-      "source": "Salford Community Leisure"
-    },
-    {
-      "title": "Private Storynook Glow Session",
-      "text": "This session contains additional sensory resources, such as adjustable lighting and projections, available at our monthly Glow sessions.",
-      "link": "https://salfordcommunityleisure.co.uk/event/private-storynook-glow-session-18/",
-      "date": "2026-10-28T10:27:35Z",
-      "source": "Salford Community Leisure"
-    },
-    {
-      "title": "Uncurbed Collective Takeover Day",
-      "text": "Something unexpected is happening at Ordsall Hall! As part of Salford’s centenary celebrations, disabled-led performance company Uncurbed Collective is bringing a…",
-      "link": "https://ordsallhall.com/event/uncurbed-collective-takeover-day/",
-      "date": "2026-10-23T10:07:49Z",
-      "source": "Salford Community Leisure"
     },
     {
       "title": "Musical Christmas Piano Performance",
@@ -112,7 +91,21 @@
       "title": "Festive Fun with Father Christmas",
       "text": "Father Christmas is stopping by Salford with a visit to Lark Hill Place!",
       "link": "https://salfordmuseum.com/event/father-christmas2/",
-      "date": "2026-10-21T14:52:02Z",
+      "date": "2026-10-21T14:52:01Z",
+      "source": "Salford Museum & Art Gallery"
+    },
+    {
+      "title": "Open [5] exhibition Awards Ceremony",
+      "text": "To mark the occasion and celebrate the end of the exhibition, we would like to invite you and a guest to the awards ceremony.",
+      "link": "https://salfordmuseum.com/event/open-5-awards-ceremony/",
+      "date": "2026-10-06T15:30:00Z",
+      "source": "Salford Museum & Art Gallery"
+    },
+    {
+      "title": "Local History Library Visit",
+      "text": "We ask visitors to our library to book ahead of their visit.",
+      "link": "https://salfordmuseum.com/event/local-history-library-visit-33/",
+      "date": "2026-10-01T17:31:18Z",
       "source": "Salford Museum & Art Gallery"
     }
   ],
@@ -176,13 +169,5 @@
       "source": "GOV.UK"
     }
   ],
-  "warnings": [
-    {
-      "title": "Yellow warning of fog affecting North West England",
-      "text": "Yellow warning of fog affecting North West England: Cheshire East, Cheshire West and Chester valid from 0000 Sun 01 Nov to 1000 Sun 01 Nov",
-      "link": "https://www.metoffice.gov.uk/weather/warnings-and-advice/uk-warnings#?date=2026-11-01&id=9fc7470f-5654-4899-a475-9952f452789d&referrer=rss",
-      "date": null,
-      "source": "Met Office"
-    }
-  ]
+  "warnings": []
 }
