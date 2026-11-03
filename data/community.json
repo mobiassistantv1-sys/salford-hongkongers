@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-02T20:43:15.098Z",
+  "updated": "2026-11-03T18:22:57.148Z",
   "council": [
     {
       "title": "Two Salford takeaways fined £25,000 for mouse infestations",
@@ -60,11 +60,18 @@
   ],
   "events": [
     {
-      "title": "Infant Orchestra",
-      "text": "Our Infant Orchestra is the first step on a young musician’s journey.",
-      "link": "https://salfordcommunityleisure.co.uk/event/infant-orchestra-36/",
-      "date": "2026-11-02T13:40:59Z",
+      "title": "Soccer Stars",
+      "text": "Come along to our football coaching sessions, Soccer Stars!",
+      "link": "https://salfordcommunityleisure.co.uk/event/soccer-stars-65/",
+      "date": "2026-11-03T15:02:28Z",
       "source": "Salford Community Leisure"
+    },
+    {
+      "title": "Assembling into Being",
+      "text": "A participatory art project developed with members of Ordsall Community Arts Centre.",
+      "link": "https://salfordmuseum.com/event/assembling-into-being/",
+      "date": "2026-11-03T13:32:39Z",
+      "source": "Salford Museum & Art Gallery"
     },
     {
       "title": "Here We Stand by Steven Speed",
