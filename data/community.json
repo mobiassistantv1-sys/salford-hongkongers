@@ -1,6 +1,20 @@
 {
-  "updated": "2026-11-03T18:22:57.148Z",
+  "updated": "2026-11-04T18:35:08.077Z",
   "council": [
+    {
+      "title": "Salford adult social care worker recognised with national learning award",
+      "text": "A Salford adult social care worker whose passage from unemployment to university graduate has inspired others and has been named a winner at the 2026 ‘Get the Nation…",
+      "link": "https://news.salford.gov.uk/news/salford-adult-social-care-worker-recognised-with-national-learning-award/",
+      "date": "2026-11-04T16:00:00.000Z",
+      "source": "Salford City Council"
+    },
+    {
+      "title": "Salford Youth Day film festival shines spotlight on young people’s stories",
+      "text": "Over 60 young people from youth groups across Salford took centre stage at a special film festival for Salford Youth Day.",
+      "link": "https://news.salford.gov.uk/news/salford-youth-day-film-festival-shines-spotlight-on-young-people-s-stories/",
+      "date": "2026-11-04T12:00:00.000Z",
+      "source": "Salford City Council"
+    },
     {
       "title": "Two Salford takeaways fined £25,000 for mouse infestations",
       "text": "Two neighbouring takeaway businesses in Salford have been ordered to pay more than £25,000.",
@@ -42,23 +56,30 @@
       "link": "https://news.salford.gov.uk/news/continuing-support-in-our-communities/",
       "date": "2026-10-23T14:30:00.000Z",
       "source": "Salford City Council"
-    },
-    {
-      "title": "Residents invited to help shape the future of supported housing",
-      "text": "Salford residents are being asked for their views on plans for the future of supported and specialist housing in the city.",
-      "link": "https://news.salford.gov.uk/news/residents-invited-to-help-shape-the-future-of-supported-housing/",
-      "date": "2026-10-21T10:00:00.000Z",
-      "source": "Salford City Council"
-    },
-    {
-      "title": "Salford Museum and Art Gallery wins Best Medium Museum in Family Friendly Museum Award 2026",
-      "text": "Salford Museum and Art Gallery has won Best Medium Museum in the Kids in Museums Family Friendly Museum Award 2026, it was announced at an awards ceremony in Birmingham.",
-      "link": "https://news.salford.gov.uk/news/salford-museum-and-art-gallery-wins-best-medium-museum-in-family-friendly-museum-award-2026-1/",
-      "date": "2026-10-21T10:00:00.000Z",
-      "source": "Salford City Council"
     }
   ],
   "events": [
+    {
+      "title": "Flecky Bennett: Ordsall Hall Experience: Nightmares Before Christmas",
+      "text": "Join your ghost host Flecky Bennett for a one-of-a-kind performance at Ordsall Hall!",
+      "link": "https://ordsallhall.com/event/flecky-bennett-christmas26/",
+      "date": "2026-11-04T11:18:54Z",
+      "source": "Salford Community Leisure"
+    },
+    {
+      "title": "In Conversation: Yan Wang Preston & Emilia Terracciano",
+      "text": "Join Yan Wang Preston and Emilia Terracciano for this intimate afterhours discussion about our latest East Wing exhibition Memory Keepers.",
+      "link": "https://salfordmuseum.com/event/in-conversation-yan-wang-preston/",
+      "date": "2026-11-04T11:00:20Z",
+      "source": "Salford Museum & Art Gallery"
+    },
+    {
+      "title": "Intuitive Mark Making Workshop with Jessica Brodigan",
+      "text": "Join artist Jessica Brodigan, whose latest exhibition The Theatrics of Nature is on display in our Park Gallery, for this expressive drawing and mark-making workshop.",
+      "link": "https://salfordmuseum.com/event/intuitive-mark-making/",
+      "date": "2026-11-04T10:52:00Z",
+      "source": "Salford Museum & Art Gallery"
+    },
     {
       "title": "Soccer Stars",
       "text": "Come along to our football coaching sessions, Soccer Stars!",
@@ -70,7 +91,7 @@
       "title": "Assembling into Being",
       "text": "A participatory art project developed with members of Ordsall Community Arts Centre.",
       "link": "https://salfordmuseum.com/event/assembling-into-being/",
-      "date": "2026-11-03T13:32:39Z",
+      "date": "2026-11-03T13:32:38Z",
       "source": "Salford Museum & Art Gallery"
     },
     {
@@ -93,63 +114,42 @@
       "link": "https://salfordmuseum.com/event/christmas-piano-performance/",
       "date": "2026-10-21T15:08:39Z",
       "source": "Salford Museum & Art Gallery"
-    },
-    {
-      "title": "Festive Fun with Father Christmas",
-      "text": "Father Christmas is stopping by Salford with a visit to Lark Hill Place!",
-      "link": "https://salfordmuseum.com/event/father-christmas2/",
-      "date": "2026-10-21T14:52:01Z",
-      "source": "Salford Museum & Art Gallery"
-    },
-    {
-      "title": "Open [5] exhibition Awards Ceremony",
-      "text": "To mark the occasion and celebrate the end of the exhibition, we would like to invite you and a guest to the awards ceremony.",
-      "link": "https://salfordmuseum.com/event/open-5-awards-ceremony/",
-      "date": "2026-10-06T15:30:00Z",
-      "source": "Salford Museum & Art Gallery"
-    },
-    {
-      "title": "Local History Library Visit",
-      "text": "We ask visitors to our library to book ahead of their visit.",
-      "link": "https://salfordmuseum.com/event/local-history-library-visit-33/",
-      "date": "2026-10-01T17:31:18Z",
-      "source": "Salford Museum & Art Gallery"
     }
   ],
   "cvs": [
     {
-      "title": "Are you emergency ready? - Be Ready campaign",
+      "title": "One year of Greater Together Manchester’s Refugee Lodgings project",
       "text": "",
-      "link": "https://www.salfordcvs.co.uk/BeReady",
-      "date": "2026-10-23T16:05:00.000Z",
+      "link": "https://www.salfordcvs.co.uk/refugeeproject",
+      "date": "2026-11-04T16:23:00.000Z",
       "source": "Salford CVS"
     },
     {
-      "title": "Salford CVS jobs",
+      "title": "Salford Parks and Green Space Consultation",
       "text": "",
-      "link": "https://www.salfordcvs.co.uk/node/460275",
-      "date": "2026-10-20T08:41:00.000Z",
+      "link": "https://www.salfordcvs.co.uk/greenspacesurvey",
+      "date": "2026-11-04T14:50:00.000Z",
       "source": "Salford CVS"
     },
     {
-      "title": "Salford CVS recognised in the Salford Centenary Awards",
+      "title": "Nominate now for the Spirit of Salford Community Awards 2027",
       "text": "",
-      "link": "https://www.salfordcvs.co.uk/centenaryawards",
-      "date": "2026-10-19T09:32:00.000Z",
+      "link": "https://www.salfordcvs.co.uk/SOSawardsnominations",
+      "date": "2026-11-04T11:34:00.000Z",
       "source": "Salford CVS"
     },
     {
-      "title": "Black History Month 2026",
+      "title": "Britain's first national survey dedicated to Black women and girls",
       "text": "",
-      "link": "https://www.salfordcvs.co.uk/node/460833",
-      "date": "2026-10-19T08:56:00.000Z",
+      "link": "https://www.salfordcvs.co.uk/blackwomensurvey",
+      "date": "2026-11-04T11:28:00.000Z",
       "source": "Salford CVS"
     },
     {
-      "title": "Salford CVS welcomes recognition of the VCSE sector in Dame Julia Unwin’s “A Precious Treasure” speech",
+      "title": "Specialist and Supported Housing Strategy 2027-2037 Public consultation",
       "text": "",
-      "link": "https://www.salfordcvs.co.uk/a-precious-treasure",
-      "date": "2026-10-16T11:23:00.000Z",
+      "link": "https://www.salfordcvs.co.uk/housingsurvey",
+      "date": "2026-11-04T11:20:00.000Z",
       "source": "Salford CVS"
     }
   ],
