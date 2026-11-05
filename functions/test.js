@@ -2,7 +2,7 @@
 "use strict";
 const fs = require("fs");
 const assert = require("assert");
-const { groups, renderSlip, STATIONS } = require("./slips");
+const { groups, renderSlip, slipCanvas, starprnt, stackPng, STATIONS } = require("./slips");
 
 const order = {
   table: "T3", no: 12, at: Date.now(), allergy: "對花生過敏", note: "少啲鹽",
@@ -25,3 +25,14 @@ assert.strictEqual(g.bar[0].al.join(), "奶", "set drink shows only the drink's 
 fs.mkdirSync("test-out", { recursive: true });
 STATIONS.forEach(st => fs.writeFileSync(`test-out/${st}.png`, renderSlip(order, st, g[st], { time: "10:42", addOn: st === "bar", reprint: false })));
 console.log("ok", JSON.stringify(g, null, 1));
+/* one job: 3 slips -> 3 raster blocks + 3 partial cuts */
+const cv = STATIONS.map(st => slipCanvas(order, st, g[st], { time: "10:42" }));
+const job = starprnt(cv);
+const count = (buf, seq) => { let n = 0; for (let i = buf.indexOf(seq); i >= 0; i = buf.indexOf(seq, i + 1)) n++; return n; };
+assert.strictEqual(job[0], 0x1b); assert.strictEqual(job[1], 0x40);
+assert.strictEqual(job[job.length - 3], 0x1b); assert.strictEqual(job[job.length - 1], 3);
+const expect = 2 + cv.reduce((a, c) => a + 9 + 72 * c.height + 3, 0);
+assert.strictEqual(job.length, expect, "byte length = init + (header + 72 bytes/row + cut) per slip");
+fs.writeFileSync("test-out/order.starprnt", job); fs.writeFileSync("test-out/stacked.png", stackPng(cv));
+console.log("starprnt bytes", job.length, "cuts", count(job, Buffer.from([0x1b, 0x64, 3])));
+

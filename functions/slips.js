@@ -64,7 +64,7 @@ function wrap(ctx, text, maxW) {
 }
 
 /* Draw one slip. Two passes: measure height, then paint. */
-function renderSlip(o, station, rows, meta) {
+function slipCanvas(o, station, rows, meta) {
   const draw = (ctx, paint) => {
     let y = PAD;
     const text = (s, size, x, opts = {}) => {
@@ -122,7 +122,37 @@ function renderSlip(o, station, rows, meta) {
   const c = createCanvas(W, H); const ctx = c.getContext("2d");
   ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, W, H);
   draw(ctx, true);
-  return c.toBuffer("image/png");
+  return c;
+}
+const renderSlip = (...a) => slipCanvas(...a).toBuffer("image/png");
+
+/* All slips of one order as ONE StarPRNT job: raster image + partial cut after each slip.
+   Commands from Star "StarPRNT Command Specifications": ESC @ init, ESC GS S raster (m=1, 1 bit/dot,
+   MSB = leftmost dot), ESC d 3 = feed to cutter then partial cut. 576 dots = 72 bytes per row (max 128). */
+function starprnt(canvases) {
+  const parts = [Buffer.from([0x1b, 0x40])];
+  canvases.forEach(c => {
+    const w = c.width, h = c.height, bpr = Math.ceil(w / 8);
+    const px = c.getContext("2d").getImageData(0, 0, w, h).data;
+    const head = Buffer.from([0x1b, 0x1d, 0x53, 1, bpr & 255, bpr >> 8, h & 255, h >> 8, 0]);
+    const data = Buffer.alloc(bpr * h);
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+      const i = (y * w + x) * 4;
+      if (px[i] * 0.299 + px[i + 1] * 0.587 + px[i + 2] * 0.114 < 128) data[y * bpr + (x >> 3)] |= 0x80 >> (x & 7);
+    }
+    parts.push(head, data, Buffer.from([0x1b, 0x64, 3]));
+  });
+  return Buffer.concat(parts);
 }
 
-module.exports = { Y, groups, renderSlip, STATIONS };
+/* Fallback if the printer only takes PNG: slips stacked, dashed tear line between, one cut at the end. */
+function stackPng(canvases) {
+  const gap = 40, H = canvases.reduce((a, c) => a + c.height, 0) + gap * (canvases.length - 1);
+  const out = createCanvas(W, H), ctx = out.getContext("2d");
+  ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, W, H); let y = 0;
+  canvases.forEach((c, i) => { ctx.drawImage(c, 0, y); y += c.height;
+    if (i < canvases.length - 1) { ctx.fillStyle = "#000"; for (let x = 0; x < W; x += 24) ctx.fillRect(x, y + gap / 2 - 2, 12, 4); y += gap; } });
+  return out.toBuffer("image/png");
+}
+
+module.exports = { Y, groups, renderSlip, slipCanvas, starprnt, stackPng, STATIONS };
