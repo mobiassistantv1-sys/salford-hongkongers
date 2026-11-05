@@ -18,8 +18,8 @@ const MAX_AGE = 3 * 60 * 60 * 1000;  /* never print slips older than 3 h (e.g. p
 const MAX_TRIES = 5;
 
 /* Printers allowed to pull orders: comma list in functions/.env, e.g. PRINTER_MAC=00:11:62:aa:bb:cc */
-const allowed = mac => String(process.env.PRINTER_MAC || "").toLowerCase().split(",").map(s => s.trim()).filter(Boolean)
-  .includes(String(mac || "").toLowerCase());
+const hex = m => String(m || "").toLowerCase().replace(/[^0-9a-f]/g, "");  /* "00:11:62:37:10:DD" == "00-11-62-37-10-dd" */
+const allowed = mac => !!hex(mac) && String(process.env.PRINTER_MAC || "").split(",").map(hex).includes(hex(mac));
 
 const hhmm = ms => new Date(ms).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/London" });
 

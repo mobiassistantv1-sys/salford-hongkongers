@@ -116,7 +116,7 @@ GitHub 上面嘅 Pull Request 撳 **Merge**，大約 1 分鐘後網站就會更�
 1. Firebase → 左下 **Upgrade** → 轉 **Blaze**。即刻去 Google Cloud Billing → Budgets 設 £5 預算提醒。
 2. Google Cloud Console → IAM → 搵 `FIREBASE_SERVICE_ACCOUNT` 嗰個服務帳戶（電郵 `firebase-adminsdk-…@yauoicafequeue.iam.gserviceaccount.com`）→ 編輯 → 加角色 **Editor**。
 3. 打印機上紙 → 關機 → 㩒住 **FEED** 再㩒 **電源** → 開始印就放手。張紙印出 **IP address** 同 **MAC address**。
-4. GitHub → repo → Settings → Secrets and variables → Actions → **Variables** 分頁 → New variable：名 `PRINTER_MAC`，值 = 張紙上面嘅 MAC（例如 `00:11:62:aa:bb:cc`）。
+4. 打印機 MAC（`00:11:62:37:10:DD`）已經寫入 `deploy-printer.yml`。換機先要喺 GitHub → Settings → Variables 設 `PRINTER_MAC` 覆蓋。
 5. GitHub → Actions → **Deploy printer server (CloudPRNT)** → Run workflow。綠剔即成功。
 6. 同一個網絡嘅電腦開瀏覽器，入打印機 IP → 左上選單 **CloudPRNT**：
    - CloudPRNT Service：**ENABLE**
