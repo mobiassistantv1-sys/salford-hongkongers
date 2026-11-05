@@ -135,7 +135,7 @@ GitHub 上面嘅 Pull Request 撳 **Merge**，大約 1 分鐘後網站就會更�
 - 超過 3 個鐘未印嘅單唔會再印（例如成日冇開機）。
 
 ## 9. 每日日結 Google Doc
-每晚 22:00 自動喺 Google Drive「友愛冰室 日結 Daily Takings」資料夾出一份「友愛冰室 日結 YYYY-MM-DD」：現金／卡、折扣、未埋單、每款餐點數量同銀碼、收款記錄。冇訂單嗰日唔出。
+每晚大約 23:59（最遲 00:15）自動喺 Google Drive「友愛冰室 日結 Daily Takings」資料夾出一份「友愛冰室 日結 YYYY-MM-DD」：現金／卡、折扣、未埋單、每款餐點數量同銀碼、收款記錄。冇訂單嗰日唔出。
 
 **一次性設定（用 salfordhongkongers@gmail.com）**
 1. 開 https://script.google.com → 新專案 → 改名「友愛冰室 日結」。
