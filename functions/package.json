@@ -1,0 +1,13 @@
+{
+  "name": "yauoicafe-cloudprnt",
+  "private": true,
+  "description": "友愛冰室 Star CloudPRNT server (Firebase Cloud Functions)",
+  "main": "index.js",
+  "engines": { "node": "22" },
+  "scripts": { "test": "node test.js" },
+  "dependencies": {
+    "@napi-rs/canvas": "0.1.100",
+    "firebase-admin": "13.10.0",
+    "firebase-functions": "6.6.0"
+  }
+}

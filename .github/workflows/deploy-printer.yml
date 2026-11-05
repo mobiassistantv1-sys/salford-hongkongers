@@ -1,0 +1,35 @@
+name: Deploy printer server (CloudPRNT)
+
+# Deploys ONLY Cloud Functions (--only functions). Database rules and the website are never touched.
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [main]
+    paths: ["functions/**", "yauoicafe/order/menu.js", "firebase.json"]
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      # Slips use the same menu as the website
+      - run: cp yauoicafe/order/menu.js functions/menu.js
+      - run: echo "PRINTER_MAC=${{ vars.PRINTER_MAC }}" > functions/.env
+      - run: npm ci --no-audit --no-fund
+        working-directory: functions
+      - run: npm test
+        working-directory: functions
+      - name: Deploy
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          printf '%s' "$FIREBASE_SERVICE_ACCOUNT" > "$RUNNER_TEMP/sa.json"
+          export GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/sa.json"
+          npx --yes firebase-tools@13.29.1 deploy --only functions --project yauoicafequeue --non-interactive --force
