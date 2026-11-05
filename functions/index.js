@@ -1,14 +1,16 @@
 /* 友愛冰室 — Star CloudPRNT server (Star mC-Print3 MCP31CI).
-   1) New order written by the QR page -> trigger puts one small queue entry per station.
-   2) Printer POSTs every few seconds -> we answer with the next queued slip.
-   3) Printer GETs the slip as PNG (one slip = one job, cut after each).
+   1) New order written by the QR page -> trigger puts ONE queue entry per order.
+   2) Printer POSTs every few seconds -> we answer with the next queued order.
+   3) Printer GETs the whole order as one StarPRNT job (kitchen, bar, floor; partial cut after each).
+      Fallback if the printer asks for PNG: slips stacked in one image, one cut at the end.
    4) Printer confirms (DELETE) -> entry removed, order marked printed.
    Protocol: https://star-m.jp/products/s_print/sdk/StarCloudPRNT/manual/en/protocol-guide.html */
 "use strict";
 const { onRequest } = require("firebase-functions/v2/https");
 const { onValueCreated } = require("firebase-functions/v2/database");
 const admin = require("firebase-admin");
-const { groups, renderSlip, STATIONS } = require("./slips");
+const { groups, slipCanvas, starprnt, stackPng, STATIONS } = require("./slips");
+const STARPRNT = "application/vnd.star.starprnt";
 
 admin.initializeApp();
 const db = admin.database();
@@ -29,10 +31,9 @@ async function publicData() { return (await db.ref("ordering/public").get()).val
 exports.queueSlips = onValueCreated({ ref: "/ordering/orders/{day}/{oid}", region: REGION }, async ev => {
   const o = ev.data.val() || {}; const { day, oid } = ev.params;
   const P = await publicData();
-  const g = groups(o, P); const at = o.at || Date.now();
-  const upd = {};
-  STATIONS.forEach((st, i) => { if (g[st]) upd[`${Q}/${at}_${i}_${oid}`] = { day, oid, st, at, tries: 0 }; });
-  if (Object.keys(upd).length) await db.ref().update(upd);
+  if (!Object.keys(groups(o, await publicData())).length) return;
+  const at = o.at || Date.now();
+  await db.ref(`${Q}/${at}_${oid}`).set({ day, oid, at, tries: 0 });
 });
 
 async function nextJob() {
@@ -43,25 +44,29 @@ async function nextJob() {
   return job;
 }
 
-async function render(key) {
+/* stations of a queue entry: whole order, or one station for entries queued by the old version */
+const stationsOf = (j, g) => (j.st ? [j.st] : STATIONS).filter(st => g[st]);
+
+async function render(key, type) {
   const j = (await db.ref(`${Q}/${key}`).get()).val(); if (!j) return null;
   const [oSnap, P] = [await db.ref(`ordering/orders/${j.day}/${j.oid}`).get(), await publicData()];
   const o = oSnap.val(); if (!o) return null;
-  const rows = groups(o, P)[j.st]; if (!rows) return null;
+  const g = groups(o, P), sts = stationsOf(j, g); if (!sts.length) return null;
   /* add-on = same table already had an earlier unpaid order today (same rule as staff page) */
   const all = (await db.ref(`ordering/orders/${j.day}`).get()).val() || {};
   const addOn = Object.keys(all).some(id => id !== j.oid && all[id].table === o.table && (all[id].at || 0) < (o.at || 0) && !all[id].paid);
-  return renderSlip(o, j.st, rows, { time: hhmm(o.at || Date.now()), addOn, reprint: !!j.reprint });
+  const meta = { time: hhmm(o.at || Date.now()), addOn, reprint: !!j.reprint };
+  const canvases = sts.map(st => slipCanvas(o, st, g[st], meta));
+  return type === STARPRNT ? starprnt(canvases) : stackPng(canvases);
 }
 
 async function confirm(mac, key, code) {
   const ok = /^2/.test(code || "");
   const ref = db.ref(`${Q}/${key}`); const j = (await ref.get()).val(); if (!j) return;
-  if (ok) {
-    await db.ref().update({ [`${Q}/${key}`]: null, [`ordering/orders/${j.day}/${j.oid}/print/${j.st}`]: Date.now() });
-  } else if ((j.tries || 0) + 1 >= MAX_TRIES) {
-    await db.ref().update({ [`${Q}/${key}`]: null, [`ordering/orders/${j.day}/${j.oid}/print/${j.st}`]: "fail:" + code });
-  } else await ref.child("tries").set((j.tries || 0) + 1);
+  const mark = v => { const u = { [`${Q}/${key}`]: null }; (j.st ? [j.st] : STATIONS).forEach(st => { u[`ordering/orders/${j.day}/${j.oid}/print/${st}`] = v; }); return u; };
+  if (ok) await db.ref().update(mark(Date.now()));
+  else if ((j.tries || 0) + 1 >= MAX_TRIES) await db.ref().update(mark("fail:" + code));
+  else await ref.child("tries").set((j.tries || 0) + 1);
 }
 
 /* ---------- 2–4) the endpoint the printer is configured with ---------- */
@@ -73,7 +78,7 @@ exports.cloudprnt = onRequest({ region: REGION, memory: "512MiB", cors: false },
       await db.ref("ordering/printer/status").set({ mac: mac || "", code: b.statusCode || "", at: Date.now(), ok: allowed(mac) });
       if (!allowed(mac)) return res.json({ jobReady: false });
       const j = await nextJob();
-      return res.json(j ? { jobReady: true, mediaTypes: ["image/png"], jobToken: j.key } : { jobReady: false });
+      return res.json(j ? { jobReady: true, mediaTypes: [STARPRNT, "image/png"], jobToken: j.key } : { jobReady: false });
     }
     if (!allowed(q.mac)) return res.status(403).send("unknown printer");
     if (req.method === "DELETE" || (req.method === "GET" && q.delete !== undefined)) {
@@ -83,13 +88,12 @@ exports.cloudprnt = onRequest({ region: REGION, memory: "512MiB", cors: false },
     }
     if (req.method === "GET") {
       let key = q.token; if (!key) { const j = await nextJob(); key = j && j.key; }
-      const png = key && await render(key);
-      if (!png) { if (key) await db.ref(`${Q}/${key}`).remove(); return res.status(404).send("no job"); }
-      res.set("Content-Type", "image/png");
-      res.set("X-Star-Cut", "partial; feed=true");
-      res.set("X-Star-ImageDitherPattern", "none");
-      if (key.split("_")[1] === "0") res.set("X-Star-Buzzerstartpattern", "1");  /* kitchen slip: beep if a buzzer is fitted */
-      return res.status(200).send(png);
+      const type = q.type === STARPRNT ? STARPRNT : "image/png";
+      const body = key && await render(key, type);
+      if (!body) { if (key) await db.ref(`${Q}/${key}`).remove(); return res.status(404).send("no job"); }
+      res.set("Content-Type", type);
+      if (type === "image/png") { res.set("X-Star-Cut", "partial; feed=true"); res.set("X-Star-ImageDitherPattern", "none"); }
+      return res.status(200).send(body);
     }
     return res.status(405).send("method");
   } catch (e) {

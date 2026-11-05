@@ -110,7 +110,7 @@ GitHub 上面嘅 Pull Request 撳 **Merge**，大約 1 分鐘後網站就會更�
 ---
 
 ## 8. 打印機（Star mC-Print3 MCP31CI，CloudPRNT）
-打印機自己上網攞單：每張新單自動出 廚房／水吧／樓面 最多三張，每張切紙。有過敏備註會反白印。
+打印機自己上網攞單：每張新單一次過出 廚房／水吧／樓面（樓面單 = 全單＋價錢＋合共，埋單用），每張之間切紙。有過敏備註會反白印。
 
 **一次性設定**
 1. Firebase → 左下 **Upgrade** → 轉 **Blaze**。即刻去 Google Cloud Billing → Budgets 設 £5 預算提醒。
@@ -121,7 +121,7 @@ GitHub 上面嘅 Pull Request 撳 **Merge**，大約 1 分鐘後網站就會更�
 6. 同一個網絡嘅電腦開瀏覽器，入打印機 IP → 左上選單 **CloudPRNT**：
    - CloudPRNT Service：**ENABLE**
    - Server URL：`https://europe-west1-yauoicafequeue.cloudfunctions.net/cloudprnt`
-   - Polling time：**5**
+   - Polling time：**2**
    - Submit → 選單 **Save** → **Save → Restart device** → Execute
 
 **測試**：用手機 scan 任何一張枱 QR 落一張有全日早餐、飲品同麵包嘅單 → 應該 10–20 秒內印出三張。
@@ -133,3 +133,13 @@ GitHub 上面嘅 Pull Request 撳 **Merge**，大約 1 分鐘後網站就會更�
 - 冇「重印」掣（後台畫面唔改）。要重印：喺 `/yauoicafe/staff/` 照睇「按工作位睇」。
 - 印唔到會自動再試 5 次，之後放棄並記 `fail`。
 - 超過 3 個鐘未印嘅單唔會再印（例如成日冇開機）。
+
+## 9. 每日日結 Google Doc
+每晚 22:00 自動喺 Google Drive「友愛冰室 日結 Daily Takings」資料夾出一份「友愛冰室 日結 YYYY-MM-DD」：現金／卡、折扣、未埋單、每款餐點數量同銀碼、收款記錄。冇訂單嗰日唔出。
+
+**一次性設定（用 salfordhongkongers@gmail.com）**
+1. 開 https://script.google.com → 新專案 → 改名「友愛冰室 日結」。
+2. 左邊 ⚙ 專案設定 → 剔「在編輯器中顯示 appsscript.json」。
+3. 將 `cafe-eod/appsscript.json` 同 `cafe-eod/Code.gs` 內容分別貼入同名檔案 → 儲存。
+4. 上面揀 `setup` → 執行 → 授權。之後每晚自動出。
+5. 想即刻出今日：揀 `reportToday` → 執行。補出某日：喺最底加一行 `function 補日結(){ reportFor('2026-11-07'); }` 再執行。
