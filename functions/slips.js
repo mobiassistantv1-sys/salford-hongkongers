@@ -19,7 +19,7 @@ const W = 576;            /* 72 mm print width at 203 dpi */
 const PAD = 8;
 
 const STATIONS = ["kitchen", "bar", "floor"];
-const TITLE = { kitchen: "廚房 KITCHEN", bar: "水吧 BAR", floor: "樓面 · 麵包 FLOOR" };
+const TITLE = { kitchen: "廚房 KITCHEN", bar: "水吧 BAR", floor: "樓面 FLOOR · 埋單用" };
 
 /* -> { kitchen:[{q,name,sub,al}], bar:[...], floor:[...] }  (empty stations omitted) */
 function groups(o, P) {
@@ -45,8 +45,11 @@ function groups(o, P) {
       sub: [l.desc.filter(x => x.g === "taste").map(x => x.zh).join("、"), "跟 " + it.zh + " 全日早餐"].filter(Boolean).join(" · "),
       al: drinkAl(l.sel) }); });
   if (bar.length) out.bar = bar;
-  const bk = L.filter(l => byId[l.itemId].cat === "bakery");
-  if (bk.length) out.floor = bk.map(l => ({ q: l.qty, name: Y.itemName(byId[l.itemId], P, "zh"), sub: "", al: al(l) }));
+  /* floor slip = the whole order with prices + total, for taking payment (always printed) */
+  out.floor = L.map(l => { const it = byId[l.itemId];
+    return { q: l.qty, name: Y.itemName(it, P, "zh") + (it.cat === "allday" ? "早餐" : ""),
+      sub: l.desc.map(x => x.zh).join("、"), al: al(l), price: l.unit * l.qty }; });
+  if (!out.floor.length) delete out.floor;
   return out;
 }
 
@@ -87,16 +90,28 @@ function renderSlip(o, station, rows, meta) {
     if (meta.reprint) text("重印 REPRINT", 30, PAD, { invert: true });
     rule();
 
+    const money = p => "£" + (p / 100).toFixed(2);
+    const right = (s, size, yy) => { if (!paint) return; ctx.font = `${size}px HK`; ctx.fillStyle = "#000"; ctx.fillText(s, W - PAD - ctx.measureText(s).width, yy + size * 0.88); };
+    const PRICE_W = 150;   /* right column for prices on the floor slip */
     rows.forEach(r => {
-      const qx = PAD, nx = PAD + 86;
-      ctx.font = "48px HK";
-      if (paint) { ctx.fillStyle = "#000"; ctx.fillText(r.q + "×", qx, y + 48 * 0.88); }
-      text(r.name, 48, nx, { gap: 6 });
+      const hasP = r.price != null, fs = hasP ? 40 : 48;   /* bill slip: smaller names, fewer wraps */
+      const qx = PAD, nx = PAD + (hasP ? 72 : 86);
+      ctx.font = `${fs}px HK`;
+      if (paint) { ctx.fillStyle = "#000"; ctx.fillText(r.q + "×", qx, y + fs * 0.88); }
+      if (hasP) right(money(r.price), 40, y);
+      text(r.name, fs, nx, { gap: 6, maxW: W - nx - PAD - (hasP ? PRICE_W : 0) });
       if (r.sub) text(r.sub, 32, nx, { gap: 6 });
       if (r.al && r.al.length) text("含：" + r.al.join("、"), 28, nx, { invert: true, gap: 10 });
       y += 10;
     });
 
+    if (station === "floor") {
+      const total = rows.reduce((a, r) => a + (r.price || 0), 0);
+      rule();
+      if (paint) { ctx.font = "56px HK"; ctx.fillStyle = "#000"; ctx.fillText("合共", PAD, y + 56 * 0.88); }
+      right(money(total), 64, y - 4); y += 76;
+      text("折扣喺埋單時先計" + (meta.addOn ? " · 呢張係加單，埋單要連前面張單一齊計" : ""), 26, PAD);
+    }
     if (o.allergy) { rule(); text("⚠ 過敏：" + o.allergy, 36, PAD, { invert: true, gap: 12, maxW: W - PAD * 2 - 12 }); }
     if (o.note) { rule(o.allergy ? 0 : 3); text("備註：" + o.note, 32, PAD); }
     y += 24;
