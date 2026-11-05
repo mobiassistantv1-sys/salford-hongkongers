@@ -14,12 +14,14 @@
       },
       "counter": {
         "$day": {
+          ".read": "auth != null",
           ".write": "auth != null",
           ".validate": "newData.isNumber() && ((root.child('ordering/roles/' + auth.uid).exists() || (root.child('shk/uids/' + auth.uid).exists() && root.child('shk/people/' + root.child('shk/uids/' + auth.uid).val() + '/status').val() === 'active' && root.child('shk/people/' + root.child('shk/uids/' + auth.uid).val() + '/roles/volunteer').val() === true)) || newData.val() === (data.exists() ? data.val() : 0) + 1)"
         }
       },
       "wcounter": {
         "$day": {
+          ".read": "auth != null",
           ".write": "auth != null",
           ".validate": "newData.isNumber() && ((root.child('ordering/roles/' + auth.uid).exists() || (root.child('shk/uids/' + auth.uid).exists() && root.child('shk/people/' + root.child('shk/uids/' + auth.uid).val() + '/status').val() === 'active' && root.child('shk/people/' + root.child('shk/uids/' + auth.uid).val() + '/roles/volunteer').val() === true)) || newData.val() === (data.exists() ? data.val() : 0) + 1)"
         }
