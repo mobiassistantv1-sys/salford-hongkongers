@@ -1,6 +1,13 @@
 {
-  "updated": "2026-11-04T18:35:08.077Z",
+  "updated": "2026-11-05T18:40:41.284Z",
   "council": [
+    {
+      "title": "Salford celebrates adult learners making a difference across the city",
+      "text": "A Salford adult social care worker whose passage from unemployment to university graduate has inspired others and has been named a winner at the 2026 ‘Get the Nation…",
+      "link": "https://news.salford.gov.uk/news/salford-celebrates-adult-learners-making-a-difference-across-the-city/",
+      "date": "2026-11-05T16:00:00.000Z",
+      "source": "Salford City Council"
+    },
     {
       "title": "Salford adult social care worker recognised with national learning award",
       "text": "A Salford adult social care worker whose passage from unemployment to university graduate has inspired others and has been named a winner at the 2026 ‘Get the Nation…",
@@ -48,13 +55,6 @@
       "text": "Council teams were out in force on Wednesday (28 October) in Kersal, on the fourth Cleaner Greener Day of Action.",
       "link": "https://news.salford.gov.uk/news/six-tonnes-of-waste-removed-as-cleaner-greener-day-comes-to-kersal/",
       "date": "2026-10-27T10:00:00.000Z",
-      "source": "Salford City Council"
-    },
-    {
-      "title": "Continuing support in our communities",
-      "text": "We are out in our communities all the time, bringing councillors, community groups and partners together to talk about issues that are important in our local areas.",
-      "link": "https://news.salford.gov.uk/news/continuing-support-in-our-communities/",
-      "date": "2026-10-23T14:30:00.000Z",
       "source": "Salford City Council"
     }
   ],
@@ -118,6 +118,20 @@
   ],
   "cvs": [
     {
+      "title": "A real Living Wage: 25 years in - Read the report",
+      "text": "",
+      "link": "https://www.salfordcvs.co.uk/living-wage-25-yrs",
+      "date": "2026-11-05T12:21:00.000Z",
+      "source": "Salford CVS"
+    },
+    {
+      "title": "More than a balance sheet: Finding a Treasurer who believes in your cause",
+      "text": "",
+      "link": "https://www.salfordcvs.co.uk/findingatrustee",
+      "date": "2026-11-05T09:19:00.000Z",
+      "source": "Salford CVS"
+    },
+    {
       "title": "One year of Greater Together Manchester’s Refugee Lodgings project",
       "text": "",
       "link": "https://www.salfordcvs.co.uk/refugeeproject",
@@ -136,20 +150,6 @@
       "text": "",
       "link": "https://www.salfordcvs.co.uk/SOSawardsnominations",
       "date": "2026-11-04T11:34:00.000Z",
-      "source": "Salford CVS"
-    },
-    {
-      "title": "Britain's first national survey dedicated to Black women and girls",
-      "text": "",
-      "link": "https://www.salfordcvs.co.uk/blackwomensurvey",
-      "date": "2026-11-04T11:28:00.000Z",
-      "source": "Salford CVS"
-    },
-    {
-      "title": "Specialist and Supported Housing Strategy 2027-2037 Public consultation",
-      "text": "",
-      "link": "https://www.salfordcvs.co.uk/housingsurvey",
-      "date": "2026-11-04T11:20:00.000Z",
       "source": "Salford CVS"
     }
   ],
