@@ -24,7 +24,8 @@
   const TASTE = [["lessice","少冰","Less ice",isIced,[]],["moremilk","多奶","More milk",null,["M"]],["lessmilk","少奶","Less milk",null,["M"]],["nomilk","齋","No milk",null,[]],["condensed","走","Condensed milk",null,["M"]]];
   const G = {
     noodle: { id:"noodle", zh:"麵類", en:"Noodles", min:1, max:1, station:"kitchen", choices:[["instant","公仔麵","Instant noodles"],["macaroni","通心粉","Macaroni"],["rice","米粉","Rice noodles"],["spag","意粉","Spaghetti"]].map(c=>({id:c[0],zh:c[1],en:c[2],p:0,al:["G"]})) },
-    sides: { id:"sides", zh:"跟配（揀 2 款）", en:"Sides (pick 2)", min:2, max:2, station:"kitchen", choices:[["sausage","腸仔","Sausage",["G","So"]],["luncheon","午餐肉","Luncheon meat",["G","So"]],["fried","煎蛋","Fried egg",["E"]],["overhard","熟蛋","Over-hard egg",["E"]],["overeasy","反蛋","Over-easy egg",["E"]],["scrambled","炒蛋","Scrambled egg (with evaporated milk)",["E","M"]]].map(c=>({id:c[0],zh:c[1],en:c[2],p:0,al:c[3]})) },
+    sides: { id:"sides", zh:"跟配（揀 2 款）", en:"Sides (pick 2)", min:2, max:2, station:"kitchen", choices:[["sausage","腸仔","Sausage",["G","So"]],["luncheon","午餐肉","Luncheon meat",["G","So"]],["fried","煎蛋","Fried egg",["E"]],["overhard","熟蛋","Over-hard egg",["E"]],["overeasy","反蛋","Over-easy egg",["E"]],["scrambled","炒蛋","Scrambled egg (with evaporated milk)",["E","M"],2]].map(c=>({id:c[0],zh:c[1],en:c[2],p:0,al:c[3],w:c[4]||1})),
+      note:{zh:"炒蛋用兩隻蛋炒，份量等於兩款跟配，所以揀炒蛋就唔可以再配其他跟配。",en:"Our scrambled egg is made with two eggs, so it counts as both sides and can't be paired with another side."} },
     toast: { id:"toast", zh:"加配多士", en:"Add toast", min:0, max:1, station:"kitchen", choices:[{id:"toast",zh:"牛油多士",en:"Buttered toast",p:50,sq:"ILFCGIYLXNIT3UMHFUCFFK5M",al:["G","M"]}] },
     setdrink: { id:"setdrink", zh:"跟餐飲品", en:"Set drink", min:1, max:1, station:"bar", choices: DR.map(d=>({id:"hot_"+d[0],zh:"熱"+d[1],en:"Hot "+d[2],p:0,al:DRAL[d[0]]})).concat(DR.map(d=>({id:"iced_"+d[0],zh:"凍"+d[1],en:"Iced "+d[2],p:50,sq:d[3],al:DRAL[d[0]]}))) },
     taste: { id:"taste", zh:"口味", en:"Preferences", min:0, max:3, station:"bar", choices: TASTE.map(t=>({id:t[0],zh:t[1],en:t[2],p:0,show:t[3]||undefined,al:t[4]})) },
@@ -87,9 +88,13 @@
     (it.g || []).forEach(k => { const g = G[k]; (sel[g.id] || []).forEach(cid => { const c = g.choices.find(x => x.id === cid); if (c) { const cp = choicePrice(g.id, c, P); unit += cp; desc.push({g:g.id, st:g.station, zh:c.zh, en:c.en, p:cp}); } }); });
     return { itemId, qty, sel, unit, desc };
   }
-  function cleanSel(it, sel) {           /* keep only valid choice ids, enforce min/max */
+  /* how many slots a selection uses: a choice with w:2 (scrambled egg) fills both sides */
+  function selCount(g, ids) { return (ids || []).reduce((a, cid) => { const c = g.choices.find(x => x.id === cid); return a + (c ? (c.w || 1) : 0); }, 0); }
+  function cleanSel(it, sel) {           /* keep only valid choice ids, enforce min/max (weighted) */
     const out = {};
-    for (const k of (it.g || [])) { const g = G[k]; const v = (sel[g.id] || []).filter(cid => g.choices.some(c => c.id === cid)).slice(0, g.max); if (v.length < g.min) return null; if (v.length) out[g.id] = v; }
+    for (const k of (it.g || [])) { const g = G[k]; const v = [];
+      (sel[g.id] || []).filter(cid => g.choices.some(c => c.id === cid)).forEach(cid => { if (selCount(g, v.concat(cid)) <= g.max) v.push(cid); });
+      if (selCount(g, v) < g.min) return null; if (v.length) out[g.id] = v; }
     return out;
   }
   function sortAl(list) { const u = []; list.forEach(a => { if (AL[a] && u.indexOf(a) < 0) u.push(a); }); return u.sort((a, b) => AL_ORDER.indexOf(a) - AL_ORDER.indexOf(b)); }
@@ -106,5 +111,5 @@
   function dayKey(d) {                   /* London calendar day, e.g. 2026-10-30 */
     return new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/London", year:"numeric", month:"2-digit", day:"2-digit" }).format(d || new Date());
   }
-  window.YO = { FIREBASE, DR, TASTE, G, CATS, MENU, STOCK, TABLES, byId, isIced, itemPrice, choicePrice, itemName, mkLine, cleanSel, dayKey, AL, sortAl, lineAllergens, optionsAddAllergens, alName };
+  window.YO = { FIREBASE, DR, TASTE, G, CATS, MENU, STOCK, TABLES, byId, isIced, itemPrice, choicePrice, itemName, mkLine, cleanSel, selCount, dayKey, AL, sortAl, lineAllergens, optionsAddAllergens, alName };
 })();

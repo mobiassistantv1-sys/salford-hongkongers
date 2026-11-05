@@ -56,7 +56,7 @@ button,input,select,textarea{font:inherit;color:inherit}button{cursor:pointer}
 .sheet{background:var(--paper);width:100%;max-width:560px;max-height:88vh;overflow:auto;border-radius:16px 16px 0 0;padding:18px max(16px,env(safe-area-inset-right,0px)) calc(16px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
 .sheet h2{font-size:22px;font-weight:900}.sheet .sub{color:var(--muted);font-size:13px;margin:2px 0 8px}.sheet .tags{display:flex;gap:6px;flex-wrap:wrap}
 .grp{border-top:1px solid var(--line);padding:12px 0}.grp-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:8px}
-.grp-h b{font-size:15px}.grp-h span{font-size:12px;color:var(--muted)}.grp-h span.need{color:var(--red);font-weight:700}
+.gnote{margin:-2px 0 8px;font-size:13px;color:var(--muted)}.grp-h b{font-size:15px}.grp-h span{font-size:12px;color:var(--muted)}.grp-h span.need{color:var(--red);font-weight:700}
 .choices{display:flex;flex-wrap:wrap;gap:8px}
 .choice{border:1.5px solid var(--line);background:var(--surface);border-radius:10px;padding:8px 12px;font-size:14.5px;text-align:left;min-height:44px}
 .choice small{color:var(--muted);margin-left:4px}.choice[aria-pressed="true"]{border-color:var(--green);background:var(--ok-soft);font-weight:700}.choice[disabled]{opacity:.4;text-decoration:line-through}
@@ -158,11 +158,11 @@ function renderSheet(){
   const sh=U.sheet;if(!sh)return "";const it=byId[sh.id];
   let h='<div class="overlay" data-act="close-bg"><div class="sheet" role="dialog" aria-modal="true" aria-label="'+esc(iname(it))+'">';
   h+='<h2>'+esc(iname(it))+'</h2><div class="sub">'+(EN()?'':esc(Y.itemName(it,P,"en"))+' · ')+'<span class="num">'+money(Y.itemPrice(it,P,false))+'</span></div><div class="tags">'+stockTag(it)+allergyTags(it)+'</div>';
-  it.g.forEach(k=>{const g=G[k],sel=sh.sel[g.id]||[];const need=g.min>0&&sel.length<g.min;
-    h+='<div class="grp"><div class="grp-h"><b>'+nm(g)+'</b><span class="'+(need&&sh.tried?"need":"")+'">'+ruleText(g)+'</span></div><div class="choices">';
+  it.g.forEach(k=>{const g=G[k],sel=sh.sel[g.id]||[];const need=g.min>0&&Y.selCount(g,sel)<g.min;
+    h+='<div class="grp"><div class="grp-h"><b>'+nm(g)+'</b><span class="'+(need&&sh.tried?"need":"")+'">'+ruleText(g)+'</span></div>'+(g.note?'<p class="gnote">'+esc(nm(g.note))+'</p>':'')+'<div class="choices">';
     g.choices.filter(c=>!c.show||c.show(sh.sel)).forEach(c=>{const on=sel.includes(c.id),o=optOff(g.id,c.id);
       const cp=c.variant?Y.itemPrice(it,P,true)-Y.itemPrice(it,P,false):Y.choicePrice(g.id,c,P);
-      const ca=(c.al||[]).filter(a=>(it.al||[]).indexOf(a)<0);h+='<button class="choice" data-act="pick" data-k="'+k+'" data-v="'+c.id+'" aria-pressed="'+on+'"'+(o?" disabled":"")+'>'+esc(nm(c))+(cp?'<small class="num">+'+money(cp)+'</small>':'')+(o?'<small>'+t("售罄","Sold out")+'</small>':'')+(ca.length?'<span class="al">'+t("含","+")+esc(alList(Y.sortAl(ca)))+'</span>':'')+'</button>';});
+      const ca=(c.al||[]).filter(a=>(it.al||[]).indexOf(a)<0);h+='<button class="choice" data-act="pick" data-k="'+k+'" data-v="'+c.id+'" aria-pressed="'+on+'"'+(o?" disabled":"")+'>'+esc(nm(c))+(c.w>1?'<small>'+t("算 "+c.w+" 款","counts as "+c.w)+'</small>':'')+(cp?'<small class="num">+'+money(cp)+'</small>':'')+(o?'<small>'+t("售罄","Sold out")+'</small>':'')+(ca.length?'<span class="al">'+t("含","+")+esc(alList(Y.sortAl(ca)))+'</span>':'')+'</button>';});
     h+='</div></div>';});
   const max=it.stock?Math.max(0,avail(it)-cartUse(it.stock,sh.edit)):20;
   h+='<div class="qtyrow"><b>'+t("數量","Quantity")+'</b><div class="stepper"><button data-act="qty" data-v="-1" aria-label="'+t("減少","Less")+'">−</button><output class="num">'+sh.qty+'</output><button data-act="qty" data-v="1" aria-label="'+t("增加","More")+'"'+(sh.qty>=max?" disabled":"")+'>+</button></div>'+(it.stock?'<span style="color:var(--muted);font-size:13px">'+t("最多 "+max+" 個","Up to "+max)+'</span>':'')+'</div>';
@@ -243,10 +243,10 @@ document.addEventListener("click",e=>{
     case "open":if(!VALID)break;{const it=byId[v];U.sheet={id:v,qty:1,sel:{},edit:null,tried:false};if(it.iced)U.sheet.sel.__iced=true;render();break;}
     case "close":case "close-bg":U.sheet=null;render();break;
     case "pick":{const sh=U.sheet,g=G[b.dataset.k],cur=sh.sel[g.id]||[];let nx;
-      if(g.max===1)nx=cur.includes(v)&&g.min===0?[]:[v];else nx=cur.includes(v)?cur.filter(x=>x!==v):(cur.length>=g.max?cur.slice(1).concat(v):cur.concat(v));
+      if(g.max===1)nx=cur.includes(v)&&g.min===0?[]:[v];else if(cur.includes(v))nx=cur.filter(x=>x!==v);else{nx=cur.concat(v);while(Y.selCount(g,nx)>g.max)nx=nx.slice(1);}  /* drop oldest until it fits (scrambled egg = 2) */
       sh.sel[g.id]=nx;if(g.id==="setdrink"&&!Y.isIced(sh.sel)&&sh.sel.taste)sh.sel.taste=sh.sel.taste.filter(x=>x!=="lessice");render();break;}
     case "qty":{const sh=U.sheet,it=byId[sh.id];const max=it.stock?avail(it)-cartUse(it.stock,sh.edit):20;sh.qty=Math.max(1,Math.min(max,sh.qty+Number(v)));render();break;}
-    case "add":{const sh=U.sheet,it=byId[sh.id];const miss=it.g.map(k=>G[k]).filter(g=>(sh.sel[g.id]||[]).length<g.min);
+    case "add":{const sh=U.sheet,it=byId[sh.id];const miss=it.g.map(k=>G[k]).filter(g=>Y.selCount(g,sh.sel[g.id])<g.min);
       if(miss.length){sh.tried=true;render();toast(t("請揀：","Please choose: ")+miss.map(g=>nm(g).replace(/（.*）|\s*\(.*\)/,"")).join(EN()?", ":"、"));break;}
       const sel={};Object.keys(sh.sel).forEach(k=>{if(k!=="__iced")sel[k]=sh.sel[k];});
       const ln=mk(it.id,sh.qty,sel);ln.lid="l"+Date.now()+Math.random().toString(36).slice(2,6);
