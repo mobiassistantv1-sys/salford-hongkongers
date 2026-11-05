@@ -4,7 +4,7 @@
  * Runs as its own Apps Script project under salfordhongkongers@gmail.com (owner of Firebase
  * project yauoicafequeue). No keys: it uses that account's own sign-in, like volunteer-sync/.
  *
- * Run once from the editor:  setup()   → makes the Drive folder + a daily 22:00 trigger
+ * Run once from the editor:  setup()   → makes the Drive folder + a daily ~23:59 trigger
  * Any time:                  reportToday()  or  reportFor('2026-11-05')
  *
  * Each report = one Google Doc "友愛冰室 日結 YYYY-MM-DD" in folder "友愛冰室 日結 Daily Takings":
@@ -52,11 +52,13 @@ function folder_() {
 function setup() {
   const f = folder_();
   ScriptApp.getProjectTriggers().filter(t => t.getHandlerFunction() === 'reportToday').forEach(t => ScriptApp.deleteTrigger(t));
-  ScriptApp.newTrigger('reportToday').timeBased().atHour(22).everyDays(1).inTimezone(TZ).create();
-  Logger.log('OK：資料夾「' + FOLDER_NAME + '」 ' + f.getUrl() + '；每晚 22:00 自動出日結。');
+  /* Apps Script runs a daily trigger within ±15 min of nearMinute, so it can land just after midnight */
+  ScriptApp.newTrigger('reportToday').timeBased().atHour(23).nearMinute(59).everyDays(1).inTimezone(TZ).create();
+  Logger.log('OK：資料夾「' + FOLDER_NAME + '」 ' + f.getUrl() + '；每晚大約 23:59 自動出日結。');
 }
 
-function reportToday() { reportFor(Utilities.formatDate(new Date(), TZ, 'yyyy-MM-dd')); }
+/* "Today" = the trading day: before 06:00 still counts as the previous day (trigger may run at 00:10). */
+function reportToday() { reportFor(Utilities.formatDate(new Date(Date.now() - 6 * 3600e3), TZ, 'yyyy-MM-dd')); }
 
 function reportFor(day) {
   const Y = menu_();
