@@ -1,0 +1,113 @@
+/* 友愛冰室 — render order slips as PNG for the Star mC-Print3 (CloudPRNT).
+   Grouping copies slipsFor() in /yauoicafe/staff/index.html so paper = screen. */
+"use strict";
+const fs = require("fs");
+const path = require("path");
+const vm = require("vm");
+const { createCanvas, GlobalFonts } = require("@napi-rs/canvas");
+
+/* Load the same menu.js the website uses (single source of truth). */
+const MENU_JS = path.join(__dirname, "menu.js");
+const sandbox = { window: {} };
+vm.runInNewContext(fs.readFileSync(MENU_JS, "utf8"), sandbox);
+const Y = sandbox.window.YO;
+const byId = Y.byId;
+
+GlobalFonts.registerFromPath(path.join(__dirname, "fonts", "NotoSansHK-Bold.otf"), "HK");
+
+const W = 576;            /* 72 mm print width at 203 dpi */
+const PAD = 8;
+
+const STATIONS = ["kitchen", "bar", "floor"];
+const TITLE = { kitchen: "廚房 KITCHEN", bar: "水吧 BAR", floor: "樓面 · 麵包 FLOOR" };
+
+/* -> { kitchen:[{q,name,sub,al}], bar:[...], floor:[...] }  (empty stations omitted) */
+function groups(o, P) {
+  const L = (o.lines || []).map(l => {
+    if (l.x || !byId[l.itemId]) return null;
+    const ln = Y.mkLine(l.itemId, Math.max(1, Math.min(50, l.qty | 0)), l.sel || {}, P);
+    return ln;
+  }).filter(Boolean);
+  const al = l => Y.lineAllergens(l.itemId, l.sel).map(c => Y.alName(c, "zh"));
+  /* set drink of an All Day Set: only the drink's own allergens go on the bar slip */
+  const drinkAl = sel => Y.sortAl(["setdrink", "taste"].flatMap(k =>
+    (sel[k] || []).flatMap(id => ((Y.G[k].choices.find(c => c.id === id) || {}).al) || []))).map(c => Y.alName(c, "zh"));
+  const out = {};
+  const kit = L.filter(l => ["allday", "sandwich"].includes(byId[l.itemId].cat));
+  if (kit.length) out.kitchen = kit.map(l => { const it = byId[l.itemId];
+    return { q: l.qty, name: Y.itemName(it, P, "zh") + (it.cat === "allday" ? "（全日早餐）" : ""),
+      sub: l.desc.filter(x => x.st === "kitchen").map(x => x.zh).join("、"), al: al(l) }; });
+  const bar = [];
+  L.forEach(l => { const it = byId[l.itemId];
+    if (it.cat === "drinks") bar.push({ q: l.qty, name: l.desc.filter(x => x.g === "drink").map(x => x.zh).join(""),
+      sub: l.desc.filter(x => x.g === "taste").map(x => x.zh).join("、"), al: al(l) });
+    else if (it.cat === "allday") bar.push({ q: l.qty, name: l.desc.filter(x => x.g === "setdrink").map(x => x.zh).join(""),
+      sub: [l.desc.filter(x => x.g === "taste").map(x => x.zh).join("、"), "跟 " + it.zh + " 全日早餐"].filter(Boolean).join(" · "),
+      al: drinkAl(l.sel) }); });
+  if (bar.length) out.bar = bar;
+  const bk = L.filter(l => byId[l.itemId].cat === "bakery");
+  if (bk.length) out.floor = bk.map(l => ({ q: l.qty, name: Y.itemName(byId[l.itemId], P, "zh"), sub: "", al: al(l) }));
+  return out;
+}
+
+function wrap(ctx, text, maxW) {
+  const lines = []; let cur = "";
+  for (const ch of String(text)) {
+    /* closing punctuation never starts a line */
+    if (ctx.measureText(cur + ch).width > maxW && cur && !"）)、，。：".includes(ch)) { lines.push(cur); cur = ch; } else cur += ch;
+  }
+  if (cur) lines.push(cur);
+  return lines;
+}
+
+/* Draw one slip. Two passes: measure height, then paint. */
+function renderSlip(o, station, rows, meta) {
+  const draw = (ctx, paint) => {
+    let y = PAD;
+    const text = (s, size, x, opts = {}) => {
+      ctx.font = `${size}px HK`; const maxW = (opts.maxW || W - x - PAD);
+      const ls = wrap(ctx, s, maxW);
+      ls.forEach(t => {
+        if (paint) {
+          if (opts.invert) { ctx.fillStyle = "#000"; ctx.fillRect(x - 6, y - 2, Math.min(maxW, ctx.measureText(t).width) + 12, size + 10); ctx.fillStyle = "#fff"; }
+          else ctx.fillStyle = "#000";
+          ctx.fillText(t, x, y + size * 0.88);
+        }
+        y += size + (opts.gap ?? 8);
+      });
+    };
+    const rule = (h = 3) => { if (paint) { ctx.fillStyle = "#000"; ctx.fillRect(0, y, W, h); } y += h + 10; };
+
+    /* header: station (inverted band), table huge, order no + time */
+    if (paint) { ctx.fillStyle = "#000"; ctx.fillRect(0, y, W, 60); ctx.fillStyle = "#fff"; ctx.font = "40px HK"; ctx.fillText(TITLE[station], PAD + 4, y + 45); }
+    y += 72;
+    const tbl = o.table && o.table.startsWith("W") ? "外賣 " + o.table : (o.table || "?");
+    text(tbl, 96, PAD, { gap: 4 });
+    text(`#${String(o.no || 0).padStart(3, "0")}  ${meta.time}${o.name ? "  " + o.name : ""}${meta.addOn ? "  【加單】" : ""}`, 30, PAD);
+    if (meta.reprint) text("重印 REPRINT", 30, PAD, { invert: true });
+    rule();
+
+    rows.forEach(r => {
+      const qx = PAD, nx = PAD + 86;
+      ctx.font = "48px HK";
+      if (paint) { ctx.fillStyle = "#000"; ctx.fillText(r.q + "×", qx, y + 48 * 0.88); }
+      text(r.name, 48, nx, { gap: 6 });
+      if (r.sub) text(r.sub, 32, nx, { gap: 6 });
+      if (r.al && r.al.length) text("含：" + r.al.join("、"), 28, nx, { invert: true, gap: 10 });
+      y += 10;
+    });
+
+    if (o.allergy) { rule(); text("⚠ 過敏：" + o.allergy, 36, PAD, { invert: true, gap: 12, maxW: W - PAD * 2 - 12 }); }
+    if (o.note) { rule(o.allergy ? 0 : 3); text("備註：" + o.note, 32, PAD); }
+    y += 24;
+    return y;
+  };
+  const probe = createCanvas(W, 10).getContext("2d");
+  const H = Math.ceil(draw(probe, false));
+  const c = createCanvas(W, H); const ctx = c.getContext("2d");
+  ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, W, H);
+  draw(ctx, true);
+  return c.toBuffer("image/png");
+}
+
+module.exports = { Y, groups, renderSlip, STATIONS };

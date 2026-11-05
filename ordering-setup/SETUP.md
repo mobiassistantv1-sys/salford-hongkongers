@@ -102,8 +102,34 @@ GitHub 上面嘅 Pull Request 撳 **Merge**，大約 1 分鐘後網站就會更�
 - **收工**：經理睇「日結」，同 Square 當日總數對數。
 
 ### 已知限制（第一版）
-- 打印機未接駁：新單喺平板顯示同響鈴。打印機到咗再加 CloudPRNT。
 - 收錢喺 Square POS 用自訂金額，所以 Square 報表冇逐項餐點；逐項記錄喺後台「日結」。
 - 加菜式、改選項要改 `order/menu.js`，叫 Claude 或者 Ivan 改。
 - 唔記得密碼冇得自己重設，要經理喺 `/admin/` 撳「重設帳戶」。
 - 義工打卡用返同一套帳戶，設定見 `volunteer-sync/`。
+
+---
+
+## 8. 打印機（Star mC-Print3 MCP31CI，CloudPRNT）
+打印機自己上網攞單：每張新單自動出 廚房／水吧／樓面 最多三張，每張切紙。有過敏備註會反白印。
+
+**一次性設定**
+1. Firebase → 左下 **Upgrade** → 轉 **Blaze**。即刻去 Google Cloud Billing → Budgets 設 £5 預算提醒。
+2. Google Cloud Console → IAM → 搵 `FIREBASE_SERVICE_ACCOUNT` 嗰個服務帳戶（電郵 `firebase-adminsdk-…@yauoicafequeue.iam.gserviceaccount.com`）→ 編輯 → 加角色 **Editor**。
+3. 打印機上紙 → 關機 → 㩒住 **FEED** 再㩒 **電源** → 開始印就放手。張紙印出 **IP address** 同 **MAC address**。
+4. GitHub → repo → Settings → Secrets and variables → Actions → **Variables** 分頁 → New variable：名 `PRINTER_MAC`，值 = 張紙上面嘅 MAC（例如 `00:11:62:aa:bb:cc`）。
+5. GitHub → Actions → **Deploy printer server (CloudPRNT)** → Run workflow。綠剔即成功。
+6. 同一個網絡嘅電腦開瀏覽器，入打印機 IP → 左上選單 **CloudPRNT**：
+   - CloudPRNT Service：**ENABLE**
+   - Server URL：`https://europe-west1-yauoicafequeue.cloudfunctions.net/cloudprnt`
+   - Polling time：**5**
+   - Submit → 選單 **Save** → **Save → Restart device** → Execute
+
+**測試**：用手機 scan 任何一張枱 QR 落一張有全日早餐、飲品同麵包嘅單 → 應該 10–20 秒內印出三張。
+
+**點睇打印機狀態**：Firebase → Realtime Database → `ordering/printer/status`（`ok: true` = 已認得部機）。
+`ordering/orders/<日期>/<單>/print` 記低每張幾點印好；`fail:…` = 印唔到（例如冇紙）。
+
+**已知限制**
+- 冇「重印」掣（後台畫面唔改）。要重印：喺 `/yauoicafe/staff/` 照睇「按工作位睇」。
+- 印唔到會自動再試 5 次，之後放棄並記 `fail`。
+- 超過 3 個鐘未印嘅單唔會再印（例如成日冇開機）。
