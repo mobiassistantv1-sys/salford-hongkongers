@@ -56,7 +56,7 @@ function walk_(rootId, pendingOnly) {
     const files = folder.getFiles();
     while (files.hasNext()) {
       const f = files.next(), m = f.getMimeType();
-      if (!/^image\//.test(m)) continue;
+      if (!/^image\//.test(m) || f.isTrashed()) continue;
       if (pendingOnly && /^SHK-(done|error)/.test(f.getDescription() || '')) continue;
       res.push({ id: f.getId(), name: f.getName(), album: album, mime: m, date: f.getDateCreated().toISOString(), size: f.getSize() });
     }
