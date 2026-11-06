@@ -47,7 +47,7 @@
     {id:"bk_pineapple",img:1,al:["G","E","M"],cat:"bakery",zh:"菠蘿包",en:"Pineapple Bun",p:200,g:[],stock:"pineapple",sq:"7NNL45ZAAOKDWPDQT4YQ54S6"},
     {id:"bk_pinebutter",img:1,al:["G","E","M"],cat:"bakery",zh:"菠蘿油",en:"Pineapple Bun with Butter",p:250,g:[],stock:"pineapple",sq:"3XZTUOEPT6S4ZWF4SQE7GK33"},
     {id:"bk_cocktail",img:1,al:["G","E","M"],cat:"bakery",zh:"雞尾包",en:"Cocktail Bun",p:200,g:[],stock:"cocktail",sq:"O5724WXR43AJEICC3GRV47FM"},
-    {id:"bk_sausage",al:["G","So","Su"],cat:"bakery",zh:"腸仔包",en:"Sausage Bun",p:200,g:[],stock:"sausage",sq:"APA66WBGY2RE5VFCEBI3HDDH"},
+    {id:"bk_sausage",img:1,al:["G","So","Su"],cat:"bakery",zh:"腸仔包",en:"Sausage Bun",p:200,g:[],stock:"sausage",sq:"APA66WBGY2RE5VFCEBI3HDDH"},
     {id:"bk_eggtart",img:1,al:["G","E","M"],cat:"bakery",zh:"蛋撻",en:"Egg Tart",p:150,g:[],stock:"eggtart",sq:"J3TYDHIXIDMOT6YDKAY5AER7"},
     /* 是日特別麵包: name, price and allergens set daily by staff in ordering/public/special (see applySpecial) */
     {id:"bk_special",special:1,al:[],cat:"bakery",zh:"是日特別麵包",en:"Today's Special Bun",p:200,g:[],stock:"special"},
