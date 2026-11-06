@@ -63,6 +63,7 @@ function reportToday() { reportFor(Utilities.formatDate(new Date(Date.now() - 6 
 function reportFor(day) {
   const Y = menu_();
   const P = fb_('ordering/public') || {};
+  if (Y.applySpecial) Y.applySpecial(P);   /* 是日特別麵包 name/price */
   const orders = fb_('ordering/orders/' + day) || {};
   const pays = Object.values(fb_('ordering/payments/' + day) || {}).sort((a, b) => (a.at || 0) - (b.at || 0));
   if (!Object.keys(orders).length && !pays.length) { Logger.log(day + '：冇訂單，唔出日結。'); return; }
@@ -120,7 +121,7 @@ function reportFor(day) {
 
   b.appendParagraph('收款記錄 Payments').setHeading(DocumentApp.ParagraphHeading.HEADING1);
   const pr = [['時間', '枱', '方式', '金額', '折扣', '經手']];
-  pays.forEach(p => pr.push([hhmm_(p.at), tableLabel_(p.table), p.m === 'cash' ? '現金' : '卡', money_(p.amt),
+  pays.forEach(p => pr.push([hhmm_(p.at), tableLabel_(p.label || p.table), p.m === 'cash' ? '現金' : '卡', money_(p.amt),
     p.discAmt ? (p.discLabel || p.disc + '%') + ' −' + money_(p.discAmt) + (p.discNote ? '（' + p.discNote + '）' : '') : '—', p.byName || (p.by === 'manager' ? '經理' : '員工')]));
   if (pays.length) table_(b, pr, [3]); else b.appendParagraph('今日未有收款記錄。');
 

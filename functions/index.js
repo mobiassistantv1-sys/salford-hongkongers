@@ -7,9 +7,9 @@
    Protocol: https://star-m.jp/products/s_print/sdk/StarCloudPRNT/manual/en/protocol-guide.html */
 "use strict";
 const { onRequest } = require("firebase-functions/v2/https");
-const { onValueCreated } = require("firebase-functions/v2/database");
+const { onValueCreated, onValueWritten } = require("firebase-functions/v2/database");
 const admin = require("firebase-admin");
-const { groups, noticeRows, slipCanvas, starprnt, stackPng, STATIONS } = require("./slips");
+const { Y, groups, noticeRows, slipCanvas, starprnt, stackPng, STATIONS } = require("./slips");
 const STARPRNT = "application/vnd.star.starprnt";
 
 admin.initializeApp();
@@ -25,12 +25,11 @@ const allowed = mac => !!hex(mac) && String(process.env.PRINTER_MAC || "").split
 
 const hhmm = ms => new Date(ms).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/London" });
 
-async function publicData() { return (await db.ref("ordering/public").get()).val() || {}; }
+async function publicData() { const P = (await db.ref("ordering/public").get()).val() || {}; Y.applySpecial(P); return P; }
 
 /* ---------- 1) queue new orders ---------- */
 exports.queueSlips = onValueCreated({ ref: "/ordering/orders/{day}/{oid}", region: REGION }, async ev => {
   const o = ev.data.val() || {}; const { day, oid } = ev.params;
-  const P = await publicData();
   if (!Object.keys(groups(o, await publicData())).length) return;
   const at = o.at || Date.now();
   await db.ref(`${Q}/${at}_${oid}`).set({ day, oid, at, tries: 0 });
@@ -45,6 +44,12 @@ async function queueNotice(day, oid, kind, extra) {
 }
 exports.cancelNotice = onValueCreated({ ref: "/ordering/orders/{day}/{oid}/lines/{i}/x", region: REGION }, async ev => {
   if (ev.data.val() === true) await queueNotice(ev.params.day, ev.params.oid, "cancel", +ev.params.i);
+});
+/* staff tapped 重印 (orders/{day}/{oid}/rp = {at, st}) -> queue a reprint of all slips or one station */
+exports.reprint = onValueWritten({ ref: "/ordering/orders/{day}/{oid}/rp", region: REGION }, async ev => {
+  const v = ev.data.after.val(); if (!v) return;
+  const at = Date.now(), { day, oid } = ev.params;
+  await db.ref(`${Q}/${at}_${oid}_rp`).set({ day, oid, at, tries: 0, reprint: true, st: STATIONS.includes(v.st) ? v.st : null });
 });
 exports.voidNotice = onValueCreated({ ref: "/ordering/orders/{day}/{oid}/void", region: REGION }, async ev => {
   await queueNotice(ev.params.day, ev.params.oid, "void");

@@ -73,6 +73,10 @@ input.t{width:100%;border:1.5px solid var(--line);background:var(--surface);bord
 .inl{display:flex;gap:6px;align-items:center;font-size:13px;color:var(--muted);flex-wrap:wrap}
 .inl input{width:76px;border:1.5px solid var(--line);background:var(--surface);border-radius:8px;padding:6px 8px}.inl input[type=time]{width:auto}
 .toggles{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:0 16px}
+.spform{display:grid;gap:8px}.spform .row2{display:grid;grid-template-columns:1fr 1fr 110px;gap:8px}@media(max-width:560px){.spform .row2{grid-template-columns:1fr}}
+.spform input.t{margin:0}.alg{display:flex;flex-wrap:wrap;gap:6px}.alg label{display:inline-flex;align-items:center;gap:5px;border:1.5px solid var(--line);border-radius:999px;padding:5px 10px;font-size:13.5px;background:var(--surface)}.alg label:has(input:checked){border-color:var(--green);background:#E6F2EC;font-weight:700}
+.spchk{display:flex;gap:8px;align-items:flex-start;font-size:13.5px}.spnow{font-size:13.5px;color:var(--muted)}.spnow b{color:var(--ink)}
+.mv{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.mv .btn[aria-pressed=true]{background:var(--ink);color:#fff;border-color:var(--ink)}
 .trow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line)}
 .trow .nm{min-width:0}.trow .nm small{color:var(--muted);margin-left:4px}
 .sw{border:0;border-radius:999px;padding:5px 12px;font-weight:700;font-size:13px;white-space:nowrap;background:var(--ok-soft);color:var(--ok)}.sw.off{background:var(--red-soft);color:var(--red)}
@@ -135,7 +139,7 @@ firebase.initializeApp(Y.FIREBASE);
 const auth=firebase.auth(),db=firebase.database();
 let user=null,role=null,myName="",authReady=false,online=true,day=Y.dayKey();
 let P={},ORD={},PAY={},LOG={};
-const U={lang:"zh",tab:"orders",loginErr:"",busy:false,billT:null,cash:"",disc:0,discNote:"",dcT:"pct",dcV:"",armed:null,showSlips:{},seen:{},sound:false};
+const U={lang:"zh",tab:"orders",loginErr:"",busy:false,billT:null,cash:"",disc:0,discNote:"",dcT:"pct",dcV:"",armed:null,showSlips:{},seen:{},sound:false,ex:{},allO:false};
 try{U.lang=localStorage.getItem("yoc_staff_lang")||"zh";}catch(e){}
 
 const $=s=>document.querySelector(s);
@@ -166,7 +170,11 @@ function isAddOn(o){return liveOrders().some(x=>x.table===o.table&&x.id!==o.id&&
 function discOf(g){if(U.disc!==-1)return Math.round(g*U.disc/100);const v=parseFloat(U.dcV);if(!(v>0))return 0;
   return Math.min(g,U.dcT==="pct"?Math.round(g*Math.min(100,v)/100):Math.round(v*100));}
 function discLabel(){if(U.disc!==-1)return U.disc+"%";const v=parseFloat(U.dcV)||0;return U.dcT==="pct"?Math.min(100,v)+"%":money(Math.round(v*100));}
-function billOf(tb){const g=openOrders(tb).reduce((a,o)=>a+orderTotal(o),0);const d=discOf(g);return {g,d,n:g-d};}
+/* 分單: o.sub = "A".."D" → shown as T3-A. Bill pays only the ticked orders (U.ex[id] = left out). */
+const subOf=o=>o.table+(o.sub?"-"+o.sub:"");
+const SUBS=["A","B","C","D"];
+function selOrders(tb){return openOrders(tb).filter(o=>!U.ex[o.id]);}
+function billOf(tb){const g=selOrders(tb).reduce((a,o)=>a+orderTotal(o),0);const d=discOf(g);return {g,d,n:g-d};}
 const addLink=tb=>'<a class="btn sm ghost" href="/yauoicafe/order/?t='+encodeURIComponent(tb)+'&staff=1">＋'+t("幫客加餐","Add items")+'</a>';
 
 /* ---------- sound ---------- */
@@ -200,7 +208,7 @@ function renderLogin(){
 }
 function renderNoRole(){return '<div class="wrap"><div class="login"><h1>'+t("呢個帳戶未有權限","This account has no access")+'</h1><p>'+t("你嘅帳戶未批核做義工。請 SHK 負責人喺管理頁（/admin/）批核。","Ask the manager to give you café access in /admin/.")+'</p><button class="btn ghost" data-act="logout">'+t("登出","Sign out")+'</button></div></div>';}
 function renderStaff(){
-  const openN=openOrders().filter(o=>!o.served).length;
+  const openN=liveOrders().filter(o=>!o.served).length;
   if(U.tab==="eod"&&!mgr())U.tab="orders";
   let h='<div class="wrap"><div class="statusbar"><span class="dot'+(online?"":" off")+'"></span>'+(online?t("已連線","Online"):t("斷線！新單暫時收唔到","Offline — new orders can't arrive"))+' · '+esc(day);
   h+=U.sound?' · 🔔 '+t("響鈴已開","Alerts on"):' <button class="btn sm green" data-act="sound">🔔 '+t("開啟新單響鈴","Turn on order alerts")+'</button>';
@@ -211,25 +219,38 @@ function renderStaff(){
   return h+'</div>';
 }
 function vOrders(){
-  const os=openOrders().sort((a,b)=>(b.at||0)-(a.at||0));
-  let h='<div class="sec"><div class="sec-h"><h2>'+t("未埋單訂單","Unpaid orders")+'</h2><p>'+t("新單會響鈴同閃紅；做好撳「已上菜」。","New orders ring and show red. Tap Served when done.")+'</p></div>';
-  if(!os.length)return h+'<div class="empty">'+t("而家冇未埋單嘅訂單。","No unpaid orders right now.")+'</div></div>';
+  const os=liveOrders().filter(o=>U.allO||!o.paid||!o.served).sort((a,b)=>(b.at||0)-(a.at||0));
+  let h='<div class="sec"><div class="sec-h"><h2>'+t("訂單","Orders")+'</h2><p>'+t("新單會響鈴同閃紅；做好撳「已上菜」。已付款又已上菜嘅會收埋。","New orders ring and show red. Paid and served orders are hidden.")+' <button class="btn sm ghost" data-act="allo">'+(U.allO?t("收埋已完成","Hide finished"):t("睇埋已完成","Show finished"))+'</button></p></div>';
+  if(!os.length)return h+'<div class="empty">'+t("而家冇未完成嘅訂單。","No open orders right now.")+'</div></div>';
   h+='<div class="grid">';
   os.forEach(o=>{const add=isAddOn(o);const fresh=!o.served&&Date.now()-(o.at||0)<120000;
-    h+='<article class="card'+(fresh?" new":"")+'"><div class="ocard-h"><span class="tbl">'+esc(tableLabel(o.table))+'</span><span class="meta">'+no3(o)+' · '+hhmm(o.at)+(o.name?' · '+esc(o.name):'')+'</span>'+(fresh?'<span class="chip newc">'+t("新","New")+'</span>':'')+(add?'<span class="chip add">'+t("加單","Add-on")+'</span>':'')+(o.served?'<span class="chip paid">'+t("已上菜","Served")+'</span>':'')+'</div>';
+    h+='<article class="card'+(fresh?" new":"")+'"><div class="ocard-h"><span class="tbl">'+esc(tableLabel(subOf(o)))+'</span><span class="meta">'+no3(o)+' · '+hhmm(o.at)+(o.name?' · '+esc(o.name):'')+'</span>'+(fresh?'<span class="chip newc">'+t("新","New")+'</span>':'')+(add?'<span class="chip add">'+t("加單","Add-on")+'</span>':'')+(o.paid?'<span class="chip paid">'+t("已付","Paid")+'</span>':'')+(o.served?'<span class="chip paid">'+t("已上菜","Served")+'</span>':'')+'</div>';
     linesOf(o).forEach(l=>{const it=byId[l.itemId];const key=o.id+":"+l.i,arm=U.armed===key;
       const la=Y.lineAllergens(l.itemId,l.sel);h+='<div class="oline'+(l.x?" x":"")+'"><span class="q num">'+l.qty+'×</span><span class="b">'+esc(iname(it))+(l.desc.length?'<small>'+esc(lineDesc(l))+'</small>':'')+(la.length?'<span class="alc">'+t("含：","Contains: ")+esc(la.map(c=>Y.alName(c,U.lang)).join(EN()?", ":"、"))+'</span>':'')+'</span>'+(l.x?'<span class="chip">'+t("已取消","Cancelled")+'</span>':'<button class="xbtn'+(arm?" arm":"")+'" data-act="xline" data-o="'+o.id+'" data-i="'+l.i+'">'+(arm?t("確認取消？","Confirm cancel?"):t("取消","Cancel"))+'</button>')+'</div>';});
     if(o.allergy)h+='<div class="anote">'+t("過敏：","Allergy: ")+esc(o.allergy)+'</div>';
     if(o.note)h+='<div class="nnote">'+t("備註：","Note: ")+esc(o.note)+'</div>';
     if(U.armed==="void:"+o.id)h+='<div class="voidbox"><label class="f" for="vr-'+o.id+'">'+t("作廢原因（必填）","Reason (required)")+'</label><input class="t" id="vr-'+o.id+'" maxlength="60" placeholder="'+t("例如：測試、客人取消","e.g. test, customer left")+'"><div style="display:flex;gap:8px;margin-top:8px"><button class="btn sm red" data-act="voidgo" data-v="'+o.id+'">'+t("確認作廢","Void order")+'</button><button class="btn sm ghost" data-act="voidno">'+t("唔作廢","Keep")+'</button></div></div>';
-    h+='<div class="cardfoot">'+addLink(o.table)+'<button class="btn sm ghost" data-act="void" data-v="'+o.id+'">'+t("作廢","Void")+'</button><button class="btn sm ghost" data-act="slips" data-v="'+o.id+'">'+(U.showSlips[o.id]?t("收起分單","Hide by station"):t("按工作位睇","View by station"))+'</button><button class="btn sm '+(o.served?'ghost':'green')+'" data-act="served" data-v="'+o.id+'">'+(o.served?t("改返未上菜","Mark not served"):t("已上菜","Served"))+'</button><span style="margin-left:auto;font-weight:900" class="num">'+money(orderTotal(o))+'</span></div>';
+    if(!o.table.startsWith("W")&&!o.paid)h+='<div class="mv" style="align-items:center"><span style="font-size:13px;color:var(--muted)">'+t("分單：","Split:")+'</span>'+[""].concat(SUBS).map(x=>'<button class="btn sm ghost" data-act="sub" data-o="'+o.id+'" data-v="'+x+'" aria-pressed="'+((o.sub||"")===x)+'">'+(x?o.table+"-"+x:t("唔分","None"))+'</button>').join("")+'</div>';
+    if(U.armed==="rp:"+o.id)h+='<div class="voidbox"><b>'+t("重印邊張？","Reprint which slip?")+'</b><div class="mv">'+[["",t("全部","All")],["kitchen",t("廚房","Kitchen")],["bar",t("水吧","Bar")],["floor",t("樓面","Floor")]].map(x=>'<button class="btn sm green" data-act="rpgo" data-o="'+o.id+'" data-v="'+x[0]+'">'+x[1]+'</button>').join("")+'<button class="btn sm ghost" data-act="voidno">'+t("取消","Cancel")+'</button></div></div>';
+    h+='<div class="cardfoot">'+addLink(o.table)+(o.paid?'':'<button class="btn sm ghost" data-act="void" data-v="'+o.id+'">'+t("作廢","Void")+'</button>')+'<button class="btn sm ghost" data-act="rp" data-v="'+o.id+'">🖨 '+t("重印","Reprint")+'</button><button class="btn sm ghost" data-act="slips" data-v="'+o.id+'">'+(U.showSlips[o.id]?t("收起分單","Hide by station"):t("按工作位睇","View by station"))+'</button><button class="btn sm '+(o.served?'ghost':'green')+'" data-act="served" data-v="'+o.id+'">'+(o.served?t("改返未上菜","Mark not served"):t("已上菜","Served"))+'</button><span style="margin-left:auto;font-weight:900" class="num">'+money(orderTotal(o))+'</span></div>';
     if(U.showSlips[o.id])h+='<div style="margin-top:8px">'+slipsFor(o)+'</div>';
     h+='</article>';});
   return h+'</div></div>';
 }
+function vSpecial(){
+  const s=P.special||{},it=byId.bk_special,d=U.sp||(U.sp={zh:s.zh||"",en:s.en||"",p:s.p?(s.p/100).toFixed(2):"",al:Object.values(s.al||{}),none:!!s.none,chk:false});
+  let h='<div class="sec"><div class="sec-h"><h2>'+t("是日特別麵包","Today\'s special bun")+'</h2><p>'+(it.ready?'<span class="spnow">'+t("而家顯示：","Showing: ")+'<b>'+esc(it.zh)+(it.en&&it.en!==it.zh?' '+esc(it.en):'')+' '+money(it.p)+'</b> · '+(it.al.length?t("含 ","Contains ")+it.al.map(c=>Y.alName(c,U.lang)).join(t("、",", ")):t("冇 14 種過敏原","None of the 14 allergens"))+(P.off&&P.off.bk_special?' · '+t("已下線","OFF"):'')+'</span>':t("未設定：客人睇唔到呢款。","Not set up: customers can\'t see it."))+'</p></div><div class="card spform">';
+  h+='<div class="row2"><input class="t" id="sp-zh" data-act="sp" data-k="zh" maxlength="20" value="'+esc(d.zh)+'" placeholder="'+t("中文名（必填），例如 椰撻","Chinese name (required)")+'"><input class="t" id="sp-en" data-act="sp" data-k="en" maxlength="30" value="'+esc(d.en)+'" placeholder="'+t("英文名，例如 Coconut Tart","English name")+'"><input class="t num" id="sp-p" data-act="sp" data-k="p" type="number" inputmode="decimal" step="0.05" min="0.5" max="20" value="'+esc(d.p)+'" placeholder="£ 2.00"></div>';
+  h+='<b style="font-size:14px">'+t("過敏原（跟包裝／食譜標籤；「可能含有」都要剔）","Allergens (from the label or recipe; tick \"may contain\" too)")+'</b><div class="alg">'+Y.sortAl(Object.keys(Y.AL)).map(c=>'<label><input type="checkbox" data-act="spal" value="'+c+'"'+(d.al.includes(c)?" checked":"")+(d.none?" disabled":"")+'>'+esc(Y.alName(c,U.lang))+'</label>').join("")+'</div>';
+  h+='<label class="spchk"><input type="checkbox" data-act="spnone"'+(d.none?" checked":"")+'>'+t("以上 14 種全部冇","None of these 14")+'</label>';
+  h+='<label class="spchk"><input type="checkbox" data-act="spchk"'+(d.chk?" checked":"")+'>'+t("我已經對過標籤，過敏原資料正確","I have checked the label; the allergen info is correct")+'</label>';
+  h+='<div class="btnrow" style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn green" data-act="spsave">'+t("儲存並上架","Save and show")+'</button>'+(it.ready?'<button class="btn ghost" data-act="off" data-v="bk_special">'+(P.off&&P.off.bk_special?t("重新上線","Turn on"):t("暫時下線","Turn off"))+'</button><button class="btn ghost" data-act="spclear">'+t("清除（今日唔賣）","Clear (not today)")+'</button>':'')+'</div>';
+  h+='<p style="font-size:12.5px;color:var(--muted);margin:0">'+t("換款會將數量歸 0；出爐之後喺下面「"+"是日特別麵包"+"」格加數。","Changing the bun resets its count to 0. Add the count in its card below after baking.")+'</p></div></div>';
+  return h;
+}
 function vStock(){
-  let h='<div class="sec"><div class="sec-h"><h2>'+t("限量麵包","Limited bakery")+'</h2><p>'+t("出爐按「+」；客人提交訂單即扣數，扣到 0 自動售罄。","Tap + when a batch comes out. Orders deduct stock when placed; 0 means sold out.")+'</p></div><div class="stock">';
-  STOCK.forEach(s=>{const n=(P.stock&&P.stock[s.k])||0;
+  let h=vSpecial()+'<div class="sec"><div class="sec-h"><h2>'+t("限量麵包","Limited bakery")+'</h2><p>'+t("出爐按「+」；客人提交訂單即扣數，扣到 0 自動售罄。","Tap + when a batch comes out. Orders deduct stock when placed; 0 means sold out.")+'</p></div><div class="stock">';
+  STOCK.filter(s=>!s.special||byId.bk_special.ready).forEach(s=>{const n=(P.stock&&P.stock[s.k])||0;
     h+='<div class="scard"><div class="top"><div><b>'+nm(s)+'</b>'+(s.nzh?'<small>'+t(s.nzh,s.nen)+'</small>':'')+'</div><span class="count num '+(n<=0?"zero":n<=2?"low":"")+'">'+n+'</span></div>';
     h+='<div class="btnrow"><button class="minus" data-act="stk" data-k="'+s.k+'" data-v="-1" aria-label="'+esc(nm(s))+' −1">−1</button>'+[4,8,12].map(v=>'<button class="plus" data-act="stk" data-k="'+s.k+'" data-v="'+v+'">+'+v+'</button>').join("")+'</div>';
     h+='<div class="inl"><label for="c-'+s.k+'">'+t("自訂","Custom")+'</label><input id="c-'+s.k+'" type="number" inputmode="numeric" min="1" max="99"><button class="btn sm ghost" data-act="stkc" data-k="'+s.k+'">'+t("加","Add")+'</button><label for="n-'+s.k+'" style="margin-left:auto">'+t("下一爐","Next batch")+'</label><input id="n-'+s.k+'" type="time" value="'+esc((P.next&&P.next[s.k])||"")+'" data-act="next" data-k="'+s.k+'"></div></div>';});
@@ -258,9 +279,12 @@ function vBill(){
   h+='</div>';
   const tb=U.billT;const os=tb?openOrders(tb):[];
   if(!tb||!os.length)return h+'<p style="color:var(--muted);margin-top:14px">'+t("揀一張紅框枱開始埋單。","Choose a table with a red border to take payment.")+'</p></div>';
-  const B=billOf(tb),tot=B.n;
-  h+='<div class="bill"><div class="card"><h3 style="font-size:18px;font-weight:900">'+esc(tableLabel(tb))+' '+t("帳單","bill")+'</h3><div style="margin:6px 0">'+addLink(tb)+'</div>';
-  os.forEach(o=>{h+='<div style="color:var(--muted);font-size:12.5px;margin-top:8px">'+no3(o)+' · '+hhmm(o.at)+'</div>';linesOf(o).filter(l=>!l.x).forEach(l=>{h+='<div class="oline"><span class="q num">'+l.qty+'×</span><span class="b">'+esc(iname(byId[l.itemId]))+(l.desc.length?'<small>'+esc(lineDesc(l))+'</small>':'')+'</span><span class="num">'+money(lineTotal(l))+'</span></div>';});});
+  const B=billOf(tb),tot=B.n,nSel=selOrders(tb).length;
+  h+='<div class="bill"><div class="card"><h3 style="font-size:18px;font-weight:900">'+esc(tableLabel(tb))+' '+t("帳單","bill")+'</h3><div style="margin:6px 0;display:flex;gap:6px;flex-wrap:wrap">'+addLink(tb)+(tb.startsWith("W")?'':'<button class="btn sm ghost" data-act="mv" data-v="'+tb+'">'+t("⇄ 搬枱","⇄ Move table")+'</button>')+'</div>';
+  if(U.mv===tb){h+='<div class="voidbox"><b>'+t("搬 "+tb+" 全部未埋單訂單去：","Move all unpaid orders of "+tb+" to:")+'</b><div class="mv">'+TABLES.filter(x=>x!==tb).map(x=>{const n=openOrders(x).length;return '<button class="btn sm '+(n?'ghost':'green')+'" data-act="mvgo" data-v="'+x+'">'+x+(n?' '+t("（有客，會合併）","(busy, merges)"):'')+'</button>';}).join("")+'<button class="btn sm ghost" data-act="mvno">'+t("取消","Cancel")+'</button></div></div>';}
+  const subs=[...new Set(os.map(o=>o.sub||""))];
+  if(os.length>1)h+='<div class="mv" style="align-items:center;margin:4px 0 2px"><span style="font-size:13px;color:var(--muted)">'+t("分帳：剔要埋嘅單","Split: tick the orders to pay")+'</span><button class="btn sm ghost" data-act="exall" data-v="">'+t("全部","All")+'</button>'+(subs.length>1?subs.map(x=>'<button class="btn sm ghost" data-act="exall" data-v="'+(x||"-")+'">'+(x?tb+"-"+x:t("未分","Unsplit"))+'</button>').join(""):'')+'</div>';
+  os.forEach(o=>{const inn=!U.ex[o.id];h+='<label style="display:flex;gap:8px;align-items:center;color:var(--muted);font-size:13px;margin-top:10px'+(inn?'':';opacity:.55')+'">'+(os.length>1?'<input type="checkbox" data-act="exo" data-v="'+o.id+'"'+(inn?" checked":"")+'>':'')+'<b style="color:var(--ink)">'+esc(subOf(o))+'</b> '+no3(o)+' · '+hhmm(o.at)+' · <span class="num">'+money(orderTotal(o))+'</span></label>';if(!inn)return;linesOf(o).filter(l=>!l.x).forEach(l=>{h+='<div class="oline"><span class="q num">'+l.qty+'×</span><span class="b">'+esc(iname(byId[l.itemId]))+(l.desc.length?'<small>'+esc(lineDesc(l))+'</small>':'')+'</span><span class="num">'+money(lineTotal(l))+'</span></div>';});});
   if(B.d)h+='<div class="subline"><span>'+t("小計","Subtotal")+'</span><span class="num">'+money(B.g)+'</span></div><div class="subline d"><span>'+t("折扣 ","Discount ")+esc(discLabel())+'</span><span class="num">−'+money(B.d)+'</span></div>';
   h+='<div class="total"><span>'+t("應收","To pay")+'</span><span class="num">'+money(tot)+'</span></div></div>';
   h+='<div class="card"><h3 style="font-size:18px;font-weight:900">'+t("收款","Payment")+'</h3>';
@@ -272,8 +296,8 @@ function vBill(){
   h+='<div class="quick">'+[["10","£10"],["20","£20"],["50","£50"]].map(q=>'<button class="btn sm ghost" data-act="qcash" data-v="'+q[0]+'">'+q[1]+'</button>').join("")+'</div>';
   const g=Math.round(parseFloat(U.cash||"0")*100),ch=g-tot;
   h+='<div style="display:flex;justify-content:space-between;align-items:baseline"><span>'+t("找續","Change")+'</span><span class="change num" id="chg">'+(U.cash&&ch>=0?money(ch):"—")+'</span></div>';
-  h+='<div class="paybtns"><button class="btn green" data-act="pay" data-v="cash"'+(U.busy?" disabled":"")+'>'+t("現金已收","Cash taken")+'</button><button class="btn green" data-act="pay" data-v="card"'+(U.busy?" disabled":"")+'>'+t("卡已收","Card taken")+'</button></div>';
-  h+='<p style="font-size:12.5px;color:var(--muted);margin:8px 0 0">'+t("Square 收款成功之後先撳。撳咗會清枱。","Tap only after Square shows the payment as complete. This clears the table.")+'</p></div></div></div>';
+  h+='<div class="paybtns"><button class="btn green" data-act="pay" data-v="cash"'+(U.busy||!nSel?" disabled":"")+'>'+t("現金已收","Cash taken")+'</button><button class="btn green" data-act="pay" data-v="card"'+(U.busy||!nSel?" disabled":"")+'>'+t("卡已收","Card taken")+'</button></div>';
+  h+='<p style="font-size:12.5px;color:var(--muted);margin:8px 0 0">'+(nSel<os.length?t("只會收剔咗嘅 "+nSel+" 張單，其餘留低。","Only the "+nSel+" ticked orders are paid; the rest stay open."):t("Square 收款成功之後先撳。撳咗會清枱。","Tap only after Square shows the payment as complete. This clears the table."))+'</p></div></div></div>';
   return h;
 }
 function vEod(){
@@ -311,7 +335,7 @@ function unsub(){subs.forEach(f=>f());subs=[];ORD={};PAY={};LOG={};U.seen={};}
 function on(ref,ev,fn){ref.on(ev,fn,()=>{});subs.push(()=>ref.off(ev,fn));}
 function subscribe(){
   unsub();day=Y.dayKey();
-  on(db.ref("ordering/public"),"value",s=>{P=s.val()||{};render();});
+  on(db.ref("ordering/public"),"value",s=>{P=s.val()||{};Y.applySpecial(P);render();});
   let initial=true;
   const oref=db.ref("ordering/orders/"+day);
   on(oref,"value",s=>{const v=s.val()||{};if(!initial){const fresh=Object.keys(v).filter(k=>!U.seen[k]);if(fresh.length){beep();const o=v[fresh[fresh.length-1]];flash(t("新單！","New order! ")+tableLabel(o.table)+" "+no3(o));}}Object.keys(v).forEach(k=>U.seen[k]=1);initial=false;ORD=v;render();});
@@ -334,7 +358,8 @@ auth.onAuthStateChanged(async u=>{
 
 /* ---------- actions ---------- */
 async function doPay(m){
-  const tb=U.billT;const os=openOrders(tb);if(!os.length)return;const B=billOf(tb);
+  const tb=U.billT;const os=selOrders(tb);if(!os.length)return;const B=billOf(tb);const left=openOrders(tb).length-os.length;
+  const lbl=[...new Set(os.map(subOf))].join("+");
   U.busy=true;render();
   try{
     const now=firebase.database.ServerValue.TIMESTAMP,upd={};
@@ -342,12 +367,12 @@ async function doPay(m){
     await db.ref().update(upd);
     const dn=U.discNote.trim().slice(0,60);
     const dl=B.d?discLabel():"";
-    await db.ref("ordering/payments/"+day).push({at:now,table:tb,m,amt:B.n,gross:B.g,disc:U.disc===-1?(U.dcT==="pct"?Math.min(100,parseFloat(U.dcV)||0):0):U.disc,discLabel:dl,discAmt:B.d,discNote:dn,by:role,byName:myName,uid:user.uid,orders:os.map(o=>o.id)});
+    await db.ref("ordering/payments/"+day).push({at:now,table:tb,label:lbl,m,amt:B.n,gross:B.g,disc:U.disc===-1?(U.dcT==="pct"?Math.min(100,parseFloat(U.dcV)||0):0):U.disc,discLabel:dl,discAmt:B.d,discNote:dn,by:role,byName:myName,uid:user.uid,orders:os.map(o=>o.id)});
     const who=mgr()?"經理":"員工",whoEn=mgr()?"Manager":"Staff";
-    logIt(tableLabelZh(tb)+" 埋單 "+money(B.n)+"（"+(m==="cash"?"現金":"卡")+"）"+(B.d?" · "+who+"俾 "+dl+" off −"+money(B.d)+(dn?"（"+dn+"）":""):""),tb+" paid "+money(B.n)+" ("+m+")"+(B.d?" · "+whoEn+" gave "+dl+" off −"+money(B.d)+(dn?" ("+dn+")":""):""));
+    logIt(tableLabelZh(lbl)+" 埋單 "+money(B.n)+"（"+(m==="cash"?"現金":"卡")+"）"+(B.d?" · "+who+"俾 "+dl+" off −"+money(B.d)+(dn?"（"+dn+"）":""):""),tb+" paid "+money(B.n)+" ("+m+")"+(B.d?" · "+whoEn+" gave "+dl+" off −"+money(B.d)+(dn?" ("+dn+")":""):""));
     const g=Math.round(parseFloat(U.cash||"0")*100);
-    toast(t(tableLabel(tb)+" 已收 "+money(B.n)+(m==="cash"&&g>B.n?"，找 "+money(g-B.n):"")+"，已清枱",tableLabel(tb)+": "+money(B.n)+" paid"+(m==="cash"&&g>B.n?", change "+money(g-B.n):"")+". Table cleared."));
-    U.billT=null;U.cash="";U.disc=0;U.discNote="";U.dcV="";
+    toast(t(tableLabel(lbl)+" 已收 "+money(B.n)+(m==="cash"&&g>B.n?"，找 "+money(g-B.n):"")+(left?"，仲有 "+left+" 張未埋":"，已清枱"),tableLabel(lbl)+": "+money(B.n)+" paid"+(m==="cash"&&g>B.n?", change "+money(g-B.n):"")+(left?". "+left+" still open.":". Table cleared.")));
+    if(!left)U.billT=null;U.ex={};U.cash="";U.disc=0;U.discNote="";U.dcV="";
   }catch(e){toast(t("儲存失敗，請再試。","Couldn't save. Try again."));}
   U.busy=false;render();
 }
@@ -360,12 +385,19 @@ document.addEventListener("submit",async e=>{
 });
 document.addEventListener("click",async e=>{
   const b=e.target.closest("[data-act]");if(!b)return;const a=b.dataset.act,v=b.dataset.v;
-  if(a!=="xline"&&a!=="resetstock"&&a!=="void"&&a!=="voidgo")U.armed=null;
+  if(a!=="xline"&&a!=="resetstock"&&a!=="void"&&a!=="voidgo"&&a!=="rp"&&a!=="rpgo")U.armed=null;
   switch(a){
     case "lang":U.lang=v;try{localStorage.setItem("yoc_staff_lang",v);}catch(x){}render();break;
     case "logout":await auth.signOut();U.billT=null;break;
     case "sound":try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();await actx.resume();}catch(x){}U.sound=true;keepAwake();beep();render();break;
     case "tab":U.tab=v;render();window.scrollTo(0,0);break;
+    case "allo":U.allO=!U.allO;render();break;
+    case "sub":{const id=b.dataset.o;await db.ref("ordering/orders/"+day+"/"+id+"/sub").set(v||null);const o=ORD[id];if(o)logIt(o.table+" "+no3(o)+(v?" 分單 "+o.table+"-"+v:" 取消分單"),o.table+" "+no3(o)+(v?" split "+o.table+"-"+v:" unsplit"));break;}
+    case "rp":U.armed="rp:"+v;render();break;
+    case "rpgo":{const id=b.dataset.o,o=ORD[id];if(!o)break;U.armed=null;await db.ref("ordering/orders/"+day+"/"+id+"/rp").set({at:firebase.database.ServerValue.TIMESTAMP,st:v||null,by:myName||role});
+      logIt("重印 "+subOf(o)+" "+no3(o)+(v?"（"+({kitchen:"廚房",bar:"水吧",floor:"樓面"})[v]+"）":""),"Reprint "+subOf(o)+" "+no3(o)+(v?" ("+v+")":""));toast(t("已送去打印機","Sent to printer"));render();break;}
+    case "exo":U.ex[v]=!b.checked;render();break;
+    case "exall":{U.ex={};if(v)openOrders(U.billT).forEach(o=>{if((o.sub||"-")!==v)U.ex[o.id]=true;});render();break;}
     case "slips":U.showSlips[v]=!U.showSlips[v];render();break;
     case "served":{const o=ORD[v];if(o)db.ref("ordering/orders/"+day+"/"+v+"/served").set(!o.served);break;}
     case "xline":{const key=b.dataset.o+":"+b.dataset.i;if(U.armed!==key){U.armed=key;render();break;}
@@ -379,8 +411,27 @@ document.addEventListener("click",async e=>{
     case "off":{const o=!!(P.off&&P.off[v]);await db.ref("ordering/public/off/"+v).set(o?null:true);const it=byId[v];logIt(it.zh+(o?" 上線":" 下線"),it.en+(o?" on":" off"));break;}
     case "optoff":{const k="opt:"+b.dataset.g+":"+v;const o=!!(P.off&&P.off[k]);await db.ref("ordering/public/off/"+k).set(o?null:true);break;}
     case "msave":{const zh=$("#mz-"+v).value.trim(),en=$("#me-"+v).value.trim();if(!zh||!en){toast(t("名唔可以留空","Names are required"));break;}await db.ref("ordering/public/names/"+v).set({zh,en});logIt("改名 "+zh,"Renamed "+en);toast(t("已儲存","Saved"));break;}
-    case "resetstock":if(!mgr())break;if(U.armed!=="reset"){U.armed="reset";render();break;}U.armed=null;await db.ref("ordering/public/stock").set({pineapple:0,cocktail:0,sausage:0,eggtart:0});await db.ref("ordering/public/next").remove();logIt("限量歸 0","Bakery counts reset");toast(t("已歸 0","Reset to 0"));break;
-    case "billt":U.billT=v;U.cash="";U.disc=0;U.discNote="";U.dcV="";render();break;
+    case "resetstock":if(!mgr())break;if(U.armed!=="reset"){U.armed="reset";render();break;}U.armed=null;await db.ref("ordering/public/stock").set({pineapple:0,cocktail:0,sausage:0,eggtart:0,special:0});await db.ref("ordering/public/next").remove();logIt("限量歸 0","Bakery counts reset");toast(t("已歸 0","Reset to 0"));break;
+    case "mv":U.mv=U.mv===v?null:v;render();break;
+    case "mvno":U.mv=null;render();break;
+    case "mvgo":{const from=U.mv;if(!from||!TABLES.includes(v)||v===from)break;const os=openOrders(from);U.mv=null;if(!os.length){render();break;}
+      const up={};os.forEach(o=>{up[o.id+"/table"]=v;up[o.id+"/moved"]={from,at:firebase.database.ServerValue.TIMESTAMP,by:myName||role};});
+      try{await db.ref("ordering/orders/"+day).update(up);}catch(x){toast(t("搬唔到，請再試","Could not move, please try again"));break;}
+      logIt(from+" 搬去 "+v+"（"+os.length+" 張單）","Moved "+from+" to "+v+" ("+os.length+" orders)");U.billT=v;U.disc=0;U.cash="";toast(t("已搬去 ","Moved to ")+v);render();break;}
+    case "spsave":{const d=U.sp||{};const zh=(d.zh||"").trim(),en=(d.en||"").trim(),p=Math.round(parseFloat(d.p)*100);
+      if(!zh){toast(t("請填中文名","Enter the Chinese name"));break;}
+      if(!(p>=50&&p<=2000)){toast(t("價錢要 £0.50–£20","Price must be £0.50–£20"));break;}
+      if(!d.none&&!d.al.length){toast(t("請剔過敏原，或剔「全部冇」","Tick the allergens, or tick \"None\""));break;}
+      if(!d.chk){toast(t("請確認已對過標籤","Please confirm you checked the label"));break;}
+      const old=P.special||{},changed=old.zh!==zh;
+      const sp={zh,en:en||null,p,al:d.none?null:Y.sortAl(d.al),none:d.none||null,at:firebase.database.ServerValue.TIMESTAMP,by:myName||role};
+      const up={"special":sp,"off/bk_special":null};if(changed)up["stock/special"]=0;
+      await db.ref("ordering/public").update(up);U.sp={zh,en,p:(p/100).toFixed(2),al:d.none?[]:Y.sortAl(d.al),none:!!d.none,chk:false};
+      logIt("是日特別麵包："+zh+" £"+(p/100).toFixed(2)+"，"+(d.none?"冇過敏原":"含 "+Y.sortAl(d.al).map(c=>Y.alName(c,"zh")).join("、")),"Special bun: "+(en||zh)+" £"+(p/100).toFixed(2));
+      toast(t("已上架","Saved"));break;}
+    case "spclear":await db.ref("ordering/public").update({"special":null,"stock/special":0});U.sp={zh:"",en:"",p:"",al:[],none:false,chk:false};logIt("清除是日特別麵包","Special bun cleared");toast(t("已清除","Cleared"));break;
+    case "spnone":case "spchk":case "spal":{const d=U.sp;if(!d)break;if(a==="spnone"){d.none=b.checked;if(d.none)d.al=[];}else if(a==="spchk")d.chk=b.checked;else{const c=b.value;d.al=b.checked?d.al.concat(c):d.al.filter(x=>x!==c);}d.chk=a==="spchk"?b.checked:false;render();break;}
+    case "billt":U.billT=v;U.mv=null;U.ex={};U.cash="";U.disc=0;U.discNote="";U.dcV="";render();break;
     case "disc":U.disc=+v;if(!U.disc)U.discNote="";render();break;
     case "dct":U.dcT=v;U.dcV="";render();break;
     case "void":U.armed="void:"+v;render();{const el=$("#vr-"+v);if(el)el.focus();}break;
@@ -401,6 +452,7 @@ document.addEventListener("change",e=>{const x=e.target;if(x.dataset.act==="next
 document.addEventListener("input",e=>{const x=e.target;
   if(x.dataset.act==="cash"){U.cash=x.value;const tot=billOf(U.billT).n,g=Math.round(parseFloat(U.cash||"0")*100),ch=g-tot;const c=$("#chg");if(c)c.textContent=U.cash&&ch>=0?money(ch):"—";}
   if(x.dataset.act==="discnote")U.discNote=x.value;
+  if(x.dataset.act==="sp"&&U.sp){U.sp[x.dataset.k]=x.value;U.sp.chk=false;const c=document.querySelector('[data-act="spchk"]');if(c)c.checked=false;}
   if(x.dataset.act==="dcv"){U.dcV=x.value;render();}});
 render();
 })();

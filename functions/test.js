@@ -40,3 +40,13 @@ const nr = noticeRows(order, {}, [1]);
 assert.strictEqual(nr.length, 1); assert.strictEqual(nr[0].q, 2);
 fs.writeFileSync("test-out/cancel.png", renderSlip(order, "cancel", nr, { time: "10:50" }));
 
+/* 是日特別麵包: staff-set name/price/allergens flow to every slip */
+const { Y } = require("./slips");
+const P2 = { special: { zh: "椰撻", en: "Coconut Tart", p: 180, al: ["G", "E", "M"] } };
+Y.applySpecial(P2);
+const g2 = groups({ table: "T1", lines: [{ itemId: "bk_special", qty: 2, sel: {} }] }, P2);
+assert.strictEqual(g2.floor[0].name, "椰撻"); assert.strictEqual(g2.floor[0].price, 360);
+assert.strictEqual(g2.floor[0].al.join("、"), "雞蛋、奶、麩質");
+assert.ok(!g2.kitchen && !g2.bar, "bun is floor only");
+assert.strictEqual(Y.applySpecial({ special: { zh: "x", p: 100 } }), false, "no allergen confirmation = not ready");
+console.log("special ok");
