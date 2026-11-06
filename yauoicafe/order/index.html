@@ -179,7 +179,7 @@ function renderSheet(){
 function renderCart(){
   U.cart=U.cart.map(l=>Object.assign(mk(l.itemId,l.qty,l.sel),{lid:l.lid}));  /* re-price live */
   let h='<div class="wrap"><button class="back" data-act="view" data-v="menu">← '+t("返回餐牌","Back to menu")+'</button><h1 style="font-size:22px;font-weight:900">'+t("你嘅訂單","Your order")+' · '+(isTA?t("外賣","Takeaway"):esc(CODE))+'</h1>';
-  if(U.err)h+='<div class="err">'+esc(U.err)+'</div>';
+  if(U.err)h+='<div class="err">'+esc(U.err)+(U.errCode?'<small style="display:block;font-weight:400;font-size:11px;opacity:.8;margin-top:4px">（'+t("錯誤","Error")+'：'+esc(U.errCode)+'）</small>':'')+'</div>';
   h+='<div class="panel" style="margin-top:10px">';
   if(!U.cart.length)h+='<div class="empty">'+t("仲未揀嘢。返回餐牌加餐點。","Nothing here yet. Go back to the menu to add items.")+'</div>';
   U.cart.forEach((l,i)=>{const it=byId[l.itemId],bad=U.bad[l.lid];
@@ -221,13 +221,25 @@ let db=null;
   db.ref(".info/connected").on("value",s=>{const was=online;online=!!s.val();if(was!==online&&U.view==="menu"&&!U.sheet)render();});
 }
 
+/* next order number: re-read the counter, then +1 in a transaction; retry (another phone may be ordering at the same moment) */
+async function nextNo(path){
+  let last;
+  for(let i=0;i<3;i++){
+    try{await db.ref(path).get();const r=await db.ref(path).transaction(n=>(n||0)+1);if(r.committed)return r.snapshot.val();last=new Error("not committed");}
+    catch(e){last=e;}
+    await new Promise(r=>setTimeout(r,300+i*400));
+  }
+  throw last;
+}
 async function submit(){
-  if(U.busy)return;U.err="";U.bad={};
+  if(U.busy)return;U.err="";U.errCode="";U.bad={};
   if(isTA){U.name=U.name.trim();if(!U.name){U.err=t("外賣請填取餐名稱。","Please enter a name for collection.");render();return;}}
   const need={};U.cart.forEach(l=>{const it=byId[l.itemId];if(off(it.id))U.bad[l.lid]=t(iname(it)+" 啱啱售完，請刪除或修改。",iname(it)+" just sold out. Please remove or change it.");if(it.stock)need[it.stock]=(need[it.stock]||0)+l.qty;});
   if(Object.keys(U.bad).length){U.err=t("有餐點剛剛賣晒，其他餐點已保留，請修改後再提交。","Something just sold out. The rest of your order is kept — please update it and place it again.");render();return;}
-  U.busy=true;render();
+  U.busy=true;render();let stage="auth";
   try{
+    if(!firebase.auth().currentUser)throw Object.assign(new Error("not signed in"),{code:"NO_AUTH"});
+    stage="stock";
     if(Object.keys(need).length){
       let short=null;
       const r=await db.ref("ordering/public/stock").transaction(cur=>{if(!cur)return cur;for(const k in need){if((cur[k]||0)<need[k]){short=k;return;}}for(const k in need)cur[k]-=need[k];return cur;});
@@ -235,13 +247,13 @@ async function submit(){
         U.err=t("有餐點剛剛賣晒，其他餐點已保留，請修改後再提交。","Something just sold out. The rest of your order is kept — please update it and place it again.");U.busy=false;render();return;}
     }
     const day=Y.dayKey();
-    await db.ref("ordering/counter/"+day).get().catch(()=>{});
-    const c=await db.ref("ordering/counter/"+day).transaction(n=>(n||0)+1);if(!c.committed)throw new Error("counter");const no=c.snapshot.val();
-    let table=CODE;if(isTA){await db.ref("ordering/wcounter/"+day).get().catch(()=>{});const w=await db.ref("ordering/wcounter/"+day).transaction(n=>(n||0)+1);if(!w.committed)throw new Error("wcounter");table="W"+String(w.snapshot.val()).padStart(2,"0");}
+    stage="counter";const no=await nextNo("ordering/counter/"+day);
+    let table=CODE;if(isTA){stage="wcounter";table="W"+String(await nextNo("ordering/wcounter/"+day)).padStart(2,"0");}
+    stage="order";
     const lines=U.cart.map(l=>({itemId:l.itemId,qty:l.qty,sel:Y.cleanSel(byId[l.itemId],l.sel)||{}}));
     await db.ref("ordering/orders/"+day).push({code:CODE,k:STAFF?"staff":KEYTOK,staff:STAFF||null,table,name:isTA?U.name:"",no,status:"new",at:firebase.database.ServerValue.TIMESTAMP,lang:U.lang,allergy:U.allergy.trim().slice(0,200),note:U.note.trim().slice(0,200),lines});
     U.last={table,no,name:U.name};U.cart=[];U.name="";U.allergy="";U.note="";U.view="done";U.busy=false;render();window.scrollTo(0,0);
-  }catch(e){U.busy=false;U.err=t("落單失敗，請搵員工幫手。","We couldn't place your order. Please ask a member of staff.");render();}
+  }catch(e){U.busy=false;U.err=t("落單失敗，請搵員工幫手。","We couldn't place your order. Please ask a member of staff.");U.errCode=stage+" / "+String(e&&(e.code||e.message)||e).slice(0,60);try{console.error("order failed",stage,e);}catch(x){}render();}
 }
 
 /* ---------- events ---------- */
