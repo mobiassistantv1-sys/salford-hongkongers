@@ -92,6 +92,17 @@ html[lang="en-GB"] .svc small{display:none}
 
 @media(max-width:860px){.about-grid,.involve .in{grid-template-columns:1fr;gap:26px}}
 @media(max-width:620px){.stats,.svc,.events,.news{grid-template-columns:1fr}.hero{padding-top:44px}}
+.gal{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:24px}
+.gal button{border:0;padding:0;background:var(--surface-2);border-radius:12px;overflow:hidden;aspect-ratio:4/3;cursor:zoom-in}
+.gal img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s}
+.gal button:hover img{transform:scale(1.03)}
+.gal-albums{color:var(--faint);font-size:13px;margin-top:10px}
+.lb{position:fixed;inset:0;z-index:100;background:rgba(20,16,14,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px}
+.lb[hidden]{display:none}
+.lb img{max-width:100%;max-height:82vh;border-radius:8px}
+.lb p{color:#eee;font-size:14px;margin-top:10px;text-align:center}
+.lb button{position:absolute;top:12px;right:14px;background:none;border:1.5px solid #fff;color:#fff;border-radius:999px;padding:4px 14px;font:inherit;cursor:pointer}
+@media(max-width:620px){.gal{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
@@ -121,7 +132,7 @@ html[lang="en-GB"] .svc small{display:none}
       <span><b data-en="Community Interest Company (CIC)">社群利益公司（CIC）</b></span>
       <span data-en-html="Company No. <b>13877472</b>">公司編號 <b>13877472</b></span>
       <span data-en="Founded January 2022">2022 年 1 月成立</span>
-      <span data-en="Run by volunteers">由義工運作</span>
+      <span data-en="Powered by volunteers">義工攜手同行</span>
     </div>
   </section>
 
@@ -138,7 +149,7 @@ html[lang="en-GB"] .svc small{display:none}
       <div class="about">
         <div class="eyebrow" data-en="About us">關於我們</div>
         <h2 data-en-html="Bringing Hong Kong<br>to Greater Manchester">把香港帶到<br>大曼徹斯特</h2>
-        <p data-en="Salford's Hongkongers CIC (SHK CIC) was founded in January 2022. It is a Community Interest Company registered at Companies House and run by volunteers.">Salford's Hongkongers CIC（SHK CIC）於 2022 年 1 月成立，是在英國公司註冊處登記的社群利益公司（Community Interest Company），由義工運作。</p>
+        <p data-en="Salford's Hongkongers CIC (SHK CIC) was founded in January 2022. It is a Community Interest Company registered at Companies House, run by a dedicated team of volunteers and staff.">Salford's Hongkongers CIC（SHK CIC）於 2022 年 1 月成立，是在英國公司註冊處登記的社群利益公司（Community Interest Company），由熱心的義工與工作人員攜手營運。</p>
         <p data-en="Salford is home to more than 2,000 Hongkongers, one of the largest Hong Kong communities in the UK, often called “Little Hong Kong”. Here we offer support, keep our culture alive, and speak up for Hongkongers.">Salford 現有逾 2,000 名香港居民，是全英其中一個最大的香港人聚居地，被稱為「小香港」。我們在這裡提供支援、保存文化，也為香港人發聲。</p>
       </div>
       <div>
@@ -206,7 +217,7 @@ html[lang="en-GB"] .svc small{display:none}
         <div>
           <div class="eyebrow" data-en="Volunteers">義工專區</div>
           <h2 data-en="Many hands make a community">一雙手，撐起一個社區</h2>
-          <p data-en="All our events are run by volunteers. Sign up with your WhatsApp number to check in on your phone at events and see your volunteering hours. Volunteers who give 10 or more hours a year can receive a volunteer service certificate.">我們所有活動都靠義工支撐。用 WhatsApp 號碼登記之後，就可以喺活動現場用手機打卡、查看自己嘅義工時數；每年服務滿 10 小時，可獲發義工服務證明。</p>
+          <p data-en="Our events rely on volunteers. Sign up with your WhatsApp number to check in on your phone at events and track your volunteering hours. Reach 10 hours of service and you can download a letter confirming your volunteer service.">我們的活動有賴義工支持。用 WhatsApp 號碼登記之後，就可以喺活動現場用手機打卡、查看自己嘅義工時數；累積服務滿 10 小時，可下載義工服務證明信。</p>
         </div>
         <div class="acts">
           <a class="btn btn-solid" href="/volunteer/join/" data-en="Volunteer with us">加入義工隊</a>
@@ -215,6 +226,17 @@ html[lang="en-GB"] .svc small{display:none}
       </div>
     </div>
   </section>
+
+  <section class="section" id="photos" hidden>
+    <div class="sec-head">
+      <div class="eyebrow" data-en="Event photos">活動花絮</div>
+      <h2 data-en="Moments from our gatherings">我哋嘅活動點滴</h2>
+      <p data-en="Faces are blurred to protect everyone's privacy.">為保障私隱，相片中的人臉已作模糊處理。</p>
+    </div>
+    <div class="gal" id="gal"></div>
+    <p class="gal-albums" id="gal-albums"></p>
+  </section>
+  <div class="lb" id="lb" hidden role="dialog" aria-modal="true"><button type="button" data-en="Close">關閉</button><img alt=""><p></p></div>
 
   <section class="section" id="partners">
     <div class="eyebrow" data-en="Our partners">合作單位</div>
@@ -232,7 +254,7 @@ html[lang="en-GB"] .svc small{display:none}
     <div class="support">
       <div class="eyebrow" style="color:var(--gold)" data-en="Support us">支持我們</div>
       <h2 data-en="If we've helped you, or someone you know">如果這裡幫到你，或你身邊的人</h2>
-      <p data-en="Salford Hongkongers CIC charges no membership fees and is run by volunteers. Our work is funded by grants, donations and support from the community. Every contribution goes straight back into the community:">Salford Hongkongers CIC 不收取會費，由義工運作。我們的運作經費來自各項資助、捐款，以及社區成員的支持。每一份心意，都會直接用在社區上：</p>
+      <p data-en="Salford Hongkongers CIC is run by a dedicated team of volunteers and staff. Our work is funded by grants, donations and support from the community, and every contribution goes back into the community:">Salford Hongkongers CIC 由熱心的義工與工作人員攜手營運，經費來自各項資助、捐款，以及社區成員的支持。每一份心意，都會用在社區服務上：</p>
       <div class="uses"><span data-en="Community events">舉辦社區活動</span><span data-en="Support services">提供支援服務</span><span data-en="Website and communication channels">維護網站及通訊平台</span><span data-en="Event supplies">購買活動物資</span><span data-en="Helping Hongkongers in need">協助有需要的香港人</span></div>
       <a class="link" href="/donate.html" data-en="How you can support us →">了解如何支持我們 →</a>
     </div>
@@ -297,6 +319,31 @@ html[lang="en-GB"] .svc small{display:none}
     .then(function (d) { if (d && d.posts && d.posts.length) { posts = d.posts; render(); } })
     .catch(function () {});
   document.addEventListener("shk:lang", function () { if (posts) render(); });
+})();
+</script>
+<script>
+/* Event photos: faces are blurred by the "Blur event photos" GitHub Action before anything lands in /images/gallery/.
+   The section stays hidden until /data/gallery.json lists photos. */
+(function () {
+  var sec = document.getElementById("photos"), gal = document.getElementById("gal"), lb = document.getElementById("lb");
+  function esc(s) { return String(s || "").replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+  function get(u) { return fetch(u, { cache: "no-cache" }).then(function (r) { if (!r.ok) throw 0; return r.json(); }); }
+  get("/data/gallery.json").then(function (d) {
+    var ph = (d && d.photos || []).slice(0, 12);
+    if (!ph.length) return;
+    gal.innerHTML = ph.map(function (p) {
+      return '<button type="button" data-src="/images/gallery/' + esc(p.id) + '.jpg" data-cap="' + esc(p.album) + '"><img src="/images/gallery/' + esc(p.id) + '.jpg" alt="' + esc(p.album) + '" loading="lazy"></button>';
+    }).join("");
+    var albums = []; ph.forEach(function (p) { if (p.album && albums.indexOf(p.album) < 0) albums.push(p.album); });
+    document.getElementById("gal-albums").textContent = albums.join(" · ");
+    sec.hidden = false;
+  }).catch(function () {});
+  gal.addEventListener("click", function (e) {
+    var b = e.target.closest("button"); if (!b) return;
+    lb.querySelector("img").src = b.dataset.src; lb.querySelector("p").textContent = b.dataset.cap; lb.hidden = false;
+  });
+  lb.addEventListener("click", function () { lb.hidden = true; });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") lb.hidden = true; });
 })();
 </script>
 </body>

@@ -95,16 +95,16 @@ ok(res.readOthersAttendance === "denied", "cannot read all attendance");
 
 // 2. certificate
 await p.goto(SITE + "/volunteer/certificate/");
-ok(await waitText(p, "確認證明上嘅名字"), "certificate asks to confirm name");
+ok(await waitText(p, "確認證明信上嘅名字"), "certificate asks to confirm name");
 ok((await txt(p)).includes("Tai Man Chan"), "confirm shows full name");
 await p.click("#go");
-await p.waitForSelector(".cert .name", { timeout: 15000 });
-ok((await p.textContent(".cert .name")).trim() === "Tai Man Chan", "certificate shows name");
-ok((await p.textContent(".cert")).includes("11 小時"), "certificate shows hours");
-ok((await p.textContent(".cert")).includes("金級義工"), "certificate shows tier");
+await p.waitForSelector(".cert h1", { timeout: 15000 });
+ok((await p.textContent(".cert")).includes("Throughout their time with us, Tai Man has been diligent"), "letter uses first name");
+ok((await p.textContent(".cert")).includes("11 hours"), "letter shows hours");
+ok((await p.textContent(".cert")).includes("Confirmation of Volunteer Service: Tai Man Chan") && !(await p.textContent(".cert")).includes("Gold"), "letter title, no tier");
 await p.setViewportSize({ width: 1200, height: 900 });
 await p.emulateMedia({ media: "print" });
-await p.pdf({ path: "shots/certificate.pdf", format: "A4", landscape: true, printBackground: true, preferCSSPageSize: true });
+await p.pdf({ path: "shots/certificate.pdf", format: "A4", landscape: false, printBackground: true, preferCSSPageSize: true });
 await p.emulateMedia({ media: "screen" });
 pv = await dbGet(`shk/people/${V}`);
 ok(pv.cert && /^SHK-VC-2026-/.test(pv.cert.no) && pv.cert.name === "Tai Man Chan", "cert recorded " + JSON.stringify(pv.cert));
@@ -158,7 +158,7 @@ ok(!(await dbGet(`shk/people/${NEW}/cert`)), "admin unlock removes certificate l
 
 // 6. sample page
 await p.goto(SITE + "/volunteer/certificate/?sample");
-ok(await waitText(p, "Chan Tai Man"), "sample certificate renders without login");
+ok(await waitText(p, "Tai Man Chan"), "sample certificate renders without login");
 
 console.log(fails ? `\n${fails} FAILURES` : "\nALL PASSED");
 await browser.close();
