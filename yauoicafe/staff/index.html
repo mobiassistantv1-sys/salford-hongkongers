@@ -178,9 +178,10 @@ document.addEventListener("visibilitychange",()=>{if(document.visibilityState===
 /* ---------- slips (Chinese, for the kitchen) ---------- */
 function slipsFor(o){
   const L=linesOf(o).filter(l=>!l.x);const out=[];const head=st=>'<div class="sta">'+st+'</div>';
-  const kit=L.filter(l=>["allday","sandwich"].includes(byId[l.itemId].cat));
+  const kit=L.filter(l=>["allday","sandwich"].includes(byId[l.itemId].cat)&&byId[l.itemId].st!=="bar");
   if(kit.length)out.push(head("廚房 KITCHEN")+kit.map(l=>{const it=byId[l.itemId];const d=l.desc.filter(x=>x.st==="kitchen").map(x=>x.zh).join("、");return '<div class="oline"><span class="q num">'+l.qty+'×</span><span class="b">'+esc(Y.itemName(it,P,"zh"))+(it.cat==="allday"?"（全日早餐）":"")+(d?'<small>'+esc(d)+'</small>':'')+'</span></div>';}).join(""));
   const bar=[];L.forEach(l=>{const it=byId[l.itemId];if(it.cat==="drinks")bar.push([l.qty,l.desc.filter(x=>x.g==="drink").map(x=>x.zh).join(""),l.desc.filter(x=>x.g==="taste").map(x=>x.zh).join("、")]);else if(it.cat==="allday")bar.push([l.qty,l.desc.filter(x=>x.g==="setdrink").map(x=>x.zh).join(""),[l.desc.filter(x=>x.g==="taste").map(x=>x.zh).join("、"),"跟 "+it.zh+" 全日早餐"].filter(Boolean).join(" · ")]);});
+  L.forEach(l=>{const it=byId[l.itemId];if(it.cat==="allday")l.desc.filter(x=>x.g==="toast").forEach(x=>bar.push([l.qty,x.zh,"跟 "+it.zh+" 全日早餐"]));else if(it.st==="bar")bar.push([l.qty,Y.itemName(it,P,"zh"),l.desc.map(x=>x.zh).join("、")]);});   /* toast is made at the bar */
   if(bar.length)out.push(head("水吧 BAR")+bar.map(b=>'<div class="oline"><span class="q num">'+b[0]+'×</span><span class="b">'+esc(b[1])+(b[2]?'<small>'+esc(b[2])+'</small>':'')+'</span></div>').join(""));
   const bk=L.filter(l=>byId[l.itemId].cat==="bakery");
   if(bk.length)out.push(head("樓面 · 麵包 FLOOR")+bk.map(l=>'<div class="oline"><span class="q num">'+l.qty+'×</span><span class="b">'+esc(Y.itemName(byId[l.itemId],P,"zh"))+'</span></div>').join(""));

@@ -17,7 +17,7 @@ const order = {
 const g = groups(order, {});
 assert.deepStrictEqual(Object.keys(g), STATIONS);
 assert.strictEqual(g.kitchen.length, 2);
-assert.strictEqual(g.bar.length, 2);
+assert.strictEqual(g.bar.length, 3, "set drink, hot drinks, set add-on toast");
 assert.strictEqual(g.floor.length, 4, "floor = whole order, cancelled line skipped");
 assert.ok(g.floor.every(r => r.price > 0), "floor rows carry prices");
 assert.ok(g.kitchen[0].al.includes("花生"), "satay shows peanut");
