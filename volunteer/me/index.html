@@ -189,8 +189,8 @@ auth.onAuthStateChanged(async u=>{
 document.addEventListener("submit",async e=>{
   const id=e.target.id;e.preventDefault();err={};ok={};
   if(id==="lf"){
-    busy="login";render();
-    try{await S.signInPhone(auth,db,$("#ph").value,$("#pw").value);}catch(x){err.login=S.authErrorText(x,false);}
+    const ph=$("#ph").value,pw=$("#pw").value;busy="login";render();
+    try{await S.signInPhone(auth,db,ph,pw);}catch(x){err.login=S.authErrorText(x,false);}
     busy="";render();return;
   }
   if(id==="pf"){
