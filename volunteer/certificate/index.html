@@ -8,7 +8,7 @@
 <link rel="icon" href="/assets/shk-logo-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;700&family=Noto+Serif+TC:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Allura&family=Noto+Serif:wght@400;700&family=Noto+Serif+TC:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&display=swap">
 <style>
 :root{--cream:#fcf8f0;--paper:#fffdf8;--ink:#2b2521;--muted:#6b6258;--magenta:#C00878;--gold:#9c6f0d;--gold-b:#F0B020;
   --serif:"Noto Serif TC","Noto Serif CJK TC","Songti TC",serif;--sans:"Noto Sans TC","Noto Sans CJK TC","PingFang HK",system-ui,sans-serif}
@@ -40,7 +40,10 @@ body{background:#e9e2d6;color:var(--ink);font-family:var(--sans);-webkit-print-c
 .cert .body p:first-child{margin-top:6mm}
 .cert .close{margin-top:9mm;font-size:4.1mm}
 .cert .sig{margin-top:4mm}
-.cert .sig .line{width:62mm;border-bottom:.35mm solid var(--ink);height:16mm}
+.cert .sig .line{width:66mm;border-bottom:.35mm solid var(--ink);height:17mm;display:flex;align-items:flex-end;padding:0 0 .5mm 2mm}
+.cert .sig .line .esig{font-family:"Allura","Great Vibes",cursive;font-size:12.5mm;line-height:1;color:#1f2a5a;display:inline}
+.cert .sig a{color:var(--muted);text-decoration:none}
+.cert .sig .note{font-family:var(--sans);font-size:2.8mm;font-style:italic;color:#8a8075;margin-top:2.5mm}
 .cert .sig b{display:block;font-size:4.2mm;margin-top:2mm}
 .cert .sig span{display:block;font-size:3.6mm;color:var(--muted);line-height:1.5}
 .cert .legal{position:absolute;left:22mm;right:22mm;bottom:11mm;text-align:center;font-family:var(--sans);font-size:2.6mm;color:#8a8075;border-top:.35mm solid #e6dccd;padding-top:3mm}
@@ -68,7 +71,7 @@ body{background:#e9e2d6;color:var(--ink);font-family:var(--sans);-webkit-print-c
 "use strict";
 const S=window.SHK,esc=S.esc;
 const $=s=>document.querySelector(s);
-const SIGNER={name:"Manson Yiu",zh:"董事",en:"Director"};
+const SIGNER={name:"Manson Yiu",en:"Director",email:"mansonyiu@salfordhongkongers.co.uk"};
 const DEMO=new URLSearchParams(location.search).has("sample");
 
 const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
@@ -96,7 +99,7 @@ function certHtml(d){
    +'<p>We are sincerely grateful to '+fn+' for giving their time freely and for the difference they have made to our community. We are pleased to provide this letter as confirmation of their volunteer service.</p>'
    +'<p>To verify this letter, please contact us at salfordhongkongers@gmail.com, quoting the reference above.</p>'
    +'</div><div class="close">Yours faithfully,</div>'
-   +'<div class="sig"><div class="line"></div><b>'+esc(SIGNER.name)+'</b><span>'+SIGNER.en+'<br>Salford Hongkongers CIC</span></div></div>'
+   +'<div class="sig"><div class="line"><span class="esig">'+esc(SIGNER.name)+'</span></div><b>'+esc(SIGNER.name)+'</b><span>'+SIGNER.en+', Salford Hongkongers CIC<br>'+esc(SIGNER.email)+'</span><div class="note">Electronically signed. Please verify using the reference number above.</div></div></div>'
    +'<div class="legal">Salford Hongkongers CIC is a Community Interest Company registered in England and Wales, Company No. 13877472.</div>';
 }
 function fit(){
