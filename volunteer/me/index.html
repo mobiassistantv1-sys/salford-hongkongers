@@ -91,7 +91,7 @@ const fullName=()=>[me&&me.first,me&&me.surname].map(x=>(x||"").trim()).filter(B
 const msg=k=>(err[k]?'<div class="err">'+esc(err[k])+'</div>':'')+(ok[k]?'<div class="saved">'+esc(ok[k])+'</div>':'');
 
 function loginCard(){
-  let h='<div class="card"><h1>義工登入</h1><p>用你嘅 WhatsApp 號碼同密碼登入，睇義工時數、義工證同服務證明。<span class="small"> Sign in to see your hours, level and certificate.</span></p>';
+  let h='<div class="card"><h1>義工登入</h1><p>用你嘅 WhatsApp 號碼同密碼登入，睇義工時數、義工證同服務證明信。<span class="small"> Sign in to see your hours, level and volunteer letter.</span></p>';
   h+='<form id="lf"><label for="ph">WhatsApp 號碼 <span>Phone</span></label><input id="ph" type="tel" inputmode="tel" autocomplete="username" placeholder="07… 或 852…" required>';
   h+='<label for="pw">密碼 <span>Password</span></label><input id="pw" type="password" autocomplete="current-password" required>';
   h+=msg("login")+'<button class="btn" type="submit"'+(busy==="login"?" disabled":"")+'>'+(busy==="login"?"登入中…":"登入 Sign in")+'</button></form>';
@@ -114,13 +114,13 @@ function hoursCard(){
 }
 function certCard(){
   if(!H)return "";
-  let h='<div class="card"><h2>義工服務證明 Certificate</h2>';
+  let h='<div class="card"><h2>義工服務證明信 Volunteer letter</h2>';
   if(H.minutes<S.CERT_MIN){
-    h+='<p>累積滿 10 小時義工服務，就可以攞一份義工服務證明。仲差 <b style="color:var(--ink)">'+esc(S.fmtMin(S.CERT_MIN-H.minutes))+'</b>。</p><p class="small">You can download a certificate once you reach 10 hours.</p>';
+    h+='<p>累積滿 10 小時義工服務，就可以攞一封義工服務證明信。仲差 <b style="color:var(--ink)">'+esc(S.fmtMin(S.CERT_MIN-H.minutes))+'</b>。</p><p class="small">You can download a volunteer letter once you reach 10 hours.</p>';
   }else if(!fullName()){
-    h+='<div class="note">你已經滿 10 小時，可以攞證明！請先喺下面「個人資料」填好英文名同英文姓（按護照）。</div><p class="small" style="margin-top:8px">Add your full English name below to get your certificate.</p>';
+    h+='<div class="note">你已經滿 10 小時，可以攞證明信！請先喺下面「個人資料」填好英文名同英文姓（按護照）。</div><p class="small" style="margin-top:8px">Add your full English name below to get your volunteer letter.</p>';
   }else{
-    h+='<p>你已經滿 10 小時，多謝你為社區付出！</p><p class="small">You have completed 10+ hours. Thank you!</p><a class="btn" style="text-align:center;text-decoration:none" href="/volunteer/certificate/">睇 / 下載證明 View certificate</a>';
+    h+='<p>你已經滿 10 小時，多謝你為社區付出！</p><p class="small">You have completed 10+ hours. Thank you!</p><a class="btn" style="text-align:center;text-decoration:none" href="/volunteer/certificate/">睇 / 下載證明信 View letter</a>';
   }
   return h+'</div>';
 }
@@ -135,10 +135,10 @@ function profileCard(){
   const locked=!!(me&&me.cert);
   let h='<div class="card"><h2>個人資料 My details</h2><form id="pf">';
   h+='<label for="nm">登記名字 <span>Name used at SHK</span></label><input id="nm" type="text" maxlength="60" required value="'+esc(me.name)+'">';
-  if(!locked)h+='<div class="notice" style="margin-top:14px"><b>需要義工服務證明？</b><br>請按護照填寫英文全名（名同姓）。證明會以你填寫嘅名字發出，發出後恕不更改為護照或其他名字，敬請留意。<span class="small" style="display:block;margin-top:6px">Enter your full English name exactly as on your passport. Certificates are issued in this name and cannot be changed afterwards.</span></div>';
+  if(!locked)h+='<div class="notice" style="margin-top:14px"><b>需要義工服務證明信？</b><br>請按護照填寫英文全名（名同姓）。證明信會以你填寫嘅名字發出，發出後恕不更改為護照或其他名字，敬請留意。<span class="small" style="display:block;margin-top:6px">Enter your full English name exactly as on your passport. Volunteer letters are issued in this name and cannot be changed afterwards.</span></div>';
   h+='<label for="fn">英文名 <span>First name</span></label><input id="fn" type="text" maxlength="60" autocomplete="given-name" value="'+esc(me.first)+'"'+(locked?" readonly":"")+'>';
   h+='<label for="sn">英文姓 <span>Surname</span></label><input id="sn" type="text" maxlength="60" autocomplete="family-name" value="'+esc(me.surname)+'"'+(locked?" readonly":"")+'>';
-  if(locked)h+='<p class="small" style="margin-top:6px">服務證明已經以「'+esc(me.cert.name||fullName())+'」發出，英文全名唔可以再改。如有錯漏請聯絡 SHK。<br>Your certificate has been issued, so your full name is locked.</p>';
+  if(locked)h+='<p class="small" style="margin-top:6px">服務證明信已經以「'+esc(me.cert.name||fullName())+'」發出，英文全名唔可以再改。如有錯漏請聯絡 SHK。<br>Your volunteer letter has been issued, so your full name is locked.</p>';
   h+='<label for="em">電郵 <span>Email (optional)</span></label><input id="em" type="email" maxlength="100" autocomplete="email" value="'+esc(me.email)+'">';
   h+=msg("profile")+'<button class="btn" type="submit"'+(busy==="profile"?" disabled":"")+'>'+(busy==="profile"?"儲存中…":"儲存 Save")+'</button></form></div>';
   return h;

@@ -70,7 +70,7 @@ function render(){
     h+='<form id="f2">';
     if(!imported){
       h+='<label for="nm">登記名字 <span>Name used at SHK, e.g. Siu Lam / 陳太</span></label><input id="nm" type="text" maxlength="60" autocomplete="name" value="'+esc(V.name)+'" required>';
-      h+='<div class="notice" style="margin-top:14px"><b>需要義工服務證明？</b><br>請按護照填寫英文全名（名同姓）。證明會以你填寫嘅名字發出，發出後恕不更改為護照或其他名字，敬請留意。<span class="small" style="display:block;margin-top:6px">Need a volunteer certificate? Enter your full English name exactly as it appears on your passport. Certificates are issued in the name you enter here and cannot be changed afterwards.</span></div>';
+      h+='<div class="notice" style="margin-top:14px"><b>需要義工服務證明信？</b><br>請按護照填寫英文全名（名同姓）。證明信會以你填寫嘅名字發出，發出後恕不更改為護照或其他名字，敬請留意。<span class="small" style="display:block;margin-top:6px">Need a volunteer letter? Enter your full English name exactly as it appears on your passport. Volunteer letters are issued in the name you enter here and cannot be changed afterwards.</span></div>';
       h+='<label for="fn">英文名 <span>First name (optional)</span></label><input id="fn" type="text" maxlength="60" autocomplete="given-name" value="'+esc(V.first)+'">';
       h+='<label for="sn">英文姓 <span>Surname (optional)</span></label><input id="sn" type="text" maxlength="60" autocomplete="family-name" value="'+esc(V.surname)+'">';
     }
