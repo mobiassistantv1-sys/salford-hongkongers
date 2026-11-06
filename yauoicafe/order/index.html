@@ -142,7 +142,7 @@ function renderMenu(){
   let h='<div class="wrap">';
   if(!online)h+='<div class="err">'+t("網絡斷咗，重新連線中…","Connection lost. Reconnecting…")+'</div>';
   if(!VALID)h+='<div class="notice"><b>'+t("睇緊餐牌","Browsing the menu")+'</b> '+t("落單請用手機 scan 枱上嘅 QR code。","To order, scan the QR code on your table.")+'</div>';
-  else h+='<div class="tablebar"><div class="tablechip">'+(isTA?t("外賣","TA"):esc(CODE))+'<small>'+(isTA?"TAKEAWAY":t("枱號","TABLE"))+'</small></div><div class="who"><h1>'+(isTA?t("外賣落單","Takeaway order"):t("歡迎！請喺手機點餐","Welcome! Order on your phone"))+'</h1><p>'+(isTA?t("取餐時付款","Pay when you collect"):t("食完先埋單","Pay at the end of your meal"))+'</p></div></div>';
+  else h+='<div class="tablebar"><div class="tablechip">'+(isTA?t("外賣","TA"):esc(CODE))+'<small>'+(isTA?"TAKEAWAY":t("枱號","TABLE"))+'</small></div><div class="who"><h1>'+(isTA?t("外賣落單","Takeaway order"):t("歡迎！請喺手機點餐","Welcome! Order on your phone"))+'</h1><p>'+(isTA?t("落單即付款","Pay when you order"):t("落單即付款","Pay when you order"))+'</p></div></div>';
   h+='<div class="notice"><b>'+t("有食物過敏？","Food allergy?")+'</b> '+t("落單前請話俾員工知，或喺訂單「過敏備註」寫低。","Please tell staff before ordering, or write it in the allergy note on your order.")+'</div>';
   h+='<nav class="cats" aria-label="'+t("餐牌類別","Menu sections")+'">'+CATS.map(c=>'<button data-act="cat" data-v="'+c.id+'" aria-pressed="'+(U.cat===c.id)+'">'+nm(c)+'</button>').join("")+'</nav>';
   CATS.forEach(c=>{
@@ -189,14 +189,14 @@ function renderCart(){
   if(isTA)h+='<label class="f" for="cname">'+t("取餐名稱","Name for collection")+' <span>'+t("必填","Required")+'</span></label><input class="t" id="cname" data-act="name" maxlength="30" value="'+esc(U.name)+'" autocomplete="off">';
   h+='<label class="f" for="callergy">'+t("過敏備註","Allergy note")+' <span>'+t("廚房單會用反白大字顯示","Shown in large bold to the kitchen")+'</span></label><textarea class="t" id="callergy" data-act="allergy" maxlength="200" placeholder="'+t("例如：一位對花生過敏","e.g. one guest is allergic to peanuts")+'">'+esc(U.allergy)+'</textarea>';
   h+='<label class="f" for="cnote">'+t("其他備註","Other notes")+'</label><textarea class="t" id="cnote" data-act="note" maxlength="200" placeholder="'+t("例如：走蔥","e.g. no spring onion")+'">'+esc(U.note)+'</textarea>';
-  h+='<p style="color:var(--muted);font-size:13px">'+(isTA?t("取餐時付款（現金或卡）。","Pay by cash or card when you collect."):t("食完先埋單，員工會收錢（現金或卡）。","Pay by cash or card at the end; staff will come to you."))+'</p></div>';
+  h+='<p style="color:var(--muted);font-size:13px">'+(isTA?t("落單後請即到櫃台付款（現金或卡）。","Please pay at the counter straight after ordering (cash or card)."):t("落單後請即到櫃台付款（現金或卡）。","Please pay at the counter straight after ordering (cash or card)."))+'</p></div>';
   h+='<div class="cartbar"><div class="wrap"><button class="btn primary" data-act="submit"'+(U.cart.length&&!U.busy?"":" disabled")+'><span>'+(U.busy?t("提交緊…","Placing order…"):t("提交訂單","Place order"))+'</span><span class="num">'+money(tot)+'</span></button></div></div>';
   return h;
 }
 function renderDone(){
   const o=U.last||{};
   let h='<div class="wrap"><div class="done"><div class="big">'+esc(o.table||"")+'</div><h2>'+t("已收到訂單！","Order received!")+'</h2><p>#'+String(o.no||"").padStart(3,"0")+'</p>';
-  h+=isTA?'<p>'+t("準備好會叫「"+esc(o.name)+"」，取餐時付款。","We will call “"+esc(o.name)+"” when it's ready. Pay when you collect.")+'</p>':'<p>'+t("我哋會送到你張枱。想加單可以再落單，食完先埋單。","We'll bring it to your table. Order more any time; pay at the end.")+'</p>';
+  h+=isTA?'<p>'+t("準備好會叫「"+esc(o.name)+"」，請即到櫃台付款。","Please pay at the counter now. We will call “"+esc(o.name)+"” when it's ready.")+'</p>':'<p>'+t("請即到櫃台付款，我哋會送到你張枱。想加單可以再落單，每次落單都要付款。","Please pay at the counter now; we'll bring it to your table. Order more any time — each order is paid when placed.")+'</p>';
   h+='<div style="margin-top:18px"><button class="btn green" data-act="view" data-v="menu">'+t("再加單","Order more")+'</button>'+(STAFF?' <a class="btn ghost" href="/yauoicafe/staff/">'+t("返後台","Back to staff page")+'</a>':'')+'</div></div></div>';
   return h;
 }
