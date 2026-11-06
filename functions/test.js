@@ -2,7 +2,7 @@
 "use strict";
 const fs = require("fs");
 const assert = require("assert");
-const { groups, renderSlip, slipCanvas, starprnt, stackPng, STATIONS } = require("./slips");
+const { groups, noticeRows, renderSlip, slipCanvas, starprnt, stackPng, STATIONS } = require("./slips");
 
 const order = {
   table: "T3", no: 12, at: Date.now(), allergy: "對花生過敏", note: "少啲鹽",
@@ -35,4 +35,8 @@ const expect = 2 + cv.reduce((a, c) => a + 9 + 72 * c.height + 3, 0);
 assert.strictEqual(job.length, expect, "byte length = init + (header + 72 bytes/row + cut) per slip");
 fs.writeFileSync("test-out/order.starprnt", job); fs.writeFileSync("test-out/stacked.png", stackPng(cv));
 console.log("starprnt bytes", job.length, "cuts", count(job, Buffer.from([0x1b, 0x64, 3])));
+/* cancel notice for line 1 (2× hot lemon tea) */
+const nr = noticeRows(order, {}, [1]);
+assert.strictEqual(nr.length, 1); assert.strictEqual(nr[0].q, 2);
+fs.writeFileSync("test-out/cancel.png", renderSlip(order, "cancel", nr, { time: "10:50" }));
 
