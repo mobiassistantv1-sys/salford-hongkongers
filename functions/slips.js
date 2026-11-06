@@ -96,7 +96,7 @@ function slipCanvas(o, station, rows, meta) {
     /* header: station (inverted band), table huge, order no + time */
     if (paint) { ctx.fillStyle = "#000"; ctx.fillRect(0, y, W, 60); ctx.fillStyle = "#fff"; ctx.font = "40px HK"; ctx.fillText(TITLE[station], PAD + 4, y + 45); }
     y += 72;
-    const tbl = o.table && o.table.startsWith("W") ? "外賣 " + o.table : (o.table || "?");
+    const tbl = o.table && o.table.startsWith("W") ? "外賣 " + o.table : (o.table || "?") + (o.sub ? "-" + o.sub : "");
     text(tbl, 96, PAD, { gap: 4 });
     text(`#${String(o.no || 0).padStart(3, "0")}  ${meta.time}${o.name ? "  " + o.name : ""}${meta.addOn ? "  【加單】" : ""}`, 30, PAD);
     if (meta.reprint) text("重印 REPRINT", 30, PAD, { invert: true });
