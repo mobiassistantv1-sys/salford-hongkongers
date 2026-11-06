@@ -102,7 +102,7 @@ function homeCard(){
   if(me.status==="pending")h+='<div class="note" style="margin-top:8px">已收到你嘅登記，等待 SHK 批核。批核之後就可以打卡。<br><span class="small">Waiting for approval.</span></div>';
   else if(me.status==="disabled")h+='<div class="note" style="margin-top:8px">帳戶已停用，如有疑問請聯絡 SHK。</div>';
   else if(!EID)h+='<p>到咗活動現場，用手機相機掃描活動 QR code 就可以打卡。<span class="small"> At the event, scan the event QR code with your camera.</span></p>';
-  h+='</div>';
+  h+='<p style="margin-top:10px"><a href="/volunteer/me/">我的義工帳戶：時數、義工證、證明、個人資料 →</a></p></div>';
   if(hours){
     h+='<div class="card"><h2>我嘅義工時數 My hours</h2><div class="kpis"><div class="kpi"><span>總時數 Hours</span><b class="num">'+(hours.total||0)+'</b></div><div class="kpi"><span>出席次數 Sessions</span><b class="num">'+(hours.count||0)+'</b></div></div>';
     (hours.recent||[]).slice(0,8).forEach(r=>{h+='<div class="row"><span>'+esc(r.date)+' · '+esc(r.title)+'</span><b class="num">'+r.hours+'</b></div>';});

@@ -131,10 +131,16 @@
             ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 60"
           },
           "first": {
-            ".validate": "newData.isString() && newData.val().length <= 60"
+            ".validate": "newData.isString() && newData.val().length <= 60 && ((auth != null && root.child('shk/admins/' + auth.uid).val() === true) || !data.parent().child('cert').exists() || newData.val() === data.val())"
           },
           "surname": {
-            ".validate": "newData.isString() && newData.val().length <= 60"
+            ".validate": "newData.isString() && newData.val().length <= 60 && ((auth != null && root.child('shk/admins/' + auth.uid).val() === true) || !data.parent().child('cert').exists() || newData.val() === data.val())"
+          },
+          "cert": {
+            ".validate": "(auth != null && root.child('shk/admins/' + auth.uid).val() === true) || (!data.exists() && newData.child('no').isString() && newData.child('no').val().length <= 30 && newData.child('at').val() === now && newData.child('name').isString() && newData.child('name').val().length <= 121)"
+          },
+          "phoneRequest": {
+            ".validate": "newData.child('phone').isString() && newData.child('phone').val().matches(/^[0-9]{10,15}$/) && newData.child('phone').val() !== $pid && newData.child('at').val() === now"
           },
           "email": {
             ".validate": "newData.isString() && newData.val().length <= 100"
@@ -151,7 +157,7 @@
         }
       },
       "events": {
-        ".read": "(auth != null && root.child('shk/admins/' + auth.uid).val() === true)",
+        ".read": "auth != null",
         ".write": "(auth != null && root.child('shk/admins/' + auth.uid).val() === true)",
         "$eid": {
           ".read": true

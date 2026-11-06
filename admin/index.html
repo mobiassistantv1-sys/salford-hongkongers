@@ -123,6 +123,8 @@ function personRow(p,pendingView){
   if(pendingView)h+='<div class="chips"><button class="btn green sm" data-act="approve" data-pid="'+p.pid+'">批准做義工</button><button class="btn ghost sm" data-act="reject" data-pid="'+p.pid+'">拒絕</button></div>';
   else{
     h+=roleChips(p);
+    if(p.phoneRequest){const kp="mv:"+p.pid;h+='<div class="chips"><span class="st pending">申請改電話 → '+esc(S.prettyPhone(p.phoneRequest.phone))+'</span><button class="btn sm '+(U.armed===kp?"arm":"green")+'" data-act="movephone" data-pid="'+p.pid+'">'+(U.armed===kp?"再撳一次確認轉號碼":"轉去新號碼")+'</button><button class="btn ghost sm" data-act="nophone" data-pid="'+p.pid+'">拒絕</button></div>';}
+    if(p.cert){const kc="uc:"+p.pid;h+='<div class="chips"><span class="st active">已發服務證明 '+esc(p.cert.no||"")+'</span><button class="btn sm '+(U.armed===kc?"arm":"ghost")+'" data-act="unlockcert" data-pid="'+p.pid+'">'+(U.armed===kc?"再撳一次：俾佢改名再重發":"解鎖英文名")+'</button></div>';}
     const ka="reset:"+p.pid;
     h+='<div class="chips">'+(st==="disabled"?'<button class="btn ghost sm" data-act="enable" data-pid="'+p.pid+'">重新啟用</button>':'<button class="btn ghost sm" data-act="disable" data-pid="'+p.pid+'">停用</button>')
       +(p.uid?'<button class="btn sm '+(U.armed===ka?"arm":"ghost")+'" data-act="reset" data-pid="'+p.pid+'">'+(U.armed===ka?"再撳一次確認重設":"重設帳戶（唔記得密碼）")+'</button>':'')
@@ -185,7 +187,7 @@ function render(){
   if(!isAdmin){$("#app").innerHTML='<div class="login card"><h1>你唔係管理員</h1><p>請用管理員帳戶登入。</p></div>';return;}
   const pend=people().filter(p=>p.status==="pending").length;
   const ae=document.activeElement,keep=ae&&ae.id?{id:ae.id,s:ae.selectionStart}:null;
-  $("#app").innerHTML=(U.notice?'<div class="card" style="border-color:var(--amber);margin-bottom:12px"><p>'+esc(U.notice)+'</p><button class="btn ghost sm" data-act="notice" style="margin-top:8px">知道</button></div>':'')+'<nav class="tabs">'+[["pending","等待批核",pend],["people","人員"],["events","活動打卡"]].map(t=>'<button data-act="tab" data-v="'+t[0]+'" aria-pressed="'+(U.tab===t[0])+'">'+t[1]+(t[2]?'<span class="cnt num">'+t[2]+'</span>':'')+'</button>').join("")+'</nav>'+({pending:vPending,people:vPeople,events:vEvents})[U.tab]();
+  $("#app").innerHTML=(U.notice?'<div class="card" style="border-color:var(--amber);margin-bottom:12px"><p>'+esc(U.notice)+'</p><button class="btn ghost sm" data-act="notice" style="margin-top:8px">知道</button></div>':'')+'<nav class="tabs">'+[["pending","等待批核",pend],["people","人員",people().filter(p=>p.phoneRequest).length],["events","活動打卡"]].map(t=>'<button data-act="tab" data-v="'+t[0]+'" aria-pressed="'+(U.tab===t[0])+'">'+t[1]+(t[2]?'<span class="cnt num">'+t[2]+'</span>':'')+'</button>').join("")+'</nav>'+({pending:vPending,people:vPeople,events:vEvents})[U.tab]();
   if(keep){const el=document.getElementById(keep.id);if(el&&el.tagName==="INPUT"&&el.type!=="time"){el.focus();try{el.setSelectionRange(keep.s,keep.s);}catch(e){}}}
 }
 
@@ -241,6 +243,27 @@ async function erasePerson(pid){
   U.notice=p.uid?"已刪除 "+p.name+" 嘅資料。最後一步：去 Firebase Console → Authentication，搵 "+S.authEmail(pid,gen)+"，刪除呢個登入帳戶。":"已刪除 "+p.name+" 嘅資料。";
   render();
 }
+/* Move a person to a new WhatsApp number (their login ID). Everything keyed by the phone number moves:
+   profile, attendance, hours. The person then sets a password again at /volunteer/join/ with the new number
+   (same flow as an imported volunteer). Café / admin access has to be switched on again after that. */
+async function movePhone(pid){
+  const p=PEOPLE[pid];if(!p||!p.phoneRequest)return;
+  const np=p.phoneRequest.phone;
+  if(p.uid===user.uid){toast("唔可以喺度轉自己嘅號碼，請叫另一位管理員幫手");return;}
+  if(PEOPLE[np]||(await db.ref("shk/directory/"+np).get()).val()){toast("新號碼已經有帳戶，轉唔到");return;}
+  const gen=(await db.ref("shk/directory/"+pid+"/gen").get()).val()||0;
+  const moved=Object.assign({},p);delete moved.pid;delete moved.uid;delete moved.phoneRequest;delete moved.claimedAt;
+  moved.phone=np;moved.imported=true;
+  const upd={};upd["shk/people/"+np]=moved;upd["shk/directory/"+np]={gen:0,imported:true,claimed:false};
+  Object.keys(ATT||{}).forEach(eid=>{const r=(ATT[eid]||{})[pid];if(r){upd["shk/attendance/"+eid+"/"+np]=r;upd["shk/attendance/"+eid+"/"+pid]=null;}});
+  const hrs=(await db.ref("shk/hours/"+pid).get()).val();if(hrs)upd["shk/hours/"+np]=hrs;upd["shk/hours/"+pid]=null;
+  upd["shk/people/"+pid]=null;upd["shk/directory/"+pid]=null;
+  if(p.uid){upd["shk/uids/"+p.uid]=null;upd["ordering/roles/"+p.uid]=null;upd["shk/admins/"+p.uid]=null;}
+  await db.ref().update(upd);
+  const r=p.roles||{},extra=(r.cafe||r.admin)?"佢啟用之後，記得喺人員頁重新開返"+(r.cafe?"冰室":"")+(r.cafe&&r.admin?"同":"")+(r.admin?"管理員":"")+"權限。":"";
+  U.notice="已將 "+p.name+" 轉去 "+S.prettyPhone(np)+"，時數同紀錄已經跟住過去。請通知佢用新號碼去 /volunteer/join/ 重新設定密碼。"+extra+(p.uid?"舊登入帳戶 "+S.authEmail(pid,gen)+" 可以喺 Firebase Console → Authentication 刪除。":"");
+  render();
+}
 function pickPid(text){const m=/#(\d{10,15})\s*$/.exec(text||"");if(m&&PEOPLE[m[1]])return m[1];const t=(text||"").trim().toLowerCase();const hit=people().filter(p=>String(p.name).toLowerCase()===t||String(p.legacyId)===t);return hit.length===1?hit[0].pid:null;}
 document.addEventListener("submit",async e=>{
   e.preventDefault();
@@ -261,7 +284,7 @@ document.addEventListener("change",e=>{if(e.target.id==="ec"&&e.target.value==="
 document.addEventListener("input",e=>{if(e.target.dataset.act==="q"){U.q=e.target.value;render();}});
 document.addEventListener("click",async e=>{
   const b=e.target.closest("[data-act]");if(!b)return;const a=b.dataset.act,v=b.dataset.v,pid=b.dataset.pid;
-  if(!["reset","close","delatt","erase"].includes(a))U.armed=null;
+  if(!["reset","close","delatt","erase","movephone","unlockcert"].includes(a))U.armed=null;
   try{switch(a){
     case "logout":await auth.signOut();break;
     case "tab":U.tab=v;render();break;
@@ -272,6 +295,9 @@ document.addEventListener("click",async e=>{
     case "role":await setRole(pid,b.dataset.r);break;
     case "cafe":await setCafe(pid,v);break;
     case "reset":if(U.armed!=="reset:"+pid){U.armed="reset:"+pid;render();break;}U.armed=null;await resetAccount(pid);break;
+    case "movephone":if(U.armed!=="mv:"+pid){U.armed="mv:"+pid;render();break;}U.armed=null;await movePhone(pid);break;
+    case "nophone":await db.ref("shk/people/"+pid+"/phoneRequest").remove();toast("已拒絕改電話申請");break;
+    case "unlockcert":if(U.armed!=="uc:"+pid){U.armed="uc:"+pid;render();break;}U.armed=null;await db.ref("shk/people/"+pid+"/cert").remove();toast(PEOPLE[pid].name+" 而家可以改英文名，改完再發證明");break;
     case "erase":if(U.armed!=="erase:"+pid){U.armed="erase:"+pid;render();break;}U.armed=null;await erasePerson(pid);break;
     case "notice":U.notice=null;render();break;
     case "qr":U.showQr[v]=!U.showQr[v];render();break;
