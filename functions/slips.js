@@ -40,7 +40,7 @@ function groups(o, P) {
   const drinkAl = sel => Y.sortAl(["setdrink", "taste"].flatMap(k =>
     (sel[k] || []).flatMap(id => ((Y.G[k].choices.find(c => c.id === id) || {}).al) || []))).map(c => Y.alName(c, "zh"));
   const out = {};
-  const kit = L.filter(l => ["allday", "sandwich"].includes(byId[l.itemId].cat));
+  const kit = L.filter(l => ["allday", "sandwich"].includes(byId[l.itemId].cat) && byId[l.itemId].st !== "bar");
   if (kit.length) out.kitchen = kit.map(l => { const it = byId[l.itemId];
     return { q: l.qty, name: Y.itemName(it, P, "zh") + (it.cat === "allday" ? "（全日早餐）" : ""),
       sub: l.desc.filter(x => x.st === "kitchen").map(x => x.zh).join("、"), al: al(l) }; });
@@ -51,6 +51,11 @@ function groups(o, P) {
     else if (it.cat === "allday") bar.push({ q: l.qty, name: l.desc.filter(x => x.g === "setdrink").map(x => x.zh).join(""),
       sub: [l.desc.filter(x => x.g === "taste").map(x => x.zh).join("、"), "跟 " + it.zh + " 全日早餐"].filter(Boolean).join(" · "),
       al: drinkAl(l.sel) }); });
+  /* toast is made at the bar: set add-on toast + toast items (西多士, 煉奶牛油多士, 花生醬多士) */
+  L.forEach(l => { const it = byId[l.itemId];
+    if (it.cat === "allday") l.desc.filter(x => x.g === "toast").forEach(x => bar.push({ q: l.qty, name: x.zh, sub: "跟 " + it.zh + " 全日早餐",
+      al: Y.sortAl((l.sel.toast || []).flatMap(id => ((Y.G.toast.choices.find(c => c.id === id) || {}).al) || [])).map(c => Y.alName(c, "zh")) }));
+    else if (it.st === "bar") bar.push({ q: l.qty, name: Y.itemName(it, P, "zh"), sub: l.desc.map(x => x.zh).join("、"), al: al(l) }); });
   if (bar.length) out.bar = bar;
   /* floor slip = the whole order with prices + total, for taking payment (always printed) */
   out.floor = L.map(l => { const it = byId[l.itemId];

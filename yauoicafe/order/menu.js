@@ -27,7 +27,7 @@
     sides: { id:"sides", zh:"跟配（揀 2 款）", en:"Sides (pick 2)", min:2, max:2, station:"kitchen", choices:[["sausage","腸仔","Sausage",["G","So"]],["luncheon","午餐肉","Luncheon meat",["G","So"]],["fried","煎蛋","Fried egg",["E"]],["overhard","熟蛋","Over-hard egg",["E"]],["overeasy","反蛋","Over-easy egg",["E"]],["scrambled","炒蛋","Scrambled egg (with evaporated milk)",["E","M"],2]].map(c=>({id:c[0],zh:c[1],en:c[2],p:0,al:c[3],w:c[4]||1})),
       dup:true,   /* tap the same side twice = double (e.g. two sausages) */
       note:{zh:"同一款撳兩下＝雙份（例如兩條腸仔）。炒蛋用兩隻蛋炒，份量等於兩款跟配，所以揀炒蛋就唔可以再配其他跟配。",en:"Tap a side twice for a double (e.g. two sausages). Our scrambled egg is made with two eggs, so it counts as both sides and can't be paired with another side."} },
-    toast: { id:"toast", zh:"加配多士", en:"Add toast", min:0, max:1, station:"kitchen", choices:[{id:"toast",zh:"牛油多士",en:"Buttered toast",p:50,sq:"ILFCGIYLXNIT3UMHFUCFFK5M",al:["G","M"]}] },
+    toast: { id:"toast", zh:"加配多士", en:"Add toast", min:0, max:1, station:"bar",   /* toast is made at the drinks bar */ choices:[{id:"toast",zh:"牛油多士",en:"Buttered toast",p:50,sq:"ILFCGIYLXNIT3UMHFUCFFK5M",al:["G","M"]}] },
     setdrink: { id:"setdrink", zh:"跟餐飲品", en:"Set drink", min:1, max:1, station:"bar", choices: DR.map(d=>({id:"hot_"+d[0],zh:"熱"+d[1],en:"Hot "+d[2],p:0,al:DRAL[d[0]]})).concat(DR.map(d=>({id:"iced_"+d[0],zh:"凍"+d[1],en:"Iced "+d[2],p:50,sq:d[3],al:DRAL[d[0]]}))) },
     taste: { id:"taste", zh:"口味", en:"Preferences", min:0, max:3, station:"bar", choices: TASTE.map(t=>({id:t[0],zh:t[1],en:t[2],p:0,show:t[3]||undefined,al:t[4]})) },
     toastsw: { id:"toastsw", zh:"烘底", en:"Bread", min:1, max:1, station:"kitchen", choices:[{id:"plain",zh:"不烘底",en:"Plain",p:0},{id:"toasted",zh:"烘底",en:"Toasted",p:50,variant:true}] },
@@ -37,7 +37,7 @@
   const CATS = [{id:"allday",zh:"全日早餐",en:"All Day Set"},{id:"bakery",zh:"麵包類",en:"Bakery"},{id:"sandwich",zh:"三文治",en:"Sandwiches & Toast"},{id:"drinks",zh:"飲品",en:"Drinks"}];
   const SETG = ["noodle","sides","toast","setdrink","taste"];
   const SETD = { zh:"麵 + 2 款跟配 + 飲品", en:"Noodles + 2 sides + drink" };
-  /* sq = Square item variation ID (price source). sqT = toasted variation. */
+  /* sq = Square item variation ID (price source). sqT = toasted variation. st:"bar" = slip goes to the drinks bar (toast). */
   const MENU = [
     {id:"ad_satay",al:["P","So","Se","Cr","G"],cat:"allday",zh:"沙爹牛肉",en:"Satay Beef",p:950,g:SETG,d:SETD,sq:"7V37O4E4IY4LA2ECWWFH7TNK"},
     {id:"ad_ham",al:["G","Su"],cat:"allday",zh:"火腿",en:"Ham",p:950,g:SETG,d:SETD,sq:"QDJEZHOELC2PMZUK76JMEEHY"},
@@ -53,9 +53,9 @@
     {id:"sw_luncheon",al:["E","M","G","So"],cat:"sandwich",zh:"午餐肉雞蛋三文治",en:"Luncheon Meat & Egg Sandwich",p:450,g:["toastsw"],sq:"BPIFBIISM4X6TI7QRYDRROYD",sqT:"JZST2O6NDJK6VRZGAXEWCPML"},
     {id:"sw_corned",al:["E","M","Su","G"],cat:"sandwich",zh:"咸牛肉雞蛋三文治",en:"Corned Beef & Egg Sandwich",p:450,g:["toastsw"],sq:"ROCEK7LLXTBK3DK73KXNPZ33",sqT:"V6KF5Y5ODAYQQVUBJNHMGNWN"},
     {id:"sw_satay",al:["E","M","P","So","Se","Cr","G"],cat:"sandwich",zh:"沙嗲牛肉雞蛋三文治",en:"Satay Beef & Egg Sandwich",p:500,g:["toastsw"],sq:"SGNWPXOPJ2CIOVF4T6XQ6GK3",sqT:"6ICMR7DI25MNBGMIAVG7UGXD"},
-    {id:"sw_french",al:["E","M","P","G"],cat:"sandwich",zh:"西多士",en:"French Toast",p:400,g:[],sq:"SHTBGLKBOES3R37D2X2WTGPL"},
-    {id:"sw_pbtoast",al:["P","M","G"],cat:"sandwich",zh:"煉奶花生醬多士",en:"Condensed Milk & Peanut Butter Toast",p:250,g:[],sq:"RVGRIURSNKV5HIUHHGUGXZ5J"},
-    {id:"sw_buttertoast",al:["M","G"],cat:"sandwich",zh:"煉奶牛油多士",en:"Condensed Milk & Butter Toast",p:250,g:[],sq:"O4KARRK4BEMTRLXXWQEJFAEV"},
+    {id:"sw_french",st:"bar",al:["E","M","P","G"],cat:"sandwich",zh:"西多士",en:"French Toast",p:400,g:[],sq:"SHTBGLKBOES3R37D2X2WTGPL"},
+    {id:"sw_pbtoast",st:"bar",al:["P","M","G"],cat:"sandwich",zh:"煉奶花生醬多士",en:"Condensed Milk & Peanut Butter Toast",p:250,g:[],sq:"RVGRIURSNKV5HIUHHGUGXZ5J"},
+    {id:"sw_buttertoast",st:"bar",al:["M","G"],cat:"sandwich",zh:"煉奶牛油多士",en:"Condensed Milk & Butter Toast",p:250,g:[],sq:"O4KARRK4BEMTRLXXWQEJFAEV"},
     {id:"dk_hot",al:[],cat:"drinks",zh:"熱飲",en:"Hot Drinks",p:300,g:["hot","taste"],sq:"6I7EQTH6N3FUY72DKSFVLZNB"},
     {id:"dk_iced",al:[],cat:"drinks",zh:"凍飲",en:"Iced Drinks",p:350,g:["iced","taste"],iced:true,sq:"XH75P5J5Q5G3WMS6UGORQQBQ"}
   ];
