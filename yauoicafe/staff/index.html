@@ -170,6 +170,9 @@ function isAddOn(o){return liveOrders().some(x=>x.table===o.table&&x.id!==o.id&&
 function discOf(g){if(U.disc!==-1)return Math.round(g*U.disc/100);const v=parseFloat(U.dcV);if(!(v>0))return 0;
   return Math.min(g,U.dcT==="pct"?Math.round(g*Math.min(100,v)/100):Math.round(v*100));}
 function discLabel(){if(U.disc!==-1)return U.disc+"%";const v=parseFloat(U.dcV)||0;return U.dcT==="pct"?Math.min(100,v)+"%":money(Math.round(v*100));}
+/* stock to put back for these lines: orders saved by the server path (o.srv) only give back what was really taken */
+function giveBack(o,idx){const out={};idx.forEach(i=>{const raw=(o.lines||[])[i];const it=raw&&byId[raw.itemId];if(!it||!it.stock)return;out[it.stock]=(out[it.stock]||0)+(raw.qty|0);});
+  if(o.srv)for(const k in out)out[k]=Math.min(out[k],(o.took||{})[k]||0);for(const k in out)if(!out[k])delete out[k];return out;}
 /* 分單: o.sub = "A".."D" → shown as T3-A. Bill pays only the ticked orders (U.ex[id] = left out). */
 const subOf=o=>o.table+(o.sub?"-"+o.sub:"");
 const SUBS=["A","B","C","D"];
@@ -227,6 +230,7 @@ function vOrders(){
     h+='<article class="card'+(fresh?" new":"")+'"><div class="ocard-h"><span class="tbl">'+esc(tableLabel(subOf(o)))+'</span><span class="meta">'+no3(o)+' · '+hhmm(o.at)+(o.name?' · '+esc(o.name):'')+'</span>'+(fresh?'<span class="chip newc">'+t("新","New")+'</span>':'')+(add?'<span class="chip add">'+t("加單","Add-on")+'</span>':'')+(o.paid?'<span class="chip paid">'+t("已付","Paid")+'</span>':'')+(o.served?'<span class="chip paid">'+t("已上菜","Served")+'</span>':'')+'</div>';
     linesOf(o).forEach(l=>{const it=byId[l.itemId];const key=o.id+":"+l.i,arm=U.armed===key;
       const la=Y.lineAllergens(l.itemId,l.sel);h+='<div class="oline'+(l.x?" x":"")+'"><span class="q num">'+l.qty+'×</span><span class="b">'+esc(iname(it))+(l.desc.length?'<small>'+esc(lineDesc(l))+'</small>':'')+(la.length?'<span class="alc">'+t("含：","Contains: ")+esc(la.map(c=>Y.alName(c,U.lang)).join(EN()?", ":"、"))+'</span>':'')+'</span>'+(l.x?'<span class="chip">'+t("已取消","Cancelled")+'</span>':'<button class="xbtn'+(arm?" arm":"")+'" data-act="xline" data-o="'+o.id+'" data-i="'+l.i+'">'+(arm?t("確認取消？","Confirm cancel?"):t("取消","Cancel"))+'</button>')+'</div>';});
+    if(o.short)h+='<div class="anote">⚠ '+t("超賣：","Oversold: ")+esc(Object.keys(o.short).map(k=>{const s=STOCK.find(x=>x.k===k);return (s?nm(s):k)+" ×"+o.short[k];}).join(t("、",", ")))+t(" — 請同客講或者換其他"," — tell the table or offer another")+'</div>';
     if(o.allergy)h+='<div class="anote">'+t("過敏：","Allergy: ")+esc(o.allergy)+'</div>';
     if(o.note)h+='<div class="nnote">'+t("備註：","Note: ")+esc(o.note)+'</div>';
     if(U.armed==="void:"+o.id)h+='<div class="voidbox"><label class="f" for="vr-'+o.id+'">'+t("作廢原因（必填）","Reason (required)")+'</label><input class="t" id="vr-'+o.id+'" maxlength="60" placeholder="'+t("例如：測試、客人取消","e.g. test, customer left")+'"><div style="display:flex;gap:8px;margin-top:8px"><button class="btn sm red" data-act="voidgo" data-v="'+o.id+'">'+t("確認作廢","Void order")+'</button><button class="btn sm ghost" data-act="voidno">'+t("唔作廢","Keep")+'</button></div></div>';
@@ -403,7 +407,7 @@ document.addEventListener("click",async e=>{
     case "xline":{const key=b.dataset.o+":"+b.dataset.i;if(U.armed!==key){U.armed=key;render();break;}
       U.armed=null;const o=ORD[b.dataset.o];const raw=o&&o.lines&&o.lines[+b.dataset.i];if(!raw||raw.x)break;const it=byId[raw.itemId];
       await db.ref("ordering/orders/"+day+"/"+b.dataset.o+"/lines/"+b.dataset.i+"/x").set(true);
-      if(it&&it.stock)await db.ref("ordering/public/stock/"+it.stock).transaction(n=>(n||0)+(raw.qty|0));
+      {const back=giveBack(o,[+b.dataset.i]);for(const k in back){await db.ref("ordering/public/stock/"+k).transaction(n=>(n||0)+back[k]);if(o.took)await db.ref("ordering/orders/"+day+"/"+b.dataset.o+"/took/"+k).set(Math.max(0,(o.took[k]||0)-back[k]));}}
       logIt("取消 "+tableLabelZh(o.table)+" "+raw.qty+"×"+it.zh+(it.stock?"（還庫）":""),"Cancelled "+o.table+" "+raw.qty+"× "+it.en+(it.stock?" (restocked)":""));
       toast(t("已取消","Cancelled"));break;}
     case "stk":{const k=b.dataset.k,n=Number(v);await db.ref("ordering/public/stock/"+k).transaction(c=>Math.max(0,(c||0)+n));if(n>0)db.ref("ordering/public/next/"+k).remove();const s=STOCK.find(x=>x.k===k);logIt(s.zh+" "+(n>0?"+":"")+n,s.en+" "+(n>0?"+":"")+n);break;}
@@ -441,7 +445,8 @@ document.addEventListener("click",async e=>{
       if(!reason){toast(t("請填作廢原因","Please enter a reason"));break;}
       U.armed=null;
       await db.ref("ordering/orders/"+day+"/"+v+"/void").set({at:firebase.database.ServerValue.TIMESTAMP,by:myName||role,reason});
-      for(const raw of (o.lines||[])){const it=raw&&byId[raw.itemId];if(it&&it.stock&&!raw.x)await db.ref("ordering/public/stock/"+it.stock).transaction(n=>(n||0)+(raw.qty|0));}
+      const back=giveBack(o,(o.lines||[]).map((r,i)=>i).filter(i=>o.lines[i]&&!o.lines[i].x));for(const k in back)await db.ref("ordering/public/stock/"+k).transaction(n=>(n||0)+back[k]);
+      if(o.took)await db.ref("ordering/orders/"+day+"/"+v+"/took").set(null);
       logIt("作廢 "+tableLabelZh(o.table)+" "+no3(o)+"（"+reason+"）","Voided "+o.table+" "+no3(o)+" ("+reason+")");
       toast(t("已作廢","Voided"));render();break;}
     case "qcash":U.cash=v;render();break;

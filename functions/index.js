@@ -30,10 +30,27 @@ async function publicData() { const P = (await db.ref("ordering/public").get()).
 /* ---------- 1) queue new orders ---------- */
 exports.queueSlips = onValueCreated({ ref: "/ordering/orders/{day}/{oid}", region: REGION }, async ev => {
   const o = ev.data.val() || {}; const { day, oid } = ev.params;
+  if (o.srv) await takeStock(day, oid, o);
   if (!Object.keys(groups(o, await publicData())).length) return;
   const at = o.at || Date.now();
   await db.ref(`${Q}/${at}_${oid}`).set({ day, oid, at, tries: 0 });
 });
+
+/* Bakery stock is taken HERE, after the order really exists (order page sets srv:1 when
+   ordering/public/srvStock is on). So a failed order never loses stock. If two phones take the
+   last bun at the same moment, the order keeps it and gets short:{key:n} so staff can tell the table. */
+async function takeStock(day, oid, o) {
+  const need = {};
+  (o.lines || []).forEach(l => { const it = l && Y.byId[l.itemId]; if (it && it.stock && !l.x) need[it.stock] = (need[it.stock] || 0) + Math.max(1, Math.min(50, l.qty | 0)); });
+  if (!Object.keys(need).length) return;
+  let took = {}, short = {};
+  await db.ref("ordering/public/stock").transaction(cur => {
+    cur = cur || {}; took = {}; short = {};
+    for (const k in need) { const have = Math.max(0, cur[k] || 0), t = Math.min(have, need[k]); cur[k] = have - t; took[k] = t; if (t < need[k]) short[k] = need[k] - t; }
+    return cur;
+  });
+  await db.ref(`ordering/orders/${day}/${oid}`).update({ took, short: Object.keys(short).length ? short : null });
+}
 
 /* cancel / void AFTER the slips were printed -> print a notice so the kitchen and bar stop making it */
 async function queueNotice(day, oid, kind, extra) {
