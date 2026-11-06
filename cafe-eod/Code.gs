@@ -63,6 +63,7 @@ function reportToday() { reportFor(Utilities.formatDate(new Date(Date.now() - 6 
 function reportFor(day) {
   const Y = menu_();
   const P = fb_('ordering/public') || {};
+  if (Y.applySpecial) Y.applySpecial(P);   /* 是日特別麵包 name/price */
   const orders = fb_('ordering/orders/' + day) || {};
   const pays = Object.values(fb_('ordering/payments/' + day) || {}).sort((a, b) => (a.at || 0) - (b.at || 0));
   if (!Object.keys(orders).length && !pays.length) { Logger.log(day + '：冇訂單，唔出日結。'); return; }

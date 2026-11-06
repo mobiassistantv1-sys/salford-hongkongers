@@ -49,6 +49,8 @@
     {id:"bk_cocktail",img:1,al:["G","E","M"],cat:"bakery",zh:"雞尾包",en:"Cocktail Bun",p:200,g:[],stock:"cocktail",sq:"O5724WXR43AJEICC3GRV47FM"},
     {id:"bk_sausage",al:["G","So","Su"],cat:"bakery",zh:"腸仔包",en:"Sausage Bun",p:200,g:[],stock:"sausage",sq:"APA66WBGY2RE5VFCEBI3HDDH"},
     {id:"bk_eggtart",img:1,al:["G","E","M"],cat:"bakery",zh:"蛋撻",en:"Egg Tart",p:150,g:[],stock:"eggtart",sq:"J3TYDHIXIDMOT6YDKAY5AER7"},
+    /* 是日特別麵包: name, price and allergens set daily by staff in ordering/public/special (see applySpecial) */
+    {id:"bk_special",special:1,al:[],cat:"bakery",zh:"是日特別麵包",en:"Today's Special Bun",p:200,g:[],stock:"special"},
     {id:"sw_egg",al:["E","M","G"],cat:"sandwich",zh:"雞蛋三文治",en:"Egg Sandwich",p:450,g:["toastsw"],sq:"C6ZBURYOIUFSCHV25IVZWQGT",sqT:"3GPYIF72XVPACH7RBHXG47MW"},
     {id:"sw_hamegg",al:["E","M","G","Su"],cat:"sandwich",zh:"火腿雞蛋三文治",en:"Ham & Egg Sandwich",p:450,g:["toastsw"],sq:"J5HOY5NLGH6UQZEYTH3GRKFV",sqT:"2RVLI6YJ5BXE3DFOK6ENWKTL"},
     {id:"sw_luncheon",al:["E","M","G","So"],cat:"sandwich",zh:"午餐肉雞蛋三文治",en:"Luncheon Meat & Egg Sandwich",p:450,g:["toastsw"],sq:"BPIFBIISM4X6TI7QRYDRROYD",sqT:"JZST2O6NDJK6VRZGAXEWCPML"},
@@ -60,7 +62,7 @@
     {id:"dk_hot",al:[],cat:"drinks",zh:"熱飲",en:"Hot Drinks",p:300,g:["hot","taste"],sq:"6I7EQTH6N3FUY72DKSFVLZNB"},
     {id:"dk_iced",al:[],cat:"drinks",zh:"凍飲",en:"Iced Drinks",p:350,g:["iced","taste"],iced:true,sq:"XH75P5J5Q5G3WMS6UGORQQBQ"}
   ];
-  const STOCK = [{k:"pineapple",zh:"菠蘿包",en:"Pineapple Bun",nzh:"菠蘿油都扣呢個數",nen:"Pineapple Bun with Butter uses this count too"},{k:"cocktail",zh:"雞尾包",en:"Cocktail Bun"},{k:"sausage",zh:"腸仔包",en:"Sausage Bun"},{k:"eggtart",zh:"蛋撻",en:"Egg Tart"}];
+  const STOCK = [{k:"pineapple",zh:"菠蘿包",en:"Pineapple Bun",nzh:"菠蘿油都扣呢個數",nen:"Pineapple Bun with Butter uses this count too"},{k:"cocktail",zh:"雞尾包",en:"Cocktail Bun"},{k:"sausage",zh:"腸仔包",en:"Sausage Bun"},{k:"eggtart",zh:"蛋撻",en:"Egg Tart"},{k:"special",zh:"是日特別麵包",en:"Today's Special Bun",special:1}];
   const TABLES = ["T1","T2","T3","T4","T5","T6","T7","T8","T9"];
   const byId = {}; MENU.forEach(m => { byId[m.id] = m; });
 
@@ -114,8 +116,22 @@
   /* does any option of this item add allergens beyond the base? */
   function optionsAddAllergens(it) { return (it.g || []).some(k => G[k].choices.some(c => (c.al || []).some(a => (it.al || []).indexOf(a) < 0))); }
   function alName(code, lang) { return AL[code] ? AL[code][lang === "en" ? 1 : 0] : code; }
+  /* Today's special bun: copy staff's settings (P.special = {zh,en,p,al:[codes],none:true}) onto the menu item.
+     Call every time P loads. Not set up (no name, or allergens not confirmed) = hidden and not orderable. */
+  const SP0 = { zh: "是日特別麵包", en: "Today's Special Bun", p: 200 };
+  function applySpecial(P) {
+    const s = (P && P.special) || {}, it = byId.bk_special, st = STOCK.find(x => x.k === "special");
+    const al = Object.values(s.al || {}).filter(a => AL[a]);
+    const ok = !!(s.zh && (s.none || al.length) && s.p > 0);
+    it.zh = ok ? s.zh : SP0.zh; it.en = ok ? (s.en || s.zh) : SP0.en; it.p = ok ? s.p : SP0.p;
+    it.al = ok && !s.none ? sortAl(al) : [];
+    it.ready = ok; st.zh = it.zh; st.en = it.en;
+    return ok;
+  }
+  /* hidden from customers: special bun not set up today */
+  function hiddenItem(it) { return !!(it && it.special && !it.ready); }
   function dayKey(d) {                   /* London calendar day, e.g. 2026-10-30 */
     return new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/London", year:"numeric", month:"2-digit", day:"2-digit" }).format(d || new Date());
   }
-  window.YO = { FIREBASE, DR, TASTE, G, CATS, MENU, STOCK, TABLES, byId, isIced, itemPrice, choicePrice, itemName, mkLine, cleanSel, selCount, dayKey, AL, sortAl, lineAllergens, optionsAddAllergens, alName };
+  window.YO = { FIREBASE, DR, TASTE, G, CATS, MENU, STOCK, TABLES, byId, isIced, itemPrice, choicePrice, itemName, mkLine, cleanSel, selCount, dayKey, AL, sortAl, lineAllergens, optionsAddAllergens, alName, applySpecial, hiddenItem };
 })();

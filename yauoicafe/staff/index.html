@@ -73,6 +73,10 @@ input.t{width:100%;border:1.5px solid var(--line);background:var(--surface);bord
 .inl{display:flex;gap:6px;align-items:center;font-size:13px;color:var(--muted);flex-wrap:wrap}
 .inl input{width:76px;border:1.5px solid var(--line);background:var(--surface);border-radius:8px;padding:6px 8px}.inl input[type=time]{width:auto}
 .toggles{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:0 16px}
+.spform{display:grid;gap:8px}.spform .row2{display:grid;grid-template-columns:1fr 1fr 110px;gap:8px}@media(max-width:560px){.spform .row2{grid-template-columns:1fr}}
+.spform input.t{margin:0}.alg{display:flex;flex-wrap:wrap;gap:6px}.alg label{display:inline-flex;align-items:center;gap:5px;border:1.5px solid var(--line);border-radius:999px;padding:5px 10px;font-size:13.5px;background:var(--surface)}.alg label:has(input:checked){border-color:var(--green);background:#E6F2EC;font-weight:700}
+.spchk{display:flex;gap:8px;align-items:flex-start;font-size:13.5px}.spnow{font-size:13.5px;color:var(--muted)}.spnow b{color:var(--ink)}
+.mv{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
 .trow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line)}
 .trow .nm{min-width:0}.trow .nm small{color:var(--muted);margin-left:4px}
 .sw{border:0;border-radius:999px;padding:5px 12px;font-weight:700;font-size:13px;white-space:nowrap;background:var(--ok-soft);color:var(--ok)}.sw.off{background:var(--red-soft);color:var(--red)}
@@ -227,9 +231,20 @@ function vOrders(){
     h+='</article>';});
   return h+'</div></div>';
 }
+function vSpecial(){
+  const s=P.special||{},it=byId.bk_special,d=U.sp||(U.sp={zh:s.zh||"",en:s.en||"",p:s.p?(s.p/100).toFixed(2):"",al:Object.values(s.al||{}),none:!!s.none,chk:false});
+  let h='<div class="sec"><div class="sec-h"><h2>'+t("是日特別麵包","Today\'s special bun")+'</h2><p>'+(it.ready?'<span class="spnow">'+t("而家顯示：","Showing: ")+'<b>'+esc(it.zh)+(it.en&&it.en!==it.zh?' '+esc(it.en):'')+' '+money(it.p)+'</b> · '+(it.al.length?t("含 ","Contains ")+it.al.map(c=>Y.alName(c,U.lang)).join(t("、",", ")):t("冇 14 種過敏原","None of the 14 allergens"))+(P.off&&P.off.bk_special?' · '+t("已下線","OFF"):'')+'</span>':t("未設定：客人睇唔到呢款。","Not set up: customers can\'t see it."))+'</p></div><div class="card spform">';
+  h+='<div class="row2"><input class="t" id="sp-zh" data-act="sp" data-k="zh" maxlength="20" value="'+esc(d.zh)+'" placeholder="'+t("中文名（必填），例如 椰撻","Chinese name (required)")+'"><input class="t" id="sp-en" data-act="sp" data-k="en" maxlength="30" value="'+esc(d.en)+'" placeholder="'+t("英文名，例如 Coconut Tart","English name")+'"><input class="t num" id="sp-p" data-act="sp" data-k="p" type="number" inputmode="decimal" step="0.05" min="0.5" max="20" value="'+esc(d.p)+'" placeholder="£ 2.00"></div>';
+  h+='<b style="font-size:14px">'+t("過敏原（跟包裝／食譜標籤；「可能含有」都要剔）","Allergens (from the label or recipe; tick \"may contain\" too)")+'</b><div class="alg">'+Y.sortAl(Object.keys(Y.AL)).map(c=>'<label><input type="checkbox" data-act="spal" value="'+c+'"'+(d.al.includes(c)?" checked":"")+(d.none?" disabled":"")+'>'+esc(Y.alName(c,U.lang))+'</label>').join("")+'</div>';
+  h+='<label class="spchk"><input type="checkbox" data-act="spnone"'+(d.none?" checked":"")+'>'+t("以上 14 種全部冇","None of these 14")+'</label>';
+  h+='<label class="spchk"><input type="checkbox" data-act="spchk"'+(d.chk?" checked":"")+'>'+t("我已經對過標籤，過敏原資料正確","I have checked the label; the allergen info is correct")+'</label>';
+  h+='<div class="btnrow" style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn green" data-act="spsave">'+t("儲存並上架","Save and show")+'</button>'+(it.ready?'<button class="btn ghost" data-act="off" data-v="bk_special">'+(P.off&&P.off.bk_special?t("重新上線","Turn on"):t("暫時下線","Turn off"))+'</button><button class="btn ghost" data-act="spclear">'+t("清除（今日唔賣）","Clear (not today)")+'</button>':'')+'</div>';
+  h+='<p style="font-size:12.5px;color:var(--muted);margin:0">'+t("換款會將數量歸 0；出爐之後喺下面「"+"是日特別麵包"+"」格加數。","Changing the bun resets its count to 0. Add the count in its card below after baking.")+'</p></div></div>';
+  return h;
+}
 function vStock(){
-  let h='<div class="sec"><div class="sec-h"><h2>'+t("限量麵包","Limited bakery")+'</h2><p>'+t("出爐按「+」；客人提交訂單即扣數，扣到 0 自動售罄。","Tap + when a batch comes out. Orders deduct stock when placed; 0 means sold out.")+'</p></div><div class="stock">';
-  STOCK.forEach(s=>{const n=(P.stock&&P.stock[s.k])||0;
+  let h=vSpecial()+'<div class="sec"><div class="sec-h"><h2>'+t("限量麵包","Limited bakery")+'</h2><p>'+t("出爐按「+」；客人提交訂單即扣數，扣到 0 自動售罄。","Tap + when a batch comes out. Orders deduct stock when placed; 0 means sold out.")+'</p></div><div class="stock">';
+  STOCK.filter(s=>!s.special||byId.bk_special.ready).forEach(s=>{const n=(P.stock&&P.stock[s.k])||0;
     h+='<div class="scard"><div class="top"><div><b>'+nm(s)+'</b>'+(s.nzh?'<small>'+t(s.nzh,s.nen)+'</small>':'')+'</div><span class="count num '+(n<=0?"zero":n<=2?"low":"")+'">'+n+'</span></div>';
     h+='<div class="btnrow"><button class="minus" data-act="stk" data-k="'+s.k+'" data-v="-1" aria-label="'+esc(nm(s))+' −1">−1</button>'+[4,8,12].map(v=>'<button class="plus" data-act="stk" data-k="'+s.k+'" data-v="'+v+'">+'+v+'</button>').join("")+'</div>';
     h+='<div class="inl"><label for="c-'+s.k+'">'+t("自訂","Custom")+'</label><input id="c-'+s.k+'" type="number" inputmode="numeric" min="1" max="99"><button class="btn sm ghost" data-act="stkc" data-k="'+s.k+'">'+t("加","Add")+'</button><label for="n-'+s.k+'" style="margin-left:auto">'+t("下一爐","Next batch")+'</label><input id="n-'+s.k+'" type="time" value="'+esc((P.next&&P.next[s.k])||"")+'" data-act="next" data-k="'+s.k+'"></div></div>';});
@@ -259,7 +274,8 @@ function vBill(){
   const tb=U.billT;const os=tb?openOrders(tb):[];
   if(!tb||!os.length)return h+'<p style="color:var(--muted);margin-top:14px">'+t("揀一張紅框枱開始埋單。","Choose a table with a red border to take payment.")+'</p></div>';
   const B=billOf(tb),tot=B.n;
-  h+='<div class="bill"><div class="card"><h3 style="font-size:18px;font-weight:900">'+esc(tableLabel(tb))+' '+t("帳單","bill")+'</h3><div style="margin:6px 0">'+addLink(tb)+'</div>';
+  h+='<div class="bill"><div class="card"><h3 style="font-size:18px;font-weight:900">'+esc(tableLabel(tb))+' '+t("帳單","bill")+'</h3><div style="margin:6px 0;display:flex;gap:6px;flex-wrap:wrap">'+addLink(tb)+(tb.startsWith("W")?'':'<button class="btn sm ghost" data-act="mv" data-v="'+tb+'">'+t("⇄ 搬枱","⇄ Move table")+'</button>')+'</div>';
+  if(U.mv===tb){h+='<div class="voidbox"><b>'+t("搬 "+tb+" 全部未埋單訂單去：","Move all unpaid orders of "+tb+" to:")+'</b><div class="mv">'+TABLES.filter(x=>x!==tb).map(x=>{const n=openOrders(x).length;return '<button class="btn sm '+(n?'ghost':'green')+'" data-act="mvgo" data-v="'+x+'">'+x+(n?' '+t("（有客，會合併）","(busy, merges)"):'')+'</button>';}).join("")+'<button class="btn sm ghost" data-act="mvno">'+t("取消","Cancel")+'</button></div></div>';}
   os.forEach(o=>{h+='<div style="color:var(--muted);font-size:12.5px;margin-top:8px">'+no3(o)+' · '+hhmm(o.at)+'</div>';linesOf(o).filter(l=>!l.x).forEach(l=>{h+='<div class="oline"><span class="q num">'+l.qty+'×</span><span class="b">'+esc(iname(byId[l.itemId]))+(l.desc.length?'<small>'+esc(lineDesc(l))+'</small>':'')+'</span><span class="num">'+money(lineTotal(l))+'</span></div>';});});
   if(B.d)h+='<div class="subline"><span>'+t("小計","Subtotal")+'</span><span class="num">'+money(B.g)+'</span></div><div class="subline d"><span>'+t("折扣 ","Discount ")+esc(discLabel())+'</span><span class="num">−'+money(B.d)+'</span></div>';
   h+='<div class="total"><span>'+t("應收","To pay")+'</span><span class="num">'+money(tot)+'</span></div></div>';
@@ -311,7 +327,7 @@ function unsub(){subs.forEach(f=>f());subs=[];ORD={};PAY={};LOG={};U.seen={};}
 function on(ref,ev,fn){ref.on(ev,fn,()=>{});subs.push(()=>ref.off(ev,fn));}
 function subscribe(){
   unsub();day=Y.dayKey();
-  on(db.ref("ordering/public"),"value",s=>{P=s.val()||{};render();});
+  on(db.ref("ordering/public"),"value",s=>{P=s.val()||{};Y.applySpecial(P);render();});
   let initial=true;
   const oref=db.ref("ordering/orders/"+day);
   on(oref,"value",s=>{const v=s.val()||{};if(!initial){const fresh=Object.keys(v).filter(k=>!U.seen[k]);if(fresh.length){beep();const o=v[fresh[fresh.length-1]];flash(t("新單！","New order! ")+tableLabel(o.table)+" "+no3(o));}}Object.keys(v).forEach(k=>U.seen[k]=1);initial=false;ORD=v;render();});
@@ -379,8 +395,27 @@ document.addEventListener("click",async e=>{
     case "off":{const o=!!(P.off&&P.off[v]);await db.ref("ordering/public/off/"+v).set(o?null:true);const it=byId[v];logIt(it.zh+(o?" 上線":" 下線"),it.en+(o?" on":" off"));break;}
     case "optoff":{const k="opt:"+b.dataset.g+":"+v;const o=!!(P.off&&P.off[k]);await db.ref("ordering/public/off/"+k).set(o?null:true);break;}
     case "msave":{const zh=$("#mz-"+v).value.trim(),en=$("#me-"+v).value.trim();if(!zh||!en){toast(t("名唔可以留空","Names are required"));break;}await db.ref("ordering/public/names/"+v).set({zh,en});logIt("改名 "+zh,"Renamed "+en);toast(t("已儲存","Saved"));break;}
-    case "resetstock":if(!mgr())break;if(U.armed!=="reset"){U.armed="reset";render();break;}U.armed=null;await db.ref("ordering/public/stock").set({pineapple:0,cocktail:0,sausage:0,eggtart:0});await db.ref("ordering/public/next").remove();logIt("限量歸 0","Bakery counts reset");toast(t("已歸 0","Reset to 0"));break;
-    case "billt":U.billT=v;U.cash="";U.disc=0;U.discNote="";U.dcV="";render();break;
+    case "resetstock":if(!mgr())break;if(U.armed!=="reset"){U.armed="reset";render();break;}U.armed=null;await db.ref("ordering/public/stock").set({pineapple:0,cocktail:0,sausage:0,eggtart:0,special:0});await db.ref("ordering/public/next").remove();logIt("限量歸 0","Bakery counts reset");toast(t("已歸 0","Reset to 0"));break;
+    case "mv":U.mv=U.mv===v?null:v;render();break;
+    case "mvno":U.mv=null;render();break;
+    case "mvgo":{const from=U.mv;if(!from||!TABLES.includes(v)||v===from)break;const os=openOrders(from);U.mv=null;if(!os.length){render();break;}
+      const up={};os.forEach(o=>{up[o.id+"/table"]=v;up[o.id+"/moved"]={from,at:firebase.database.ServerValue.TIMESTAMP,by:myName||role};});
+      try{await db.ref("ordering/orders/"+day).update(up);}catch(x){toast(t("搬唔到，請再試","Could not move, please try again"));break;}
+      logIt(from+" 搬去 "+v+"（"+os.length+" 張單）","Moved "+from+" to "+v+" ("+os.length+" orders)");U.billT=v;U.disc=0;U.cash="";toast(t("已搬去 ","Moved to ")+v);render();break;}
+    case "spsave":{const d=U.sp||{};const zh=(d.zh||"").trim(),en=(d.en||"").trim(),p=Math.round(parseFloat(d.p)*100);
+      if(!zh){toast(t("請填中文名","Enter the Chinese name"));break;}
+      if(!(p>=50&&p<=2000)){toast(t("價錢要 £0.50–£20","Price must be £0.50–£20"));break;}
+      if(!d.none&&!d.al.length){toast(t("請剔過敏原，或剔「全部冇」","Tick the allergens, or tick \"None\""));break;}
+      if(!d.chk){toast(t("請確認已對過標籤","Please confirm you checked the label"));break;}
+      const old=P.special||{},changed=old.zh!==zh;
+      const sp={zh,en:en||null,p,al:d.none?null:Y.sortAl(d.al),none:d.none||null,at:firebase.database.ServerValue.TIMESTAMP,by:myName||role};
+      const up={"special":sp,"off/bk_special":null};if(changed)up["stock/special"]=0;
+      await db.ref("ordering/public").update(up);U.sp={zh,en,p:(p/100).toFixed(2),al:d.none?[]:Y.sortAl(d.al),none:!!d.none,chk:false};
+      logIt("是日特別麵包："+zh+" £"+(p/100).toFixed(2)+"，"+(d.none?"冇過敏原":"含 "+Y.sortAl(d.al).map(c=>Y.alName(c,"zh")).join("、")),"Special bun: "+(en||zh)+" £"+(p/100).toFixed(2));
+      toast(t("已上架","Saved"));break;}
+    case "spclear":await db.ref("ordering/public").update({"special":null,"stock/special":0});U.sp={zh:"",en:"",p:"",al:[],none:false,chk:false};logIt("清除是日特別麵包","Special bun cleared");toast(t("已清除","Cleared"));break;
+    case "spnone":case "spchk":case "spal":{const d=U.sp;if(!d)break;if(a==="spnone"){d.none=b.checked;if(d.none)d.al=[];}else if(a==="spchk")d.chk=b.checked;else{const c=b.value;d.al=b.checked?d.al.concat(c):d.al.filter(x=>x!==c);}d.chk=a==="spchk"?b.checked:false;render();break;}
+    case "billt":U.billT=v;U.mv=null;U.cash="";U.disc=0;U.discNote="";U.dcV="";render();break;
     case "disc":U.disc=+v;if(!U.disc)U.discNote="";render();break;
     case "dct":U.dcT=v;U.dcV="";render();break;
     case "void":U.armed="void:"+v;render();{const el=$("#vr-"+v);if(el)el.focus();}break;
@@ -401,6 +436,7 @@ document.addEventListener("change",e=>{const x=e.target;if(x.dataset.act==="next
 document.addEventListener("input",e=>{const x=e.target;
   if(x.dataset.act==="cash"){U.cash=x.value;const tot=billOf(U.billT).n,g=Math.round(parseFloat(U.cash||"0")*100),ch=g-tot;const c=$("#chg");if(c)c.textContent=U.cash&&ch>=0?money(ch):"—";}
   if(x.dataset.act==="discnote")U.discNote=x.value;
+  if(x.dataset.act==="sp"&&U.sp){U.sp[x.dataset.k]=x.value;U.sp.chk=false;const c=document.querySelector('[data-act="spchk"]');if(c)c.checked=false;}
   if(x.dataset.act==="dcv"){U.dcV=x.value;render();}});
 render();
 })();

@@ -147,7 +147,7 @@ function renderMenu(){
   h+='<nav class="cats" aria-label="'+t("餐牌類別","Menu sections")+'">'+CATS.map(c=>'<button data-act="cat" data-v="'+c.id+'" aria-pressed="'+(U.cat===c.id)+'">'+nm(c)+'</button>').join("")+'</nav>';
   CATS.forEach(c=>{
     h+='<section><div class="cat-h" id="cat-'+c.id+'"><h2>'+nm(c)+'</h2>'+(EN()?'':'<span>'+c.en+'</span>')+'</div><div class="items">';
-    MENU.filter(m=>m.cat===c.id).forEach(m=>{
+    MENU.filter(m=>m.cat===c.id&&!Y.hiddenItem(m)).forEach(m=>{
       const out=avail(m)<=0,left=m.stock?avail(m)-cartUse(m.stock):1;
       const sub=EN()?(m.d?m.d.en:""):[Y.itemName(m,P,"en"),m.d?m.d.zh:""].filter(Boolean).join(" · ");
       const base=Y.itemPrice(m,P,false),tp=m.g.includes("toastsw")?Y.itemPrice(m,P,true)-base:0;
@@ -217,7 +217,7 @@ let db=null;
   const keepCounters=()=>{const d=Y.dayKey();db.ref("ordering/counter/"+d).on("value",()=>{},()=>{});db.ref("ordering/wcounter/"+d).on("value",()=>{},()=>{});};
   if(VALID&&STAFF)firebase.auth().onAuthStateChanged(u=>{if(!u||u.isAnonymous){U.err=t("請先喺後台登入，再撳「幫客加餐」。","Sign in to the staff page first, then tap Add items.");render();}else keepCounters();});
   else if(VALID)firebase.auth().signInAnonymously().then(keepCounters).catch(()=>{U.err=t("連線失敗，請請員工幫手。","Couldn't connect. Please ask staff.");});
-  db.ref("ordering/public").on("value",s=>{P=s.val()||{};const first=!ready;ready=true;if(first||(U.view==="menu"&&!U.sheet))render();},()=>{ready=true;render();});
+  db.ref("ordering/public").on("value",s=>{P=s.val()||{};Y.applySpecial(P);const first=!ready;ready=true;if(first||(U.view==="menu"&&!U.sheet))render();},()=>{ready=true;render();});
   db.ref(".info/connected").on("value",s=>{const was=online;online=!!s.val();if(was!==online&&U.view==="menu"&&!U.sheet)render();});
 }
 
@@ -234,7 +234,7 @@ async function nextNo(path){
 async function submit(){
   if(U.busy)return;U.err="";U.errCode="";U.bad={};
   if(isTA){U.name=U.name.trim();if(!U.name){U.err=t("外賣請填取餐名稱。","Please enter a name for collection.");render();return;}}
-  const need={};U.cart.forEach(l=>{const it=byId[l.itemId];if(off(it.id))U.bad[l.lid]=t(iname(it)+" 啱啱售完，請刪除或修改。",iname(it)+" just sold out. Please remove or change it.");if(it.stock)need[it.stock]=(need[it.stock]||0)+l.qty;});
+  const need={};U.cart.forEach(l=>{const it=byId[l.itemId];if(off(it.id)||Y.hiddenItem(it))U.bad[l.lid]=t(iname(it)+" 啱啱售完，請刪除或修改。",iname(it)+" just sold out. Please remove or change it.");if(it.stock)need[it.stock]=(need[it.stock]||0)+l.qty;});
   if(Object.keys(U.bad).length){U.err=t("有餐點剛剛賣晒，其他餐點已保留，請修改後再提交。","Something just sold out. The rest of your order is kept — please update it and place it again.");render();return;}
   U.busy=true;render();let stage="auth";
   try{
