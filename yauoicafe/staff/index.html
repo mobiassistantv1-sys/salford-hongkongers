@@ -100,7 +100,7 @@ table.t{width:100%;border-collapse:collapse;font-size:14px}table.t th,table.t td
 table.t th{font-size:12px;color:var(--muted);font-weight:700}table.t .r{text-align:right}
 .scroll{overflow-x:auto}.empty{color:var(--muted);padding:24px;text-align:center;border:1.5px dashed var(--line);border-radius:var(--r)}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(24px + env(safe-area-inset-bottom,0px));z-index:50;background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:999px;font-weight:700;font-size:14px;max-width:calc(100% - 32px)}
-.alert{position:fixed;left:0;right:0;top:0;z-index:60;background:var(--red);color:#fff;text-align:center;font-weight:900;font-size:20px;padding:calc(14px + env(safe-area-inset-top,0px)) 16px 14px}
+.voidbox{border:1.5px solid var(--red);background:var(--red-soft);border-radius:10px;padding:10px;margin-top:8px}.btn.red{background:var(--red);color:#fff}a.btn{text-decoration:none;display:inline-flex;align-items:center}.alert{position:fixed;left:0;right:0;top:0;z-index:60;background:var(--red);color:#fff;text-align:center;font-weight:900;font-size:20px;padding:calc(14px + env(safe-area-inset-top,0px)) 16px 14px}
 </style>
 </head>
 <body>
@@ -135,7 +135,7 @@ firebase.initializeApp(Y.FIREBASE);
 const auth=firebase.auth(),db=firebase.database();
 let user=null,role=null,myName="",authReady=false,online=true,day=Y.dayKey();
 let P={},ORD={},PAY={},LOG={};
-const U={lang:"zh",tab:"orders",loginErr:"",busy:false,billT:null,cash:"",disc:0,discNote:"",armed:null,showSlips:{},seen:{},sound:false};
+const U={lang:"zh",tab:"orders",loginErr:"",busy:false,billT:null,cash:"",disc:0,discNote:"",dcT:"pct",dcV:"",armed:null,showSlips:{},seen:{},sound:false};
 try{U.lang=localStorage.getItem("yoc_staff_lang")||"zh";}catch(e){}
 
 const $=s=>document.querySelector(s);
@@ -159,9 +159,15 @@ const lineTotal=l=>l.unit*l.qty;
 const orderTotal=o=>linesOf(o).filter(l=>!l.x).reduce((a,l)=>a+lineTotal(l),0);
 const lineDesc=l=>l.desc.map(d=>EN()?d.en:d.zh).join(EN()?", ":"、");
 function orderList(){return Object.keys(ORD).map(id=>Object.assign({id},ORD[id]));}
-function openOrders(tb){return orderList().filter(o=>!o.paid&&(tb?o.table===tb:true));}
-function isAddOn(o){return orderList().some(x=>x.table===o.table&&x.id!==o.id&&(x.at||0)<(o.at||0)&&!x.paid);}
-function billOf(tb){const g=openOrders(tb).reduce((a,o)=>a+orderTotal(o),0);const d=Math.round(g*U.disc/100);return {g,d,n:g-d};}
+function liveOrders(){return orderList().filter(o=>!o.void);}   /* voided (作廢) orders never count */
+function openOrders(tb){return liveOrders().filter(o=>!o.paid&&(tb?o.table===tb:true));}
+function isAddOn(o){return liveOrders().some(x=>x.table===o.table&&x.id!==o.id&&(x.at||0)<(o.at||0)&&!x.paid);}
+/* U.disc: 0/20/40/50 = preset %, -1 = custom (U.dcT "pct" or "amt", value in U.dcV) */
+function discOf(g){if(U.disc!==-1)return Math.round(g*U.disc/100);const v=parseFloat(U.dcV);if(!(v>0))return 0;
+  return Math.min(g,U.dcT==="pct"?Math.round(g*Math.min(100,v)/100):Math.round(v*100));}
+function discLabel(){if(U.disc!==-1)return U.disc+"%";const v=parseFloat(U.dcV)||0;return U.dcT==="pct"?Math.min(100,v)+"%":money(Math.round(v*100));}
+function billOf(tb){const g=openOrders(tb).reduce((a,o)=>a+orderTotal(o),0);const d=discOf(g);return {g,d,n:g-d};}
+const addLink=tb=>'<a class="btn sm ghost" href="/yauoicafe/order/?t='+encodeURIComponent(tb)+'&staff=1">＋'+t("幫客加餐","Add items")+'</a>';
 
 /* ---------- sound ---------- */
 let actx=null;
@@ -214,7 +220,8 @@ function vOrders(){
       const la=Y.lineAllergens(l.itemId,l.sel);h+='<div class="oline'+(l.x?" x":"")+'"><span class="q num">'+l.qty+'×</span><span class="b">'+esc(iname(it))+(l.desc.length?'<small>'+esc(lineDesc(l))+'</small>':'')+(la.length?'<span class="alc">'+t("含：","Contains: ")+esc(la.map(c=>Y.alName(c,U.lang)).join(EN()?", ":"、"))+'</span>':'')+'</span>'+(l.x?'<span class="chip">'+t("已取消","Cancelled")+'</span>':'<button class="xbtn'+(arm?" arm":"")+'" data-act="xline" data-o="'+o.id+'" data-i="'+l.i+'">'+(arm?t("確認取消？","Confirm cancel?"):t("取消","Cancel"))+'</button>')+'</div>';});
     if(o.allergy)h+='<div class="anote">'+t("過敏：","Allergy: ")+esc(o.allergy)+'</div>';
     if(o.note)h+='<div class="nnote">'+t("備註：","Note: ")+esc(o.note)+'</div>';
-    h+='<div class="cardfoot"><button class="btn sm ghost" data-act="slips" data-v="'+o.id+'">'+(U.showSlips[o.id]?t("收起分單","Hide by station"):t("按工作位睇","View by station"))+'</button><button class="btn sm '+(o.served?'ghost':'green')+'" data-act="served" data-v="'+o.id+'">'+(o.served?t("改返未上菜","Mark not served"):t("已上菜","Served"))+'</button><span style="margin-left:auto;font-weight:900" class="num">'+money(orderTotal(o))+'</span></div>';
+    if(U.armed==="void:"+o.id)h+='<div class="voidbox"><label class="f" for="vr-'+o.id+'">'+t("作廢原因（必填）","Reason (required)")+'</label><input class="t" id="vr-'+o.id+'" maxlength="60" placeholder="'+t("例如：測試、客人取消","e.g. test, customer left")+'"><div style="display:flex;gap:8px;margin-top:8px"><button class="btn sm red" data-act="voidgo" data-v="'+o.id+'">'+t("確認作廢","Void order")+'</button><button class="btn sm ghost" data-act="voidno">'+t("唔作廢","Keep")+'</button></div></div>';
+    h+='<div class="cardfoot">'+addLink(o.table)+'<button class="btn sm ghost" data-act="void" data-v="'+o.id+'">'+t("作廢","Void")+'</button><button class="btn sm ghost" data-act="slips" data-v="'+o.id+'">'+(U.showSlips[o.id]?t("收起分單","Hide by station"):t("按工作位睇","View by station"))+'</button><button class="btn sm '+(o.served?'ghost':'green')+'" data-act="served" data-v="'+o.id+'">'+(o.served?t("改返未上菜","Mark not served"):t("已上菜","Served"))+'</button><span style="margin-left:auto;font-weight:900" class="num">'+money(orderTotal(o))+'</span></div>';
     if(U.showSlips[o.id])h+='<div style="margin-top:8px">'+slipsFor(o)+'</div>';
     h+='</article>';});
   return h+'</div></div>';
@@ -251,12 +258,13 @@ function vBill(){
   const tb=U.billT;const os=tb?openOrders(tb):[];
   if(!tb||!os.length)return h+'<p style="color:var(--muted);margin-top:14px">'+t("揀一張紅框枱開始埋單。","Choose a table with a red border to take payment.")+'</p></div>';
   const B=billOf(tb),tot=B.n;
-  h+='<div class="bill"><div class="card"><h3 style="font-size:18px;font-weight:900">'+esc(tableLabel(tb))+' '+t("帳單","bill")+'</h3>';
+  h+='<div class="bill"><div class="card"><h3 style="font-size:18px;font-weight:900">'+esc(tableLabel(tb))+' '+t("帳單","bill")+'</h3><div style="margin:6px 0">'+addLink(tb)+'</div>';
   os.forEach(o=>{h+='<div style="color:var(--muted);font-size:12.5px;margin-top:8px">'+no3(o)+' · '+hhmm(o.at)+'</div>';linesOf(o).filter(l=>!l.x).forEach(l=>{h+='<div class="oline"><span class="q num">'+l.qty+'×</span><span class="b">'+esc(iname(byId[l.itemId]))+(l.desc.length?'<small>'+esc(lineDesc(l))+'</small>':'')+'</span><span class="num">'+money(lineTotal(l))+'</span></div>';});});
-  if(B.d)h+='<div class="subline"><span>'+t("小計","Subtotal")+'</span><span class="num">'+money(B.g)+'</span></div><div class="subline d"><span>'+t("折扣 ","Discount ")+U.disc+'%</span><span class="num">−'+money(B.d)+'</span></div>';
+  if(B.d)h+='<div class="subline"><span>'+t("小計","Subtotal")+'</span><span class="num">'+money(B.g)+'</span></div><div class="subline d"><span>'+t("折扣 ","Discount ")+esc(discLabel())+'</span><span class="num">−'+money(B.d)+'</span></div>';
   h+='<div class="total"><span>'+t("應收","To pay")+'</span><span class="num">'+money(tot)+'</span></div></div>';
   h+='<div class="card"><h3 style="font-size:18px;font-weight:900">'+t("收款","Payment")+'</h3>';
-  h+='<b style="font-size:14px">'+t("優惠","Discount")+'</b><div class="discs">'+[0,20,40,50].map(x=>'<button class="btn sm ghost" data-act="disc" data-v="'+x+'" aria-pressed="'+(U.disc===x)+'">'+(x?x+"% off":t("無折扣","None"))+'</button>').join("")+'</div>';
+  h+='<b style="font-size:14px">'+t("優惠","Discount")+'</b><div class="discs">'+[0,20,40,50,-1].map(x=>'<button class="btn sm ghost" data-act="disc" data-v="'+x+'" aria-pressed="'+(U.disc===x)+'">'+(x===-1?t("自訂","Custom"):x?x+"% off":t("無折扣","None"))+'</button>').join("")+'</div>';
+  if(U.disc===-1)h+='<div class="discs" style="margin-top:6px"><button class="btn sm ghost" data-act="dct" data-v="pct" aria-pressed="'+(U.dcT==="pct")+'">% off</button><button class="btn sm ghost" data-act="dct" data-v="amt" aria-pressed="'+(U.dcT==="amt")+'">'+t("減 £","£ off")+'</button><input class="t num" id="dcv" data-act="dcv" type="number" inputmode="decimal" step="'+(U.dcT==="pct"?"1":"0.01")+'" min="0" value="'+esc(U.dcV)+'" placeholder="'+(U.dcT==="pct"?t("例如 10","e.g. 10"):t("例如 1.50","e.g. 1.50"))+'" style="max-width:140px"></div>';
   if(U.disc)h+='<input class="t" id="discnote" data-act="discnote" maxlength="60" value="'+esc(U.discNote)+'" placeholder="'+t("原因（可選），例如：義工、熟客","Reason (optional), e.g. volunteer, regular")+'">';
   h+='<div class="sqbox">'+t("喺 Square POS 用「自訂金額」收：","In Square POS, charge a custom amount of:")+'<br><b class="num">'+money(tot)+'</b></div>';
   h+='<label class="f" for="cashin">'+t("現金計找續（可選）：客人俾","Cash change helper (optional): received")+'</label><input class="t num" id="cashin" type="number" inputmode="decimal" step="0.01" min="0" value="'+esc(U.cash)+'" data-act="cash" placeholder="'+t("例如 20","e.g. 20")+'">';
@@ -274,12 +282,14 @@ function vEod(){
   let h='<div class="sec"><div class="sec-h"><h2>'+t("今日日結 ","Takings for ")+esc(day)+'</h2><p>'+t("同 Square 當日總數同 Daily Takings 表對數。","Check against Square's daily total and the Daily Takings sheet.")+'</p></div><div class="kpis">';
   [[t("現金","Cash"),money(cash)],[t("卡","Card"),money(card)],[t("已收合共","Total taken"),money(cash+card)],[t("折扣總額","Discounts given"),money(disc)],[t("未埋單","Unpaid"),money(open)]].forEach(k=>{h+='<div class="kpi"><span>'+k[0]+'</span><b class="num">'+k[1]+'</b></div>';});
   h+='</div></div>';
-  const sold={};orderList().forEach(o=>linesOf(o).filter(l=>!l.x).forEach(l=>{sold[l.itemId]=(sold[l.itemId]||0)+l.qty;}));
+  const sold={};liveOrders().forEach(o=>linesOf(o).filter(l=>!l.x).forEach(l=>{sold[l.itemId]=(sold[l.itemId]||0)+l.qty;}));
   const rows=MENU.filter(m=>sold[m.id]).sort((a,b)=>sold[b.id]-sold[a.id]);
   h+='<div class="sec"><div class="sec-h"><h2>'+t("今日賣出（包括未埋單）","Sold today (incl. unpaid)")+'</h2></div><div class="card scroll"><table class="t"><thead><tr><th>'+t("餐點","Item")+'</th><th class="r">'+t("數量","Qty")+'</th></tr></thead><tbody>'+(rows.length?rows.map(m=>'<tr><td>'+esc(iname(m))+'</td><td class="r num">'+sold[m.id]+'</td></tr>').join(""):'<tr><td colspan="2" style="color:var(--muted)">'+t("今日未有訂單。","No orders yet today.")+'</td></tr>')+'</tbody></table></div></div>';
   h+='<div class="sec"><div class="sec-h"><h2>'+t("收款記錄","Payments")+'</h2></div><div class="card scroll"><table class="t"><thead><tr><th>'+t("時間","Time")+'</th><th>'+t("枱","Table")+'</th><th>'+t("方式","Method")+'</th><th class="r">'+t("金額","Amount")+'</th></tr></thead><tbody>';
-  h+=pays.length?pays.slice().reverse().map(p=>'<tr><td class="num">'+hhmm(p.at)+'</td><td>'+esc(tableLabel(p.table))+'</td><td>'+(p.m==="cash"?t("現金","Cash"):t("卡","Card"))+(p.disc?'<br><small style="color:var(--amber);font-weight:700">'+p.disc+'% off −'+money(p.discAmt)+' · '+(p.byName?esc(p.byName):(p.by==="manager"?t("經理","Manager"):t("員工","Staff")))+(p.discNote?' · '+esc(p.discNote):'')+'</small>':'')+'</td><td class="r num">'+money(p.amt)+'</td></tr>').join(""):'<tr><td colspan="4" style="color:var(--muted)">'+t("今日未有收款。","No payments yet today.")+'</td></tr>';
+  h+=pays.length?pays.slice().reverse().map(p=>'<tr><td class="num">'+hhmm(p.at)+'</td><td>'+esc(tableLabel(p.table))+'</td><td>'+(p.m==="cash"?t("現金","Cash"):t("卡","Card"))+(p.discAmt?'<br><small style="color:var(--amber);font-weight:700">'+esc(p.discLabel||(p.disc+"%"))+' off −'+money(p.discAmt)+' · '+(p.byName?esc(p.byName):(p.by==="manager"?t("經理","Manager"):t("員工","Staff")))+(p.discNote?' · '+esc(p.discNote):'')+'</small>':'')+'</td><td class="r num">'+money(p.amt)+'</td></tr>').join(""):'<tr><td colspan="4" style="color:var(--muted)">'+t("今日未有收款。","No payments yet today.")+'</td></tr>';
   h+='</tbody></table></div></div>';
+  const voids=orderList().filter(o=>o.void);
+  if(voids.length)h+='<div class="sec"><div class="sec-h"><h2>'+t("已作廢（唔計數）","Voided (not counted)")+'</h2></div><div class="card scroll"><table class="t"><tbody>'+voids.map(o=>'<tr><td class="num">'+no3(o)+'</td><td>'+esc(tableLabel(o.table))+'</td><td>'+esc(o.void.reason||"")+'</td><td>'+esc(o.void.by||"")+'</td><td class="r num">'+money(orderTotal(o))+'</td></tr>').join("")+'</tbody></table></div></div>';
   const logs=Object.keys(LOG).map(k=>LOG[k]).sort((a,b)=>(b.at||0)-(a.at||0)).slice(0,30);
   h+='<div class="sec"><div class="sec-h"><h2>'+t("操作記錄","Activity log")+'</h2></div><div class="card scroll"><table class="t"><tbody>'+(logs.length?logs.map(l=>'<tr><td class="num" style="width:64px">'+hhmm(l.at)+'</td><td>'+esc(EN()?l.en:l.zh)+'</td></tr>').join(""):'<tr><td style="color:var(--muted)">—</td></tr>')+'</tbody></table></div></div>';
   return h;
@@ -330,12 +340,13 @@ async function doPay(m){
     os.forEach(o=>{upd["ordering/orders/"+day+"/"+o.id+"/paid"]=true;upd["ordering/orders/"+day+"/"+o.id+"/paidBy"]=m;upd["ordering/orders/"+day+"/"+o.id+"/paidAt"]=now;});
     await db.ref().update(upd);
     const dn=U.discNote.trim().slice(0,60);
-    await db.ref("ordering/payments/"+day).push({at:now,table:tb,m,amt:B.n,gross:B.g,disc:U.disc,discAmt:B.d,discNote:dn,by:role,byName:myName,uid:user.uid,orders:os.map(o=>o.id)});
+    const dl=B.d?discLabel():"";
+    await db.ref("ordering/payments/"+day).push({at:now,table:tb,m,amt:B.n,gross:B.g,disc:U.disc===-1?(U.dcT==="pct"?Math.min(100,parseFloat(U.dcV)||0):0):U.disc,discLabel:dl,discAmt:B.d,discNote:dn,by:role,byName:myName,uid:user.uid,orders:os.map(o=>o.id)});
     const who=mgr()?"經理":"員工",whoEn=mgr()?"Manager":"Staff";
-    logIt(tableLabelZh(tb)+" 埋單 "+money(B.n)+"（"+(m==="cash"?"現金":"卡")+"）"+(U.disc?" · "+who+"俾 "+U.disc+"% off −"+money(B.d)+(dn?"（"+dn+"）":""):""),tb+" paid "+money(B.n)+" ("+m+")"+(U.disc?" · "+whoEn+" gave "+U.disc+"% off −"+money(B.d)+(dn?" ("+dn+")":""):""));
+    logIt(tableLabelZh(tb)+" 埋單 "+money(B.n)+"（"+(m==="cash"?"現金":"卡")+"）"+(B.d?" · "+who+"俾 "+dl+" off −"+money(B.d)+(dn?"（"+dn+"）":""):""),tb+" paid "+money(B.n)+" ("+m+")"+(B.d?" · "+whoEn+" gave "+dl+" off −"+money(B.d)+(dn?" ("+dn+")":""):""));
     const g=Math.round(parseFloat(U.cash||"0")*100);
     toast(t(tableLabel(tb)+" 已收 "+money(B.n)+(m==="cash"&&g>B.n?"，找 "+money(g-B.n):"")+"，已清枱",tableLabel(tb)+": "+money(B.n)+" paid"+(m==="cash"&&g>B.n?", change "+money(g-B.n):"")+". Table cleared."));
-    U.billT=null;U.cash="";U.disc=0;U.discNote="";
+    U.billT=null;U.cash="";U.disc=0;U.discNote="";U.dcV="";
   }catch(e){toast(t("儲存失敗，請再試。","Couldn't save. Try again."));}
   U.busy=false;render();
 }
@@ -348,7 +359,7 @@ document.addEventListener("submit",async e=>{
 });
 document.addEventListener("click",async e=>{
   const b=e.target.closest("[data-act]");if(!b)return;const a=b.dataset.act,v=b.dataset.v;
-  if(a!=="xline"&&a!=="resetstock")U.armed=null;
+  if(a!=="xline"&&a!=="resetstock"&&a!=="void"&&a!=="voidgo")U.armed=null;
   switch(a){
     case "lang":U.lang=v;try{localStorage.setItem("yoc_staff_lang",v);}catch(x){}render();break;
     case "logout":await auth.signOut();U.billT=null;break;
@@ -368,8 +379,19 @@ document.addEventListener("click",async e=>{
     case "optoff":{const k="opt:"+b.dataset.g+":"+v;const o=!!(P.off&&P.off[k]);await db.ref("ordering/public/off/"+k).set(o?null:true);break;}
     case "msave":{const zh=$("#mz-"+v).value.trim(),en=$("#me-"+v).value.trim();if(!zh||!en){toast(t("名唔可以留空","Names are required"));break;}await db.ref("ordering/public/names/"+v).set({zh,en});logIt("改名 "+zh,"Renamed "+en);toast(t("已儲存","Saved"));break;}
     case "resetstock":if(!mgr())break;if(U.armed!=="reset"){U.armed="reset";render();break;}U.armed=null;await db.ref("ordering/public/stock").set({pineapple:0,cocktail:0,sausage:0,eggtart:0});await db.ref("ordering/public/next").remove();logIt("限量歸 0","Bakery counts reset");toast(t("已歸 0","Reset to 0"));break;
-    case "billt":U.billT=v;U.cash="";U.disc=0;U.discNote="";render();break;
+    case "billt":U.billT=v;U.cash="";U.disc=0;U.discNote="";U.dcV="";render();break;
     case "disc":U.disc=+v;if(!U.disc)U.discNote="";render();break;
+    case "dct":U.dcT=v;U.dcV="";render();break;
+    case "void":U.armed="void:"+v;render();{const el=$("#vr-"+v);if(el)el.focus();}break;
+    case "voidno":render();break;
+    case "voidgo":{const o=ORD[v];const el=$("#vr-"+v);const reason=(el&&el.value||"").trim().slice(0,60);
+      if(!o||o.paid){U.armed=null;render();break;}
+      if(!reason){toast(t("請填作廢原因","Please enter a reason"));break;}
+      U.armed=null;
+      await db.ref("ordering/orders/"+day+"/"+v+"/void").set({at:firebase.database.ServerValue.TIMESTAMP,by:myName||role,reason});
+      for(const raw of (o.lines||[])){const it=raw&&byId[raw.itemId];if(it&&it.stock&&!raw.x)await db.ref("ordering/public/stock/"+it.stock).transaction(n=>(n||0)+(raw.qty|0));}
+      logIt("作廢 "+tableLabelZh(o.table)+" "+no3(o)+"（"+reason+"）","Voided "+o.table+" "+no3(o)+" ("+reason+")");
+      toast(t("已作廢","Voided"));render();break;}
     case "qcash":U.cash=v;render();break;
     case "pay":doPay(v);break;
   }
@@ -377,7 +399,8 @@ document.addEventListener("click",async e=>{
 document.addEventListener("change",e=>{const x=e.target;if(x.dataset.act==="next"){const k=x.dataset.k;db.ref("ordering/public/next/"+k).set(x.value||null);}});
 document.addEventListener("input",e=>{const x=e.target;
   if(x.dataset.act==="cash"){U.cash=x.value;const tot=billOf(U.billT).n,g=Math.round(parseFloat(U.cash||"0")*100),ch=g-tot;const c=$("#chg");if(c)c.textContent=U.cash&&ch>=0?money(ch):"—";}
-  if(x.dataset.act==="discnote")U.discNote=x.value;});
+  if(x.dataset.act==="discnote")U.discNote=x.value;
+  if(x.dataset.act==="dcv"){U.dcV=x.value;render();}});
 render();
 })();
 </script>

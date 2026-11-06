@@ -68,9 +68,11 @@ function reportFor(day) {
   if (!Object.keys(orders).length && !pays.length) { Logger.log(day + '：冇訂單，唔出日結。'); return; }
 
   /* per item: qty + amount (same pricing as staff page: Y.mkLine with Square prices in P) */
-  const sold = {}; let gross = 0, unpaid = 0, nOrders = 0; const cancelled = [];
+  const sold = {}; let gross = 0, unpaid = 0, nOrders = 0; const cancelled = [], voided = [];
   Object.keys(orders).forEach(id => {
-    const o = orders[id]; nOrders++; let oTotal = 0;
+    const o = orders[id];
+    if (o.void) { voided.push(tableLabel_(o.table) + ' #' + String(o.no || 0).padStart(3, '0') + ' ' + hhmm_(o.at) + '：' + (o.void.reason || '') + '（' + (o.void.by || '') + '）'); return; }   /* 作廢 = not counted */
+    nOrders++; let oTotal = 0;
     (o.lines || []).forEach(l => {
       const it = Y.byId[l.itemId]; if (!it) return;
       const qty = Math.max(1, Math.min(50, l.qty | 0));
@@ -119,9 +121,13 @@ function reportFor(day) {
   b.appendParagraph('收款記錄 Payments').setHeading(DocumentApp.ParagraphHeading.HEADING1);
   const pr = [['時間', '枱', '方式', '金額', '折扣', '經手']];
   pays.forEach(p => pr.push([hhmm_(p.at), tableLabel_(p.table), p.m === 'cash' ? '現金' : '卡', money_(p.amt),
-    p.disc ? p.disc + '% −' + money_(p.discAmt) + (p.discNote ? '（' + p.discNote + '）' : '') : '—', p.byName || (p.by === 'manager' ? '經理' : '員工')]));
+    p.discAmt ? (p.discLabel || p.disc + '%') + ' −' + money_(p.discAmt) + (p.discNote ? '（' + p.discNote + '）' : '') : '—', p.byName || (p.by === 'manager' ? '經理' : '員工')]));
   if (pays.length) table_(b, pr, [3]); else b.appendParagraph('今日未有收款記錄。');
 
+  if (voided.length) {
+    b.appendParagraph('已作廢（唔計數）Voided').setHeading(DocumentApp.ParagraphHeading.HEADING1);
+    voided.forEach(c => b.appendListItem(c));
+  }
   if (cancelled.length) {
     b.appendParagraph('已取消 Cancelled').setHeading(DocumentApp.ParagraphHeading.HEADING1);
     cancelled.forEach(c => b.appendListItem(c));

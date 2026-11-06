@@ -56,7 +56,7 @@ button,input,select,textarea{font:inherit;color:inherit}button{cursor:pointer}
 .sheet{background:var(--paper);width:100%;max-width:560px;max-height:88vh;overflow:auto;border-radius:16px 16px 0 0;padding:18px max(16px,env(safe-area-inset-right,0px)) calc(16px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
 .sheet h2{font-size:22px;font-weight:900}.sheet .sub{color:var(--muted);font-size:13px;margin:2px 0 8px}.sheet .tags{display:flex;gap:6px;flex-wrap:wrap}
 .grp{border-top:1px solid var(--line);padding:12px 0}.grp-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:8px}
-.gnote{margin:-2px 0 8px;font-size:13px;color:var(--muted)}.dbl{margin-left:6px;background:var(--green);color:var(--green-ink);border-radius:6px;padding:0 6px;font-size:13px}.grp-h b{font-size:15px}.grp-h span{font-size:12px;color:var(--muted)}.grp-h span.need{color:var(--red);font-weight:700}
+.staffbar{background:#9A5B00;color:#fff;font-weight:800;padding:8px 16px;text-align:center}.staffbar a{color:#fff;margin-left:8px}.gnote{margin:-2px 0 8px;font-size:13px;color:var(--muted)}.dbl{margin-left:6px;background:var(--green);color:var(--green-ink);border-radius:6px;padding:0 6px;font-size:13px}.grp-h b{font-size:15px}.grp-h span{font-size:12px;color:var(--muted)}.grp-h span.need{color:var(--red);font-weight:700}
 .choices{display:flex;flex-wrap:wrap;gap:8px}
 .choice{border:1.5px solid var(--line);background:var(--surface);border-radius:10px;padding:8px 12px;font-size:14.5px;text-align:left;min-height:44px}
 .choice small{color:var(--muted);margin-left:4px}.choice[aria-pressed="true"]{border-color:var(--green);background:var(--ok-soft);font-weight:700}.choice[disabled]{opacity:.4;text-decoration:line-through}
@@ -101,7 +101,9 @@ input.t,textarea.t{width:100%;border:1.5px solid var(--line);background:var(--su
 const Y=window.YO,G=Y.G,CATS=Y.CATS,MENU=Y.MENU,byId=Y.byId;
 const qs=new URLSearchParams(location.search);
 const CODE=(qs.get("t")||"").toUpperCase(),KEYTOK=qs.get("k")||"";
-const VALID=(Y.TABLES.includes(CODE)||CODE==="TA")&&KEYTOK.length>=4;
+/* staff=1: staff adding items for a table from the back office (signed in with their SHK account; no QR key) */
+const STAFF=qs.get("staff")==="1";
+const VALID=(Y.TABLES.includes(CODE)||CODE==="TA"||(STAFF&&/^W\d{2,}$/.test(CODE)))&&(KEYTOK.length>=4||STAFF);
 const isTA=CODE==="TA";
 let P={}; let ready=false, online=true;
 const U={lang:"zh",cat:"allday",cart:[],view:"menu",sheet:null,bad:{},err:"",name:"",allergy:"",note:"",last:null,busy:false};
@@ -191,7 +193,7 @@ function renderDone(){
   const o=U.last||{};
   let h='<div class="wrap"><div class="done"><div class="big">'+esc(o.table||"")+'</div><h2>'+t("已收到訂單！","Order received!")+'</h2><p>#'+String(o.no||"").padStart(3,"0")+'</p>';
   h+=isTA?'<p>'+t("準備好會叫「"+esc(o.name)+"」，取餐時付款。","We will call “"+esc(o.name)+"” when it's ready. Pay when you collect.")+'</p>':'<p>'+t("我哋會送到你張枱。想加單可以再落單，食完先埋單。","We'll bring it to your table. Order more any time; pay at the end.")+'</p>';
-  h+='<div style="margin-top:18px"><button class="btn green" data-act="view" data-v="menu">'+t("再加單","Order more")+'</button></div></div></div>';
+  h+='<div style="margin-top:18px"><button class="btn green" data-act="view" data-v="menu">'+t("再加單","Order more")+'</button>'+(STAFF?' <a class="btn ghost" href="/yauoicafe/staff/">'+t("返後台","Back to staff page")+'</a>':'')+'</div></div></div>';
   return h;
 }
 function render(){
@@ -199,14 +201,15 @@ function render(){
   $("#l-zh").setAttribute("aria-pressed",!EN());$("#l-en").setAttribute("aria-pressed",EN());
   if(!ready)return;
   if(!VALID){$("#app").innerHTML=renderMenu();return;}  /* no table code: browse the menu only */
-  $("#app").innerHTML=U.view==="done"?renderDone():(U.view==="cart"?renderCart():renderMenu())+renderSheet();
+  $("#app").innerHTML=(STAFF?'<div class="staffbar">'+t("員工代客落單","Staff adding items")+' · '+esc(CODE)+' <a href="/yauoicafe/staff/">'+t("← 返後台","← Back to staff page")+'</a></div>':'')+(U.view==="done"?renderDone():(U.view==="cart"?renderCart():renderMenu())+renderSheet());
 }
 
 /* ---------- Firebase ---------- */
 let db=null;
 {
   firebase.initializeApp(Y.FIREBASE);db=firebase.database();
-  if(VALID)firebase.auth().signInAnonymously().catch(()=>{U.err=t("連線失敗，請請員工幫手。","Couldn't connect. Please ask staff.");});
+  if(VALID&&STAFF)firebase.auth().onAuthStateChanged(u=>{if(!u||u.isAnonymous){U.err=t("請先喺後台登入，再撳「幫客加餐」。","Sign in to the staff page first, then tap Add items.");render();}});
+  else if(VALID)firebase.auth().signInAnonymously().catch(()=>{U.err=t("連線失敗，請請員工幫手。","Couldn't connect. Please ask staff.");});
   db.ref("ordering/public").on("value",s=>{P=s.val()||{};const first=!ready;ready=true;if(first||(U.view==="menu"&&!U.sheet))render();},()=>{ready=true;render();});
   db.ref(".info/connected").on("value",s=>{const was=online;online=!!s.val();if(was!==online&&U.view==="menu"&&!U.sheet)render();});
 }
@@ -228,7 +231,7 @@ async function submit(){
     const c=await db.ref("ordering/counter/"+day).transaction(n=>(n||0)+1);const no=c.snapshot.val();
     let table=CODE;if(isTA){const w=await db.ref("ordering/wcounter/"+day).transaction(n=>(n||0)+1);table="W"+String(w.snapshot.val()).padStart(2,"0");}
     const lines=U.cart.map(l=>({itemId:l.itemId,qty:l.qty,sel:Y.cleanSel(byId[l.itemId],l.sel)||{}}));
-    await db.ref("ordering/orders/"+day).push({code:CODE,k:KEYTOK,table,name:isTA?U.name:"",no,status:"new",at:firebase.database.ServerValue.TIMESTAMP,lang:U.lang,allergy:U.allergy.trim().slice(0,200),note:U.note.trim().slice(0,200),lines});
+    await db.ref("ordering/orders/"+day).push({code:CODE,k:STAFF?"staff":KEYTOK,staff:STAFF||null,table,name:isTA?U.name:"",no,status:"new",at:firebase.database.ServerValue.TIMESTAMP,lang:U.lang,allergy:U.allergy.trim().slice(0,200),note:U.note.trim().slice(0,200),lines});
     U.last={table,no,name:U.name};U.cart=[];U.name="";U.allergy="";U.note="";U.view="done";U.busy=false;render();window.scrollTo(0,0);
   }catch(e){U.busy=false;U.err=t("落單失敗，請搵員工幫手。","We couldn't place your order. Please ask a member of staff.");render();}
 }

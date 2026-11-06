@@ -9,7 +9,7 @@
 const { onRequest } = require("firebase-functions/v2/https");
 const { onValueCreated } = require("firebase-functions/v2/database");
 const admin = require("firebase-admin");
-const { groups, slipCanvas, starprnt, stackPng, STATIONS } = require("./slips");
+const { groups, noticeRows, slipCanvas, starprnt, stackPng, STATIONS } = require("./slips");
 const STARPRNT = "application/vnd.star.starprnt";
 
 admin.initializeApp();
@@ -36,6 +36,20 @@ exports.queueSlips = onValueCreated({ ref: "/ordering/orders/{day}/{oid}", regio
   await db.ref(`${Q}/${at}_${oid}`).set({ day, oid, at, tries: 0 });
 });
 
+/* cancel / void AFTER the slips were printed -> print a notice so the kitchen and bar stop making it */
+async function queueNotice(day, oid, kind, extra) {
+  const o = (await db.ref(`ordering/orders/${day}/${oid}`).get()).val();
+  if (!o || !o.print) return;                       /* not printed yet: the main job simply leaves it out */
+  const at = Date.now();
+  await db.ref(`${Q}/${at}_${oid}_${kind}${extra != null ? extra : ""}`).set({ day, oid, at, tries: 0, notice: kind, line: extra != null ? extra : null });
+}
+exports.cancelNotice = onValueCreated({ ref: "/ordering/orders/{day}/{oid}/lines/{i}/x", region: REGION }, async ev => {
+  if (ev.data.val() === true) await queueNotice(ev.params.day, ev.params.oid, "cancel", +ev.params.i);
+});
+exports.voidNotice = onValueCreated({ ref: "/ordering/orders/{day}/{oid}/void", region: REGION }, async ev => {
+  await queueNotice(ev.params.day, ev.params.oid, "void");
+});
+
 async function nextJob() {
   const s = await db.ref(Q).orderByKey().limitToFirst(5).get();
   const now = Date.now(); let job = null; const drop = {};
@@ -51,6 +65,13 @@ async function render(key, type) {
   const j = (await db.ref(`${Q}/${key}`).get()).val(); if (!j) return null;
   const [oSnap, P] = [await db.ref(`ordering/orders/${j.day}/${j.oid}`).get(), await publicData()];
   const o = oSnap.val(); if (!o) return null;
+  if (j.notice) {
+    const rows = j.notice === "cancel" ? noticeRows(o, P, [j.line]) : noticeRows(o, P, (o.lines || []).map((l, i) => i).filter(i => !(o.lines[i] || {}).x));
+    if (!rows.length) return null;
+    const c = slipCanvas(Object.assign({}, o, { allergy: "", note: j.notice === "void" && o.void ? "原因：" + o.void.reason : "" }), j.notice, rows, { time: hhmm(Date.now()) });
+    return type === STARPRNT ? starprnt([c]) : stackPng([c]);
+  }
+  if (o.void) return null;                          /* voided before printing: nothing to print */
   const g = groups(o, P), sts = stationsOf(j, g); if (!sts.length) return null;
   /* add-on = same table already had an earlier unpaid order today (same rule as staff page) */
   const all = (await db.ref(`ordering/orders/${j.day}`).get()).val() || {};
@@ -63,7 +84,8 @@ async function render(key, type) {
 async function confirm(mac, key, code) {
   const ok = /^2/.test(code || "");
   const ref = db.ref(`${Q}/${key}`); const j = (await ref.get()).val(); if (!j) return;
-  const mark = v => { const u = { [`${Q}/${key}`]: null }; (j.st ? [j.st] : STATIONS).forEach(st => { u[`ordering/orders/${j.day}/${j.oid}/print/${st}`] = v; }); return u; };
+  const mark = v => { const u = { [`${Q}/${key}`]: null };
+    (j.notice ? [j.notice + (j.line != null ? "_" + j.line : "")] : j.st ? [j.st] : STATIONS).forEach(st => { u[`ordering/orders/${j.day}/${j.oid}/print/${st}`] = v; }); return u; };
   if (ok) await db.ref().update(mark(Date.now()));
   else if ((j.tries || 0) + 1 >= MAX_TRIES) await db.ref().update(mark("fail:" + code));
   else await ref.child("tries").set((j.tries || 0) + 1);

@@ -19,7 +19,14 @@ const W = 576;            /* 72 mm print width at 203 dpi */
 const PAD = 8;
 
 const STATIONS = ["kitchen", "bar", "floor"];
-const TITLE = { kitchen: "廚房 KITCHEN", bar: "水吧 BAR", floor: "樓面 FLOOR · 埋單用" };
+const TITLE = { kitchen: "廚房 KITCHEN", bar: "水吧 BAR", floor: "樓面 FLOOR · 埋單用", cancel: "⚠ 取消 CANCEL · 唔使做", void: "⚠ 整張作廢 VOID · 唔使做" };
+
+/* rows for a cancel / void notice: the line(s) that no longer need making */
+function noticeRows(o, P, idxs) {
+  return idxs.map(i => (o.lines || [])[i]).filter(l => l && byId[l.itemId]).map(l => {
+    const ln = Y.mkLine(l.itemId, Math.max(1, Math.min(50, l.qty | 0)), l.sel || {}, P);
+    return { q: ln.qty, name: Y.itemName(byId[l.itemId], P, "zh"), sub: ln.desc.map(x => x.zh).join("、") }; });
+}
 
 /* -> { kitchen:[{q,name,sub,al}], bar:[...], floor:[...] }  (empty stations omitted) */
 function groups(o, P) {
@@ -155,4 +162,4 @@ function stackPng(canvases) {
   return out.toBuffer("image/png");
 }
 
-module.exports = { Y, groups, renderSlip, slipCanvas, starprnt, stackPng, STATIONS };
+module.exports = { Y, groups, noticeRows, renderSlip, slipCanvas, starprnt, stackPng, STATIONS };
