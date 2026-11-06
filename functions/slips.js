@@ -98,22 +98,22 @@ function slipCanvas(o, station, rows, meta) {
     y += 72;
     const tbl = o.table && o.table.startsWith("W") ? "外賣 " + o.table : (o.table || "?") + (o.sub ? "-" + o.sub : "");
     text(tbl, 96, PAD, { gap: 4 });
-    text(`#${String(o.no || 0).padStart(3, "0")}  ${meta.time}${o.name ? "  " + o.name : ""}${meta.addOn ? "  【加單】" : ""}`, 30, PAD);
-    if (meta.reprint) text("重印 REPRINT", 30, PAD, { invert: true });
+    text(`#${String(o.no || 0).padStart(3, "0")}  ${meta.time}${o.name ? "  " + o.name : ""}${meta.addOn ? "  【加單】" : ""}`, 36, PAD);
+    if (meta.reprint) text("重印 REPRINT", 36, PAD, { invert: true });
     rule();
 
     const money = p => "£" + (p / 100).toFixed(2);
     const right = (s, size, yy) => { if (!paint) return; ctx.font = `${size}px HK`; ctx.fillStyle = "#000"; ctx.fillText(s, W - PAD - ctx.measureText(s).width, yy + size * 0.88); };
-    const PRICE_W = 150;   /* right column for prices on the floor slip */
+    const PRICE_W = 170;   /* right column for prices on the floor slip */
     rows.forEach(r => {
-      const hasP = r.price != null, fs = hasP ? 40 : 48;   /* bill slip: smaller names, fewer wraps */
-      const qx = PAD, nx = PAD + (hasP ? 72 : 86);
+      const hasP = r.price != null, fs = hasP ? 48 : 58;   /* bill slip: smaller names, fewer wraps */
+      const qx = PAD, nx = PAD + (hasP ? 86 : 104);
       ctx.font = `${fs}px HK`;
       if (paint) { ctx.fillStyle = "#000"; ctx.fillText(r.q + "×", qx, y + fs * 0.88); }
-      if (hasP) right(money(r.price), 40, y);
+      if (hasP) right(money(r.price), 48, y);
       text(r.name, fs, nx, { gap: 6, maxW: W - nx - PAD - (hasP ? PRICE_W : 0) });
-      if (r.sub) text(r.sub, 32, nx, { gap: 6 });
-      if (r.al && r.al.length) text("含：" + r.al.join("、"), 28, nx, { invert: true, gap: 10 });
+      if (r.sub) text(r.sub, 40, nx, { gap: 6 });
+      if (r.al && r.al.length) text("含：" + r.al.join("、"), 34, nx + 6, { invert: true, gap: 12, maxW: W - nx - PAD - 18 });
       y += 10;
     });
 
@@ -122,10 +122,10 @@ function slipCanvas(o, station, rows, meta) {
       rule();
       if (paint) { ctx.font = "56px HK"; ctx.fillStyle = "#000"; ctx.fillText("合共", PAD, y + 56 * 0.88); }
       right(money(total), 64, y - 4); y += 76;
-      text("折扣喺埋單時先計" + (meta.addOn ? " · 呢張係加單，埋單要連前面張單一齊計" : ""), 26, PAD);
+      text("折扣喺收錢時先計", 30, PAD);
     }
-    if (o.allergy) { rule(); text("⚠ 過敏：" + o.allergy, 36, PAD, { invert: true, gap: 12, maxW: W - PAD * 2 - 12 }); }
-    if (o.note) { rule(o.allergy ? 0 : 3); text("備註：" + o.note, 32, PAD); }
+    if (o.allergy) { rule(); text("⚠ 過敏：" + o.allergy, 44, PAD, { invert: true, gap: 12, maxW: W - PAD * 2 - 12 }); }
+    if (o.note) { rule(o.allergy ? 0 : 3); text("【備註】" + o.note, 42, PAD, { invert: true, gap: 12, maxW: W - PAD * 2 - 12 }); }
     y += 24;
     return y;
   };

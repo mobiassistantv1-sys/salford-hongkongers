@@ -23,7 +23,8 @@ button,input,select,textarea{font:inherit;color:inherit}button{cursor:pointer}
 .band-in{max-width:560px;margin:0 auto;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .wordmark{font-family:var(--f-display);font-size:22px;letter-spacing:.06em;line-height:1}
 .wordmark small{display:block;font-family:var(--f-body);font-size:10.5px;letter-spacing:.18em;font-weight:500;opacity:.85;margin-top:3px}
-.lang{margin-left:auto;display:flex;background:var(--green-ink);padding:4px;border-radius:12px}
+.fz{margin-left:auto;display:flex;gap:4px}.fz button{border:2px solid var(--green-ink);background:transparent;color:var(--green-ink);font-weight:900;font-size:18px;line-height:1;padding:8px 10px;border-radius:10px;min-width:48px;min-height:44px}.fz button:disabled{opacity:.4}
+.lang{display:flex;background:var(--green-ink);padding:4px;border-radius:12px}
 .lang button{border:0;background:transparent;color:var(--green);font-weight:900;font-size:17px;padding:8px 16px;border-radius:9px;min-width:64px;line-height:1.1}
 .lang button[aria-pressed="true"]{background:var(--green);color:var(--green-ink)}
 .wrap{max-width:560px;margin:0 auto}
@@ -86,6 +87,7 @@ input.t,textarea.t{width:100%;border:1.5px solid var(--line);background:var(--su
 <body>
 <header class="band"><div class="band-in">
   <a href="/yauoicafe/" class="logo"><img src="/yauoicafe/assets/yau-oi-logo-320.jpg" alt="友愛冰室 Yau Oi Cafe" width="112" height="55"></a>
+  <div class="fz" role="group" aria-label="字體大小 Text size"><button data-act="fz" data-v="-1" aria-label="字細啲 Smaller text">A−</button><button data-act="fz" data-v="1" aria-label="字大啲 Larger text">A＋</button></div>
   <div class="lang" role="group" aria-label="Language 語言">
     <button id="l-zh" data-act="lang" data-v="zh" lang="zh-Hant">中文</button>
     <button id="l-en" data-act="lang" data-v="en" lang="en">English</button>
@@ -111,6 +113,9 @@ const isTA=CODE==="TA";
 let P={}; let ready=false, online=true;
 const U={lang:"zh",cat:"allday",cart:[],view:"menu",sheet:null,bad:{},err:"",name:"",allergy:"",note:"",last:null,busy:false};
 try{U.lang=localStorage.getItem("yoc_lang")||"zh";}catch(e){}
+/* 字體放大: level 0 = normal, 1–4 = bigger (for older customers) */
+const FZ=[1,1.15,1.3,1.45,1.6];U.fz=0;try{U.fz=Math.max(0,Math.min(4,parseInt(localStorage.getItem("yoc_fz")||"0",10)||0));}catch(e){}
+function applyFz(){const a=document.getElementById("app");if(a)a.style.zoom=FZ[U.fz];document.querySelectorAll('[data-act="fz"]').forEach(b=>{b.disabled=b.dataset.v==="1"?U.fz>=4:U.fz<=0;});}
 
 const $=s=>document.querySelector(s);
 const EN=()=>U.lang==="en";const t=(zh,en)=>EN()?en:zh;
@@ -202,7 +207,7 @@ function renderDone(){
 }
 function render(){
   document.documentElement.lang=EN()?"en":"zh-Hant";
-  $("#l-zh").setAttribute("aria-pressed",!EN());$("#l-en").setAttribute("aria-pressed",EN());
+  applyFz();$("#l-zh").setAttribute("aria-pressed",!EN());$("#l-en").setAttribute("aria-pressed",EN());
   if(!ready)return;
   if(!VALID){$("#app").innerHTML=renderMenu();return;}  /* no table code: browse the menu only */
   $("#app").innerHTML=(STAFF?'<div class="staffbar">'+t("員工代客落單","Staff adding items")+' · '+esc(CODE)+' <a href="/yauoicafe/staff/">'+t("← 返後台","← Back to staff page")+'</a></div>':'')+(U.view==="done"?renderDone():(U.view==="cart"?renderCart():renderMenu())+renderSheet());
@@ -240,6 +245,7 @@ async function waitAuth(){
 }
 async function submit(){
   if(U.busy)return;U.err="";U.errCode="";U.bad={};
+  [["name","name"],["allergy","allergy"],["note","note"]].forEach(([a,k])=>{const el=document.querySelector('[data-act="'+a+'"]');if(el)U[k]=el.value;});
   if(isTA){U.name=U.name.trim();if(!U.name){U.err=t("外賣請填取餐名稱。","Please enter a name for collection.");render();return;}}
   const need={};U.cart.forEach(l=>{const it=byId[l.itemId];if(off(it.id)||Y.hiddenItem(it))U.bad[l.lid]=t(iname(it)+" 啱啱售完，請刪除或修改。",iname(it)+" just sold out. Please remove or change it.");if(it.stock)need[it.stock]=(need[it.stock]||0)+l.qty;});
   if(Object.keys(U.bad).length){U.err=t("有餐點剛剛賣晒，其他餐點已保留，請修改後再提交。","Something just sold out. The rest of your order is kept — please update it and place it again.");render();return;}
@@ -251,7 +257,10 @@ async function submit(){
     stage="counter";const no=await nextNo("ordering/counter/"+day);
     let table=CODE;if(isTA){stage="wcounter";table="W"+String(await nextNo("ordering/wcounter/"+day)).padStart(2,"0");}
     stage="stock";
-    if(Object.keys(need).length){
+    const srv=!!P.srvStock;
+    if(srv){for(const k in need)if(stockOf(k)<need[k]){const left=stockOf(k);U.cart.forEach(l=>{if(byId[l.itemId].stock===k)U.bad[l.lid]=t(Y.STOCK.find(s=>s.k===k).zh+" 只剩 "+left+" 個，請修改數量。","Only "+left+" "+Y.STOCK.find(s=>s.k===k).en+" left. Please change the quantity.");});
+      U.err=t("有餐點剛剛賣晒，其他餐點已保留，請修改後再提交。","Something just sold out. The rest of your order is kept — please update it and place it again.");U.busy=false;render();return;}}
+    else if(Object.keys(need).length){
       let short=null;
       const r=await db.ref("ordering/public/stock").transaction(cur=>{if(!cur)return cur;for(const k in need){if((cur[k]||0)<need[k]){short=k;return;}}for(const k in need)cur[k]-=need[k];return cur;});
       if(!r.committed){const k=short;const left=stockOf(k);U.cart.forEach(l=>{if(byId[l.itemId].stock===k)U.bad[l.lid]=t(Y.STOCK.find(s=>s.k===k).zh+" 只剩 "+left+" 個，請修改數量。","Only "+left+" "+Y.STOCK.find(s=>s.k===k).en+" left. Please change the quantity.");});
@@ -259,8 +268,8 @@ async function submit(){
     }
     stage="order";
     const lines=U.cart.map(l=>({itemId:l.itemId,qty:l.qty,sel:Y.cleanSel(byId[l.itemId],l.sel)||{}}));
-    const took=Object.keys(need).length?need:null;
-    const order={code:CODE,k:STAFF?"staff":KEYTOK,staff:STAFF||null,table,name:isTA?U.name:"",no,status:"new",at:firebase.database.ServerValue.TIMESTAMP,lang:U.lang,allergy:U.allergy.trim().slice(0,200),note:U.note.trim().slice(0,200),lines};
+    const took=!srv&&Object.keys(need).length?need:null;
+    const order={code:CODE,k:STAFF?"staff":KEYTOK,staff:STAFF||null,table,name:isTA?U.name:"",no,status:"new",at:firebase.database.ServerValue.TIMESTAMP,lang:U.lang,allergy:U.allergy.trim().slice(0,200),note:U.note.trim().slice(0,200),lines,srv:srv?1:null};
     /* one retry for a network blip; a refusal (wrong QR key) fails the same way twice */
     try{await db.ref("ordering/orders/"+day).push(order);}
     catch(e1){if(String(e1&&e1.code||e1).toLowerCase().includes("permission")){e1.took=took;throw e1;}await new Promise(r=>setTimeout(r,1500));try{await db.ref("ordering/orders/"+day).push(order);}catch(e2){e2.took=took;throw e2;}}
@@ -273,6 +282,7 @@ document.addEventListener("click",e=>{
   const b=e.target.closest("[data-act]");if(!b)return;const a=b.dataset.act,v=b.dataset.v;
   if(a==="close-bg"&&e.target!==b)return;
   switch(a){
+    case "fz":U.fz=Math.max(0,Math.min(4,U.fz+Number(v)));try{localStorage.setItem("yoc_fz",U.fz);}catch(x){}applyFz();toast(t(["標準字","大字","特大字","超大字","最大字"][U.fz],["Normal text","Large","Larger","Extra large","Largest"][U.fz]));break;
     case "lang":U.lang=v;U.err="";U.bad={};try{localStorage.setItem("yoc_lang",v);}catch(x){}render();break;
     case "cat":U.cat=v;render();{const el=document.getElementById("cat-"+v);if(el)el.scrollIntoView({behavior:"smooth",block:"start"});}break;
     case "open":if(!VALID)break;{const it=byId[v];U.sheet={id:v,qty:1,sel:{},edit:null,tried:false};if(it.iced)U.sheet.sel.__iced=true;render();break;}
