@@ -44,7 +44,7 @@ button,input,select,textarea{font:inherit;color:inherit}button{cursor:pointer}
 .item .pr small{display:block;font-size:11.5px;font-weight:500;color:var(--muted)}
 .item.has-img{grid-template-columns:72px 1fr auto}.item.has-img .thumb{grid-row:1/span 3;grid-column:1;width:72px;height:72px;border-radius:12px;object-fit:cover;align-self:start}
 .item.has-img .nm,.item.has-img .en{grid-column:2}.item.has-img .tags{grid-column:2/-1}.item.has-img .pr{grid-column:3}
-.sheetimg{display:block;width:100%;max-width:200px;aspect-ratio:1;margin:0 auto 10px;border-radius:16px;object-fit:cover}
+.imgcap{text-align:center;font-size:12px;color:var(--muted);margin:-4px 0 8px}.sheetimg{display:block;width:100%;max-width:200px;height:auto;aspect-ratio:1;margin:0 auto 10px;border-radius:16px;object-fit:cover}
 .item .tags{grid-column:1/-1;display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
 .item[disabled]{cursor:not-allowed}.item[disabled] .nm,.item[disabled] .pr,.item[disabled] .en{opacity:.45}
 .tag{font-size:11.5px;font-weight:700;border-radius:6px;padding:2px 7px}
@@ -162,7 +162,7 @@ function ruleText(g){if(g.min===g.max)return t("必揀 "+g.min,"Choose "+g.min);
 function renderSheet(){
   const sh=U.sheet;if(!sh)return "";const it=byId[sh.id];
   let h='<div class="overlay" data-act="close-bg"><div class="sheet" role="dialog" aria-modal="true" aria-label="'+esc(iname(it))+'">';
-  if(it.img)h+='<img class="sheetimg" src="/yauoicafe/assets/menu/'+it.id+'.webp" alt="'+esc(iname(it))+'" width="480" height="480">';
+  if(it.img)h+='<img class="sheetimg" src="/yauoicafe/assets/menu/'+it.id+'.webp" alt="'+esc(iname(it))+'" width="480" height="480">'+(it.imgCap?'<p class="imgcap">'+esc(nm(it.imgCap))+'</p>':'');
   h+='<h2>'+esc(iname(it))+'</h2><div class="sub">'+(EN()?'':esc(Y.itemName(it,P,"en"))+' · ')+'<span class="num">'+money(Y.itemPrice(it,P,false))+'</span></div><div class="tags">'+stockTag(it)+allergyTags(it)+'</div>';
   it.g.forEach(k=>{const g=G[k],sel=sh.sel[g.id]||[];const need=g.min>0&&Y.selCount(g,sel)<g.min;
     h+='<div class="grp"><div class="grp-h"><b>'+nm(g)+'</b><span class="'+(need&&sh.tried?"need":"")+'">'+ruleText(g)+'</span></div>'+(g.note?'<p class="gnote">'+esc(nm(g.note))+'</p>':'')+'<div class="choices">';
