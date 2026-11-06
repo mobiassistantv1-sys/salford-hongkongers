@@ -231,6 +231,13 @@ async function nextNo(path){
   }
   throw last;
 }
+/* phone just opened / network blip: wait up to 8 s for the anonymous sign-in instead of failing */
+async function waitAuth(){
+  if(firebase.auth().currentUser)return true;
+  if(!STAFF)firebase.auth().signInAnonymously().catch(()=>{});
+  for(let i=0;i<16;i++){await new Promise(r=>setTimeout(r,500));if(firebase.auth().currentUser)return true;}
+  return false;
+}
 async function submit(){
   if(U.busy)return;U.err="";U.errCode="";U.bad={};
   if(isTA){U.name=U.name.trim();if(!U.name){U.err=t("外賣請填取餐名稱。","Please enter a name for collection.");render();return;}}
@@ -238,7 +245,11 @@ async function submit(){
   if(Object.keys(U.bad).length){U.err=t("有餐點剛剛賣晒，其他餐點已保留，請修改後再提交。","Something just sold out. The rest of your order is kept — please update it and place it again.");render();return;}
   U.busy=true;render();let stage="auth";
   try{
-    if(!firebase.auth().currentUser)throw Object.assign(new Error("not signed in"),{code:"NO_AUTH"});
+    if(!(await waitAuth()))throw Object.assign(new Error("not signed in"),{code:"NO_AUTH"});
+    /* number first: if the counter fails, no bakery stock has been taken yet */
+    const day=Y.dayKey();
+    stage="counter";const no=await nextNo("ordering/counter/"+day);
+    let table=CODE;if(isTA){stage="wcounter";table="W"+String(await nextNo("ordering/wcounter/"+day)).padStart(2,"0");}
     stage="stock";
     if(Object.keys(need).length){
       let short=null;
@@ -246,14 +257,15 @@ async function submit(){
       if(!r.committed){const k=short;const left=stockOf(k);U.cart.forEach(l=>{if(byId[l.itemId].stock===k)U.bad[l.lid]=t(Y.STOCK.find(s=>s.k===k).zh+" 只剩 "+left+" 個，請修改數量。","Only "+left+" "+Y.STOCK.find(s=>s.k===k).en+" left. Please change the quantity.");});
         U.err=t("有餐點剛剛賣晒，其他餐點已保留，請修改後再提交。","Something just sold out. The rest of your order is kept — please update it and place it again.");U.busy=false;render();return;}
     }
-    const day=Y.dayKey();
-    stage="counter";const no=await nextNo("ordering/counter/"+day);
-    let table=CODE;if(isTA){stage="wcounter";table="W"+String(await nextNo("ordering/wcounter/"+day)).padStart(2,"0");}
     stage="order";
     const lines=U.cart.map(l=>({itemId:l.itemId,qty:l.qty,sel:Y.cleanSel(byId[l.itemId],l.sel)||{}}));
-    await db.ref("ordering/orders/"+day).push({code:CODE,k:STAFF?"staff":KEYTOK,staff:STAFF||null,table,name:isTA?U.name:"",no,status:"new",at:firebase.database.ServerValue.TIMESTAMP,lang:U.lang,allergy:U.allergy.trim().slice(0,200),note:U.note.trim().slice(0,200),lines});
+    const took=Object.keys(need).length?need:null;
+    const order={code:CODE,k:STAFF?"staff":KEYTOK,staff:STAFF||null,table,name:isTA?U.name:"",no,status:"new",at:firebase.database.ServerValue.TIMESTAMP,lang:U.lang,allergy:U.allergy.trim().slice(0,200),note:U.note.trim().slice(0,200),lines};
+    /* one retry for a network blip; a refusal (wrong QR key) fails the same way twice */
+    try{await db.ref("ordering/orders/"+day).push(order);}
+    catch(e1){if(String(e1&&e1.code||e1).toLowerCase().includes("permission")){e1.took=took;throw e1;}await new Promise(r=>setTimeout(r,1500));try{await db.ref("ordering/orders/"+day).push(order);}catch(e2){e2.took=took;throw e2;}}
     U.last={table,no,name:U.name};U.cart=[];U.name="";U.allergy="";U.note="";U.view="done";U.busy=false;render();window.scrollTo(0,0);
-  }catch(e){U.busy=false;U.err=t("落單失敗，請搵員工幫手。","We couldn't place your order. Please ask a member of staff.");U.errCode=stage+" / "+String(e&&(e.code||e.message)||e).slice(0,60);try{console.error("order failed",stage,e);}catch(x){}render();}
+  }catch(e){U.busy=false;U.err=t("落單失敗，請搵員工幫手。","We couldn't place your order. Please ask a member of staff.");U.errCode=stage+" / "+String(e&&(e.code||e.message)||e).slice(0,60)+(e&&e.took?" · "+t("已扣麵包：","bakery taken: ")+Object.keys(e.took).map(k=>{const s=Y.STOCK.find(x=>x.k===k);return (s?t(s.zh,s.en):k)+" ×"+e.took[k];}).join(t("、",", "))+t("（請員工加返）"," (staff: add back)"):"");try{console.error("order failed",stage,e);}catch(x){}render();}
 }
 
 /* ---------- events ---------- */
