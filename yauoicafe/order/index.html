@@ -42,6 +42,9 @@ button,input,select,textarea{font:inherit;color:inherit}button{cursor:pointer}
 .item .nm{font-size:17px;font-weight:700;min-width:0}.item .en{font-size:12.5px;color:var(--muted);grid-column:1}
 .item .pr{font-weight:900;color:var(--red);font-size:17px;grid-row:1;grid-column:2;text-align:right}
 .item .pr small{display:block;font-size:11.5px;font-weight:500;color:var(--muted)}
+.item.has-img{grid-template-columns:72px 1fr auto}.item.has-img .thumb{grid-row:1/span 3;grid-column:1;width:72px;height:72px;border-radius:12px;object-fit:cover;align-self:start}
+.item.has-img .nm,.item.has-img .en{grid-column:2}.item.has-img .tags{grid-column:2/-1}.item.has-img .pr{grid-column:3}
+.sheetimg{display:block;width:100%;max-width:200px;aspect-ratio:1;margin:0 auto 10px;border-radius:16px;object-fit:cover}
 .item .tags{grid-column:1/-1;display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
 .item[disabled]{cursor:not-allowed}.item[disabled] .nm,.item[disabled] .pr,.item[disabled] .en{opacity:.45}
 .tag{font-size:11.5px;font-weight:700;border-radius:6px;padding:2px 7px}
@@ -148,7 +151,7 @@ function renderMenu(){
       const out=avail(m)<=0,left=m.stock?avail(m)-cartUse(m.stock):1;
       const sub=EN()?(m.d?m.d.en:""):[Y.itemName(m,P,"en"),m.d?m.d.zh:""].filter(Boolean).join(" · ");
       const base=Y.itemPrice(m,P,false),tp=m.g.includes("toastsw")?Y.itemPrice(m,P,true)-base:0;
-      h+='<button class="item" data-act="open" data-v="'+m.id+'"'+(out?" disabled":"")+'><span class="nm">'+esc(iname(m))+'</span><span class="pr num">'+money(base)+(tp?'<small>'+t("烘底 +","Toasted +")+money(tp)+'</small>':'')+'</span>'+(sub?'<span class="en">'+esc(sub)+'</span>':'')+'<span class="tags">'+stockTag(m)+(out?'':allergyTags(m))+(m.stock&&!out&&left<=0?'<span class="tag low">'+t("已全部放入訂單","All left are in your order")+'</span>':'')+'</span></button>';});
+      h+='<button class="item'+(m.img?' has-img':'')+'" data-act="open" data-v="'+m.id+'"'+(out?" disabled":"")+'>'+(m.img?'<img class="thumb" src="/yauoicafe/assets/menu/'+m.id+'.webp" alt="" loading="lazy" width="72" height="72">':'')+'<span class="nm">'+esc(iname(m))+'</span><span class="pr num">'+money(base)+(tp?'<small>'+t("烘底 +","Toasted +")+money(tp)+'</small>':'')+'</span>'+(sub?'<span class="en">'+esc(sub)+'</span>':'')+'<span class="tags">'+stockTag(m)+(out?'':allergyTags(m))+(m.stock&&!out&&left<=0?'<span class="tag low">'+t("已全部放入訂單","All left are in your order")+'</span>':'')+'</span></button>';});
     h+='</div></section>';});
   h+='</div>';
   const n=U.cart.reduce((a,l)=>a+l.qty,0),tot=U.cart.reduce((a,l)=>a+lineTotal(l),0);
@@ -159,6 +162,7 @@ function ruleText(g){if(g.min===g.max)return t("必揀 "+g.min,"Choose "+g.min);
 function renderSheet(){
   const sh=U.sheet;if(!sh)return "";const it=byId[sh.id];
   let h='<div class="overlay" data-act="close-bg"><div class="sheet" role="dialog" aria-modal="true" aria-label="'+esc(iname(it))+'">';
+  if(it.img)h+='<img class="sheetimg" src="/yauoicafe/assets/menu/'+it.id+'.webp" alt="'+esc(iname(it))+'" width="480" height="480">';
   h+='<h2>'+esc(iname(it))+'</h2><div class="sub">'+(EN()?'':esc(Y.itemName(it,P,"en"))+' · ')+'<span class="num">'+money(Y.itemPrice(it,P,false))+'</span></div><div class="tags">'+stockTag(it)+allergyTags(it)+'</div>';
   it.g.forEach(k=>{const g=G[k],sel=sh.sel[g.id]||[];const need=g.min>0&&Y.selCount(g,sel)<g.min;
     h+='<div class="grp"><div class="grp-h"><b>'+nm(g)+'</b><span class="'+(need&&sh.tried?"need":"")+'">'+ruleText(g)+'</span></div>'+(g.note?'<p class="gnote">'+esc(nm(g.note))+'</p>':'')+'<div class="choices">';

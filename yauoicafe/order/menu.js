@@ -37,23 +37,24 @@
   const CATS = [{id:"allday",zh:"全日早餐",en:"All Day Set"},{id:"bakery",zh:"麵包類",en:"Bakery"},{id:"sandwich",zh:"三文治",en:"Sandwiches & Toast"},{id:"drinks",zh:"飲品",en:"Drinks"}];
   const SETG = ["noodle","sides","toast","setdrink","taste"];
   const SETD = { zh:"麵 + 2 款跟配 + 飲品", en:"Noodles + 2 sides + drink" };
-  /* sq = Square item variation ID (price source). sqT = toasted variation. st:"bar" = slip goes to the drinks bar (toast). */
+  /* sq = Square item variation ID (price source). sqT = toasted variation. st:"bar" = slip goes to the drinks bar (toast).
+     img:1 = photo at /yauoicafe/assets/menu/<id>.webp (real café photos, background removed, 480×480). */
   const MENU = [
     {id:"ad_satay",al:["P","So","Se","Cr","G"],cat:"allday",zh:"沙爹牛肉",en:"Satay Beef",p:950,g:SETG,d:SETD,sq:"7V37O4E4IY4LA2ECWWFH7TNK"},
     {id:"ad_ham",al:["G","Su"],cat:"allday",zh:"火腿",en:"Ham",p:950,g:SETG,d:SETD,sq:"QDJEZHOELC2PMZUK76JMEEHY"},
     {id:"ad_fivespice",al:["So","G"],cat:"allday",zh:"五香肉丁",en:"Five Spice Pork",p:950,g:SETG,d:SETD,sq:"SATHJILD7JVSQS6SHWSRZIH7"},
     {id:"ad_bbq",al:["G","So"],cat:"allday",zh:"叉燒",en:"BBQ Pork",p:950,g:SETG,d:SETD,sq:"AFENZLCEBW5MWUDSWQRLTYP3"},
-    {id:"bk_pineapple",al:["G","E","M"],cat:"bakery",zh:"菠蘿包",en:"Pineapple Bun",p:200,g:[],stock:"pineapple",sq:"7NNL45ZAAOKDWPDQT4YQ54S6"},
+    {id:"bk_pineapple",img:1,al:["G","E","M"],cat:"bakery",zh:"菠蘿包",en:"Pineapple Bun",p:200,g:[],stock:"pineapple",sq:"7NNL45ZAAOKDWPDQT4YQ54S6"},
     {id:"bk_pinebutter",al:["G","E","M"],cat:"bakery",zh:"菠蘿油",en:"Pineapple Bun with Butter",p:250,g:[],stock:"pineapple",sq:"3XZTUOEPT6S4ZWF4SQE7GK33"},
-    {id:"bk_cocktail",al:["G","E","M"],cat:"bakery",zh:"雞尾包",en:"Cocktail Bun",p:200,g:[],stock:"cocktail",sq:"O5724WXR43AJEICC3GRV47FM"},
+    {id:"bk_cocktail",img:1,al:["G","E","M"],cat:"bakery",zh:"雞尾包",en:"Cocktail Bun",p:200,g:[],stock:"cocktail",sq:"O5724WXR43AJEICC3GRV47FM"},
     {id:"bk_sausage",al:["G","So","Su"],cat:"bakery",zh:"腸仔包",en:"Sausage Bun",p:200,g:[],stock:"sausage",sq:"APA66WBGY2RE5VFCEBI3HDDH"},
-    {id:"bk_eggtart",al:["G","E","M"],cat:"bakery",zh:"蛋撻",en:"Egg Tart",p:150,g:[],stock:"eggtart",sq:"J3TYDHIXIDMOT6YDKAY5AER7"},
+    {id:"bk_eggtart",img:1,al:["G","E","M"],cat:"bakery",zh:"蛋撻",en:"Egg Tart",p:150,g:[],stock:"eggtart",sq:"J3TYDHIXIDMOT6YDKAY5AER7"},
     {id:"sw_egg",al:["E","M","G"],cat:"sandwich",zh:"雞蛋三文治",en:"Egg Sandwich",p:450,g:["toastsw"],sq:"C6ZBURYOIUFSCHV25IVZWQGT",sqT:"3GPYIF72XVPACH7RBHXG47MW"},
     {id:"sw_hamegg",al:["E","M","G","Su"],cat:"sandwich",zh:"火腿雞蛋三文治",en:"Ham & Egg Sandwich",p:450,g:["toastsw"],sq:"J5HOY5NLGH6UQZEYTH3GRKFV",sqT:"2RVLI6YJ5BXE3DFOK6ENWKTL"},
     {id:"sw_luncheon",al:["E","M","G","So"],cat:"sandwich",zh:"午餐肉雞蛋三文治",en:"Luncheon Meat & Egg Sandwich",p:450,g:["toastsw"],sq:"BPIFBIISM4X6TI7QRYDRROYD",sqT:"JZST2O6NDJK6VRZGAXEWCPML"},
     {id:"sw_corned",al:["E","M","Su","G"],cat:"sandwich",zh:"咸牛肉雞蛋三文治",en:"Corned Beef & Egg Sandwich",p:450,g:["toastsw"],sq:"ROCEK7LLXTBK3DK73KXNPZ33",sqT:"V6KF5Y5ODAYQQVUBJNHMGNWN"},
     {id:"sw_satay",al:["E","M","P","So","Se","Cr","G"],cat:"sandwich",zh:"沙嗲牛肉雞蛋三文治",en:"Satay Beef & Egg Sandwich",p:500,g:["toastsw"],sq:"SGNWPXOPJ2CIOVF4T6XQ6GK3",sqT:"6ICMR7DI25MNBGMIAVG7UGXD"},
-    {id:"sw_french",st:"bar",al:["E","M","P","G"],cat:"sandwich",zh:"西多士",en:"French Toast",p:400,g:[],sq:"SHTBGLKBOES3R37D2X2WTGPL"},
+    {id:"sw_french",img:1,st:"bar",al:["E","M","P","G"],cat:"sandwich",zh:"西多士",en:"French Toast",p:400,g:[],sq:"SHTBGLKBOES3R37D2X2WTGPL"},
     {id:"sw_pbtoast",st:"bar",al:["P","M","G"],cat:"sandwich",zh:"煉奶花生醬多士",en:"Condensed Milk & Peanut Butter Toast",p:250,g:[],sq:"RVGRIURSNKV5HIUHHGUGXZ5J"},
     {id:"sw_buttertoast",st:"bar",al:["M","G"],cat:"sandwich",zh:"煉奶牛油多士",en:"Condensed Milk & Butter Toast",p:250,g:[],sq:"O4KARRK4BEMTRLXXWQEJFAEV"},
     {id:"dk_hot",al:[],cat:"drinks",zh:"熱飲",en:"Hot Drinks",p:300,g:["hot","taste"],sq:"6I7EQTH6N3FUY72DKSFVLZNB"},
