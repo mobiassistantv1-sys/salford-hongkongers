@@ -55,7 +55,7 @@
     {id:"sw_hamegg",img:1,al:["E","M","G","Su"],cat:"sandwich",zh:"火腿雞蛋三文治",en:"Ham & Egg Sandwich",p:450,g:["toastsw"],sq:"J5HOY5NLGH6UQZEYTH3GRKFV",sqT:"2RVLI6YJ5BXE3DFOK6ENWKTL"},
     {id:"sw_luncheon",al:["E","M","G","So"],cat:"sandwich",zh:"午餐肉雞蛋三文治",en:"Luncheon Meat & Egg Sandwich",p:450,g:["toastsw"],sq:"BPIFBIISM4X6TI7QRYDRROYD",sqT:"JZST2O6NDJK6VRZGAXEWCPML"},
     {id:"sw_corned",img:1,al:["E","M","Su","G"],cat:"sandwich",zh:"咸牛肉雞蛋三文治",en:"Corned Beef & Egg Sandwich",p:450,g:["toastsw"],sq:"ROCEK7LLXTBK3DK73KXNPZ33",sqT:"V6KF5Y5ODAYQQVUBJNHMGNWN"},
-    {id:"sw_satay",al:["E","M","P","So","Se","Cr","G"],cat:"sandwich",zh:"沙嗲牛肉雞蛋三文治",en:"Satay Beef & Egg Sandwich",p:500,g:["toastsw"],sq:"SGNWPXOPJ2CIOVF4T6XQ6GK3",sqT:"6ICMR7DI25MNBGMIAVG7UGXD"},
+    {id:"sw_satay",img:1,al:["E","M","P","So","Se","Cr","G"],cat:"sandwich",zh:"沙嗲牛肉雞蛋三文治",en:"Satay Beef & Egg Sandwich",p:500,g:["toastsw"],sq:"SGNWPXOPJ2CIOVF4T6XQ6GK3",sqT:"6ICMR7DI25MNBGMIAVG7UGXD"},
     {id:"sw_french",img:1,st:"bar",al:["E","M","P","G"],cat:"sandwich",zh:"西多士",en:"French Toast",p:400,g:[],sq:"SHTBGLKBOES3R37D2X2WTGPL"},
     {id:"sw_pbtoast",st:"bar",al:["P","M","G"],cat:"sandwich",zh:"煉奶花生醬多士",en:"Condensed Milk & Peanut Butter Toast",p:250,g:[],sq:"RVGRIURSNKV5HIUHHGUGXZ5J"},
     {id:"sw_buttertoast",st:"bar",al:["M","G"],cat:"sandwich",zh:"煉奶牛油多士",en:"Condensed Milk & Butter Toast",p:250,g:[],sq:"O4KARRK4BEMTRLXXWQEJFAEV"},
