@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-07T16:48:37.726Z",
+  "updated": "2026-11-08T17:00:00.798Z",
   "council": [
     {
       "title": "Visible and supportive work in communities continues to address resident concerns",
@@ -176,5 +176,13 @@
       "source": "GOV.UK"
     }
   ],
-  "warnings": []
+  "warnings": [
+    {
+      "title": "Yellow warning of fog affecting North West England",
+      "text": "Yellow warning of fog affecting North West England: Cheshire East, Cheshire West and Chester, Greater Manchester, Halton, Merseyside, Warrington valid from 1800 Sun 08…",
+      "link": "https://www.metoffice.gov.uk/weather/warnings-and-advice/uk-warnings#?date=2026-11-08&id=dd63f8cc-72a9-4311-96de-0bec87a9abae&referrer=rss",
+      "date": null,
+      "source": "Met Office"
+    }
+  ]
 }
