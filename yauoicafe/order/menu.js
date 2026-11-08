@@ -45,7 +45,7 @@
     {id:"ad_fivespice",img:1,imgCap:{zh:"相片：五香肉丁米粉，麵款可以自選",en:"Photo: five spice pork with rice noodles — choose your noodles"},al:["So","G"],cat:"allday",zh:"五香肉丁",en:"Five Spice Pork",p:950,g:SETG,d:SETD,sq:"SATHJILD7JVSQS6SHWSRZIH7"},
     {id:"ad_bbq",img:1,imgCap:{zh:"相片：叉燒意粉，麵款可以自選",en:"Photo: BBQ pork with spaghetti — choose your noodles"},al:["G","So"],cat:"allday",zh:"叉燒",en:"BBQ Pork",p:950,g:SETG,d:SETD,sq:"AFENZLCEBW5MWUDSWQRLTYP3"},
     {id:"bk_pineapple",img:1,al:["G","E","M"],cat:"bakery",zh:"菠蘿包",en:"Pineapple Bun",p:200,g:[],stock:"pineapple",sq:"7NNL45ZAAOKDWPDQT4YQ54S6"},
-    {id:"bk_pinebutter",img:1,al:["G","E","M"],cat:"bakery",zh:"菠蘿油",en:"Pineapple Bun with Butter",p:250,g:[],stock:"pineapple",sq:"3XZTUOEPT6S4ZWF4SQE7GK33"},
+    {id:"bk_pinebutter",img:1,st:"bar",al:["G","E","M"],cat:"bakery",zh:"菠蘿油",en:"Pineapple Bun with Butter",p:250,g:[],stock:"pineapple",sq:"3XZTUOEPT6S4ZWF4SQE7GK33"},
     {id:"bk_cocktail",img:1,al:["G","E","M"],cat:"bakery",zh:"雞尾包",en:"Cocktail Bun",p:200,g:[],stock:"cocktail",sq:"O5724WXR43AJEICC3GRV47FM"},
     {id:"bk_sausage",img:1,al:["G","So","Su"],cat:"bakery",zh:"腸仔包",en:"Sausage Bun",p:200,g:[],stock:"sausage",sq:"APA66WBGY2RE5VFCEBI3HDDH"},
     {id:"bk_eggtart",img:1,al:["G","E","M"],cat:"bakery",zh:"蛋撻",en:"Egg Tart",p:150,g:[],stock:"eggtart",sq:"J3TYDHIXIDMOT6YDKAY5AER7"},
