@@ -34,8 +34,7 @@ h2 span{display:inline-block;background:var(--gold);color:var(--ink);border-radi
 .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
 .card b{display:block;color:var(--red);font-size:18px;margin-bottom:4px}
 .card p{margin:0;color:var(--muted);font-size:15.5px}
-.pics{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:0}
-@media(max-width:640px){.pics{grid-template-columns:1fr 1fr}.pics figure:first-child{grid-column:1/-1}}
+.pics{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0}
 .pics figure{margin:0;background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
 .pics img{display:block;width:100%;height:auto;aspect-ratio:1/1;object-fit:cover}
 .pics figcaption{padding:8px 12px 10px;font-weight:700;font-size:15px;line-height:1.35}
@@ -74,6 +73,8 @@ html:not([lang="en"]) [data-l="en"],html[lang="en"] [data-l="zh"]{display:none!i
     <div class="pics">
       <figure><img src="/yauoicafe/assets/promo/ham-macaroni-breakfast.webp" width="900" height="900" loading="lazy" alt="火腿通粉、炒蛋、牛油多士同熱奶茶 Ham macaroni with scrambled egg, buttered toast and hot milk tea">
         <figcaption><span data-l="zh">全日早餐：火腿通粉</span><span data-l="en">All Day Set: ham macaroni</span><small data-l="zh">跟蛋、牛油多士同飲品</small><small data-l="en">with eggs, buttered toast and a drink</small></figcaption></figure>
+      <figure><img src="/yauoicafe/assets/promo/satay-noodles-set.webp" width="900" height="900" loading="lazy" alt="沙嗲牛肉公仔麵、煎蛋、蛋撻同凍檸茶 Satay beef instant noodles with fried eggs, an egg tart and iced lemon tea">
+        <figcaption><span data-l="zh">全日早餐：沙嗲牛肉公仔麵</span><span data-l="en">All Day Set: satay beef instant noodles</span><small data-l="zh">跟煎蛋同凍檸茶，加個蛋撻</small><small data-l="en">with fried eggs and iced lemon tea, plus an egg tart</small></figcaption></figure>
       <figure><img src="/yauoicafe/assets/promo/pineapple-buns.webp" width="900" height="900" loading="lazy" alt="即日焗菠蘿包 Freshly baked pineapple buns">
         <figcaption><span data-l="zh">即日焗菠蘿包</span><span data-l="en">Freshly baked pineapple buns</span></figcaption></figure>
       <figure><img src="/yauoicafe/assets/promo/corned-beef-egg-sandwich.webp" width="900" height="900" loading="lazy" alt="咸牛肉炒蛋三文治 Corned beef and egg sandwich">
