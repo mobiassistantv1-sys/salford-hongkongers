@@ -28,7 +28,9 @@ function noticeRows(o, P, idxs) {
     return { q: ln.qty, name: Y.itemName(byId[l.itemId], P, "zh"), sub: ln.desc.map(x => x.zh).join("、") }; });
 }
 
-/* -> { kitchen:[{q,name,sub,al}], bar:[...], floor:[...] }  (empty stations omitted) */
+/* -> { kitchen:[{q,name,sub}], bar:[...], floor:[{q,name,sub,al,price}] }  (empty stations omitted)
+   Allergen lines ("含：…") only on the floor slip — kitchen and bar know their recipes.
+   The customer's own allergy note and other note print on every slip. */
 function groups(o, P) {
   const L = (o.lines || []).map(l => {
     if (l.x || !byId[l.itemId]) return null;
@@ -36,26 +38,22 @@ function groups(o, P) {
     return ln;
   }).filter(Boolean);
   const al = l => Y.lineAllergens(l.itemId, l.sel).map(c => Y.alName(c, "zh"));
-  /* set drink of an All Day Set: only the drink's own allergens go on the bar slip */
-  const drinkAl = sel => Y.sortAl(["setdrink", "taste"].flatMap(k =>
-    (sel[k] || []).flatMap(id => ((Y.G[k].choices.find(c => c.id === id) || {}).al) || []))).map(c => Y.alName(c, "zh"));
   const out = {};
   const kit = L.filter(l => ["allday", "sandwich"].includes(byId[l.itemId].cat) && byId[l.itemId].st !== "bar");
   if (kit.length) out.kitchen = kit.map(l => { const it = byId[l.itemId];
     return { q: l.qty, name: Y.itemName(it, P, "zh") + (it.cat === "allday" ? "（全日早餐）" : ""),
-      sub: l.desc.filter(x => x.st === "kitchen").map(x => x.zh).join("、"), al: al(l) }; });
+      sub: l.desc.filter(x => x.st === "kitchen").map(x => x.zh).join("、") }; });
   const bar = [];
   L.forEach(l => { const it = byId[l.itemId];
     if (it.cat === "drinks") bar.push({ q: l.qty, name: l.desc.filter(x => x.g === "drink").map(x => x.zh).join(""),
-      sub: l.desc.filter(x => x.g === "taste").map(x => x.zh).join("、"), al: al(l) });
+      sub: l.desc.filter(x => x.g === "taste").map(x => x.zh).join("、") });
     else if (it.cat === "allday") bar.push({ q: l.qty, name: l.desc.filter(x => x.g === "setdrink").map(x => x.zh).join(""),
       sub: [l.desc.filter(x => x.g === "taste").map(x => x.zh).join("、"), "跟 " + it.zh + " 全日早餐"].filter(Boolean).join(" · "),
-      al: drinkAl(l.sel) }); });
+    }); });
   /* toast is made at the bar: set add-on toast + toast items (西多士, 煉奶牛油多士, 花生醬多士) */
   L.forEach(l => { const it = byId[l.itemId];
-    if (it.cat === "allday") l.desc.filter(x => x.g === "toast").forEach(x => bar.push({ q: l.qty, name: x.zh, sub: "跟 " + it.zh + " 全日早餐",
-      al: Y.sortAl((l.sel.toast || []).flatMap(id => ((Y.G.toast.choices.find(c => c.id === id) || {}).al) || [])).map(c => Y.alName(c, "zh")) }));
-    else if (it.st === "bar") bar.push({ q: l.qty, name: Y.itemName(it, P, "zh"), sub: l.desc.map(x => x.zh).join("、"), al: al(l) }); });
+    if (it.cat === "allday") l.desc.filter(x => x.g === "toast").forEach(x => bar.push({ q: l.qty, name: x.zh, sub: "跟 " + it.zh + " 全日早餐" }));
+    else if (it.st === "bar") bar.push({ q: l.qty, name: Y.itemName(it, P, "zh"), sub: l.desc.map(x => x.zh).join("、") }); });
   if (bar.length) out.bar = bar;
   /* floor slip = the whole order with prices + total, for taking payment (always printed) */
   out.floor = L.map(l => { const it = byId[l.itemId];
@@ -113,7 +111,7 @@ function slipCanvas(o, station, rows, meta) {
       if (hasP) right(money(r.price), 48, y);
       text(r.name, fs, nx, { gap: 6, maxW: W - nx - PAD - (hasP ? PRICE_W : 0) });
       if (r.sub) text(r.sub, 40, nx, { gap: 6 });
-      if (r.al && r.al.length) text("含：" + r.al.join("、"), 34, nx + 6, { invert: true, gap: 12, maxW: W - nx - PAD - 18 });
+      if (r.al && r.al.length) text("含：" + r.al.join("、"), 34, nx + 6, { invert: true, gap: 12, maxW: W - nx - PAD - 48 });
       y += 10;
     });
 
