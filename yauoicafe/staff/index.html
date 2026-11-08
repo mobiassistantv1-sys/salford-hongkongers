@@ -58,6 +58,8 @@ input.t{width:100%;border:1.5px solid var(--line);background:var(--surface);bord
 .oline .q{font-weight:900;min-width:28px}.oline .b{flex:1;min-width:0}.oline .b small{display:block;color:var(--muted)}
 .oline .b .alc{display:block;color:var(--red);font-weight:700;font-size:12px}
 .oline.x .b{text-decoration:line-through;opacity:.5}
+.part{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:4px 0;font-size:14px}.part em{font-style:normal;color:var(--muted)}
+.svb{border:1.5px solid var(--red);background:none;color:var(--red);border-radius:8px;font-size:13px;font-weight:900;padding:4px 10px;white-space:nowrap;min-height:32px}.svb.on{border-color:var(--green);background:var(--green);color:var(--green-ink)}
 .xbtn{border:1px solid var(--line);background:none;border-radius:6px;font-size:12px;padding:2px 6px;color:var(--muted);white-space:nowrap}
 .xbtn.arm{border-color:var(--red);color:var(--red);font-weight:700}
 .anote{background:var(--red);color:#fff;border-radius:8px;padding:6px 8px;font-weight:900;font-size:15px;margin-top:8px}
@@ -173,6 +175,18 @@ function discLabel(){if(U.disc!==-1)return U.disc+"%";const v=parseFloat(U.dcV)|
 /* stock to put back for these lines: orders saved by the server path (o.srv) only give back what was really taken */
 function giveBack(o,idx){const out={};idx.forEach(i=>{const raw=(o.lines||[])[i];const it=raw&&byId[raw.itemId];if(!it||!it.stock)return;out[it.stock]=(out[it.stock]||0)+(raw.qty|0);});
   if(o.srv)for(const k in out)out[k]=Math.min(out[k],(o.took||{})[k]||0);for(const k in out)if(!out[k])delete out[k];return out;}
+/* 逐樣上菜: each line has parts (All Day Set: 麵 / 跟配 / 多士 / 飲品; anything else: one part "all").
+   Ticks live in orders/{day}/{id}/lines/{i}/sv/{part}; o.served = every part of every live line ticked. */
+function partsOf(l){const it=byId[l.itemId];if(!it||it.cat!=="allday")return [{k:"all"}];
+  const g=k=>l.desc.filter(x=>x.g===k).map(x=>EN()?x.en:x.zh);const out=[];
+  out.push({k:"noodle",lbl:t("麵","Noodles"),txt:g("noodle").join("")});
+  out.push({k:"sides",lbl:t("跟配","Sides"),txt:g("sides").join(EN()?", ":"、")});
+  if(g("toast").length)out.push({k:"toast",lbl:t("多士","Toast"),txt:g("toast").join("")});
+  out.push({k:"drink",lbl:t("飲品","Drink"),txt:g("setdrink").concat(g("taste")).join(" ")});
+  return out;}
+const isSv=(o,l,k)=>!!(((o.lines||[])[l.i]||{}).sv||{})[k];
+const svBtn=(o,l,k)=>{const on=isSv(o,l,k);return '<button class="svb'+(on?" on":"")+'" data-act="psv" data-o="'+o.id+'" data-i="'+l.i+'" data-k="'+k+'" aria-pressed="'+on+'">'+(on?t("已上","Served"):t("未上","Not yet"))+'</button>';};
+function allServed(o){const ls=linesOf(o).filter(l=>!l.x);return ls.length>0&&ls.every(l=>partsOf(l).every(p=>isSv(o,l,p.k)));}
 /* 分單: o.sub = "A".."D" → shown as T3-A. Bill pays only the ticked orders (U.ex[id] = left out). */
 const subOf=o=>o.table+(o.sub?"-"+o.sub:"");
 const SUBS=["A","B","C","D"];
@@ -229,7 +243,11 @@ function vOrders(){
   os.forEach(o=>{const add=isAddOn(o);const fresh=!o.served&&Date.now()-(o.at||0)<120000;
     h+='<article class="card'+(fresh?" new":"")+'"><div class="ocard-h"><span class="tbl">'+esc(tableLabel(subOf(o)))+'</span><span class="meta">'+no3(o)+' · '+hhmm(o.at)+(o.name?' · '+esc(o.name):'')+'</span>'+(fresh?'<span class="chip newc">'+t("新","New")+'</span>':'')+(add?'<span class="chip add">'+t("加單","Add-on")+'</span>':'')+(o.paid?'<span class="chip paid">'+t("已付","Paid")+'</span>':'')+(o.served?'<span class="chip paid">'+t("已上菜","Served")+'</span>':'')+'</div>';
     linesOf(o).forEach(l=>{const it=byId[l.itemId];const key=o.id+":"+l.i,arm=U.armed===key;
-      const la=Y.lineAllergens(l.itemId,l.sel);h+='<div class="oline'+(l.x?" x":"")+'"><span class="q num">'+l.qty+'×</span><span class="b">'+esc(iname(it))+(l.desc.length?'<small>'+esc(lineDesc(l))+'</small>':'')+(la.length?'<span class="alc">'+t("含：","Contains: ")+esc(la.map(c=>Y.alName(c,U.lang)).join(EN()?", ":"、"))+'</span>':'')+'</span>'+(l.x?'<span class="chip">'+t("已取消","Cancelled")+'</span>':'<button class="xbtn'+(arm?" arm":"")+'" data-act="xline" data-o="'+o.id+'" data-i="'+l.i+'">'+(arm?t("確認取消？","Confirm cancel?"):t("取消","Cancel"))+'</button>')+'</div>';});
+      const la=Y.lineAllergens(l.itemId,l.sel),ps=partsOf(l),multi=ps.length>1;
+      h+='<div class="oline'+(l.x?" x":"")+'"><span class="q num">'+l.qty+'×</span><span class="b">'+esc(iname(it))+(!multi&&l.desc.length?'<small>'+esc(lineDesc(l))+'</small>':'');
+      if(multi&&!l.x)h+=ps.map(p=>'<span class="part"><span><em>'+esc(p.lbl)+'：</em>'+esc(p.txt)+'</span>'+svBtn(o,l,p.k)+'</span>').join("");
+      else if(multi)h+='<small>'+esc(lineDesc(l))+'</small>';
+      h+=(la.length?'<span class="alc">'+t("含：","Contains: ")+esc(la.map(c=>Y.alName(c,U.lang)).join(EN()?", ":"、"))+'</span>':'')+'</span>'+(l.x?'<span class="chip">'+t("已取消","Cancelled")+'</span>':(multi?'':svBtn(o,l,"all"))+'<button class="xbtn'+(arm?" arm":"")+'" data-act="xline" data-o="'+o.id+'" data-i="'+l.i+'">'+(arm?t("確認取消？","Confirm cancel?"):t("取消","Cancel"))+'</button>')+'</div>';});
     if(o.short)h+='<div class="anote">⚠ '+t("超賣：","Oversold: ")+esc(Object.keys(o.short).map(k=>{const s=STOCK.find(x=>x.k===k);return (s?nm(s):k)+" ×"+o.short[k];}).join(t("、",", ")))+t(" — 請同客講或者換其他"," — tell the table or offer another")+'</div>';
     if(o.allergy)h+='<div class="anote">'+t("過敏：","Allergy: ")+esc(o.allergy)+'</div>';
     if(o.note)h+='<div class="nnote">'+t("備註：","Note: ")+esc(o.note)+'</div>';
@@ -403,7 +421,13 @@ document.addEventListener("click",async e=>{
     case "exo":U.ex[v]=!b.checked;render();break;
     case "exall":{U.ex={};if(v)openOrders(U.billT).forEach(o=>{if((o.sub||"-")!==v)U.ex[o.id]=true;});render();break;}
     case "slips":U.showSlips[v]=!U.showSlips[v];render();break;
-    case "served":{const o=ORD[v];if(o)db.ref("ordering/orders/"+day+"/"+v+"/served").set(!o.served);break;}
+    case "served":{const o=ORD[v];if(!o)break;const on=!o.served,up={served:on};const ob=Object.assign({id:v},o);
+      linesOf(ob).filter(l=>!l.x).forEach(l=>{partsOf(l).forEach(p=>{up["lines/"+l.i+"/sv/"+p.k]=on||null;});});
+      await db.ref("ordering/orders/"+day+"/"+v).update(up);break;}
+    case "psv":{const id=b.dataset.o,i=+b.dataset.i,k=b.dataset.k,o=ORD[id];if(!o||!o.lines||!o.lines[i])break;
+      const cur=!!((o.lines[i].sv||{})[k]);const nx=JSON.parse(JSON.stringify(o));nx.lines[i].sv=Object.assign({},nx.lines[i].sv||{},{[k]:!cur||null});
+      const all=allServed(Object.assign({id},nx));
+      await db.ref("ordering/orders/"+day+"/"+id).update({["lines/"+i+"/sv/"+k]:!cur||null,served:all});break;}
     case "xline":{const key=b.dataset.o+":"+b.dataset.i;if(U.armed!==key){U.armed=key;render();break;}
       U.armed=null;const o=ORD[b.dataset.o];const raw=o&&o.lines&&o.lines[+b.dataset.i];if(!raw||raw.x)break;const it=byId[raw.itemId];
       await db.ref("ordering/orders/"+day+"/"+b.dataset.o+"/lines/"+b.dataset.i+"/x").set(true);
