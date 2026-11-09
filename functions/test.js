@@ -21,7 +21,7 @@ assert.strictEqual(g.bar.length, 4, "set drink, hot drinks, set add-on toast, �
 assert.strictEqual(g.floor.length, 4, "floor = whole order, cancelled line skipped");
 assert.ok(g.floor.every(r => r.price > 0), "floor rows carry prices");
 assert.ok(!g.kitchen[0].al && !g.bar.some(r => r.al), "no allergen lines on kitchen / bar");
-assert.ok(g.floor[0].al.includes("花生"), "floor still shows peanut");
+assert.ok(g.floor.every(r => !r.al), "no allergen lines on the floor slip either");
 assert.ok(g.bar.some(r => r.name === "菠蘿油"), "菠蘿油 goes to the bar");
 fs.mkdirSync("test-out", { recursive: true });
 STATIONS.forEach(st => fs.writeFileSync(`test-out/${st}.png`, renderSlip(order, st, g[st], { time: "10:42", addOn: st === "bar", reprint: false })));
@@ -47,7 +47,12 @@ const P2 = { special: { zh: "椰撻", en: "Coconut Tart", p: 180, al: ["G", "E",
 Y.applySpecial(P2);
 const g2 = groups({ table: "T1", lines: [{ itemId: "bk_special", qty: 2, sel: {} }] }, P2);
 assert.strictEqual(g2.floor[0].name, "椰撻"); assert.strictEqual(g2.floor[0].price, 360);
-assert.strictEqual(g2.floor[0].al.join("、"), "雞蛋、奶、麩質");
+assert.strictEqual(Y.lineAllergens("bk_special", {}).join(), "E,M,G");
 assert.ok(!g2.kitchen && !g2.bar, "bun is floor only");
 assert.strictEqual(Y.applySpecial({ special: { zh: "x", p: 100 } }), false, "no allergen confirmation = not ready");
 console.log("special ok");
+/* customer receipt: two orders, discount */
+const o2 = { table: "T3", sub: "B", no: 13, lines: [{ itemId: "dk_iced", qty: 1, sel: { drink: ["iced_lemontea"] } }] };
+const rrows = groups(order, {}).floor.concat(groups(o2, {}).floor);
+fs.writeFileSync("test-out/receipt.png", renderSlip({ table: "T3+T3-B", noText: "#012 #013" }, "receipt", rrows, { time: "11:05", disc: { amt: 250, label: "10%" } }));
+console.log("receipt ok", rrows.length);
