@@ -61,8 +61,8 @@
     {id:"sw_corned",img:1,al:["E","M","Su","G"],cat:"sandwich",zh:"咸牛肉雞蛋三文治",en:"Corned Beef & Egg Sandwich",p:450,g:["toastsw"],sq:"ROCEK7LLXTBK3DK73KXNPZ33",sqT:"V6KF5Y5ODAYQQVUBJNHMGNWN"},
     {id:"sw_satay",img:1,al:["E","M","P","So","Se","Cr","G"],cat:"sandwich",zh:"沙嗲牛肉雞蛋三文治",en:"Satay Beef & Egg Sandwich",p:500,g:["toastsw"],sq:"SGNWPXOPJ2CIOVF4T6XQ6GK3",sqT:"6ICMR7DI25MNBGMIAVG7UGXD"},
     {id:"sw_french",img:1,st:"bar",al:["E","M","P","G"],cat:"sandwich",zh:"西多士",en:"French Toast",p:400,g:[],sq:"SHTBGLKBOES3R37D2X2WTGPL"},
-    /* 開心果醬西多士: allergens as told by Manson 2026-11-09 (開心果、果仁、花生、穀物、朱古力、煉奶、牛油) + egg (French toast batter). Not on Square yet: price from p. */
-    {id:"sw_pistachio",img:1,st:"bar",al:["P","N","E","M","G"],cat:"sandwich",zh:"開心果醬西多士",en:"Pistachio French Toast",p:500,g:[]},
+    /* 開心果醬西多士: allergens confirmed by Manson 2026-11-09 (開心果、果仁、花生、穀物、朱古力、煉奶、牛油; egg in batter; chocolate sauce has soya). Not on Square yet: price from p. */
+    {id:"sw_pistachio",img:1,st:"bar",al:["P","N","E","M","G","So"],cat:"sandwich",zh:"開心果醬西多士",en:"Pistachio French Toast",p:500,g:[]},
     {id:"sw_pbtoast",st:"bar",al:["P","M","G"],cat:"sandwich",zh:"煉奶花生醬多士",en:"Condensed Milk & Peanut Butter Toast",p:250,g:[],sq:"RVGRIURSNKV5HIUHHGUGXZ5J"},
     {id:"sw_buttertoast",st:"bar",al:["M","G"],cat:"sandwich",zh:"煉奶牛油多士",en:"Condensed Milk & Butter Toast",p:250,g:[],sq:"O4KARRK4BEMTRLXXWQEJFAEV"},
     {id:"dk_hot",al:[],cat:"drinks",zh:"熱飲",en:"Hot Drinks",p:300,g:["hot","taste"],sq:"6I7EQTH6N3FUY72DKSFVLZNB"},
