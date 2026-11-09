@@ -66,7 +66,15 @@ exports.cancelNotice = onValueCreated({ ref: "/ordering/orders/{day}/{oid}/lines
 exports.reprint = onValueWritten({ ref: "/ordering/orders/{day}/{oid}/rp", region: REGION }, async ev => {
   const v = ev.data.after.val(); if (!v) return;
   const at = Date.now(), { day, oid } = ev.params;
-  await db.ref(`${Q}/${at}_${oid}_rp`).set({ day, oid, at, tries: 0, reprint: true, st: STATIONS.includes(v.st) ? v.st : null });
+  await db.ref(`${Q}/${at}_${oid}_rp`).set({ day, oid, at, tries: 0, reprint: true, st: STATIONS.includes(v.st) || v.st === "receipt" ? v.st : null });
+});
+/* staff tapped 印收據俾客 on the bill (orders/{day}/{oid}/rcpt = {at, ids:[...], discAmt, discLabel}) */
+exports.receipt = onValueWritten({ ref: "/ordering/orders/{day}/{oid}/rcpt", region: REGION }, async ev => {
+  const v = ev.data.after.val(); if (!v) return;
+  const at = Date.now(), { day, oid } = ev.params;
+  const ids = (Array.isArray(v.ids) ? v.ids : Object.values(v.ids || {})).filter(x => typeof x === "string").slice(0, 20);
+  await db.ref(`${Q}/${at}_${oid}_rc`).set({ day, oid, at, tries: 0, receipt: true, ids: ids.length ? ids : [oid],
+    discAmt: Math.max(0, v.discAmt | 0), discLabel: String(v.discLabel || "").slice(0, 20) });
 });
 exports.voidNotice = onValueCreated({ ref: "/ordering/orders/{day}/{oid}/void", region: REGION }, async ev => {
   await queueNotice(ev.params.day, ev.params.oid, "void");
@@ -93,6 +101,17 @@ async function render(key, type) {
     const c = slipCanvas(Object.assign({}, o, { allergy: "", note: j.notice === "void" && o.void ? "原因：" + o.void.reason : "" }), j.notice, rows, { time: hhmm(Date.now()) });
     return type === STARPRNT ? starprnt([c]) : stackPng([c]);
   }
+  if (j.receipt || j.st === "receipt") {            /* customer receipt: one or more orders, prices, discount, total */
+    const ids = j.receipt ? Object.values(j.ids || {}) : [j.oid];
+    const all = (await db.ref(`ordering/orders/${j.day}`).get()).val() || {};
+    const os = ids.map(id => all[id]).filter(x => x && !x.void);
+    if (!os.length) return null;
+    const rows = os.flatMap(x => (groups(x, P).floor || []));
+    const label = [...new Set(os.map(x => x.table && x.table.startsWith("W") ? x.table : x.table + (x.sub ? "-" + x.sub : "")))].join("+");
+    const head = { table: label, noText: os.map(x => "#" + String(x.no || 0).padStart(3, "0")).join(" ") };
+    const c = slipCanvas(head, "receipt", rows, { time: hhmm(Date.now()), disc: { amt: j.discAmt || 0, label: j.discLabel || "" } });
+    return type === STARPRNT ? starprnt([c]) : stackPng([c]);
+  }
   if (o.void) return null;                          /* voided before printing: nothing to print */
   const g = groups(o, P), sts = stationsOf(j, g); if (!sts.length) return null;
   /* add-on = same table already had an earlier unpaid order today (same rule as staff page) */
@@ -107,7 +126,7 @@ async function confirm(mac, key, code) {
   const ok = /^2/.test(code || "");
   const ref = db.ref(`${Q}/${key}`); const j = (await ref.get()).val(); if (!j) return;
   const mark = v => { const u = { [`${Q}/${key}`]: null };
-    (j.notice ? [j.notice + (j.line != null ? "_" + j.line : "")] : j.st ? [j.st] : STATIONS).forEach(st => { u[`ordering/orders/${j.day}/${j.oid}/print/${st}`] = v; }); return u; };
+    (j.receipt ? ["receipt"] : j.notice ? [j.notice + (j.line != null ? "_" + j.line : "")] : j.st ? [j.st] : STATIONS).forEach(st => { u[`ordering/orders/${j.day}/${j.oid}/print/${st}`] = v; }); return u; };
   if (ok) await db.ref().update(mark(Date.now()));
   else if ((j.tries || 0) + 1 >= MAX_TRIES) await db.ref().update(mark("fail:" + code));
   else await ref.child("tries").set((j.tries || 0) + 1);

@@ -19,7 +19,7 @@ const W = 576;            /* 72 mm print width at 203 dpi */
 const PAD = 8;
 
 const STATIONS = ["kitchen", "bar", "floor"];
-const TITLE = { kitchen: "廚房 KITCHEN", bar: "水吧 BAR", floor: "樓面 FLOOR · 埋單用", cancel: "⚠ 取消 CANCEL · 唔使做", void: "⚠ 整張作廢 VOID · 唔使做" };
+const TITLE = { kitchen: "廚房 KITCHEN", bar: "水吧 BAR", floor: "樓面 FLOOR · 埋單用", receipt: "友愛冰室 收據 RECEIPT", cancel: "⚠ 取消 CANCEL · 唔使做", void: "⚠ 整張作廢 VOID · 唔使做" };
 
 /* rows for a cancel / void notice: the line(s) that no longer need making */
 function noticeRows(o, P, idxs) {
@@ -28,8 +28,8 @@ function noticeRows(o, P, idxs) {
     return { q: ln.qty, name: Y.itemName(byId[l.itemId], P, "zh"), sub: ln.desc.map(x => x.zh).join("、") }; });
 }
 
-/* -> { kitchen:[{q,name,sub}], bar:[...], floor:[{q,name,sub,al,price}] }  (empty stations omitted)
-   Allergen lines ("含：…") only on the floor slip — kitchen and bar know their recipes.
+/* -> { kitchen:[{q,name,sub}], bar:[...], floor:[{q,name,sub,price}] }  (empty stations omitted)
+   No allergen lines ("含：…") on any slip — staff know the recipes; the menu and staff screen show them.
    The customer's own allergy note and other note print on every slip. */
 function groups(o, P) {
   const L = (o.lines || []).map(l => {
@@ -37,7 +37,6 @@ function groups(o, P) {
     const ln = Y.mkLine(l.itemId, Math.max(1, Math.min(50, l.qty | 0)), l.sel || {}, P);
     return ln;
   }).filter(Boolean);
-  const al = l => Y.lineAllergens(l.itemId, l.sel).map(c => Y.alName(c, "zh"));
   const out = {};
   const kit = L.filter(l => ["allday", "sandwich"].includes(byId[l.itemId].cat) && byId[l.itemId].st !== "bar");
   if (kit.length) out.kitchen = kit.map(l => { const it = byId[l.itemId];
@@ -58,7 +57,7 @@ function groups(o, P) {
   /* floor slip = the whole order with prices + total, for taking payment (always printed) */
   out.floor = L.map(l => { const it = byId[l.itemId];
     return { q: l.qty, name: Y.itemName(it, P, "zh") + (it.cat === "allday" ? "早餐" : ""),
-      sub: l.desc.map(x => x.zh).join("、"), al: al(l), price: l.unit * l.qty }; });
+      sub: l.desc.map(x => x.zh).join("、"), price: l.unit * l.qty }; });
   if (!out.floor.length) delete out.floor;
   return out;
 }
@@ -96,7 +95,7 @@ function slipCanvas(o, station, rows, meta) {
     y += 72;
     const tbl = o.table && o.table.startsWith("W") ? "外賣 " + o.table : (o.table || "?") + (o.sub ? "-" + o.sub : "");
     text(tbl, 96, PAD, { gap: 4 });
-    text(`#${String(o.no || 0).padStart(3, "0")}  ${meta.time}${o.name ? "  " + o.name : ""}${meta.addOn ? "  【加單】" : ""}`, 36, PAD);
+    text(`${o.noText || "#" + String(o.no || 0).padStart(3, "0")}  ${meta.time}${o.name ? "  " + o.name : ""}${meta.addOn ? "  【加單】" : ""}`, 36, PAD);
     if (meta.reprint) text("重印 REPRINT", 36, PAD, { invert: true });
     rule();
 
@@ -115,6 +114,19 @@ function slipCanvas(o, station, rows, meta) {
       y += 10;
     });
 
+    if (station === "receipt") {
+      const total = rows.reduce((a, r) => a + (r.price || 0), 0), d = meta.disc || {};
+      rule();
+      if (d.amt > 0) {
+        if (paint) { ctx.font = "36px HK"; ctx.fillStyle = "#000"; ctx.fillText("小計", PAD, y + 36 * 0.88); } right(money(total), 36, y); y += 48;
+        if (paint) { ctx.font = "36px HK"; ctx.fillStyle = "#000"; ctx.fillText("折扣 " + (d.label || ""), PAD, y + 36 * 0.88); } right("−" + money(d.amt), 36, y); y += 52;
+      }
+      if (paint) { ctx.font = "56px HK"; ctx.fillStyle = "#000"; ctx.fillText("合共", PAD, y + 56 * 0.88); }
+      right(money(total - (d.amt || 0)), 64, y - 4); y += 80;
+      text("多謝光臨 Thank you!", 32, PAD);
+      text("Salford Hongkongers CIC", 22, PAD, { gap: 4 }); text("The Angel Centre, Salford M3 6FA", 22, PAD);
+      y += 24; return y;
+    }
     if (station === "floor") {
       const total = rows.reduce((a, r) => a + (r.price || 0), 0);
       rule();
