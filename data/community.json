@@ -1,6 +1,13 @@
 {
-  "updated": "2026-11-08T17:00:00.798Z",
+  "updated": "2026-11-09T21:24:16.099Z",
   "council": [
+    {
+      "title": "Salford's history and communities celebrated in new Centenary murals across the city",
+      "text": "Eight colourful new murals celebrating Salford's people, places and history are set to transform locations across the city as part of its 100th birthday celebrations.",
+      "link": "https://news.salford.gov.uk/news/salfords-history-and-communities-celebrated-in-new-centenary-murals-across-the-city/",
+      "date": "2026-11-09T12:00:00.000Z",
+      "source": "Salford City Council"
+    },
     {
       "title": "Visible and supportive work in communities continues to address resident concerns",
       "text": "Proactive action to tackle and disrupt the incidents in October, some of which had been shared on social media.",
@@ -48,13 +55,6 @@
       "text": "Two neighbouring takeaway businesses in Salford have been ordered to pay more than £25,000.",
       "link": "https://news.salford.gov.uk/news/two-salford-takeaways-fined-25-000-for-mouse-infestations/",
       "date": "2026-11-02T09:30:00.000Z",
-      "source": "Salford City Council"
-    },
-    {
-      "title": "Salford organisations unite for Day of Action in Lower Broughton",
-      "text": "Council officers joined partners for a multi-agency Day of Action in Lower Broughton.",
-      "link": "https://news.salford.gov.uk/news/salford-organisations-unite-for-day-of-action-in-lower-broughton/",
-      "date": "2026-10-30T14:30:00.000Z",
       "source": "Salford City Council"
     }
   ],
@@ -118,6 +118,20 @@
   ],
   "cvs": [
     {
+      "title": "A fair day’s pay for a hard day’s work: why Salford CVS backs the real Living Wage",
+      "text": "",
+      "link": "https://www.salfordcvs.co.uk/livingwageweek",
+      "date": "2026-11-09T13:09:00.000Z",
+      "source": "Salford CVS"
+    },
+    {
+      "title": "Stronger Together for Inter Faith Week 2026",
+      "text": "",
+      "link": "https://www.salfordcvs.co.uk/inter-faith-week-26",
+      "date": "2026-11-08T15:28:00.000Z",
+      "source": "Salford CVS"
+    },
+    {
       "title": "A real Living Wage: 25 years in - Read the report",
       "text": "",
       "link": "https://www.salfordcvs.co.uk/living-wage-25-yrs",
@@ -136,20 +150,6 @@
       "text": "",
       "link": "https://www.salfordcvs.co.uk/refugeeproject",
       "date": "2026-11-04T16:23:00.000Z",
-      "source": "Salford CVS"
-    },
-    {
-      "title": "Salford Parks and Green Space Consultation",
-      "text": "",
-      "link": "https://www.salfordcvs.co.uk/greenspacesurvey",
-      "date": "2026-11-04T14:50:00.000Z",
-      "source": "Salford CVS"
-    },
-    {
-      "title": "Nominate now for the Spirit of Salford Community Awards 2027",
-      "text": "",
-      "link": "https://www.salfordcvs.co.uk/SOSawardsnominations",
-      "date": "2026-11-04T11:34:00.000Z",
       "source": "Salford CVS"
     }
   ],
@@ -179,8 +179,8 @@
   "warnings": [
     {
       "title": "Yellow warning of fog affecting North West England",
-      "text": "Yellow warning of fog affecting North West England: Cheshire East, Cheshire West and Chester, Greater Manchester, Halton, Merseyside, Warrington valid from 1800 Sun 08…",
-      "link": "https://www.metoffice.gov.uk/weather/warnings-and-advice/uk-warnings#?date=2026-11-08&id=dd63f8cc-72a9-4311-96de-0bec87a9abae&referrer=rss",
+      "text": "Yellow warning of fog affecting North West England: Cheshire East, Cheshire West and Chester, Greater Manchester valid from 1800 Mon 09 Nov to 1000 Tue 10 Nov",
+      "link": "https://www.metoffice.gov.uk/weather/warnings-and-advice/uk-warnings#?date=2026-11-09&id=cdb621a0-9fe0-4ca2-8f74-01632e8ac5dc&referrer=rss",
       "date": null,
       "source": "Met Office"
     }
