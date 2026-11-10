@@ -180,11 +180,12 @@ html:not([lang="en"]) [data-l="en"],html[lang="en"] [data-l="zh"]{display:none!i
   const h=document.documentElement,b=document.getElementById("lang"),Y=window.YO;
   let lang="zh";
   /* the one moment of motion: dishes take turns on the plate between the couplet strips */
-  const ids=["ad_satay","bk_pinebutter","sw_hamegg","bk_eggtart","ad_bbq","sw_pistachio","bk_pineapple","ad_ham"].filter(id=>Y.byId[id]);
+  const ids=["set_satay","bk_pinebutter","sw_hamegg","bk_eggtart","ad_bbq","sw_pistachio","bk_pineapple","ad_ham"].filter(id=>Y.byId[id]||id==="set_satay");
+  const SET={zh:"沙嗲牛肉全日早餐",en:"Satay beef All Day Set"};
   const plate=document.getElementById("plate"),nameEl=document.getElementById("dishname");
   ids.forEach((id,k)=>{const im=new Image();im.src="/yauoicafe/demo/cut/"+id+".webp";im.alt="";im.decoding="async";if(!k)im.className="on";plate.appendChild(im);});
   let i=0;
-  const label=()=>{const m=Y.byId[ids[i]];nameEl.innerHTML=(lang==="en"?"":m.zh)+'<span>'+m.en+'</span>';};
+  const label=()=>{const m=Y.byId[ids[i]]||SET;nameEl.innerHTML=(lang==="en"?"":m.zh)+'<span>'+m.en+'</span>';};
   label();
   if(!matchMedia("(prefers-reduced-motion:reduce)").matches)setInterval(()=>{const im=plate.children;im[i].classList.remove("on");i=(i+1)%ids.length;im[i].classList.add("on");label();},3200);
   function set(l){lang=l;h.lang=l==="en"?"en":"zh-Hant";b.textContent=l==="en"?"中文":"EN";try{localStorage.setItem("shk_lang",l)}catch(e){}label();}
