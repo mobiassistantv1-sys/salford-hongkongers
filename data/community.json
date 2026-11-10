@@ -1,6 +1,34 @@
 {
-  "updated": "2026-11-09T21:24:16.099Z",
+  "updated": "2026-11-10T18:37:52.045Z",
   "council": [
+    {
+      "title": "Out and about in Claremont",
+      "text": "Councillors and council officers have been out and about in Claremont today, looking at local issues that matter to people.",
+      "link": "https://news.salford.gov.uk/news/out-and-about-in-claremont/",
+      "date": "2026-11-10T13:40:00.000Z",
+      "source": "Salford City Council"
+    },
+    {
+      "title": "Major milestone for Eccles as town centre Masterplan Vision is approved",
+      "text": "Salford City Council’s Cabinet has approved the Eccles town centre Masterplan Vision, marking a major step forward for the regeneration of the town.",
+      "link": "https://news.salford.gov.uk/news/major-milestone-for-eccles-as-town-centre-masterplan-vision-is-approved/",
+      "date": "2026-11-10T12:30:00.000Z",
+      "source": "Salford City Council"
+    },
+    {
+      "title": "£250,000 funding package to support Jewish communities in Salford",
+      "text": "Salford City Council was awarded £600,000 as part of the wider £2 million fund ‘to support cohesion and to tackle antisemitism’.",
+      "link": "https://news.salford.gov.uk/news/250-000-funding-package-to-support-jewish-communities-in-salford/",
+      "date": "2026-11-10T12:00:00.000Z",
+      "source": "Salford City Council"
+    },
+    {
+      "title": "Salford’s Local Plan gets green light to move to next stage",
+      "text": "Part 2 of Salford’s Local Plan has been given the green light to move to the next stage when it will go to Full Council for debate and a decision on 18 November.",
+      "link": "https://news.salford.gov.uk/news/salford-s-local-plan-gets-green-light-to-move-to-next-stage/",
+      "date": "2026-11-10T11:00:00.000Z",
+      "source": "Salford City Council"
+    },
     {
       "title": "Salford's history and communities celebrated in new Centenary murals across the city",
       "text": "Eight colourful new murals celebrating Salford's people, places and history are set to transform locations across the city as part of its 100th birthday celebrations.",
@@ -27,34 +55,6 @@
       "text": "A Salford adult social care worker whose passage from unemployment to university graduate has inspired others and has been named a winner at the 2026 ‘Get the Nation…",
       "link": "https://news.salford.gov.uk/news/salford-celebrates-adult-learners-making-a-difference-across-the-city/",
       "date": "2026-11-05T16:00:00.000Z",
-      "source": "Salford City Council"
-    },
-    {
-      "title": "Salford adult social care worker recognised with national learning award",
-      "text": "A Salford adult social care worker whose passage from unemployment to university graduate has inspired others and has been named a winner at the 2026 ‘Get the Nation…",
-      "link": "https://news.salford.gov.uk/news/salford-adult-social-care-worker-recognised-with-national-learning-award/",
-      "date": "2026-11-04T16:00:00.000Z",
-      "source": "Salford City Council"
-    },
-    {
-      "title": "Salford Youth Day film festival shines spotlight on young people’s stories",
-      "text": "Over 60 young people from youth groups across Salford took centre stage at a special film festival for Salford Youth Day.",
-      "link": "https://news.salford.gov.uk/news/salford-youth-day-film-festival-shines-spotlight-on-young-people-s-stories/",
-      "date": "2026-11-04T12:00:00.000Z",
-      "source": "Salford City Council"
-    },
-    {
-      "title": "We Invented The Weekend - The festival of freetime is back!",
-      "text": "Salfordʼs cross-generational festival returns on Saturday 12 and Sunday 13 June 2027 - with over 200 Free activities.",
-      "link": "https://news.salford.gov.uk/news/we-invented-the-weekend-the-festival-of-freetime-is-back/",
-      "date": "2026-11-04T12:00:00.000Z",
-      "source": "Salford City Council"
-    },
-    {
-      "title": "Two Salford takeaways fined £25,000 for mouse infestations",
-      "text": "Two neighbouring takeaway businesses in Salford have been ordered to pay more than £25,000.",
-      "link": "https://news.salford.gov.uk/news/two-salford-takeaways-fined-25-000-for-mouse-infestations/",
-      "date": "2026-11-02T09:30:00.000Z",
       "source": "Salford City Council"
     }
   ],
@@ -118,6 +118,20 @@
   ],
   "cvs": [
     {
+      "title": "Are you emergency ready? - Be Ready campaign",
+      "text": "",
+      "link": "https://www.salfordcvs.co.uk/BeReady",
+      "date": "2026-11-23T17:05:00.000Z",
+      "source": "Salford CVS"
+    },
+    {
+      "title": "Mobile cervical screening service coming to Salford South East",
+      "text": "",
+      "link": "https://www.salfordcvs.co.uk/NHS-cervical-screening",
+      "date": "2026-11-10T14:21:00.000Z",
+      "source": "Salford CVS"
+    },
+    {
       "title": "A fair day’s pay for a hard day’s work: why Salford CVS backs the real Living Wage",
       "text": "",
       "link": "https://www.salfordcvs.co.uk/livingwageweek",
@@ -136,20 +150,6 @@
       "text": "",
       "link": "https://www.salfordcvs.co.uk/living-wage-25-yrs",
       "date": "2026-11-05T12:21:00.000Z",
-      "source": "Salford CVS"
-    },
-    {
-      "title": "More than a balance sheet: Finding a Treasurer who believes in your cause",
-      "text": "",
-      "link": "https://www.salfordcvs.co.uk/findingatrustee",
-      "date": "2026-11-05T09:19:00.000Z",
-      "source": "Salford CVS"
-    },
-    {
-      "title": "One year of Greater Together Manchester’s Refugee Lodgings project",
-      "text": "",
-      "link": "https://www.salfordcvs.co.uk/refugeeproject",
-      "date": "2026-11-04T16:23:00.000Z",
       "source": "Salford CVS"
     }
   ],
@@ -176,13 +176,5 @@
       "source": "GOV.UK"
     }
   ],
-  "warnings": [
-    {
-      "title": "Yellow warning of fog affecting North West England",
-      "text": "Yellow warning of fog affecting North West England: Cheshire East, Cheshire West and Chester, Greater Manchester valid from 1800 Mon 09 Nov to 1000 Tue 10 Nov",
-      "link": "https://www.metoffice.gov.uk/weather/warnings-and-advice/uk-warnings#?date=2026-11-09&id=cdb621a0-9fe0-4ca2-8f74-01632e8ac5dc&referrer=rss",
-      "date": null,
-      "source": "Met Office"
-    }
-  ]
+  "warnings": []
 }
