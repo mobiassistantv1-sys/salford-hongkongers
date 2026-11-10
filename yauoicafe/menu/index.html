@@ -3,11 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="robots" content="noindex">
-<title>友愛冰室 · 睇相揀餐（試玩）</title>
+<meta name="description" content="友愛冰室餐牌：全日早餐、麵包、三文治，連價錢同過敏原。Yau Oi Cafe menu with prices and allergens.">
+<title>友愛冰室 餐牌 · Yau Oi Cafe menu</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bowlby+One&family=Noto+Sans+HK:wght@500;700;900&family=Noto+Serif+HK:wght@900&display=swap">
 <style>
+@font-face{font-family:"YO Sign";src:url("/yauoicafe/assets/fonts/chiron-sung-hk-900-subset.woff2") format("woff2");font-weight:900;font-display:swap}
 /* 茶餐廳紙皮石 (mosaic tile) wall behind each dish; the colour follows the menu section */
 :root{--green:#0F6B3A;--red:#D62828;--gold:#FFC83D;--paper:#FFF7E1;--ink:#1F1A17;
   --bg:var(--green);--fg:var(--paper);--tag:var(--gold);--tagink:var(--ink);
@@ -15,9 +16,7 @@
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
 body{background:var(--bg);color:var(--fg);font-family:var(--body);transition:background-color .45s ease,color .45s ease;overflow-x:hidden}
-.tiles{position:fixed;inset:0;pointer-events:none;opacity:.1;
-  background-image:linear-gradient(rgba(255,255,255,.55) 2px,transparent 2px),linear-gradient(90deg,rgba(255,255,255,.55) 2px,transparent 2px);
-  background-size:16px 16px}
+.tiles{position:fixed;inset:0;pointer-events:none;background:radial-gradient(110% 70% at 50% -5%,rgba(255,255,255,.22),transparent 60%),linear-gradient(to bottom,transparent 55%,rgba(0,0,0,.18))}
 header{position:relative;z-index:2;display:flex;align-items:center;gap:10px;padding:12px 16px 0;max-width:1100px;margin:0 auto}
 header img{height:42px;border-radius:4px;display:block}
 .lang{margin-left:auto;border:2px solid currentColor;background:transparent;color:inherit;font:700 15px var(--body);border-radius:10px;padding:6px 12px;min-height:40px}
@@ -27,7 +26,7 @@ nav button[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
 main{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:0 16px 120px;display:grid;grid-template-columns:1fr;grid-template-areas:"stage" "info"}
 .stage{grid-area:stage;position:relative;height:min(44vh,420px);touch-action:pan-y;user-select:none;margin-top:6px}
 /* the shop-sign: dish name set vertically, like the signboards on Nathan Road */
-.sign{position:absolute;right:0;top:12px;writing-mode:vertical-rl;font:900 clamp(46px,12vw,104px)/1.02 var(--zh);letter-spacing:.04em;color:var(--fg);text-shadow:4px 4px 0 rgba(0,0,0,.18);max-height:100%;z-index:1}
+.sign{position:absolute;right:0;top:12px;writing-mode:vertical-rl;font:900 clamp(46px,12vw,104px)/1.02 "YO Sign",var(--zh);letter-spacing:.04em;color:var(--fg);text-shadow:4px 4px 0 rgba(0,0,0,.18);max-height:100%;z-index:1}
 .dish{position:absolute;left:0;right:clamp(62px,15vw,128px);top:50%;margin:0 auto;max-width:460px;transform:translateY(-50%);z-index:2;filter:drop-shadow(0 18px 22px rgba(0,0,0,.35))}
 .dish img{display:block;width:100%;height:auto}
 .dish.out-l{animation:outL .32s ease forwards}.dish.out-r{animation:outR .32s ease forwards}
@@ -70,8 +69,8 @@ html:not([lang="en"]) [data-l="en"],html[lang="en"] [data-l="zh"]{display:none!i
   <a href="/yauoicafe/"><img src="/yauoicafe/assets/yau-oi-logo-320.jpg" alt="友愛冰室 Yau Oi Cafe" width="112" height="55"></a>
   <button class="lang" id="lang" type="button">EN</button>
 </header>
-<p class="demo" data-l="zh">試玩版：睇吓靚相揀餐。真正落單請掃枱上 QR code。</p>
-<p class="demo" data-l="en">Preview: browse the menu by photo. To order, scan the QR code on your table.</p>
+<p class="demo" data-l="zh">落單請坐低之後掃枱上 QR code，外賣掃門口 QR code。</p>
+<p class="demo" data-l="en">To order, sit down and scan the QR code on your table, or the takeaway QR code at the entrance.</p>
 <nav id="cats" aria-label="餐牌類別 Menu sections"></nav>
 <main>
   <div class="stage" id="stage" aria-live="polite">
@@ -90,7 +89,7 @@ html:not([lang="en"]) [data-l="en"],html[lang="en"] [data-l="zh"]{display:none!i
     </div>
   </div>
 </main>
-<div class="cta"><a href="/yauoicafe/demo/build/"><span data-l="zh">自己砌一份全日早餐</span><span data-l="en">Build your own All Day Set</span></a></div>
+<div class="cta"><a href="/yauoicafe/"><span data-l="zh">返冰室主頁</span><span data-l="en">Back to Yau Oi Cafe</span></a></div>
 <script src="/yauoicafe/order/menu.js"></script>
 <script>
 (function(){
@@ -115,7 +114,7 @@ html:not([lang="en"]) [data-l="en"],html[lang="en"] [data-l="zh"]{display:none!i
     $("al").innerHTML='<li class="lbl">'+(EN()?"Contains:":"含：")+'</li>'+(al.length?al.map(c=>"<li>"+Y.alName(c,lang)+"</li>").join(""):"<li>"+(EN()?"none of the 14":"冇 14 種過敏原")+"</li>")+(Y.optionsAddAllergens(m)?"<li>"+(EN()?"options may add more":"選項另有過敏原")+"</li>":"");
     $("cap").textContent=m.imgCap?(EN()?m.imgCap.en:m.imgCap.zh):"";
     $("count").textContent=(i+1)+" / "+L.length;
-    const d=$("dish"),img=$("img"),src="/yauoicafe/demo/cut/"+m.id+".webp";
+    const d=$("dish"),img=$("img"),src="/yauoicafe/assets/cut/"+m.id+".webp";
     img.alt=zh+" "+en;
     if(!dir){img.src=src;}
     else{busy=true;d.className="dish out-"+(dir>0?"l":"r");
