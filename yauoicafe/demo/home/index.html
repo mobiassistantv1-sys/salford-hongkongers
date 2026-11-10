@@ -40,7 +40,7 @@ a{color:var(--green);font-weight:700}
   background:#BFE0C8;background-image:radial-gradient(rgba(255,255,255,.6) 1px,transparent 1.6px),radial-gradient(rgba(15,107,58,.2) 1px,transparent 1.6px),linear-gradient(#D2EBDA,#A9D4B6);
   background-size:12px 12px,17px 17px,100% 100%;box-shadow:0 -2px 0 #E7F5EB inset,0 -30px 60px rgba(0,0,0,.25)}
 .plate{position:absolute;left:0;right:0;bottom:10%;top:0}
-.plate img{position:absolute;left:50%;bottom:0;max-width:82%;max-height:96%;width:auto;height:auto;transform:translateX(-50%) translateY(14px) scale(.94);opacity:0;
+.plate img{position:absolute;left:50%;bottom:0;max-width:92%;max-height:96%;width:auto;height:auto;transform:translateX(-50%) translateY(14px) scale(.94);opacity:0;
   transition:opacity .55s ease,transform .55s cubic-bezier(.2,.9,.3,1.1);filter:drop-shadow(0 18px 14px rgba(0,0,0,.35))}
 .plate img.on{opacity:1;transform:translateX(-50%)}
 .plate img.fade-r{-webkit-mask-image:linear-gradient(to right,transparent 1%,#000 14%,#000 84%,transparent 99%);mask-image:linear-gradient(to right,transparent 1%,#000 14%,#000 84%,transparent 99%)}
@@ -191,10 +191,10 @@ html:not([lang="en"]) [data-l="en"],html[lang="en"] [data-l="zh"]{display:none!i
   const h=document.documentElement,b=document.getElementById("lang"),Y=window.YO;
   let lang="zh";
   /* the one moment of motion: dishes take turns on the table under the sign */
-  const ids=["set_satay","bk_pinebutter","sw_hamegg","bk_eggtart","ad_bbq","sw_pistachio","bk_pineapple","ad_ham"].filter(id=>Y.byId[id]||id==="set_satay");
-  const SET={zh:"沙嗲牛肉全日早餐",en:"Satay beef All Day Set"};
+  const ids=["set_ham","bk_pinebutter","sw_hamegg","bk_eggtart","ad_bbq","sw_pistachio","bk_pineapple","ad_ham"].filter(id=>Y.byId[id]||id==="set_ham");
+  const SET={zh:"火腿通粉全日早餐",en:"Ham macaroni set"};
   const plate=document.getElementById("plate"),nameEl=document.getElementById("dishname");
-  ids.forEach((id,k)=>{const im=new Image();im.src="/yauoicafe/demo/cut/"+id+".webp";im.alt="";im.decoding="async";if(id==="set_satay")im.classList.add("fade-r");if(!k)im.classList.add("on");plate.appendChild(im);});
+  ids.forEach((id,k)=>{const im=new Image();im.src="/yauoicafe/demo/cut/"+id+".webp";im.alt="";im.decoding="async";if(!k)im.classList.add("on");plate.appendChild(im);});
   let i=0;
   const label=()=>{const m=Y.byId[ids[i]]||SET;nameEl.innerHTML=(lang==="en"?"":m.zh)+'<span>'+m.en+'</span>';};
   label();
