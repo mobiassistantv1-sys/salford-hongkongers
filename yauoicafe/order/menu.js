@@ -40,7 +40,7 @@
   /* sq = Square item variation ID (price source). sqT = toasted variation. st:"bar" = slip goes to the drinks bar (toast).
      img:1 = photo at /yauoicafe/assets/menu/<id>.webp (real café photos, background removed, 480×480). */
   const MENU = [
-    {id:"ad_satay",img:1,imgCap:{zh:"相片：沙爹牛肉公仔麵，麵款可以自選",en:"Photo: satay beef with instant noodles — choose your noodles"},al:["P","So","Se","Cr","G"],cat:"allday",zh:"沙爹牛肉",en:"Satay Beef",p:950,g:SETG,d:SETD,sq:"7V37O4E4IY4LA2ECWWFH7TNK"},
+    {id:"ad_satay",img:1,imgCap:{zh:"相片：沙嗲牛肉公仔麵，麵款可以自選",en:"Photo: satay beef with instant noodles — choose your noodles"},al:["P","So","Se","Cr","G"],cat:"allday",zh:"沙嗲牛肉",en:"Satay Beef",p:950,g:SETG,d:SETD,sq:"7V37O4E4IY4LA2ECWWFH7TNK"},
     {id:"ad_ham",img:1,imgCap:{zh:"相片：火腿通心粉，麵款可以自選",en:"Photo: ham with macaroni — choose your noodles"},al:["G","Su"],cat:"allday",zh:"火腿",en:"Ham",p:950,g:SETG,d:SETD,sq:"QDJEZHOELC2PMZUK76JMEEHY"},
     {id:"ad_fivespice",img:1,imgCap:{zh:"相片：五香肉丁米粉，麵款可以自選",en:"Photo: five spice pork with rice noodles — choose your noodles"},al:["So","G"],cat:"allday",zh:"五香肉丁",en:"Five Spice Pork",p:950,g:SETG,d:SETD,sq:"SATHJILD7JVSQS6SHWSRZIH7"},
     {id:"ad_bbq",img:1,imgCap:{zh:"相片：叉燒意粉，麵款可以自選",en:"Photo: BBQ pork with spaghetti — choose your noodles"},al:["G","So"],cat:"allday",zh:"叉燒",en:"BBQ Pork",p:950,g:SETG,d:SETD,sq:"AFENZLCEBW5MWUDSWQRLTYP3"},

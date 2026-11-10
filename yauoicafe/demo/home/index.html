@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>友愛冰室 Yau Oi Cafe · Salford（新主頁試玩）</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bowlby+One&family=Noto+Sans+HK:wght@500;700;900&family=Noto+Serif+HK:wght@900&display=swap">
+<style>
+/* Tokens: brand palette from the poster standard; HK shop-sign lettering (魏碑) + a lit wall and table as the signature */
+:root{--green:#0F6B3A;--deep:#0A4F2A;--red:#D62828;--gold:#FFC83D;--paper:#FFF7E1;--ink:#1F1A17;--muted:#5E554D;--line:#EADFC8;
+  --zh:"Noto Serif HK","Songti TC",serif;--en:"Bowlby One",Impact,sans-serif;--body:"Noto Sans HK","PingFang HK",system-ui,sans-serif}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.65}
+a{color:var(--green);font-weight:700}
+.wrap{max-width:960px;margin:0 auto;padding:0 16px}
+/* continuous Greek-key (回紋) band — the same frame as the logo */
+.key{height:22px;background-color:var(--green);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22'%3E%3Cpath d='M0 19H19V3H5V15H15V7H9V11' fill='none' stroke='%23FFF7E1' stroke-width='2.2'/%3E%3C/svg%3E");background-repeat:repeat-x;background-position:0 0}
+.bar{background:var(--green);color:var(--paper)}
+.bar .wrap{display:flex;align-items:center;gap:12px;padding-top:8px;padding-bottom:8px}
+.bar a{color:var(--paper);text-decoration:none;font-weight:500;font-size:14px}
+.lang{margin-left:auto;border:2px solid currentColor;background:transparent;color:inherit;font:700 14px var(--body);border-radius:10px;padding:5px 12px;min-height:38px}
+/* 招牌字：昭源宋體 Chiron Sung HK Heavy (香港字形, OFL), subset to the words on this page */
+@font-face{font-family:"YO Sign";src:url("/yauoicafe/demo/fonts/chiron-sung-hk-900-subset.woff2") format("woff2");font-weight:900;font-display:swap}
+/* hero: a lit shop wall, a raised gold signboard line, and the dish sitting on a formica table */
+.hero{position:relative;color:var(--paper);overflow:hidden;
+  background:radial-gradient(120% 70% at 50% -10%,#2E9A5E 0%,#0F6B3A 45%,#073A20 100%)}
+
+.hero .wrap{position:relative;z-index:1;padding-top:22px;padding-bottom:0}
+.logo{display:block;width:min(200px,52vw);height:auto;margin:0 auto 14px;border-radius:8px;
+  box-shadow:0 2px 0 rgba(255,255,255,.25) inset,0 10px 22px rgba(0,0,0,.35),0 3px 0 rgba(0,0,0,.3)}
+.signline{margin:0;text-align:center;font:900 clamp(46px,13.5vw,96px)/1.1 "YO Sign",var(--zh);letter-spacing:.04em;color:var(--gold);
+  text-shadow:0 1px 0 #FFE08A,0 2px 0 #E0A21C,0 3px 0 #C98A10,0 4px 0 #A9700A,0 5px 0 #8A5A06,0 12px 18px rgba(0,0,0,.45)}
+.signline span{display:block}
+.signline[data-l="en"]{font:400 clamp(28px,7vw,48px)/1.15 var(--en);letter-spacing:.01em}
+.scene{position:relative;max-width:620px;margin:6px auto 0;height:clamp(250px,70vw,400px);perspective:900px}
+.counter{position:absolute;left:-30%;right:-30%;bottom:-2px;height:52%;transform:rotateX(58deg);transform-origin:50% 100%;border-radius:50% 50% 0 0/22% 22% 0 0;
+  background:#BFE0C8;background-image:radial-gradient(rgba(255,255,255,.6) 1px,transparent 1.6px),radial-gradient(rgba(15,107,58,.2) 1px,transparent 1.6px),linear-gradient(#D2EBDA,#A9D4B6);
+  background-size:12px 12px,17px 17px,100% 100%;box-shadow:0 -2px 0 #E7F5EB inset,0 -30px 60px rgba(0,0,0,.25)}
+.plate{position:absolute;left:0;right:0;bottom:10%;top:0}
+.plate img{position:absolute;left:50%;bottom:0;max-width:92%;max-height:96%;width:auto;height:auto;transform:translateX(-50%) translateY(14px) scale(.94);opacity:0;
+  transition:opacity .55s ease,transform .55s cubic-bezier(.2,.9,.3,1.1);filter:drop-shadow(0 18px 14px rgba(0,0,0,.35))}
+.plate img.on{opacity:1;transform:translateX(-50%)}
+.plate img.fade-r{-webkit-mask-image:linear-gradient(to right,transparent 1%,#000 14%,#000 84%,transparent 99%);mask-image:linear-gradient(to right,transparent 1%,#000 14%,#000 84%,transparent 99%)}
+.shadow{position:absolute;left:22%;right:22%;bottom:7%;height:9%;border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.35),transparent)}
+.dishname{text-align:center;font:900 22px "YO Sign",var(--zh);margin:30px 0 -6px;letter-spacing:0;min-height:1.6em;color:var(--paper);text-shadow:0 2px 6px rgba(0,0,0,.35)}
+.dishname span{font:400 15px var(--en);opacity:.85;margin-left:8px}
+.intro{max-width:620px;margin:18px auto 0;text-align:center;font-size:16.5px;opacity:.95}
+.cta{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:20px}
+.btn{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;border-radius:12px;padding:13px 20px;font:900 17px var(--body);min-height:50px}
+.btn.gold{background:var(--gold);color:var(--ink);box-shadow:0 4px 0 #C89412}
+.btn.line{border:2.5px solid var(--paper);color:var(--paper)}
+section{padding:34px 0}
+h2{font:900 clamp(32px,8vw,46px)/1.15 "YO Sign",var(--zh);color:var(--green);margin:0 0 16px;text-shadow:0 2px 0 rgba(15,107,58,.18)}
+h2 [data-l="en"]{font:400 clamp(24px,6vw,34px)/1.2 var(--en)}
+/* food photos: pinned like snapshots on the noticeboard */
+.snaps{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.snap{position:relative;margin:0;background:#fff;padding:8px 8px 10px;box-shadow:0 1px 1px rgba(0,0,0,.08),0 6px 10px rgba(60,40,10,.12),0 18px 30px rgba(60,40,10,.12)}
+.snap::before{content:"";position:absolute;top:-9px;left:50%;width:64px;height:20px;margin-left:-32px;background:rgba(255,200,61,.75);transform:rotate(-3deg);box-shadow:0 1px 2px rgba(0,0,0,.1)}
+.snap:nth-child(odd){transform:rotate(-1.2deg)}.snap:nth-child(even){transform:rotate(1.2deg)}
+.snap img{display:block;width:100%;height:auto;aspect-ratio:1/1;object-fit:cover}
+.snap figcaption{font:900 15px/1.35 var(--body);padding:8px 2px 0}
+.snap small{display:block;font-weight:500;color:var(--muted);font-size:13px}
+.more{margin:18px 0 0;text-align:center}
+.more a{font-size:16px}
+/* what we stand for: written like the menu board (水牌) */
+.board{background:radial-gradient(120% 90% at 30% 0%,#14653A,#0A4F2A 60%,#073A20);color:var(--paper);border-radius:6px;padding:22px 20px;border:10px solid #7A5532;border-image:linear-gradient(135deg,#9A6E43,#6B4A2B 50%,#4F3520) 1;box-shadow:0 14px 28px rgba(60,40,10,.25),inset 0 0 30px rgba(0,0,0,.35)}
+.board h2{color:var(--gold)}
+.board dl{margin:0;display:grid;gap:16px}
+.board dt{font:900 24px "YO Sign",var(--zh);color:var(--paper)}
+.board dd{margin:2px 0 0;opacity:.9;font-size:16px}
+/* opening hours: the enamel door sign */
+.door{display:grid;gap:14px}
+.sign{background:linear-gradient(160deg,#E84545,#D62828 45%,#B51F1F);color:#fff;border-radius:12px;padding:18px 20px;box-shadow:0 2px 0 rgba(255,255,255,.35) inset,0 5px 0 #9E1B1B,0 14px 24px rgba(0,0,0,.2);border:3px solid #fff;outline:3px solid var(--red)}
+.sign b{display:block;font:900 15px var(--body);color:var(--gold)}
+.sign p{margin:2px 0 0;font:900 23px/1.35 var(--body)}
+.sign small{display:block;font:500 14px/1.5 var(--body);opacity:.95;margin-top:6px}
+.sign small a{color:#fff}
+.ways{display:grid;gap:12px}
+.way{border-left:6px solid var(--gold);background:#fff;padding:12px 16px;border-radius:0 12px 12px 0;box-shadow:0 1px 1px rgba(0,0,0,.06),0 8px 18px rgba(60,40,10,.1)}
+.way b{display:block;font:900 22px "YO Sign",var(--zh);color:var(--red)}
+.way p{margin:2px 0 0;color:var(--muted);font-size:15.5px}
+.allergy{background:#FFF0D2;border:2px dashed var(--gold);border-radius:10px;padding:12px 14px;font-size:15.5px;margin:16px 0 0}
+footer{background:var(--green);color:var(--paper);font-size:14px}
+footer .wrap{padding-top:18px;padding-bottom:28px}
+footer a{color:var(--paper)}
+.demo{background:var(--gold);color:var(--ink);text-align:center;font:700 13px var(--body);padding:6px 12px}
+:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+@media(min-width:760px){
+  .snaps{grid-template-columns:repeat(4,1fr)}
+  .door{grid-template-columns:1fr 1fr;align-items:start}
+  .ways{grid-template-columns:repeat(3,1fr)}
+  .board dl{grid-template-columns:repeat(3,1fr)}
+  .hero .wrap{padding-top:30px}
+  .scene{max-width:760px}
+  .counter{left:-80%;right:-80%}
+}
+@media(prefers-reduced-motion:reduce){.plate img{transition:none}html{scroll-behavior:auto}}
+html:not([lang="en"]) [data-l="en"],html[lang="en"] [data-l="zh"]{display:none!important}
+</style>
+</head>
+<body>
+<div class="demo"><span data-l="zh">新主頁試玩版，正式主頁未改。</span><span data-l="en">New homepage preview. The live homepage hasn't changed.</span></div>
+<div class="bar"><div class="wrap"><a href="/">← Salford Hongkongers CIC</a><button class="lang" id="lang" type="button">EN</button></div></div>
+<div class="key" aria-hidden="true"></div>
+<header class="hero">
+  <div class="wrap">
+    <img class="logo" src="/yauoicafe/assets/yau-oi-logo-800.jpg" alt="友愛冰室 Yau Oi Cafe" width="800" height="396">
+    <h1 class="signline" data-l="zh"><span>一杯奶茶</span><span>一份人情味</span></h1>
+    <h1 class="signline" data-l="en"><span>A cup of milk tea,</span><span>a taste of home</span></h1>
+    <p class="intro" data-l="zh">友愛冰室係 Salford 嘅香港冰室，由 Salford Hongkongers CIC 同一班義工一齊營運。我哋想喺 Salford 留住香港冰室嘅味道同人情味，畀新來嘅港人、街坊同朋友有個地方坐低、食餐好、傾吓偈。</p>
+    <p class="intro" data-l="en">Yau Oi Cafe is a Hong Kong-style café in Salford, run by Salford Hongkongers CIC and a team of volunteers. We want to keep the taste and warmth of a Hong Kong <i>bing sutt</i> alive here — a place for new arrivals, neighbours and friends to sit down, eat well and chat.</p>
+    <div class="cta">
+      <a class="btn gold" href="/yauoicafe/demo/showcase/"><span data-l="zh">睇餐牌</span><span data-l="en">See the menu</span></a>
+      <a class="btn line" href="/yauoicafe/queue/"><span data-l="zh">網上排隊</span><span data-l="en">Join the queue</span></a>
+      <a class="btn line" href="https://whatsapp.com/channel/0029Vb8zqGP0gcfFZ7uxnY3h" target="_blank" rel="noopener"><span data-l="zh">追蹤 WhatsApp 頻道</span><span data-l="en">Follow on WhatsApp</span></a>
+    </div>
+    <p class="dishname" id="dishname" aria-live="polite"></p>
+    <div class="scene" aria-hidden="true"><div class="counter"></div><div class="shadow"></div><div class="plate" id="plate"></div></div>
+  </div>
+</header>
+<div class="key" aria-hidden="true"></div>
+
+<main class="wrap">
+  <section>
+    <h2><span data-l="zh">冰室出品</span><span data-l="en">From our kitchen</span></h2>
+    <div class="snaps">
+      <figure class="snap"><img src="/yauoicafe/assets/promo/ham-macaroni-breakfast.webp" width="900" height="900" loading="lazy" alt="火腿通粉、炒蛋、牛油多士同熱奶茶 Ham macaroni with scrambled egg, buttered toast and hot milk tea">
+        <figcaption><span data-l="zh">全日早餐：火腿通粉</span><span data-l="en">All Day Set: ham macaroni</span><small data-l="zh">跟蛋、牛油多士同飲品</small><small data-l="en">with eggs, buttered toast and a drink</small></figcaption></figure>
+      <figure class="snap"><img src="/yauoicafe/assets/promo/satay-noodles-set.webp" width="900" height="900" loading="lazy" alt="沙嗲牛肉公仔麵、煎蛋、蛋撻同凍檸茶 Satay beef instant noodles with fried eggs, an egg tart and iced lemon tea">
+        <figcaption><span data-l="zh">全日早餐：沙嗲牛肉公仔麵</span><span data-l="en">All Day Set: satay beef instant noodles</span><small data-l="zh">跟煎蛋同凍檸茶，加個蛋撻</small><small data-l="en">with fried eggs and iced lemon tea, plus an egg tart</small></figcaption></figure>
+      <figure class="snap"><img src="/yauoicafe/assets/promo/pineapple-buns.webp" width="900" height="900" loading="lazy" alt="即日焗菠蘿包 Freshly baked pineapple buns">
+        <figcaption><span data-l="zh">即日焗菠蘿包</span><span data-l="en">Freshly baked pineapple buns</span></figcaption></figure>
+      <figure class="snap"><img src="/yauoicafe/assets/promo/corned-beef-egg-sandwich.webp" width="900" height="900" loading="lazy" alt="咸牛肉炒蛋三文治 Corned beef and egg sandwich">
+        <figcaption><span data-l="zh">咸牛肉蛋三文治</span><span data-l="en">Corned beef &amp; egg sandwich</span></figcaption></figure>
+    </div>
+    <p class="more"><a href="/yauoicafe/demo/build/"><span data-l="zh">自己砌一份全日早餐睇吓幾錢</span><span data-l="en">Build an All Day Set and see the price</span></a></p>
+  </section>
+
+  <section>
+    <div class="board">
+      <h2><span data-l="zh">我哋嘅理念</span><span data-l="en">What we stand for</span></h2>
+      <dl>
+        <div><dt><span data-l="zh">香港味道</span><span data-l="en">Taste of Hong Kong</span></dt>
+          <dd data-l="zh">港式早餐、通粉、三文治、即日焗嘅菠蘿包同蛋撻，配一杯絲襪奶茶。</dd><dd data-l="en">Hong Kong breakfasts, macaroni soup, sandwiches, freshly baked pineapple buns and egg tarts, with a proper milk tea.</dd></div>
+        <div><dt><span data-l="zh">社區聚腳點</span><span data-l="en">A community meeting place</span></dt>
+          <dd data-l="zh">唔止係食飯，係一個識新朋友、互相照應嘅地方。</dd><dd data-l="en">More than a meal — a place to meet people and look out for each other.</dd></div>
+        <div><dt><span data-l="zh">義工營運</span><span data-l="en">Run by volunteers</span></dt>
+          <dd data-l="zh">由 Salford Hongkongers CIC 嘅義工落手落腳打理，收益用返喺營運社區中心同舉辦社區活動。</dd><dd data-l="en">Run hands-on by Salford Hongkongers CIC volunteers. What we earn goes back into running the community centre and holding community events.</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section>
+    <h2><span data-l="zh">幾時開、喺邊度</span><span data-l="en">When &amp; where</span></h2>
+    <div class="door">
+      <div class="sign"><b data-l="zh">營業時間</b><b data-l="en">Opening hours</b>
+        <p data-l="zh">星期五至日<br>10:00am – 下午2點</p><p data-l="en">Friday to Sunday<br>10:00am – 2:00pm</p>
+        <small data-l="zh">下午2點係最後落單時間。公眾假期或者活動日可能有變，請留意<a href="https://whatsapp.com/channel/0029Vb8zqGP0gcfFZ7uxnY3h" target="_blank" rel="noopener">友愛冰室 WhatsApp 頻道</a>。</small>
+        <small data-l="en">2:00pm is last order. Hours may change on holidays or event days — follow our <a href="https://whatsapp.com/channel/0029Vb8zqGP0gcfFZ7uxnY3h" target="_blank" rel="noopener">Yau Oi Cafe WhatsApp channel</a>.</small></div>
+      <div class="sign" style="background:linear-gradient(160deg,#1E8A50,#0F6B3A 45%,#0A4F2A);outline-color:var(--green);box-shadow:0 2px 0 rgba(255,255,255,.3) inset,0 5px 0 var(--deep),0 14px 24px rgba(0,0,0,.2)"><b data-l="zh">地址</b><b data-l="en">Address</b>
+        <p>The Angel Centre<br>1 St Philip's Place, Salford M3 6FA</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2><span data-l="zh">點樣落單</span><span data-l="en">How to order</span></h2>
+    <div class="ways">
+      <div class="way"><b data-l="zh">堂食</b><b data-l="en">Eat in</b>
+        <p data-l="zh">坐低之後用手機 scan 枱上嘅 QR code 落單，落單後即到櫃台付款（現金或者卡）。</p><p data-l="en">Sit down, scan the QR code on your table to order, then pay at the counter straight away (cash or card).</p></div>
+      <div class="way"><b data-l="zh">外賣</b><b data-l="en">Takeaway</b>
+        <p data-l="zh">scan 門口嘅外賣 QR code 落單，落單後即到櫃台付款。</p><p data-l="en">Scan the takeaway QR code at the entrance then pay at the counter straight away.</p></div>
+      <div class="way"><b data-l="zh">人多要等位</b><b data-l="en">Busy?</b>
+        <p data-l="zh">用網上排隊取號，輪到你手機會響。</p><p data-l="en">Take a number with the online queue — your phone alerts you when it's your turn.</p></div>
+    </div>
+    <p class="allergy" data-l="zh"><b>食物過敏？</b> 每樣餐點嘅過敏原都寫喺餐牌上。落單前請話俾員工知，或者喺訂單「過敏備註」寫低。</p>
+    <p class="allergy" data-l="en"><b>Food allergy?</b> Allergens are listed for every item on the menu. Please tell staff before ordering, or add an allergy note to your order.</p>
+  </section>
+</main>
+
+<div class="key" aria-hidden="true"></div>
+<footer><div class="wrap">
+  <p data-l="zh">友愛冰室由 <a href="/">Salford Hongkongers CIC</a>（公司編號 13877472）營運。 · <a href="https://whatsapp.com/channel/0029VaSj6Bk8kyyHDVnHkx2E" target="_blank" rel="noopener">CIC WhatsApp 頻道</a> · <a href="/privacy/">私隱政策</a> · <a href="/yauoicafe/staff/">員工登入</a></p>
+  <p data-l="en">Yau Oi Cafe is run by <a href="/">Salford Hongkongers CIC</a> (company no. 13877472). · <a href="https://whatsapp.com/channel/0029VaSj6Bk8kyyHDVnHkx2E" target="_blank" rel="noopener">CIC WhatsApp channel</a> · <a href="/privacy/">Privacy</a> · <a href="/yauoicafe/staff/">Staff sign-in</a></p>
+</div></footer>
+<script src="/yauoicafe/order/menu.js"></script>
+<script>
+(function(){
+  const h=document.documentElement,b=document.getElementById("lang"),Y=window.YO;
+  let lang="zh";
+  /* the one moment of motion: dishes take turns on the table under the sign */
+  const ids=["set_ham","bk_pinebutter","sw_hamegg","bk_eggtart","ad_bbq","sw_pistachio","bk_pineapple","ad_ham"].filter(id=>Y.byId[id]||id==="set_ham");
+  const SET={zh:"火腿通粉全日早餐",en:"Ham macaroni set"};
+  const plate=document.getElementById("plate"),nameEl=document.getElementById("dishname");
+  ids.forEach((id,k)=>{const im=new Image();im.src="/yauoicafe/demo/cut/"+id+".webp";im.alt="";im.decoding="async";if(!k)im.classList.add("on");plate.appendChild(im);});
+  let i=0;
+  const label=()=>{const m=Y.byId[ids[i]]||SET;nameEl.innerHTML=(lang==="en"?"":m.zh)+'<span>'+m.en+'</span>';};
+  label();
+  if(!matchMedia("(prefers-reduced-motion:reduce)").matches)setInterval(()=>{const im=plate.children;im[i].classList.remove("on");i=(i+1)%ids.length;im[i].classList.add("on");label();},3200);
+  function set(l){lang=l;h.lang=l==="en"?"en":"zh-Hant";b.textContent=l==="en"?"中文":"EN";try{localStorage.setItem("shk_lang",l)}catch(e){}label();}
+  let s=null;try{s=localStorage.getItem("shk_lang")}catch(e){}
+  set(s==="en"?"en":"zh");
+  b.addEventListener("click",function(){set(h.lang==="en"?"zh":"en")});
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>友愛冰室 · 睇相揀餐（試玩）</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bowlby+One&family=Noto+Sans+HK:wght@500;700;900&family=Noto+Serif+HK:wght@900&display=swap">
+<style>
+/* 茶餐廳紙皮石 (mosaic tile) wall behind each dish; the colour follows the menu section */
+:root{--green:#0F6B3A;--red:#D62828;--gold:#FFC83D;--paper:#FFF7E1;--ink:#1F1A17;
+  --bg:var(--green);--fg:var(--paper);--tag:var(--gold);--tagink:var(--ink);
+  --zh:"Noto Serif HK","Songti TC",serif;--en:"Bowlby One",Impact,sans-serif;--body:"Noto Sans HK","PingFang HK",system-ui,sans-serif}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);transition:background-color .45s ease,color .45s ease;overflow-x:hidden}
+.tiles{position:fixed;inset:0;pointer-events:none;opacity:.1;
+  background-image:linear-gradient(rgba(255,255,255,.55) 2px,transparent 2px),linear-gradient(90deg,rgba(255,255,255,.55) 2px,transparent 2px);
+  background-size:16px 16px}
+header{position:relative;z-index:2;display:flex;align-items:center;gap:10px;padding:12px 16px 0;max-width:1100px;margin:0 auto}
+header img{height:42px;border-radius:4px;display:block}
+.lang{margin-left:auto;border:2px solid currentColor;background:transparent;color:inherit;font:700 15px var(--body);border-radius:10px;padding:6px 12px;min-height:40px}
+nav{position:relative;z-index:2;display:flex;gap:8px;padding:12px 16px 0;max-width:1100px;margin:0 auto;overflow-x:auto;scrollbar-width:none}
+nav button{flex:none;border:2px solid currentColor;background:transparent;color:inherit;font:900 16px var(--body);border-radius:999px;padding:8px 16px;min-height:44px}
+nav button[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
+main{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:0 16px 120px;display:grid;grid-template-columns:1fr;grid-template-areas:"stage" "info"}
+.stage{grid-area:stage;position:relative;height:min(44vh,420px);touch-action:pan-y;user-select:none;margin-top:6px}
+/* the shop-sign: dish name set vertically, like the signboards on Nathan Road */
+.sign{position:absolute;right:0;top:12px;writing-mode:vertical-rl;font:900 clamp(46px,12vw,104px)/1.02 var(--zh);letter-spacing:.04em;color:var(--fg);text-shadow:4px 4px 0 rgba(0,0,0,.18);max-height:100%;z-index:1}
+.dish{position:absolute;left:0;right:clamp(62px,15vw,128px);top:50%;margin:0 auto;max-width:460px;transform:translateY(-50%);z-index:2;filter:drop-shadow(0 18px 22px rgba(0,0,0,.35))}
+.dish img{display:block;width:100%;height:auto}
+.dish.out-l{animation:outL .32s ease forwards}.dish.out-r{animation:outR .32s ease forwards}
+.dish.in-l{animation:inL .42s cubic-bezier(.2,.9,.3,1.2) both}.dish.in-r{animation:inR .42s cubic-bezier(.2,.9,.3,1.2) both}
+@keyframes outL{to{transform:translate(-70%,-50%) rotate(-12deg);opacity:0}}
+@keyframes outR{to{transform:translate(70%,-50%) rotate(12deg);opacity:0}}
+@keyframes inL{from{transform:translate(60%,-50%) rotate(10deg);opacity:0}to{transform:translateY(-50%)}}
+@keyframes inR{from{transform:translate(-60%,-50%) rotate(-10deg);opacity:0}to{transform:translateY(-50%)}}
+.info{grid-area:info}
+.en{font:400 clamp(22px,5.4vw,34px)/1.1 var(--en);margin:0 0 10px;letter-spacing:.01em}
+.row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+/* yellow price card, the kind taped to the wall above the counter */
+.price{display:inline-block;background:var(--tag);color:var(--tagink);font:400 30px/1 var(--en);padding:10px 16px 8px;border-radius:6px;transform:rotate(-3deg);box-shadow:3px 3px 0 rgba(0,0,0,.25)}
+.desc{font:700 16px/1.5 var(--body);opacity:.92;margin:0}
+.al{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0 0;padding:0;list-style:none}
+.al li{background:rgba(0,0,0,.22);color:var(--fg);border-radius:6px;padding:4px 9px;font:700 14px var(--body)}
+.al .lbl{background:none;padding-left:0}
+.cap{font-size:13px;opacity:.8;margin:10px 0 0}
+.pager{display:flex;align-items:center;gap:10px;margin:14px 0 0}
+.arrow{width:56px;height:56px;border-radius:50%;border:3px solid currentColor;background:transparent;color:inherit;font:900 26px/1 var(--body);display:grid;place-items:center}
+.count{font:400 18px var(--en);min-width:64px;text-align:center}
+.cta{position:fixed;left:0;right:0;bottom:0;z-index:3;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:linear-gradient(transparent,rgba(0,0,0,.25))}
+.cta a{display:block;max-width:560px;margin:0 auto;text-align:center;text-decoration:none;background:var(--paper);color:var(--ink);font:900 18px var(--body);padding:15px;border-radius:14px;box-shadow:0 4px 0 rgba(0,0,0,.3)}
+.demo{position:relative;z-index:2;max-width:1100px;margin:8px auto 0;padding:0 16px;font-size:12.5px;opacity:.85}
+:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+@media(min-width:860px){
+  main{grid-template-columns:1.15fr 1fr;grid-template-areas:"stage info";align-items:center;padding-top:20px}
+  .stage{height:600px}
+  .info{padding-left:56px}
+  .sign{font-size:96px}
+  .dish{right:150px}
+}
+@media(prefers-reduced-motion:reduce){body{transition:none}.dish{animation:none!important}}
+html:not([lang="en"]) [data-l="en"],html[lang="en"] [data-l="zh"]{display:none!important}
+</style>
+</head>
+<body>
+<div class="tiles" aria-hidden="true"></div>
+<header>
+  <a href="/yauoicafe/"><img src="/yauoicafe/assets/yau-oi-logo-320.jpg" alt="友愛冰室 Yau Oi Cafe" width="112" height="55"></a>
+  <button class="lang" id="lang" type="button">EN</button>
+</header>
+<p class="demo" data-l="zh">試玩版：睇吓靚相揀餐。真正落單請掃枱上 QR code。</p>
+<p class="demo" data-l="en">Preview: browse the menu by photo. To order, scan the QR code on your table.</p>
+<nav id="cats" aria-label="餐牌類別 Menu sections"></nav>
+<main>
+  <div class="stage" id="stage" aria-live="polite">
+    <div class="sign" id="sign" aria-hidden="true"></div>
+    <div class="dish" id="dish"><img id="img" alt=""></div>
+  </div>
+  <div class="info">
+    <div class="en" id="en"></div>
+    <div class="row"><span class="price" id="price"></span><p class="desc" id="desc"></p></div>
+    <ul class="al" id="al"></ul>
+    <p class="cap" id="cap"></p>
+    <div class="pager">
+      <button class="arrow" id="prev" type="button" aria-label="上一款 Previous">‹</button>
+      <span class="count" id="count"></span>
+      <button class="arrow" id="next" type="button" aria-label="下一款 Next">›</button>
+    </div>
+  </div>
+</main>
+<div class="cta"><a href="/yauoicafe/demo/build/"><span data-l="zh">自己砌一份全日早餐</span><span data-l="en">Build your own All Day Set</span></a></div>
+<script src="/yauoicafe/order/menu.js"></script>
+<script>
+(function(){
+  const Y=window.YO,h=document.documentElement,$=id=>document.getElementById(id);
+  /* section colours: wall / text / price card */
+  const THEME={allday:["#0F6B3A","#FFF7E1","#FFC83D","#1F1A17"],bakery:["#FFC83D","#1F1A17","#D62828","#FFF7E1"],sandwich:["#D62828","#FFF7E1","#FFC83D","#1F1A17"]};
+  let P={},lang="zh",i=0,busy=false;
+  try{lang=localStorage.getItem("shk_lang")==="en"?"en":"zh";}catch(e){}
+  const EN=()=>lang==="en";
+  const items=()=>Y.MENU.filter(m=>m.img&&!Y.hiddenItem(m)&&!(P.off&&P.off[m.id]));
+  const cats=()=>Y.CATS.filter(c=>items().some(m=>m.cat===c.id));
+  const money=p=>"£"+(p/100).toFixed(2);
+  function paint(dir){
+    const L=items();if(!L.length)return;i=(i+L.length)%L.length;const m=L[i],th=THEME[m.cat]||THEME.allday;
+    const st=h.style;st.setProperty("--bg",th[0]);st.setProperty("--fg",th[1]);st.setProperty("--tag",th[2]);st.setProperty("--tagink",th[3]);
+    const zh=Y.itemName(m,P,"zh"),en=Y.itemName(m,P,"en");
+    $("sign").textContent=EN()?"":zh.replace(/\s/g,"");$("sign").style.fontSize=zh.length>5?"clamp(34px,8vw,66px)":zh.length>4?"clamp(40px,10vw,80px)":"";
+    $("en").textContent=EN()?en:en;
+    $("price").textContent=money(Y.itemPrice(m,P,false));
+    $("desc").textContent=m.d?(EN()?m.d.en:m.d.zh):(EN()?zh:"");
+    const al=Y.lineAllergens(m.id,{});
+    $("al").innerHTML='<li class="lbl">'+(EN()?"Contains:":"含：")+'</li>'+(al.length?al.map(c=>"<li>"+Y.alName(c,lang)+"</li>").join(""):"<li>"+(EN()?"none of the 14":"冇 14 種過敏原")+"</li>")+(Y.optionsAddAllergens(m)?"<li>"+(EN()?"options may add more":"選項另有過敏原")+"</li>":"");
+    $("cap").textContent=m.imgCap?(EN()?m.imgCap.en:m.imgCap.zh):"";
+    $("count").textContent=(i+1)+" / "+L.length;
+    const d=$("dish"),img=$("img"),src="/yauoicafe/demo/cut/"+m.id+".webp";
+    img.alt=zh+" "+en;
+    if(!dir){img.src=src;}
+    else{busy=true;d.className="dish out-"+(dir>0?"l":"r");
+      setTimeout(()=>{img.src=src;d.className="dish in-"+(dir>0?"l":"r");setTimeout(()=>{busy=false;},420);},matchMedia("(prefers-reduced-motion:reduce)").matches?0:300);}
+    $("cats").innerHTML=cats().map(c=>'<button type="button" data-c="'+c.id+'" aria-pressed="'+(c.id===m.cat)+'">'+(EN()?c.en:c.zh)+'</button>').join("");
+    document.title=(EN()?en:zh)+" · 友愛冰室";
+  }
+  const go=dir=>{if(busy)return;i+=dir;paint(dir);};
+  $("prev").onclick=()=>go(-1);$("next").onclick=()=>go(1);
+  ["prev","next"].forEach(id=>$(id).addEventListener("mousedown",e=>e.preventDefault()));
+  $("cats").onclick=e=>{const b=e.target.closest("[data-c]");if(!b)return;const L=items(),j=L.findIndex(m=>m.cat===b.dataset.c);if(j>=0&&j!==i){const dir=j>i?1:-1;i=j;paint(dir);}};
+  addEventListener("keydown",e=>{if(e.key==="ArrowRight")go(1);if(e.key==="ArrowLeft")go(-1);});
+  let x0=null;const s=$("stage");
+  s.addEventListener("pointerdown",e=>{x0=e.clientX;});
+  s.addEventListener("pointerup",e=>{if(x0==null)return;const dx=e.clientX-x0;x0=null;if(Math.abs(dx)>40)go(dx<0?1:-1);});
+  function setLang(l){lang=l;h.lang=l==="en"?"en":"zh-Hant";$("lang").textContent=l==="en"?"中文":"EN";try{localStorage.setItem("shk_lang",l);}catch(e){}paint(0);}
+  $("lang").onclick=()=>setLang(EN()?"zh":"en");
+  setLang(lang);
+  /* live prices, names, sold-out and today's special buns (public data, read-only) */
+  fetch(Y.FIREBASE.databaseURL+"/ordering/public.json").then(r=>r.json()).then(p=>{P=p||{};Y.applySpecial(P);paint(0);}).catch(()=>{});
+})();
+</script>
+</body>
+</html>
