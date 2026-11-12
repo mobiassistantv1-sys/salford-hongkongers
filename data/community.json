@@ -1,6 +1,13 @@
 {
-  "updated": "2026-11-11T18:37:29.489Z",
+  "updated": "2026-11-12T18:50:07.810Z",
   "council": [
+    {
+      "title": "Little Hulton Nursery transformed and more local SEND places created for families",
+      "text": "Children and families in Little Hulton are benefiting from a major investment to improve nursery facilities and expanded specialist support closer to home.",
+      "link": "https://news.salford.gov.uk/news/little-hulton-nursery-transformed-and-more-local-send-places-created-for-families/",
+      "date": "2026-11-12T12:00:00.000Z",
+      "source": "Salford City Council"
+    },
     {
       "title": "Councillors and officers out and about in Claremont",
       "text": "Councillors and council officers have been out and about in Claremont today, looking at local issues that matter to people.",
@@ -49,16 +56,23 @@
       "link": "https://news.salford.gov.uk/news/salford-ranked-best-in-england-for-nhs-health-checks-and-shortlisted-for-national-award/",
       "date": "2026-11-06T11:00:00.000Z",
       "source": "Salford City Council"
-    },
-    {
-      "title": "Salford celebrates adult learners making a difference across the city",
-      "text": "A Salford adult social care worker whose passage from unemployment to university graduate has inspired others and has been named a winner at the 2026 ‘Get the Nation…",
-      "link": "https://news.salford.gov.uk/news/salford-celebrates-adult-learners-making-a-difference-across-the-city/",
-      "date": "2026-11-05T16:00:00.000Z",
-      "source": "Salford City Council"
     }
   ],
   "events": [
+    {
+      "title": "Stay & Play",
+      "text": "Prepare to be amazed! We’re welcoming a special magician to The Den for an exciting, interactive workshop packed with incredible tricks and magical surprises.",
+      "link": "https://salfordcommunityleisure.co.uk/event/stay-play/",
+      "date": "2026-11-12T13:50:22Z",
+      "source": "Salford Community Leisure"
+    },
+    {
+      "title": "Shop & Drop",
+      "text": "Fancy a little time to yourself? Our usual Drop & Shop session is completely FREE this Saturday! While you enjoy some shopping time, the children can play, explore and…",
+      "link": "https://salfordcommunityleisure.co.uk/event/shop-drop/",
+      "date": "2026-11-12T13:33:10Z",
+      "source": "Salford Community Leisure"
+    },
     {
       "title": "Flecky Bennett: Ordsall Hall Experience: Nightmares Before Christmas",
       "text": "Join your ghost host Flecky Bennett for a one-of-a-kind performance at Ordsall Hall!",
@@ -100,20 +114,6 @@
       "link": "https://salfordmuseum.com/event/here-we-stand/",
       "date": "2026-10-29T12:32:17Z",
       "source": "Salford Museum & Art Gallery"
-    },
-    {
-      "title": "Young Shoots Social Club by Liz Lock and Salford Youth Service",
-      "text": "Young Shoots Social Club was a year-long project led by socially-engaged photographer Liz Lock with Salford Youth Service. Around 50 young people aged 11-18 took part…",
-      "link": "https://salfordmuseum.com/event/young-shoots-social-club/",
-      "date": "2026-10-29T12:14:25Z",
-      "source": "Salford Museum & Art Gallery"
-    },
-    {
-      "title": "Musical Christmas Piano Performance",
-      "text": "Have you ever noticed the grand piano on our mezzanine overlooking the café? Ever wanted to hear it? This is your opportunity!",
-      "link": "https://salfordmuseum.com/event/christmas-piano-performance/",
-      "date": "2026-10-21T15:08:39Z",
-      "source": "Salford Museum & Art Gallery"
     }
   ],
   "cvs": [
@@ -122,6 +122,20 @@
       "text": "",
       "link": "https://www.salfordcvs.co.uk/BeReady",
       "date": "2026-11-23T17:05:00.000Z",
+      "source": "Salford CVS"
+    },
+    {
+      "title": "Salford CVS' AGM 2026",
+      "text": "",
+      "link": "https://www.salfordcvs.co.uk/node/460904",
+      "date": "2026-11-12T17:09:00.000Z",
+      "source": "Salford CVS"
+    },
+    {
+      "title": "Making it Real Board - Apply for the role of Lived Experience Co-Chair",
+      "text": "",
+      "link": "https://www.salfordcvs.co.uk/SASCBoard",
+      "date": "2026-11-12T09:16:00.000Z",
       "source": "Salford CVS"
     },
     {
@@ -136,20 +150,6 @@
       "text": "",
       "link": "https://www.salfordcvs.co.uk/livingwageweek",
       "date": "2026-11-09T13:09:00.000Z",
-      "source": "Salford CVS"
-    },
-    {
-      "title": "Stronger Together for Inter Faith Week 2026",
-      "text": "",
-      "link": "https://www.salfordcvs.co.uk/inter-faith-week-26",
-      "date": "2026-11-08T15:28:00.000Z",
-      "source": "Salford CVS"
-    },
-    {
-      "title": "A real Living Wage: 25 years in - Read the report",
-      "text": "",
-      "link": "https://www.salfordcvs.co.uk/living-wage-25-yrs",
-      "date": "2026-11-05T12:21:00.000Z",
       "source": "Salford CVS"
     }
   ],
