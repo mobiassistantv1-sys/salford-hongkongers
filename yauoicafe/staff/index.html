@@ -452,7 +452,7 @@ document.addEventListener("click",async e=>{
     case "off":{const o=!!(P.off&&P.off[v]);await db.ref("ordering/public/off/"+v).set(o?null:true);const it=byId[v];logIt(it.zh+(o?" 上線":" 下線"),it.en+(o?" on":" off"));break;}
     case "optoff":{const k="opt:"+b.dataset.g+":"+v;const o=!!(P.off&&P.off[k]);await db.ref("ordering/public/off/"+k).set(o?null:true);break;}
     case "msave":{const zh=$("#mz-"+v).value.trim(),en=$("#me-"+v).value.trim();if(!zh||!en){toast(t("名唔可以留空","Names are required"));break;}await db.ref("ordering/public/names/"+v).set({zh,en});logIt("改名 "+zh,"Renamed "+en);toast(t("已儲存","Saved"));break;}
-    case "resetstock":if(!mgr())break;if(U.armed!=="reset"){U.armed="reset";render();break;}U.armed=null;await db.ref("ordering/public/stock").set({pineapple:0,cocktail:0,sausage:0,eggtart:0,special:0,special2:0,special3:0,special4:0,special5:0});await db.ref("ordering/public/next").remove();logIt("限量歸 0","Bakery counts reset");toast(t("已歸 0","Reset to 0"));break;
+    case "resetstock":if(!mgr())break;if(U.armed!=="reset"){U.armed="reset";render();break;}U.armed=null;await db.ref("ordering/public/stock").set({pineapple:0,cocktail:0,sausage:0,eggtart:0,snowcharsiu:0,special:0,special2:0,special3:0,special4:0,special5:0});await db.ref("ordering/public/next").remove();logIt("限量歸 0","Bakery counts reset");toast(t("已歸 0","Reset to 0"));break;
     case "mv":U.mv=U.mv===v?null:v;render();break;
     case "mvno":U.mv=null;render();break;
     case "mvgo":{const from=U.mv;if(!from||!TABLES.includes(v)||v===from)break;const os=openOrders(from);U.mv=null;if(!os.length){render();break;}

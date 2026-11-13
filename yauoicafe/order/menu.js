@@ -49,6 +49,7 @@
     {id:"bk_cocktail",img:1,al:["G","E","M"],cat:"bakery",zh:"雞尾包",en:"Cocktail Bun",p:200,g:[],stock:"cocktail",sq:"O5724WXR43AJEICC3GRV47FM"},
     {id:"bk_sausage",img:1,al:["G","So","Su"],cat:"bakery",zh:"腸仔包",en:"Sausage Bun",p:200,g:[],stock:"sausage",sq:"APA66WBGY2RE5VFCEBI3HDDH"},
     {id:"bk_eggtart",img:1,al:["G","E","M"],cat:"bakery",zh:"蛋撻",en:"Egg Tart",p:150,g:[],stock:"eggtart",sq:"J3TYDHIXIDMOT6YDKAY5AER7"},
+    {id:"bk_snowcharsiu",img:1,al:["G","E","M","So"],cat:"bakery",zh:"雪山叉燒包",en:"Snow-top BBQ Pork Bun",p:300,g:[],stock:"snowcharsiu"},
     /* 是日特別麵包 ×5 slots: name, price and allergens set daily by staff in ordering/public/special, special2 … special5 (see applySpecial) */
     {id:"bk_special",special:1,al:[],cat:"bakery",zh:"是日特別麵包",en:"Today's Special Bun",p:200,g:[],stock:"special"},
     {id:"bk_special2",special:2,al:[],cat:"bakery",zh:"是日特別麵包 2",en:"Today's Special Bun 2",p:200,g:[],stock:"special2"},
@@ -68,7 +69,7 @@
     {id:"dk_hot",al:[],cat:"drinks",zh:"熱飲",en:"Hot Drinks",p:300,g:["hot","taste"],sq:"6I7EQTH6N3FUY72DKSFVLZNB"},
     {id:"dk_iced",al:[],cat:"drinks",zh:"凍飲",en:"Iced Drinks",p:350,g:["iced","taste"],iced:true,sq:"XH75P5J5Q5G3WMS6UGORQQBQ"}
   ];
-  const STOCK = [{k:"pineapple",zh:"菠蘿包",en:"Pineapple Bun",nzh:"菠蘿油都扣呢個數",nen:"Pineapple Bun with Butter uses this count too"},{k:"cocktail",zh:"雞尾包",en:"Cocktail Bun"},{k:"sausage",zh:"腸仔包",en:"Sausage Bun"},{k:"eggtart",zh:"蛋撻",en:"Egg Tart"},{k:"special",zh:"是日特別麵包",en:"Today's Special Bun",special:1},{k:"special2",zh:"是日特別麵包 2",en:"Today's Special Bun 2",special:2},{k:"special3",zh:"是日特別麵包 3",en:"Today's Special Bun 3",special:3},{k:"special4",zh:"是日特別麵包 4",en:"Today's Special Bun 4",special:4},{k:"special5",zh:"是日特別麵包 5",en:"Today's Special Bun 5",special:5}];
+  const STOCK = [{k:"pineapple",zh:"菠蘿包",en:"Pineapple Bun",nzh:"菠蘿油都扣呢個數",nen:"Pineapple Bun with Butter uses this count too"},{k:"cocktail",zh:"雞尾包",en:"Cocktail Bun"},{k:"sausage",zh:"腸仔包",en:"Sausage Bun"},{k:"eggtart",zh:"蛋撻",en:"Egg Tart"},{k:"snowcharsiu",zh:"雪山叉燒包",en:"Snow-top BBQ Pork Bun"},{k:"special",zh:"是日特別麵包",en:"Today's Special Bun",special:1},{k:"special2",zh:"是日特別麵包 2",en:"Today's Special Bun 2",special:2},{k:"special3",zh:"是日特別麵包 3",en:"Today's Special Bun 3",special:3},{k:"special4",zh:"是日特別麵包 4",en:"Today's Special Bun 4",special:4},{k:"special5",zh:"是日特別麵包 5",en:"Today's Special Bun 5",special:5}];
   const TABLES = ["T1","T2","T3","T4","T5","T6","T7","T8","T9"];
   const byId = {}; MENU.forEach(m => { byId[m.id] = m; });
 
