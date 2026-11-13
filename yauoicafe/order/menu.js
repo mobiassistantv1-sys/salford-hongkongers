@@ -49,7 +49,8 @@
     {id:"bk_cocktail",img:1,al:["G","E","M"],cat:"bakery",zh:"雞尾包",en:"Cocktail Bun",p:200,g:[],stock:"cocktail",sq:"O5724WXR43AJEICC3GRV47FM"},
     {id:"bk_sausage",img:1,al:["G","So","Su"],cat:"bakery",zh:"腸仔包",en:"Sausage Bun",p:200,g:[],stock:"sausage",sq:"APA66WBGY2RE5VFCEBI3HDDH"},
     {id:"bk_eggtart",img:1,al:["G","E","M"],cat:"bakery",zh:"蛋撻",en:"Egg Tart",p:150,g:[],stock:"eggtart",sq:"J3TYDHIXIDMOT6YDKAY5AER7"},
-    {id:"bk_snowcharsiu",img:1,al:["G","E","M","So"],cat:"bakery",zh:"雪山叉燒包",en:"Snow-top BBQ Pork Bun",p:300,g:[],stock:"snowcharsiu"},
+    /* 雪山叉燒包: allergens confirmed by Manson 2026-11-13 (soya, gluten, sesame, oyster sauce = molluscs, almond/nuts, sulphites; plus egg, milk) */
+    {id:"bk_snowcharsiu",img:1,al:["G","E","M","So","Se","Mo","N","Su"],cat:"bakery",zh:"雪山叉燒包",en:"Snow-top BBQ Pork Bun",p:300,g:[],stock:"snowcharsiu"},
     /* 是日特別麵包 ×5 slots: name, price and allergens set daily by staff in ordering/public/special, special2 … special5 (see applySpecial) */
     {id:"bk_special",special:1,al:[],cat:"bakery",zh:"是日特別麵包",en:"Today's Special Bun",p:200,g:[],stock:"special"},
     {id:"bk_special2",special:2,al:[],cat:"bakery",zh:"是日特別麵包 2",en:"Today's Special Bun 2",p:200,g:[],stock:"special2"},
