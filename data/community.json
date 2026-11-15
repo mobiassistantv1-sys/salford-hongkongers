@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-14T16:58:51.974Z",
+  "updated": "2026-11-15T17:39:37.199Z",
   "council": [
     {
       "title": "Little Hulton Nursery transformed and more local SEND places created for families",
@@ -176,5 +176,20 @@
       "source": "GOV.UK"
     }
   ],
-  "warnings": []
+  "warnings": [
+    {
+      "title": "Yellow warning of ice affecting North West England",
+      "text": "Yellow warning of ice affecting North West England: Cumbria valid from 1800 Sun 15 Nov to 1000 Mon 16 Nov",
+      "link": "https://www.metoffice.gov.uk/weather/warnings-and-advice/uk-warnings#?date=2026-11-15&id=393e4003-14d3-4449-8edc-fd3a13363a24&referrer=rss",
+      "date": null,
+      "source": "Met Office"
+    },
+    {
+      "title": "Yellow warning of snow affecting North West England",
+      "text": "Yellow warning of snow affecting North West England: Blackburn with Darwen, Cheshire East, Cumbria, Greater Manchester, Lancashire valid from 0000 Tue 17 Nov to 1200 Tue…",
+      "link": "https://www.metoffice.gov.uk/weather/warnings-and-advice/uk-warnings#?date=2026-11-17&id=401e8bda-a79f-4da4-aba7-73c323e7ac50&referrer=rss",
+      "date": null,
+      "source": "Met Office"
+    }
+  ]
 }
