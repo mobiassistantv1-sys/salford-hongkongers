@@ -1,6 +1,20 @@
 {
-  "updated": "2026-11-15T17:39:37.199Z",
+  "updated": "2026-11-16T20:56:30.421Z",
   "council": [
+    {
+      "title": "Help protect adults at risk of abuse and neglect during Safeguarding Adults Week 2026",
+      "text": "",
+      "link": "https://news.salford.gov.uk/news/help-protect-adults-at-risk-of-abuse-and-neglect-during-safeguarding-adults-week-2026/",
+      "date": "2026-11-16T12:00:00.000Z",
+      "source": "Salford City Council"
+    },
+    {
+      "title": "From Star Wars to Salford: Hollywood film veteran appointed to attract more TV and movie productions to the city",
+      "text": "Jonny Shelton is the new Creative Industries Development Manager at Salford City Council, where he will lead a new Film and TV Office.",
+      "link": "https://news.salford.gov.uk/news/from-star-wars-to-salford-hollywood-film-veteran-appointed-to-attract-more-tv-and-movie-productions-to-the-city/",
+      "date": "2026-11-16T09:00:00.000Z",
+      "source": "Salford City Council"
+    },
     {
       "title": "Little Hulton Nursery transformed and more local SEND places created for families",
       "text": "Children and families in Little Hulton are benefiting from a major investment to improve nursery facilities and expanded specialist support closer to home.",
@@ -42,37 +56,9 @@
       "link": "https://news.salford.gov.uk/news/salfords-history-and-communities-celebrated-in-new-centenary-murals-across-the-city/",
       "date": "2026-11-09T12:00:00.000Z",
       "source": "Salford City Council"
-    },
-    {
-      "title": "Visible and supportive work in communities continues to address resident concerns",
-      "text": "Proactive action to tackle and disrupt the incidents in October, some of which had been shared on social media.",
-      "link": "https://news.salford.gov.uk/news/visible-and-supportive-work-in-communities-continues-to-address-resident-concerns/",
-      "date": "2026-11-06T12:00:00.000Z",
-      "source": "Salford City Council"
-    },
-    {
-      "title": "Salford ranked best in England for NHS Health Checks and shortlisted for national award",
-      "text": "Salford has been named England's top-performing area for NHS Health Checks and shortlisted for a national award.",
-      "link": "https://news.salford.gov.uk/news/salford-ranked-best-in-england-for-nhs-health-checks-and-shortlisted-for-national-award/",
-      "date": "2026-11-06T11:00:00.000Z",
-      "source": "Salford City Council"
     }
   ],
   "events": [
-    {
-      "title": "Stay & Play",
-      "text": "Prepare to be amazed! We’re welcoming a special magician to The Den for an exciting, interactive workshop packed with incredible tricks and magical surprises.",
-      "link": "https://salfordcommunityleisure.co.uk/event/stay-play/",
-      "date": "2026-11-12T13:50:22Z",
-      "source": "Salford Community Leisure"
-    },
-    {
-      "title": "Shop & Drop",
-      "text": "Fancy a little time to yourself? Our usual Drop & Shop session is completely FREE this Saturday! While you enjoy some shopping time, the children can play, explore and…",
-      "link": "https://salfordcommunityleisure.co.uk/event/shop-drop/",
-      "date": "2026-11-12T13:33:10Z",
-      "source": "Salford Community Leisure"
-    },
     {
       "title": "Flecky Bennett: Ordsall Hall Experience: Nightmares Before Christmas",
       "text": "Join your ghost host Flecky Bennett for a one-of-a-kind performance at Ordsall Hall!",
@@ -114,6 +100,20 @@
       "link": "https://salfordmuseum.com/event/here-we-stand/",
       "date": "2026-10-29T12:32:17Z",
       "source": "Salford Museum & Art Gallery"
+    },
+    {
+      "title": "Young Shoots Social Club by Liz Lock and Salford Youth Service",
+      "text": "Young Shoots Social Club was a year-long project led by socially-engaged photographer Liz Lock with Salford Youth Service. Around 50 young people aged 11-18 took part…",
+      "link": "https://salfordmuseum.com/event/young-shoots-social-club/",
+      "date": "2026-10-29T12:14:25Z",
+      "source": "Salford Museum & Art Gallery"
+    },
+    {
+      "title": "Musical Christmas Piano Performance",
+      "text": "Have you ever noticed the grand piano on our mezzanine overlooking the café? Ever wanted to hear it? This is your opportunity!",
+      "link": "https://salfordmuseum.com/event/christmas-piano-performance/",
+      "date": "2026-10-21T15:08:39Z",
+      "source": "Salford Museum & Art Gallery"
     }
   ],
   "cvs": [
@@ -125,31 +125,31 @@
       "source": "Salford CVS"
     },
     {
-      "title": "Salford CVS' AGM 2026",
+      "title": "Salford CVS AGM 2026",
       "text": "",
-      "link": "https://www.salfordcvs.co.uk/node/460904",
-      "date": "2026-11-12T17:09:00.000Z",
+      "link": "https://www.salfordcvs.co.uk/node/460910",
+      "date": "2026-11-16T15:54:00.000Z",
       "source": "Salford CVS"
     },
     {
-      "title": "Making it Real Board - Apply for the role of Lived Experience Co-Chair",
+      "title": "Cold health alert issued for the North West",
       "text": "",
-      "link": "https://www.salfordcvs.co.uk/SASCBoard",
-      "date": "2026-11-12T09:16:00.000Z",
+      "link": "https://www.salfordcvs.co.uk/coldweather",
+      "date": "2026-11-16T12:16:00.000Z",
       "source": "Salford CVS"
     },
     {
-      "title": "Mobile cervical screening service coming to Salford South East",
+      "title": "The King’s Award for Voluntary Service: Celebrating Salford CVS Members",
       "text": "",
-      "link": "https://www.salfordcvs.co.uk/NHS-cervical-screening",
-      "date": "2026-11-10T14:21:00.000Z",
+      "link": "https://www.salfordcvs.co.uk/Kingsaward",
+      "date": "2026-11-16T12:04:00.000Z",
       "source": "Salford CVS"
     },
     {
-      "title": "A fair day’s pay for a hard day’s work: why Salford CVS backs the real Living Wage",
+      "title": "Safeguarding Adults Week 2026 - 16th - 22nd November",
       "text": "",
-      "link": "https://www.salfordcvs.co.uk/livingwageweek",
-      "date": "2026-11-09T13:09:00.000Z",
+      "link": "https://www.salfordcvs.co.uk/safeguarding-adults-week-26",
+      "date": "2026-11-16T10:17:00.000Z",
       "source": "Salford CVS"
     }
   ],
@@ -178,15 +178,8 @@
   ],
   "warnings": [
     {
-      "title": "Yellow warning of ice affecting North West England",
-      "text": "Yellow warning of ice affecting North West England: Cumbria valid from 1800 Sun 15 Nov to 1000 Mon 16 Nov",
-      "link": "https://www.metoffice.gov.uk/weather/warnings-and-advice/uk-warnings#?date=2026-11-15&id=393e4003-14d3-4449-8edc-fd3a13363a24&referrer=rss",
-      "date": null,
-      "source": "Met Office"
-    },
-    {
       "title": "Yellow warning of snow affecting North West England",
-      "text": "Yellow warning of snow affecting North West England: Blackburn with Darwen, Cheshire East, Cumbria, Greater Manchester, Lancashire valid from 0000 Tue 17 Nov to 1200 Tue…",
+      "text": "Yellow warning of snow affecting North West England: Blackburn with Darwen, Cheshire East, Cumbria, Greater Manchester, Lancashire valid from 0000 Tue 17 Nov to 1100 Tue…",
       "link": "https://www.metoffice.gov.uk/weather/warnings-and-advice/uk-warnings#?date=2026-11-17&id=401e8bda-a79f-4da4-aba7-73c323e7ac50&referrer=rss",
       "date": null,
       "source": "Met Office"
