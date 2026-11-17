@@ -29,6 +29,28 @@ a{color:var(--green);font-weight:700}
   background:radial-gradient(120% 70% at 50% -10%,#2E9A5E 0%,#0F6B3A 45%,#073A20 100%)}
 
 .hero .wrap{position:relative;z-index:1;padding-top:22px;padding-bottom:0}
+/* neon sign: the real logo lights up when we're open and goes dark when we're closed */
+.neon{width:min(220px,56vw);margin:0 auto 10px;border-radius:10px;transition:box-shadow .6s ease}
+.neon .logo{margin:0;width:100%;transition:filter .6s ease}
+.neon.on{box-shadow:0 0 0 2px rgba(255,255,255,.55),0 0 18px 4px rgba(255,90,90,.55),0 0 46px 10px rgba(80,255,160,.35)}
+.neon.on .logo{filter:saturate(1.15) brightness(1.05) drop-shadow(0 0 6px rgba(255,60,60,.7))}
+.neon.on.flick{animation:flick 1.6s steps(1) 1}
+.neon.off .logo{filter:grayscale(.85) brightness(.5) contrast(.9)}
+@keyframes flick{0%{opacity:.25}8%{opacity:1}14%{opacity:.35}20%{opacity:1}34%{opacity:.55}40%{opacity:1}}
+.status{text-align:center;margin:0 0 14px;font:900 16px var(--body)}
+.status span{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:6px 14px}
+.status .open{background:rgba(255,255,255,.14);color:#fff}.status .open::before{content:"";width:10px;height:10px;border-radius:50%;background:#53F29A;box-shadow:0 0 10px #53F29A}
+.status .shut{background:rgba(0,0,0,.25);color:rgba(255,247,225,.8)}.status .shut::before{content:"";width:10px;height:10px;border-radius:50%;background:#8a8a8a}
+/* today's buns */
+.buns{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px}
+.bun{background:#fff;border-radius:14px;padding:10px;text-align:center;box-shadow:0 1px 1px rgba(0,0,0,.06),0 8px 18px rgba(60,40,10,.1)}
+.bun img{width:100%;max-width:120px;aspect-ratio:1/1;object-fit:contain;display:block;margin:0 auto}
+.bun b{display:block;font:900 17px var(--zh)}.bun .left{display:inline-block;margin-top:4px;border-radius:6px;padding:2px 8px;font-weight:700;font-size:13.5px;background:#E6F2EA;color:var(--green)}
+.bun .left.low{background:#FFF0D2;color:#9A5B00}.bun .left.out{background:#F1E9DC;color:var(--muted)}
+.bunnote{margin:10px 0 0;color:var(--muted);font-size:14px}
+.maps{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.maps a{display:inline-flex;align-items:center;gap:6px;background:#fff;color:var(--green);text-decoration:none;font:900 15px var(--body);border-radius:10px;padding:10px 14px;min-height:44px}
+.sign .park{margin:10px 0 0;font:700 14.5px/1.5 var(--body);background:rgba(255,255,255,.14);border-radius:8px;padding:8px 10px}
 .logo{display:block;width:min(200px,52vw);height:auto;margin:0 auto 14px;border-radius:8px;
   box-shadow:0 2px 0 rgba(255,255,255,.25) inset,0 10px 22px rgba(0,0,0,.35),0 3px 0 rgba(0,0,0,.3)}
 .signline{margin:0;text-align:center;font:900 clamp(46px,13.5vw,96px)/1.1 "YO Sign",var(--zh);letter-spacing:.04em;color:var(--gold);
@@ -105,7 +127,8 @@ html:not([lang="en"]) [data-l="en"],html[lang="en"] [data-l="zh"]{display:none!i
 <div class="key" aria-hidden="true"></div>
 <header class="hero">
   <div class="wrap">
-    <img class="logo" src="/yauoicafe/assets/yau-oi-logo-800.jpg" alt="友愛冰室 Yau Oi Cafe" width="800" height="396">
+    <div class="neon" id="neon"><img class="logo" src="/yauoicafe/assets/yau-oi-logo-800.jpg" alt="友愛冰室 Yau Oi Cafe" width="800" height="396"></div>
+    <p class="status" id="status" aria-live="polite"></p>
     <h1 class="signline" data-l="zh"><span>一杯奶茶</span><span>一份人情味</span></h1>
     <h1 class="signline" data-l="en"><span>A cup of milk tea,</span><span>a taste of home</span></h1>
     <p class="intro" data-l="zh">友愛冰室係 Salford 嘅香港冰室，由 Salford Hongkongers CIC 同一班義工一齊營運。我哋想喺 Salford 留住香港冰室嘅味道同人情味，畀新來嘅港人、街坊同朋友有個地方坐低、食餐好、傾吓偈。</p>
@@ -122,6 +145,12 @@ html:not([lang="en"]) [data-l="en"],html[lang="en"] [data-l="zh"]{display:none!i
 <div class="key" aria-hidden="true"></div>
 
 <main class="wrap">
+  <section id="bunsec" hidden>
+    <h2><span data-l="zh">今日麵包</span><span data-l="en">Today's buns</span></h2>
+    <div class="buns" id="buns"></div>
+    <p class="bunnote" data-l="zh">數量每分鐘更新。賣晒就要等下一爐。</p><p class="bunnote" data-l="en">Counts update every minute. When they're gone, wait for the next batch.</p>
+  </section>
+
   <section>
     <h2><span data-l="zh">冰室出品</span><span data-l="en">From our kitchen</span></h2>
     <div class="snaps">
@@ -158,7 +187,9 @@ html:not([lang="en"]) [data-l="en"],html[lang="en"] [data-l="zh"]{display:none!i
         <small data-l="zh">下午2點係最後落單時間。公眾假期或者活動日可能有變，請留意<a href="https://whatsapp.com/channel/0029Vb8zqGP0gcfFZ7uxnY3h" target="_blank" rel="noopener">友愛冰室 WhatsApp 頻道</a>。</small>
         <small data-l="en">2:00pm is last order. Hours may change on holidays or event days — follow our <a href="https://whatsapp.com/channel/0029Vb8zqGP0gcfFZ7uxnY3h" target="_blank" rel="noopener">Yau Oi Cafe WhatsApp channel</a>.</small></div>
       <div class="sign" style="background:linear-gradient(160deg,#1E8A50,#0F6B3A 45%,#0A4F2A);outline-color:var(--green);box-shadow:0 2px 0 rgba(255,255,255,.3) inset,0 5px 0 var(--deep),0 14px 24px rgba(0,0,0,.2)"><b data-l="zh">地址</b><b data-l="en">Address</b>
-        <p>The Angel Centre<br>1 St Philip's Place, Salford M3 6FA</p></div>
+        <p>The Angel Centre<br>1 St Philip's Place, Salford M3 6FA</p>
+        <div class="maps"><a href="https://maps.google.com/?q=The+Angel+Centre,+1+St+Philip%27s+Place,+Salford+M3+6FA" target="_blank" rel="noopener"><span data-l="zh">Google 地圖</span><span data-l="en">Google Maps</span></a><a href="https://maps.app.goo.gl/eAESxwdnVfYfAHnU7" target="_blank" rel="noopener"><span data-l="zh">停車場位置</span><span data-l="en">Car park</span></a></div>
+        <p class="park" data-l="zh">揸車嚟？泊好車記得入嚟登記返車牌。</p><p class="park" data-l="en">Driving? After parking, please come in and register your number plate.</p></div>
     </div>
   </section>
 
@@ -196,10 +227,37 @@ html:not([lang="en"]) [data-l="en"],html[lang="en"] [data-l="zh"]{display:none!i
   const label=()=>{const m=Y.byId[ids[i]]||SET;nameEl.innerHTML=(lang==="en"?"":m.zh)+'<span>'+m.en+'</span>';};
   label();
   if(!matchMedia("(prefers-reduced-motion:reduce)").matches)setInterval(()=>{const im=plate.children;im[i].classList.remove("on");i=(i+1)%ids.length;im[i].classList.add("on");label();},3200);
-  function set(l){lang=l;h.lang=l==="en"?"en":"zh-Hant";b.textContent=l==="en"?"中文":"EN";try{localStorage.setItem("shk_lang",l)}catch(e){}label();}
+  /* ---- open / closed: Fri–Sun 10:00–14:00 London time, staff can override for today ---- */
+  let P={},first=true;
+  const DAYS=[5,6,0],OPEN=10*60,CLOSE=14*60,WD=["日","一","二","三","四","五","六"],WDE=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+  function london(){const p={};new Intl.DateTimeFormat("en-GB",{timeZone:"Europe/London",weekday:"short",hour:"2-digit",minute:"2-digit",hourCycle:"h23",year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(new Date()).forEach(x=>p[x.type]=x.value);
+    return {wd:["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].indexOf(p.weekday),min:+p.hour*60+ +p.minute,day:p.year+"-"+p.month+"-"+p.day};}
+  function state(){const n=london(),ov=P.shop&&P.shop.day===n.day?P.shop.mode:null;
+    const sched=DAYS.includes(n.wd)&&n.min>=OPEN&&n.min<CLOSE;const open=ov==="closed"?false:ov==="open"?(n.min>=OPEN&&n.min<CLOSE):sched;
+    let nx=null;for(let k=0;k<8;k++){const d=(n.wd+k)%7;if(!DAYS.includes(d))continue;if(k===0&&(n.min>=OPEN||ov==="closed"))continue;nx={k,d};break;}
+    return {open,nx,ov};}
+  function paintStatus(){const st=state(),neon=document.getElementById("neon"),el=document.getElementById("status");
+    const was=neon.classList.contains("on");neon.classList.toggle("on",st.open);neon.classList.toggle("off",!st.open);
+    if(st.open&&!was&&!first&&!matchMedia("(prefers-reduced-motion:reduce)").matches){neon.classList.add("flick");setTimeout(()=>neon.classList.remove("flick"),1700);}
+    if(st.open&&first&&!matchMedia("(prefers-reduced-motion:reduce)").matches){neon.classList.add("flick");setTimeout(()=>neon.classList.remove("flick"),1700);}
+    first=false;
+    const nxz=st.nx?(st.nx.k===0?"今日":st.nx.k===1?"聽日":"星期"+WD[st.nx.d]):"",nxe=st.nx?(st.nx.k===0?"today":st.nx.k===1?"tomorrow":WDE[st.nx.d]):"";
+    el.innerHTML=st.open?'<span class="open">'+(lang==="en"?"Open now · last order 2pm":"營業中 · 下午2點最後落單")+'</span>'
+      :'<span class="shut">'+(lang==="en"?"Closed"+(st.ov==="closed"?" today":"")+(st.nx?" · back "+nxe+" 10am":""):(st.ov==="closed"?"今日休息":"休息中")+(st.nx?" · "+nxz+" 10am 再開":""))+'</span>';
+    paintBuns(st.open);}
+  /* ---- today's buns: live counts from the staff page ---- */
+  function paintBuns(open){const sec=document.getElementById("bunsec"),box=document.getElementById("buns");
+    const list=Y.MENU.filter(m=>m.cat==="bakery"&&m.stock&&!Y.hiddenItem(m)&&!(P.off&&P.off[m.id]));
+    const stock=P.stock||{},any=list.some(m=>(stock[m.stock]||0)>0);
+    sec.hidden=!(open&&list.length&&(any||Object.keys(stock).length));if(sec.hidden)return;
+    box.innerHTML=list.map(m=>{const n=Math.max(0,stock[m.stock]||0),img=m.img?"/yauoicafe/assets/cut/"+m.id+".webp":"";
+      return '<div class="bun">'+(img?'<img src="'+img+'" alt="" loading="lazy">':'')+'<b>'+(lang==="en"?Y.itemName(m,P,"en"):Y.itemName(m,P,"zh"))+'</b><span class="left '+(n<=0?"out":n<=2?"low":"")+'">'+(n<=0?(lang==="en"?"Sold out":"賣晒"):(lang==="en"?n+" left":"剩 "+n+" 個"))+'</span></div>';}).join("");}
+  function load(){fetch(Y.FIREBASE.databaseURL+"/ordering/public.json").then(r=>r.json()).then(p=>{P=p||{};Y.applySpecial(P);paintStatus();}).catch(()=>paintStatus());}
+  function set(l){lang=l;h.lang=l==="en"?"en":"zh-Hant";b.textContent=l==="en"?"中文":"EN";try{localStorage.setItem("shk_lang",l)}catch(e){}label();if(!first)paintStatus();}
   let s=null;try{s=localStorage.getItem("shk_lang")}catch(e){}
   set(s==="en"?"en":"zh");
   b.addEventListener("click",function(){set(h.lang==="en"?"zh":"en")});
+  paintStatus();load();setInterval(load,60000);
 })();
 </script>
 </body>

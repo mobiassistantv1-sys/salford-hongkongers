@@ -31,10 +31,26 @@ async function publicData() { const P = (await db.ref("ordering/public").get()).
 exports.queueSlips = onValueCreated({ ref: "/ordering/orders/{day}/{oid}", region: REGION }, async ev => {
   const o = ev.data.val() || {}; const { day, oid } = ev.params;
   if (o.srv) await takeStock(day, oid, o);
+  try { await updatePopular(); } catch (e) { console.error("popular", e); }
   if (!Object.keys(groups(o, await publicData())).length) return;
   const at = o.at || Date.now();
   await db.ref(`${Q}/${at}_${oid}`).set({ day, oid, at, tries: 0 });
 });
+
+/* 人氣: top 3 items by quantity over the last 28 days (voided orders and cancelled lines left out).
+   Written to ordering/public/popular = {ids:[...], at}; recomputed at most every 10 minutes. */
+async function updatePopular() {
+  const ref = db.ref("ordering/public/popular"), cur = (await ref.get()).val();
+  if (cur && Date.now() - (cur.at || 0) < 10 * 60 * 1000) return;
+  const end = (await db.ref("ordering/orders").orderByKey().limitToLast(40).get()).val() || {};
+  const since = new Date(Date.now() - 28 * 864e5).toISOString().slice(0, 10), n = {};
+  Object.keys(end).filter(d => d >= since).forEach(d => Object.values(end[d] || {}).forEach(o => {
+    if (!o || o.void) return;
+    (o.lines || []).forEach(l => { if (l && !l.x && Y.byId[l.itemId] && !Y.byId[l.itemId].special) n[l.itemId] = (n[l.itemId] || 0) + Math.max(1, Math.min(50, l.qty | 0)); });
+  }));
+  const ids = Object.keys(n).sort((a, b) => n[b] - n[a]).slice(0, 3);
+  await ref.set({ ids, at: Date.now() });
+}
 
 /* Bakery stock is taken HERE, after the order really exists (order page sets srv:1 when
    ordering/public/srvStock is on). So a failed order never loses stock. If two phones take the
