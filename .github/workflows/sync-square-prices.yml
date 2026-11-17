@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: read
+  id-token: write
 
 jobs:
   sync:
@@ -19,8 +20,12 @@ jobs:
         with:
           node-version: "20"
       - run: npm install --no-save --no-audit --no-fund firebase-admin@12.7.0
+      # Keyless Google sign-in (Workload Identity Federation): the org policy forbids service-account keys.
+      - uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: projects/354774084334/locations/global/workloadIdentityPools/github/providers/salford-hongkongers
+          service_account: github-actions@yauoicafequeue.iam.gserviceaccount.com
       - run: node scripts/sync-square-prices.mjs
         env:
           SQUARE_ACCESS_TOKEN: ${{ secrets.SQUARE_ACCESS_TOKEN }}
-          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
           FIREBASE_DB_URL: ${{ secrets.FIREBASE_DB_URL }}
