@@ -48,6 +48,13 @@ a{color:var(--green);font-weight:700}
 .bun b{display:block;font:900 17px var(--zh)}.bun .left{display:inline-block;margin-top:4px;border-radius:6px;padding:2px 8px;font-weight:700;font-size:13.5px;background:#E6F2EA;color:var(--green)}
 .bun .left.low{background:#FFF0D2;color:#9A5B00}.bun .left.out{background:#F1E9DC;color:var(--muted)}
 .bunnote{margin:10px 0 0;color:var(--muted);font-size:14px}
+.ig{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.ig a{position:relative;display:block;aspect-ratio:1/1;overflow:hidden;border-radius:8px;background:#EADFC8}
+.ig img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s ease}
+.ig a:hover img{transform:scale(1.04)}
+.ig .play{position:absolute;right:6px;top:6px;width:22px;height:22px;color:#fff;filter:drop-shadow(0 1px 2px rgba(0,0,0,.6))}
+.igmore{margin:10px 0 0;text-align:right}.igmore a{font-size:15px}
+@media(min-width:760px){.ig{grid-template-columns:repeat(6,1fr)}}
 .maps{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
 .maps a{display:inline-flex;align-items:center;gap:6px;background:#fff;color:var(--green);text-decoration:none;font:900 15px var(--body);border-radius:10px;padding:10px 14px;min-height:44px}
 .sign .park{margin:10px 0 0;font:700 14.5px/1.5 var(--body);background:rgba(255,255,255,.14);border-radius:8px;padding:8px 10px}
@@ -165,6 +172,12 @@ html:not([lang="en"]) [data-l="en"],html[lang="en"] [data-l="zh"]{display:none!i
     </div>
   </section>
 
+  <section id="igsec" hidden>
+    <h2><span data-l="zh">IG 最新</span><span data-l="en">Latest on Instagram</span></h2>
+    <div class="ig" id="ig"></div>
+    <p class="igmore"><a href="https://www.instagram.com/yauoi.cafe/" target="_blank" rel="noopener">@yauoi.cafe</a></p>
+  </section>
+
   <section>
     <div class="board">
       <h2><span data-l="zh">我哋嘅理念</span><span data-l="en">What we stand for</span></h2>
@@ -258,6 +271,14 @@ html:not([lang="en"]) [data-l="en"],html[lang="en"] [data-l="zh"]{display:none!i
   set(s==="en"?"en":"zh");
   b.addEventListener("click",function(){set(h.lang==="en"?"zh":"en")});
   paintStatus();load();setInterval(load,60000);
+  /* IG 最新: Behold JSON feed (free plan: 6 posts, refreshed daily). Hidden if it can't load. */
+  fetch("https://feeds.behold.so/nEo7fdZAGPpHm6XPrkm5").then(r=>r.ok?r.json():null).then(f=>{
+    const posts=(f&&Array.isArray(f.posts)?f.posts:[]).slice(0,6);if(!posts.length)return;
+    const esc=x=>String(x||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+    document.getElementById("ig").innerHTML=posts.map(p=>{const z=p.sizes||{},src=(z.medium||z.small||{}).mediaUrl||p.thumbnailUrl||p.mediaUrl;if(!src)return "";
+      const alt=p.altText||(p.prunedCaption||p.caption||"").slice(0,120);
+      return '<a href="'+esc(p.permalink)+'" target="_blank" rel="noopener"><img src="'+esc(src)+'" alt="'+esc(alt)+'" loading="lazy">'+(p.mediaType==="VIDEO"?'<svg class="play" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8 5v14l11-7z"/></svg>':'')+'</a>';}).join("");
+    document.getElementById("igsec").hidden=false;}).catch(()=>{});
 })();
 </script>
 </body>
