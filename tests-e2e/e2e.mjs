@@ -150,8 +150,12 @@ ok(await waitText(p, "11 小時"), "hours kept after number change");
 ok((await txt(p)).includes("07700 900777"), "shows new number");
 await p.screenshot({ path: "shots/me-after-move.png", fullPage: true });
 
-// 5. admin unlocks name
-await a.reload(); await a.waitForSelector('[data-act="tab"][data-v="people"]'); await a.click('[data-act="tab"][data-v="people"]');
+ok((await dbGet(`shk/people/${NEW}/status`)) === "pending", "re-activated account waits for admin approval");
+// 5. admin approves, then unlocks name
+await a.reload(); await a.waitForSelector('[data-act="tab"][data-v="pending"]'); await a.click('[data-act="tab"][data-v="pending"]');
+await a.waitForSelector('[data-act="approve"]'); await a.click('[data-act="approve"]'); await a.waitForTimeout(1000);
+ok((await dbGet(`shk/people/${NEW}/status`)) === "active", "admin approval makes it active again");
+await a.click('[data-act="tab"][data-v="people"]');
 await a.waitForSelector('[data-act="unlockcert"]'); await a.click('[data-act="unlockcert"]'); await a.click('[data-act="unlockcert"]');
 await a.waitForTimeout(1000);
 ok(!(await dbGet(`shk/people/${NEW}/cert`)), "admin unlock removes certificate lock");
