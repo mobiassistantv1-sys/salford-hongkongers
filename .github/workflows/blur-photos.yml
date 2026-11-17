@@ -1,0 +1,37 @@
+name: Blur event photos
+
+on:
+  workflow_dispatch: {}
+  schedule:
+    - cron: "*/30 * * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: event-photos
+  cancel-in-progress: false
+
+jobs:
+  photos:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install --quiet opencv-python-headless==4.10.0.84 pillow pillow-heif numpy
+      - run: python scripts/sync_photos.py
+        env:
+          PHOTO_API: ${{ secrets.PHOTO_API }}
+          PHOTO_TOKEN: ${{ secrets.PHOTO_TOKEN }}
+      - name: Commit if changed
+        run: |
+          git add -A images/gallery data/gallery.json 2>/dev/null || true
+          if git diff --cached --quiet; then echo "No change"; exit 0; fi
+          git config user.name "shk-photo-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Update event photos"
+          git pull --rebase -q origin main
+          git push

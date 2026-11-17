@@ -2,7 +2,7 @@
 "use strict";
 const fs = require("fs");
 const assert = require("assert");
-const { groups, renderSlip, slipCanvas, starprnt, stackPng, STATIONS } = require("./slips");
+const { groups, noticeRows, renderSlip, slipCanvas, starprnt, stackPng, STATIONS } = require("./slips");
 
 const order = {
   table: "T3", no: 12, at: Date.now(), allergy: "對花生過敏", note: "少啲鹽",
@@ -17,11 +17,12 @@ const order = {
 const g = groups(order, {});
 assert.deepStrictEqual(Object.keys(g), STATIONS);
 assert.strictEqual(g.kitchen.length, 2);
-assert.strictEqual(g.bar.length, 2);
+assert.strictEqual(g.bar.length, 4, "set drink, hot drinks, set add-on toast, 菠蘿油");
 assert.strictEqual(g.floor.length, 4, "floor = whole order, cancelled line skipped");
 assert.ok(g.floor.every(r => r.price > 0), "floor rows carry prices");
-assert.ok(g.kitchen[0].al.includes("花生"), "satay shows peanut");
-assert.strictEqual(g.bar[0].al.join(), "奶", "set drink shows only the drink's allergens");
+assert.ok(!g.kitchen[0].al && !g.bar.some(r => r.al), "no allergen lines on kitchen / bar");
+assert.ok(g.floor.every(r => !r.al), "no allergen lines on the floor slip either");
+assert.ok(g.bar.some(r => r.name === "菠蘿油"), "菠蘿油 goes to the bar");
 fs.mkdirSync("test-out", { recursive: true });
 STATIONS.forEach(st => fs.writeFileSync(`test-out/${st}.png`, renderSlip(order, st, g[st], { time: "10:42", addOn: st === "bar", reprint: false })));
 console.log("ok", JSON.stringify(g, null, 1));
@@ -35,4 +36,23 @@ const expect = 2 + cv.reduce((a, c) => a + 9 + 72 * c.height + 3, 0);
 assert.strictEqual(job.length, expect, "byte length = init + (header + 72 bytes/row + cut) per slip");
 fs.writeFileSync("test-out/order.starprnt", job); fs.writeFileSync("test-out/stacked.png", stackPng(cv));
 console.log("starprnt bytes", job.length, "cuts", count(job, Buffer.from([0x1b, 0x64, 3])));
+/* cancel notice for line 1 (2× hot lemon tea) */
+const nr = noticeRows(order, {}, [1]);
+assert.strictEqual(nr.length, 1); assert.strictEqual(nr[0].q, 2);
+fs.writeFileSync("test-out/cancel.png", renderSlip(order, "cancel", nr, { time: "10:50" }));
 
+/* 是日特別麵包: staff-set name/price/allergens flow to every slip */
+const { Y } = require("./slips");
+const P2 = { special: { zh: "椰撻", en: "Coconut Tart", p: 180, al: ["G", "E", "M"] } };
+Y.applySpecial(P2);
+const g2 = groups({ table: "T1", lines: [{ itemId: "bk_special", qty: 2, sel: {} }] }, P2);
+assert.strictEqual(g2.floor[0].name, "椰撻"); assert.strictEqual(g2.floor[0].price, 360);
+assert.strictEqual(Y.lineAllergens("bk_special", {}).join(), "E,M,G");
+assert.ok(!g2.kitchen && !g2.bar, "bun is floor only");
+assert.strictEqual(Y.applySpecial({ special: { zh: "x", p: 100 } }), false, "no allergen confirmation = not ready");
+console.log("special ok");
+/* customer receipt: two orders, discount */
+const o2 = { table: "T3", sub: "B", no: 13, lines: [{ itemId: "dk_iced", qty: 1, sel: { drink: ["iced_lemontea"] } }] };
+const rrows = groups(order, {}).floor.concat(groups(o2, {}).floor);
+fs.writeFileSync("test-out/receipt.png", renderSlip({ table: "T3+T3-B", noText: "#012 #013" }, "receipt", rrows, { time: "11:05", disc: { amt: 250, label: "10%" } }));
+console.log("receipt ok", rrows.length);

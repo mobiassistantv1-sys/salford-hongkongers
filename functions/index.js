@@ -7,9 +7,9 @@
    Protocol: https://star-m.jp/products/s_print/sdk/StarCloudPRNT/manual/en/protocol-guide.html */
 "use strict";
 const { onRequest } = require("firebase-functions/v2/https");
-const { onValueCreated } = require("firebase-functions/v2/database");
+const { onValueCreated, onValueWritten } = require("firebase-functions/v2/database");
 const admin = require("firebase-admin");
-const { groups, slipCanvas, starprnt, stackPng, STATIONS } = require("./slips");
+const { Y, groups, noticeRows, slipCanvas, starprnt, stackPng, STATIONS } = require("./slips");
 const STARPRNT = "application/vnd.star.starprnt";
 
 admin.initializeApp();
@@ -22,18 +22,81 @@ const MAX_TRIES = 5;
 /* Printers allowed to pull orders: comma list in functions/.env, e.g. PRINTER_MAC=00:11:62:aa:bb:cc */
 const hex = m => String(m || "").toLowerCase().replace(/[^0-9a-f]/g, "");  /* "00:11:62:37:10:DD" == "00-11-62-37-10-dd" */
 const allowed = mac => !!hex(mac) && String(process.env.PRINTER_MAC || "").split(",").map(hex).includes(hex(mac));
+/* Optional shared key: when PRINTER_KEY is set (GitHub secret), the printer's CloudPRNT URL must end in ?k=<key>.
+   The MAC alone is not a secret (it is printed on the self-test slip). */
+const keyOk = q => !process.env.PRINTER_KEY || (q && q.k) === process.env.PRINTER_KEY;
 
 const hhmm = ms => new Date(ms).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/London" });
 
-async function publicData() { return (await db.ref("ordering/public").get()).val() || {}; }
+async function publicData() { const P = (await db.ref("ordering/public").get()).val() || {}; Y.applySpecial(P); return P; }
 
 /* ---------- 1) queue new orders ---------- */
 exports.queueSlips = onValueCreated({ ref: "/ordering/orders/{day}/{oid}", region: REGION }, async ev => {
   const o = ev.data.val() || {}; const { day, oid } = ev.params;
-  const P = await publicData();
+  if (o.srv) await takeStock(day, oid, o);
+  try { await updatePopular(); } catch (e) { console.error("popular", e); }
   if (!Object.keys(groups(o, await publicData())).length) return;
   const at = o.at || Date.now();
   await db.ref(`${Q}/${at}_${oid}`).set({ day, oid, at, tries: 0 });
+});
+
+/* 人氣: top 3 items by quantity over the last 28 days (voided orders and cancelled lines left out).
+   Written to ordering/public/popular = {ids:[...], at}; recomputed at most every 10 minutes. */
+async function updatePopular() {
+  const ref = db.ref("ordering/public/popular"), cur = (await ref.get()).val();
+  if (cur && Date.now() - (cur.at || 0) < 10 * 60 * 1000) return;
+  const end = (await db.ref("ordering/orders").orderByKey().limitToLast(40).get()).val() || {};
+  const since = new Date(Date.now() - 28 * 864e5).toISOString().slice(0, 10), n = {};
+  Object.keys(end).filter(d => d >= since).forEach(d => Object.values(end[d] || {}).forEach(o => {
+    if (!o || o.void) return;
+    (o.lines || []).forEach(l => { if (l && !l.x && Y.byId[l.itemId] && !Y.byId[l.itemId].special) n[l.itemId] = (n[l.itemId] || 0) + Math.max(1, Math.min(50, l.qty | 0)); });
+  }));
+  const ids = Object.keys(n).sort((a, b) => n[b] - n[a]).slice(0, 3);
+  await ref.set({ ids, at: Date.now() });
+}
+
+/* Bakery stock is taken HERE, after the order really exists (order page sets srv:1 when
+   ordering/public/srvStock is on). So a failed order never loses stock. If two phones take the
+   last bun at the same moment, the order keeps it and gets short:{key:n} so staff can tell the table. */
+async function takeStock(day, oid, o) {
+  const need = {};
+  (o.lines || []).forEach(l => { const it = l && Y.byId[l.itemId]; if (it && it.stock && !l.x) need[it.stock] = (need[it.stock] || 0) + Math.max(1, Math.min(50, l.qty | 0)); });
+  if (!Object.keys(need).length) return;
+  let took = {}, short = {};
+  await db.ref("ordering/public/stock").transaction(cur => {
+    cur = cur || {}; took = {}; short = {};
+    for (const k in need) { const have = Math.max(0, cur[k] || 0), t = Math.min(have, need[k]); cur[k] = have - t; took[k] = t; if (t < need[k]) short[k] = need[k] - t; }
+    return cur;
+  });
+  await db.ref(`ordering/orders/${day}/${oid}`).update({ took, short: Object.keys(short).length ? short : null });
+}
+
+/* cancel / void AFTER the slips were printed -> print a notice so the kitchen and bar stop making it */
+async function queueNotice(day, oid, kind, extra) {
+  const o = (await db.ref(`ordering/orders/${day}/${oid}`).get()).val();
+  if (!o || !o.print) return;                       /* not printed yet: the main job simply leaves it out */
+  const at = Date.now();
+  await db.ref(`${Q}/${at}_${oid}_${kind}${extra != null ? extra : ""}`).set({ day, oid, at, tries: 0, notice: kind, line: extra != null ? extra : null });
+}
+exports.cancelNotice = onValueCreated({ ref: "/ordering/orders/{day}/{oid}/lines/{i}/x", region: REGION }, async ev => {
+  if (ev.data.val() === true) await queueNotice(ev.params.day, ev.params.oid, "cancel", +ev.params.i);
+});
+/* staff tapped 重印 (orders/{day}/{oid}/rp = {at, st}) -> queue a reprint of all slips or one station */
+exports.reprint = onValueWritten({ ref: "/ordering/orders/{day}/{oid}/rp", region: REGION }, async ev => {
+  const v = ev.data.after.val(); if (!v) return;
+  const at = Date.now(), { day, oid } = ev.params;
+  await db.ref(`${Q}/${at}_${oid}_rp`).set({ day, oid, at, tries: 0, reprint: true, st: STATIONS.includes(v.st) || v.st === "receipt" ? v.st : null });
+});
+/* staff tapped 印收據俾客 on the bill (orders/{day}/{oid}/rcpt = {at, ids:[...], discAmt, discLabel}) */
+exports.receipt = onValueWritten({ ref: "/ordering/orders/{day}/{oid}/rcpt", region: REGION }, async ev => {
+  const v = ev.data.after.val(); if (!v) return;
+  const at = Date.now(), { day, oid } = ev.params;
+  const ids = (Array.isArray(v.ids) ? v.ids : Object.values(v.ids || {})).filter(x => typeof x === "string").slice(0, 20);
+  await db.ref(`${Q}/${at}_${oid}_rc`).set({ day, oid, at, tries: 0, receipt: true, ids: ids.length ? ids : [oid],
+    discAmt: Math.max(0, v.discAmt | 0), discLabel: String(v.discLabel || "").slice(0, 20) });
+});
+exports.voidNotice = onValueCreated({ ref: "/ordering/orders/{day}/{oid}/void", region: REGION }, async ev => {
+  await queueNotice(ev.params.day, ev.params.oid, "void");
 });
 
 async function nextJob() {
@@ -51,6 +114,24 @@ async function render(key, type) {
   const j = (await db.ref(`${Q}/${key}`).get()).val(); if (!j) return null;
   const [oSnap, P] = [await db.ref(`ordering/orders/${j.day}/${j.oid}`).get(), await publicData()];
   const o = oSnap.val(); if (!o) return null;
+  if (j.notice) {
+    const rows = j.notice === "cancel" ? noticeRows(o, P, [j.line]) : noticeRows(o, P, (o.lines || []).map((l, i) => i).filter(i => !(o.lines[i] || {}).x));
+    if (!rows.length) return null;
+    const c = slipCanvas(Object.assign({}, o, { allergy: "", note: j.notice === "void" && o.void ? "原因：" + o.void.reason : "" }), j.notice, rows, { time: hhmm(Date.now()) });
+    return type === STARPRNT ? starprnt([c]) : stackPng([c]);
+  }
+  if (j.receipt || j.st === "receipt") {            /* customer receipt: one or more orders, prices, discount, total */
+    const ids = j.receipt ? Object.values(j.ids || {}) : [j.oid];
+    const all = (await db.ref(`ordering/orders/${j.day}`).get()).val() || {};
+    const os = ids.map(id => all[id]).filter(x => x && !x.void);
+    if (!os.length) return null;
+    const rows = os.flatMap(x => (groups(x, P).floor || []));
+    const label = [...new Set(os.map(x => x.table && x.table.startsWith("W") ? x.table : x.table + (x.sub ? "-" + x.sub : "")))].join("+");
+    const head = { table: label, noText: os.map(x => "#" + String(x.no || 0).padStart(3, "0")).join(" ") };
+    const c = slipCanvas(head, "receipt", rows, { time: hhmm(Date.now()), disc: { amt: j.discAmt || 0, label: j.discLabel || "" } });
+    return type === STARPRNT ? starprnt([c]) : stackPng([c]);
+  }
+  if (o.void) return null;                          /* voided before printing: nothing to print */
   const g = groups(o, P), sts = stationsOf(j, g); if (!sts.length) return null;
   /* add-on = same table already had an earlier unpaid order today (same rule as staff page) */
   const all = (await db.ref(`ordering/orders/${j.day}`).get()).val() || {};
@@ -63,7 +144,8 @@ async function render(key, type) {
 async function confirm(mac, key, code) {
   const ok = /^2/.test(code || "");
   const ref = db.ref(`${Q}/${key}`); const j = (await ref.get()).val(); if (!j) return;
-  const mark = v => { const u = { [`${Q}/${key}`]: null }; (j.st ? [j.st] : STATIONS).forEach(st => { u[`ordering/orders/${j.day}/${j.oid}/print/${st}`] = v; }); return u; };
+  const mark = v => { const u = { [`${Q}/${key}`]: null };
+    (j.receipt ? ["receipt"] : j.notice ? [j.notice + (j.line != null ? "_" + j.line : "")] : j.st ? [j.st] : STATIONS).forEach(st => { u[`ordering/orders/${j.day}/${j.oid}/print/${st}`] = v; }); return u; };
   if (ok) await db.ref().update(mark(Date.now()));
   else if ((j.tries || 0) + 1 >= MAX_TRIES) await db.ref().update(mark("fail:" + code));
   else await ref.child("tries").set((j.tries || 0) + 1);
@@ -76,11 +158,11 @@ exports.cloudprnt = onRequest({ region: REGION, memory: "512MiB", cors: false },
     if (req.method === "POST") {
       const b = req.body || {}; const mac = b.printerMAC;
       await db.ref("ordering/printer/status").set({ mac: mac || "", code: b.statusCode || "", at: Date.now(), ok: allowed(mac) });
-      if (!allowed(mac)) return res.json({ jobReady: false });
+      if (!allowed(mac) || !keyOk(q)) return res.json({ jobReady: false });
       const j = await nextJob();
       return res.json(j ? { jobReady: true, mediaTypes: [STARPRNT, "image/png"], jobToken: j.key } : { jobReady: false });
     }
-    if (!allowed(q.mac)) return res.status(403).send("unknown printer");
+    if (!allowed(q.mac) || !keyOk(q)) return res.status(403).send("unknown printer");
     if (req.method === "DELETE" || (req.method === "GET" && q.delete !== undefined)) {
       let key = q.token; if (!key) { const j = await nextJob(); key = j && j.key; }  /* firmware without token support */
       if (key) await confirm(q.mac, key, q.code);

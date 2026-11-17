@@ -19,36 +19,45 @@ const W = 576;            /* 72 mm print width at 203 dpi */
 const PAD = 8;
 
 const STATIONS = ["kitchen", "bar", "floor"];
-const TITLE = { kitchen: "廚房 KITCHEN", bar: "水吧 BAR", floor: "樓面 FLOOR · 埋單用" };
+const TITLE = { kitchen: "廚房 KITCHEN", bar: "水吧 BAR", floor: "樓面 FLOOR · 埋單用", receipt: "友愛冰室 收據 RECEIPT", cancel: "⚠ 取消 CANCEL · 唔使做", void: "⚠ 整張作廢 VOID · 唔使做" };
 
-/* -> { kitchen:[{q,name,sub,al}], bar:[...], floor:[...] }  (empty stations omitted) */
+/* rows for a cancel / void notice: the line(s) that no longer need making */
+function noticeRows(o, P, idxs) {
+  return idxs.map(i => (o.lines || [])[i]).filter(l => l && byId[l.itemId]).map(l => {
+    const ln = Y.mkLine(l.itemId, Math.max(1, Math.min(50, l.qty | 0)), l.sel || {}, P);
+    return { q: ln.qty, name: Y.itemName(byId[l.itemId], P, "zh"), sub: ln.desc.map(x => x.zh).join("、") }; });
+}
+
+/* -> { kitchen:[{q,name,sub}], bar:[...], floor:[{q,name,sub,price}] }  (empty stations omitted)
+   No allergen lines ("含：…") on any slip — staff know the recipes; the menu and staff screen show them.
+   The customer's own allergy note and other note print on every slip. */
 function groups(o, P) {
   const L = (o.lines || []).map(l => {
     if (l.x || !byId[l.itemId]) return null;
     const ln = Y.mkLine(l.itemId, Math.max(1, Math.min(50, l.qty | 0)), l.sel || {}, P);
     return ln;
   }).filter(Boolean);
-  const al = l => Y.lineAllergens(l.itemId, l.sel).map(c => Y.alName(c, "zh"));
-  /* set drink of an All Day Set: only the drink's own allergens go on the bar slip */
-  const drinkAl = sel => Y.sortAl(["setdrink", "taste"].flatMap(k =>
-    (sel[k] || []).flatMap(id => ((Y.G[k].choices.find(c => c.id === id) || {}).al) || []))).map(c => Y.alName(c, "zh"));
   const out = {};
-  const kit = L.filter(l => ["allday", "sandwich"].includes(byId[l.itemId].cat));
+  const kit = L.filter(l => ["allday", "sandwich"].includes(byId[l.itemId].cat) && byId[l.itemId].st !== "bar");
   if (kit.length) out.kitchen = kit.map(l => { const it = byId[l.itemId];
     return { q: l.qty, name: Y.itemName(it, P, "zh") + (it.cat === "allday" ? "（全日早餐）" : ""),
-      sub: l.desc.filter(x => x.st === "kitchen").map(x => x.zh).join("、"), al: al(l) }; });
+      sub: l.desc.filter(x => x.st === "kitchen").map(x => x.zh).join("、") }; });
   const bar = [];
   L.forEach(l => { const it = byId[l.itemId];
     if (it.cat === "drinks") bar.push({ q: l.qty, name: l.desc.filter(x => x.g === "drink").map(x => x.zh).join(""),
-      sub: l.desc.filter(x => x.g === "taste").map(x => x.zh).join("、"), al: al(l) });
+      sub: l.desc.filter(x => x.g === "taste").map(x => x.zh).join("、") });
     else if (it.cat === "allday") bar.push({ q: l.qty, name: l.desc.filter(x => x.g === "setdrink").map(x => x.zh).join(""),
       sub: [l.desc.filter(x => x.g === "taste").map(x => x.zh).join("、"), "跟 " + it.zh + " 全日早餐"].filter(Boolean).join(" · "),
-      al: drinkAl(l.sel) }); });
+    }); });
+  /* toast is made at the bar: set add-on toast + toast items (西多士, 煉奶牛油多士, 花生醬多士) */
+  L.forEach(l => { const it = byId[l.itemId];
+    if (it.cat === "allday") l.desc.filter(x => x.g === "toast").forEach(x => bar.push({ q: l.qty, name: x.zh, sub: "跟 " + it.zh + " 全日早餐" }));
+    else if (it.st === "bar") bar.push({ q: l.qty, name: Y.itemName(it, P, "zh"), sub: l.desc.map(x => x.zh).join("、") }); });
   if (bar.length) out.bar = bar;
   /* floor slip = the whole order with prices + total, for taking payment (always printed) */
   out.floor = L.map(l => { const it = byId[l.itemId];
     return { q: l.qty, name: Y.itemName(it, P, "zh") + (it.cat === "allday" ? "早餐" : ""),
-      sub: l.desc.map(x => x.zh).join("、"), al: al(l), price: l.unit * l.qty }; });
+      sub: l.desc.map(x => x.zh).join("、"), price: l.unit * l.qty }; });
   if (!out.floor.length) delete out.floor;
   return out;
 }
@@ -84,36 +93,49 @@ function slipCanvas(o, station, rows, meta) {
     /* header: station (inverted band), table huge, order no + time */
     if (paint) { ctx.fillStyle = "#000"; ctx.fillRect(0, y, W, 60); ctx.fillStyle = "#fff"; ctx.font = "40px HK"; ctx.fillText(TITLE[station], PAD + 4, y + 45); }
     y += 72;
-    const tbl = o.table && o.table.startsWith("W") ? "外賣 " + o.table : (o.table || "?");
+    const tbl = o.table && o.table.startsWith("W") ? "外賣 " + o.table : (o.table || "?") + (o.sub ? "-" + o.sub : "");
     text(tbl, 96, PAD, { gap: 4 });
-    text(`#${String(o.no || 0).padStart(3, "0")}  ${meta.time}${o.name ? "  " + o.name : ""}${meta.addOn ? "  【加單】" : ""}`, 30, PAD);
-    if (meta.reprint) text("重印 REPRINT", 30, PAD, { invert: true });
+    text(`${o.noText || "#" + String(o.no || 0).padStart(3, "0")}  ${meta.time}${o.name ? "  " + o.name : ""}${meta.addOn ? "  【加單】" : ""}`, 36, PAD);
+    if (meta.reprint) text("重印 REPRINT", 36, PAD, { invert: true });
     rule();
 
     const money = p => "£" + (p / 100).toFixed(2);
     const right = (s, size, yy) => { if (!paint) return; ctx.font = `${size}px HK`; ctx.fillStyle = "#000"; ctx.fillText(s, W - PAD - ctx.measureText(s).width, yy + size * 0.88); };
-    const PRICE_W = 150;   /* right column for prices on the floor slip */
+    const PRICE_W = 170;   /* right column for prices on the floor slip */
     rows.forEach(r => {
-      const hasP = r.price != null, fs = hasP ? 40 : 48;   /* bill slip: smaller names, fewer wraps */
-      const qx = PAD, nx = PAD + (hasP ? 72 : 86);
+      const hasP = r.price != null, fs = hasP ? 48 : 58;   /* bill slip: smaller names, fewer wraps */
+      const qx = PAD, nx = PAD + (hasP ? 86 : 104);
       ctx.font = `${fs}px HK`;
       if (paint) { ctx.fillStyle = "#000"; ctx.fillText(r.q + "×", qx, y + fs * 0.88); }
-      if (hasP) right(money(r.price), 40, y);
+      if (hasP) right(money(r.price), 48, y);
       text(r.name, fs, nx, { gap: 6, maxW: W - nx - PAD - (hasP ? PRICE_W : 0) });
-      if (r.sub) text(r.sub, 32, nx, { gap: 6 });
-      if (r.al && r.al.length) text("含：" + r.al.join("、"), 28, nx, { invert: true, gap: 10 });
+      if (r.sub) text(r.sub, 40, nx, { gap: 6 });
+      if (r.al && r.al.length) text("含：" + r.al.join("、"), 34, nx + 6, { invert: true, gap: 12, maxW: W - nx - PAD - 48 });
       y += 10;
     });
 
+    if (station === "receipt") {
+      const total = rows.reduce((a, r) => a + (r.price || 0), 0), d = meta.disc || {};
+      rule();
+      if (d.amt > 0) {
+        if (paint) { ctx.font = "36px HK"; ctx.fillStyle = "#000"; ctx.fillText("小計", PAD, y + 36 * 0.88); } right(money(total), 36, y); y += 48;
+        if (paint) { ctx.font = "36px HK"; ctx.fillStyle = "#000"; ctx.fillText("折扣 " + (d.label || ""), PAD, y + 36 * 0.88); } right("−" + money(d.amt), 36, y); y += 52;
+      }
+      if (paint) { ctx.font = "56px HK"; ctx.fillStyle = "#000"; ctx.fillText("合共", PAD, y + 56 * 0.88); }
+      right(money(total - (d.amt || 0)), 64, y - 4); y += 80;
+      text("多謝光臨 Thank you!", 32, PAD);
+      text("Salford Hongkongers CIC", 22, PAD, { gap: 4 }); text("The Angel Centre, Salford M3 6FA", 22, PAD);
+      y += 24; return y;
+    }
     if (station === "floor") {
       const total = rows.reduce((a, r) => a + (r.price || 0), 0);
       rule();
       if (paint) { ctx.font = "56px HK"; ctx.fillStyle = "#000"; ctx.fillText("合共", PAD, y + 56 * 0.88); }
       right(money(total), 64, y - 4); y += 76;
-      text("折扣喺埋單時先計" + (meta.addOn ? " · 呢張係加單，埋單要連前面張單一齊計" : ""), 26, PAD);
+      text("折扣喺收錢時先計", 30, PAD);
     }
-    if (o.allergy) { rule(); text("⚠ 過敏：" + o.allergy, 36, PAD, { invert: true, gap: 12, maxW: W - PAD * 2 - 12 }); }
-    if (o.note) { rule(o.allergy ? 0 : 3); text("備註：" + o.note, 32, PAD); }
+    if (o.allergy) { rule(); text("⚠ 過敏：" + o.allergy, 44, PAD, { invert: true, gap: 12, maxW: W - PAD * 2 - 12 }); }
+    if (o.note) { rule(o.allergy ? 0 : 3); text("【備註】" + o.note, 42, PAD, { invert: true, gap: 12, maxW: W - PAD * 2 - 12 }); }
     y += 24;
     return y;
   };
@@ -155,4 +177,4 @@ function stackPng(canvases) {
   return out.toBuffer("image/png");
 }
 
-module.exports = { Y, groups, renderSlip, slipCanvas, starprnt, stackPng, STATIONS };
+module.exports = { Y, groups, noticeRows, renderSlip, slipCanvas, starprnt, stackPng, STATIONS };

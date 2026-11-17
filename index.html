@@ -92,6 +92,16 @@ html[lang="en-GB"] .svc small{display:none}
 
 @media(max-width:860px){.about-grid,.involve .in{grid-template-columns:1fr;gap:26px}}
 @media(max-width:620px){.stats,.svc,.events,.news{grid-template-columns:1fr}.hero{padding-top:44px}}
+.ig{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:24px}
+.ig a{display:flex;flex-direction:column;text-decoration:none;background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.ig a:hover{border-color:var(--magenta)}
+.ig .im{position:relative;aspect-ratio:1/1;background:var(--surface-2)}
+.ig .im{overflow:hidden}
+.ig img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.ig .im span{position:absolute;top:8px;right:8px;background:rgba(0,0,0,.55);color:#fff;font-size:11px;border-radius:99px;padding:2px 8px}
+.ig p{font-size:13px;line-height:1.5;color:var(--muted);padding:10px 12px 12px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.ig-more{display:inline-block;margin-top:14px;font-weight:700;color:var(--magenta);text-decoration:none}
+@media(max-width:760px){.ig{grid-template-columns:repeat(2,1fr)}}
 .gal{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:24px}
 .gal button{border:0;padding:0;background:var(--surface-2);border-radius:12px;overflow:hidden;aspect-ratio:4/3;cursor:zoom-in}
 .gal img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s}
@@ -227,6 +237,15 @@ html[lang="en-GB"] .svc small{display:none}
     </div>
   </section>
 
+  <section class="section" id="ig" hidden>
+    <div class="sec-head">
+      <div class="eyebrow">Instagram</div>
+      <h2 data-en="Latest on Instagram">Instagram 最新動態</h2>
+    </div>
+    <div class="ig" id="ig-list"></div>
+    <a class="ig-more" href="https://www.instagram.com/salfordhongkongerscic/" target="_blank" rel="noopener" data-en="Follow @salfordhongkongerscic →">追蹤 @salfordhongkongerscic →</a>
+  </section>
+
   <section class="section" id="photos" hidden>
     <div class="sec-head">
       <div class="eyebrow" data-en="Event photos">活動花絮</div>
@@ -344,6 +363,24 @@ html[lang="en-GB"] .svc small{display:none}
   });
   lb.addEventListener("click", function () { lb.hidden = true; });
   document.addEventListener("keydown", function (e) { if (e.key === "Escape") lb.hidden = true; });
+})();
+</script>
+<script>
+/* Latest 4 Instagram posts from the Behold feed (behold.so), read straight from the browser. Hidden if the feed is down. */
+(function () {
+  var sec = document.getElementById("ig"), list = document.getElementById("ig-list");
+  function esc(s) { return String(s || "").replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+  function safe(u) { return /^https:\/\//.test(u || "") ? u : "#"; }
+  fetch("https://feeds.behold.so/x2twyP7534l6jbQ1g5zR").then(function (r) { if (!r.ok) throw 0; return r.json(); }).then(function (d) {
+    var posts = (d && d.posts || []).slice(0, 4);
+    if (!posts.length) return;
+    list.innerHTML = posts.map(function (p) {
+      var sz = p.sizes || {}, img = (sz.medium || sz.small || {}).mediaUrl || p.thumbnailUrl || p.mediaUrl;
+      var tag = p.mediaType === "VIDEO" ? "Reel" : p.mediaType === "CAROUSEL_ALBUM" ? "▦" : "";
+      return '<a href="' + esc(safe(p.permalink)) + '" target="_blank" rel="noopener"><div class="im"><img src="' + esc(safe(img)) + '" alt="" loading="lazy">' + (tag ? "<span>" + tag + "</span>" : "") + "</div><p>" + esc(p.prunedCaption || p.caption || "") + "</p></a>";
+    }).join("");
+    sec.hidden = false;
+  }).catch(function () {});
 })();
 </script>
 </body>
