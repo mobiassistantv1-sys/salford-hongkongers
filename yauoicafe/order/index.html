@@ -48,6 +48,14 @@ button,input,select,textarea{font:inherit;color:inherit}button{cursor:pointer}
 .imgcap{text-align:center;font-size:12px;color:var(--muted);margin:-4px 0 8px}.sheetimg{display:block;width:100%;max-width:200px;height:auto;aspect-ratio:1;margin:0 auto 10px;border-radius:16px;object-fit:cover}
 .item .tags{grid-column:1/-1;display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
 .item[disabled]{cursor:not-allowed}.item[disabled] .nm,.item[disabled] .pr,.item[disabled] .en{opacity:.45}
+.tag.pop{background:var(--gold,#FFC83D);color:#1F1A17}
+.feat{background:#FFF3C9;border-radius:14px;padding:4px 12px;margin:12px 0}.feat .cat-h{margin-top:10px}.feat .item:last-child{border-bottom:0}
+.again{display:flex;align-items:center;gap:12px;background:#fff;border:2px solid var(--green);border-radius:14px;padding:12px;margin:12px 0}
+.again div{flex:1;min-width:0}.again b{display:block}.again span{display:block;font-size:14px;color:var(--muted)}.again .btn{flex:none;width:auto;padding:12px 16px}
+.upsell{position:fixed;left:0;right:0;bottom:84px;z-index:30;padding:0 12px}.upsell .in{max-width:560px;margin:0 auto;background:#fff;border:2.5px solid var(--green);border-radius:16px;padding:12px;box-shadow:0 10px 30px rgba(0,0,0,.2)}
+.upsell b{display:block;font-size:17px;margin-bottom:8px}.upsell .opts{display:flex;gap:8px;flex-wrap:wrap}
+.upsell .opts button{display:flex;align-items:center;gap:8px;border:2px solid var(--line);background:#FFFDF6;border-radius:12px;padding:8px 10px;font-weight:700;font-size:15px;min-height:48px}
+.upsell .opts img{width:36px;height:36px;border-radius:8px;object-fit:cover}.upsell .no{margin-left:auto;border:0;background:none;color:var(--muted);font-weight:700;min-height:48px;padding:0 6px}
 .tag{font-size:11.5px;font-weight:700;border-radius:6px;padding:2px 7px}
 .tag.left{background:var(--ok-soft);color:var(--ok)}.tag.low{background:var(--amber-soft);color:var(--amber)}.tag.out{background:var(--sunk);color:var(--muted)}.tag.nut{background:var(--red-soft);color:var(--red)}.tag.al{background:var(--red-soft);color:var(--red)}.tag.alnote{background:var(--sunk);color:var(--muted);font-weight:500}.choice .al{display:block;font-size:11.5px;color:var(--red);font-weight:700;margin:2px 0 0}.cline .alc{grid-column:1/-1;color:var(--red);font-size:12.5px;font-weight:700}.tag.chk{background:var(--sunk);color:var(--muted);font-weight:500}
 .cartbar{position:fixed;left:0;right:0;bottom:0;z-index:25;background:var(--paper);border-top:1px solid var(--line);padding:10px max(16px,env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
@@ -152,20 +160,46 @@ function stockTag(it){
 function alList(codes){return codes.map(c=>Y.alName(c,U.lang)).join(EN()?", ":"、");}
 function allergyTags(it){const b=(it.al||[]);let h=b.length?'<span class="tag al">'+t("含：","Contains: ")+esc(alList(Y.sortAl(b)))+'</span>':'';if(Y.optionsAddAllergens(it))h+='<span class="tag alnote">'+t("選項另有過敏原","Options may add allergens")+'</span>';return h;}
 
+/* 人氣 = top sellers of the last 4 weeks (written by the printer server); 是日推介 = chosen by staff */
+const isPop=m=>!!(P.popular&&(P.popular.ids||[]).includes(m.id));
+function itemBtn(m){
+      const out=avail(m)<=0,left=m.stock?avail(m)-cartUse(m.stock):1;
+      const sub=EN()?(m.d?m.d.en:""):[Y.itemName(m,P,"en"),m.d?m.d.zh:""].filter(Boolean).join(" · ");
+      const base=Y.itemPrice(m,P,false),tp=m.g.includes("toastsw")?Y.itemPrice(m,P,true)-base:0;
+      return '<button class="item'+(m.img?' has-img':'')+'" data-act="open" data-v="'+m.id+'"'+(out?" disabled":"")+'>'+(m.img?'<img class="thumb" src="/yauoicafe/assets/menu/'+m.id+'.webp" alt="" loading="lazy" width="72" height="72">':'')+'<span class="nm">'+esc(iname(m))+'</span><span class="pr num">'+money(base)+(tp?'<small>'+t("烘底 +","Toasted +")+money(tp)+'</small>':'')+'</span>'+(sub?'<span class="en">'+esc(sub)+'</span>':'')+'<span class="tags">'+(isPop(m)?'<span class="tag pop">'+t("人氣","Popular")+'</span>':'')+stockTag(m)+(out?'':allergyTags(m))+(m.stock&&!out&&left<=0?'<span class="tag low">'+t("已全部放入訂單","All left are in your order")+'</span>':'')+'</span></button>';
+}
+const canSell=m=>m&&!Y.hiddenItem(m)&&!off(m.id)&&avail(m)>0;
+/* 再叫一次: the last order on this phone (ids only, re-priced and re-checked now) */
+function lastOrder(){try{const o=JSON.parse(localStorage.getItem("yoc_last")||"null");return o&&Array.isArray(o.lines)?o:null;}catch(e){return null;}}
+/* suggest once per visit: sandwich / bakery → a drink; All Day Set → a bun */
+function upsellFor(it){U.upSeen=U.upSeen||{};
+  const has=c=>U.cart.some(l=>byId[l.itemId].cat===c);
+  if((it.cat==="sandwich"||it.cat==="bakery")&&!has("drinks")&&!has("allday")&&!U.upSeen.drink){U.upSeen.drink=1;return "drink";}
+  if(it.cat==="allday"&&!has("bakery")&&!U.upSeen.bun&&MENU.some(m=>m.cat==="bakery"&&canSell(m))){U.upSeen.bun=1;return "bun";}
+  return null;}
+function renderUpsell(){if(!U.up||U.sheet||U.view!=="menu")return "";
+  let o;
+  if(U.up==="drink")o=["dk_hot","dk_iced"].map(id=>byId[id]).filter(canSell);
+  else o=MENU.filter(m=>m.cat==="bakery"&&canSell(m)).sort((a,b)=>(isPop(b)?1:0)-(isPop(a)?1:0)).slice(0,3);
+  if(!o.length)return "";
+  return '<div class="upsell" role="dialog" aria-label="'+t("建議","Suggestion")+'"><div class="in"><b>'+t("已加入 ✓ ","Added ✓ ")+(U.up==="drink"?t("配杯飲品？","Add a drink?"):t("加個麵包？","Add a bun?"))+'</b><div class="opts">'
+    +o.map(m=>'<button data-act="upgo" data-v="'+m.id+'">'+(m.img?'<img src="/yauoicafe/assets/menu/'+m.id+'.webp" alt="">':'')+esc(iname(m))+' <span class="num">'+money(Y.itemPrice(m,P,false))+'</span></button>').join("")
+    +'<button class="no" data-act="upno">'+t("唔使喇","No thanks")+'</button></div></div></div>';}
 function renderMenu(){
   let h='<div class="wrap">';
   if(!online)h+='<div class="err">'+t("網絡斷咗，重新連線中…","Connection lost. Reconnecting…")+'</div>';
   if(!VALID)h+='<div class="notice"><b>'+t("睇緊餐牌","Browsing the menu")+'</b> '+t("落單請用手機 scan 枱上嘅 QR code。","To order, scan the QR code on your table.")+'</div>';
   else h+='<div class="tablebar"><div class="tablechip">'+(isTA?t("外賣","TA"):esc(CODE))+'<small>'+(isTA?"TAKEAWAY":t("枱號","TABLE"))+'</small></div><div class="who"><h1>'+(isTA?t("外賣落單","Takeaway order"):t("歡迎！請喺手機點餐","Welcome! Order on your phone"))+'</h1><p>'+(isTA?t("落單即付款","Pay when you order"):t("落單即付款","Pay when you order"))+'</p></div></div>';
   h+='<div class="notice"><b>'+t("有食物過敏？","Food allergy?")+'</b> '+t("落單前請話俾員工知，或喺訂單「過敏備註」寫低。","Please tell staff before ordering, or write it in the allergy note on your order.")+'</div>';
+  const feat=MENU.filter(m=>P.featured&&P.featured[m.id]&&!Y.hiddenItem(m));
+  if(feat.length)h+='<section class="feat"><div class="cat-h"><h2>'+t("是日推介","Today\'s picks")+'</h2></div><div class="items">'+feat.map(itemBtn).join("")+'</div></section>';
+  const lo=VALID&&!U.cart.length&&lastOrder();
+  if(lo){const ls=lo.lines.filter(l=>byId[l.itemId]);if(ls.length)h+='<div class="again"><div><b>'+t("上次叫過","Last time you had")+'</b><span>'+esc(ls.map(l=>l.qty+"× "+iname(byId[l.itemId])).join(EN()?", ":"、"))+'</span></div><button class="btn primary" data-act="again">'+t("再叫一次","Order again")+'</button></div>';}
   h+='<nav class="cats" aria-label="'+t("餐牌類別","Menu sections")+'">'+CATS.map(c=>'<button data-act="cat" data-v="'+c.id+'" aria-pressed="'+(U.cat===c.id)+'">'+nm(c)+'</button>').join("")+'</nav>';
   CATS.forEach(c=>{
     h+='<section><div class="cat-h" id="cat-'+c.id+'"><h2>'+nm(c)+'</h2>'+(EN()?'':'<span>'+c.en+'</span>')+'</div><div class="items">';
     MENU.filter(m=>m.cat===c.id&&!Y.hiddenItem(m)).forEach(m=>{
-      const out=avail(m)<=0,left=m.stock?avail(m)-cartUse(m.stock):1;
-      const sub=EN()?(m.d?m.d.en:""):[Y.itemName(m,P,"en"),m.d?m.d.zh:""].filter(Boolean).join(" · ");
-      const base=Y.itemPrice(m,P,false),tp=m.g.includes("toastsw")?Y.itemPrice(m,P,true)-base:0;
-      h+='<button class="item'+(m.img?' has-img':'')+'" data-act="open" data-v="'+m.id+'"'+(out?" disabled":"")+'>'+(m.img?'<img class="thumb" src="/yauoicafe/assets/menu/'+m.id+'.webp" alt="" loading="lazy" width="72" height="72">':'')+'<span class="nm">'+esc(iname(m))+'</span><span class="pr num">'+money(base)+(tp?'<small>'+t("烘底 +","Toasted +")+money(tp)+'</small>':'')+'</span>'+(sub?'<span class="en">'+esc(sub)+'</span>':'')+'<span class="tags">'+stockTag(m)+(out?'':allergyTags(m))+(m.stock&&!out&&left<=0?'<span class="tag low">'+t("已全部放入訂單","All left are in your order")+'</span>':'')+'</span></button>';});
+      h+=itemBtn(m);});
     h+='</div></section>';});
   h+='</div>';
   const n=U.cart.reduce((a,l)=>a+l.qty,0),tot=U.cart.reduce((a,l)=>a+lineTotal(l),0);
@@ -224,7 +258,7 @@ function render(){
   applyFz();$("#l-zh").setAttribute("aria-pressed",!EN());$("#l-en").setAttribute("aria-pressed",EN());
   if(!ready)return;
   if(!VALID){$("#app").innerHTML=renderMenu();return;}  /* no table code: browse the menu only */
-  $("#app").innerHTML=(STAFF?'<div class="staffbar">'+t("員工代客落單","Staff adding items")+' · '+esc(CODE)+' <a href="/yauoicafe/staff/">'+t("← 返後台","← Back to staff page")+'</a></div>':'')+(U.view==="done"?renderDone():(U.view==="cart"?renderCart():renderMenu())+renderSheet());
+  $("#app").innerHTML=(STAFF?'<div class="staffbar">'+t("員工代客落單","Staff adding items")+' · '+esc(CODE)+' <a href="/yauoicafe/staff/">'+t("← 返後台","← Back to staff page")+'</a></div>':'')+(U.view==="done"?renderDone():(U.view==="cart"?renderCart():renderMenu())+renderSheet()+renderUpsell());
 }
 
 /* ---------- Firebase ---------- */
@@ -287,7 +321,8 @@ async function submit(){
     /* one retry for a network blip; a refusal (wrong QR key) fails the same way twice */
     try{await db.ref("ordering/orders/"+day).push(order);}
     catch(e1){if(String(e1&&e1.code||e1).toLowerCase().includes("permission")){e1.took=took;throw e1;}await new Promise(r=>setTimeout(r,1500));try{await db.ref("ordering/orders/"+day).push(order);}catch(e2){e2.took=took;throw e2;}}
-    U.last={table,no,name:U.name,total:U.cart.reduce((a,l)=>a+lineTotal(l),0)};U.cart=[];U.name="";U.allergy="";U.note="";U.view="done";U.busy=false;render();window.scrollTo(0,0);
+    U.last={table,no,name:U.name,total:U.cart.reduce((a,l)=>a+lineTotal(l),0)};
+    if(!STAFF)try{localStorage.setItem("yoc_last",JSON.stringify({at:Date.now(),lines:lines.map(l=>({itemId:l.itemId,qty:l.qty,sel:l.sel}))}));}catch(x){}U.cart=[];U.name="";U.allergy="";U.note="";U.view="done";U.busy=false;render();window.scrollTo(0,0);
   }catch(e){U.busy=false;U.err=t("落單失敗，請搵員工幫手。","We couldn't place your order. Please ask a member of staff.");U.errCode=stage+" / "+String(e&&(e.code||e.message)||e).slice(0,60)+(e&&e.took?" · "+t("已扣麵包：","bakery taken: ")+Object.keys(e.took).map(k=>{const s=Y.STOCK.find(x=>x.k===k);return (s?t(s.zh,s.en):k)+" ×"+e.took[k];}).join(t("、",", "))+t("（請員工加返）"," (staff: add back)"):"");try{console.error("order failed",stage,e);}catch(x){}render();}
 }
 
@@ -312,8 +347,16 @@ document.addEventListener("click",e=>{
       if(miss.length){sh.tried=true;render();toast(t("請揀：","Please choose: ")+miss.map(g=>nm(g).replace(/（.*）|\s*\(.*\)/,"")).join(EN()?", ":"、"));break;}
       const sel={};Object.keys(sh.sel).forEach(k=>{if(k!=="__iced")sel[k]=sh.sel[k];});
       const ln=mk(it.id,sh.qty,sel);ln.lid="l"+Date.now()+Math.random().toString(36).slice(2,6);
-      if(sh.edit!=null)U.cart[sh.edit]=ln;else U.cart.push(ln);U.sheet=null;U.bad={};U.err="";render();toast(t("已加入：","Added: ")+sh.qty+" × "+iname(it));break;}
-    case "view":U.view=v;U.err="";render();window.scrollTo(0,0);break;
+      if(sh.edit!=null)U.cart[sh.edit]=ln;else U.cart.push(ln);U.sheet=null;U.bad={};U.err="";
+      U.up=sh.edit==null?upsellFor(it):null;render();if(!U.up)toast(t("已加入：","Added: ")+sh.qty+" × "+iname(it));break;}
+    case "upno":U.up=null;render();break;
+    case "upgo":U.up=null;{const it2=byId[v];if(canSell(it2)){U.sheet={id:v,qty:1,sel:{},edit:null,tried:false};if(it2.iced)U.sheet.sel.__iced=true;}}render();break;
+    case "again":{const lo=lastOrder();if(!lo)break;let ok=0,skip=0;
+      lo.lines.forEach(l=>{const it2=byId[l.itemId];const sel=it2&&Y.cleanSel(it2,l.sel||{});
+        if(!canSell(it2)||!sel||(it2.stock&&avail(it2)-cartUse(it2.stock)<l.qty)){skip++;return;}
+        const ln=mk(it2.id,l.qty,sel);ln.lid="l"+Date.now()+Math.random().toString(36).slice(2,6);U.cart.push(ln);ok++;});
+      render();toast(skip?t("已加 "+ok+" 樣，"+skip+" 樣今日冇得賣或者選項改咗","Added "+ok+"; "+skip+" not available today"):t("已加返上次嘅餐點","Added your last order"));break;}
+    case "view":U.view=v;U.err="";U.up=null;render();window.scrollTo(0,0);break;
     case "edit":{const l=U.cart[+v];const sel=JSON.parse(JSON.stringify(l.sel));if(byId[l.itemId].iced)sel.__iced=true;U.sheet={id:l.itemId,qty:l.qty,sel,edit:+v,tried:false};render();break;}
     case "remove":U.cart.splice(+v,1);U.bad={};U.err="";render();break;
     case "submit":submit();break;
