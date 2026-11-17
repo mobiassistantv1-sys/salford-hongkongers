@@ -92,7 +92,7 @@ html[lang="en-GB"] .svc small{display:none}
 
 @media(max-width:860px){.about-grid,.involve .in{grid-template-columns:1fr;gap:26px}}
 @media(max-width:620px){.stats,.svc,.events,.news{grid-template-columns:1fr}.hero{padding-top:44px}}
-.ig{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:24px}
+.ig{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:24px}
 .ig a{display:flex;flex-direction:column;text-decoration:none;background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
 .ig a:hover{border-color:var(--magenta)}
 .ig .im{position:relative;aspect-ratio:1/1;background:var(--surface-2)}
@@ -366,13 +366,13 @@ html[lang="en-GB"] .svc small{display:none}
 })();
 </script>
 <script>
-/* Latest 4 Instagram posts from the Behold feed (behold.so), read straight from the browser. Hidden if the feed is down. */
+/* Latest 6 Instagram posts from the Behold feed (behold.so), read straight from the browser. Hidden if the feed is down. */
 (function () {
   var sec = document.getElementById("ig"), list = document.getElementById("ig-list");
   function esc(s) { return String(s || "").replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
   function safe(u) { return /^https:\/\//.test(u || "") ? u : "#"; }
   fetch("https://feeds.behold.so/x2twyP7534l6jbQ1g5zR").then(function (r) { if (!r.ok) throw 0; return r.json(); }).then(function (d) {
-    var posts = (d && d.posts || []).slice(0, 4);
+    var posts = (d && d.posts || []).slice(0, 6);
     if (!posts.length) return;
     list.innerHTML = posts.map(function (p) {
       var sz = p.sizes || {}, img = (sz.medium || sz.small || {}).mediaUrl || p.thumbnailUrl || p.mediaUrl;
