@@ -1,6 +1,13 @@
 {
-  "updated": "2026-11-16T20:56:30.421Z",
+  "updated": "2026-11-17T19:46:32.015Z",
   "council": [
+    {
+      "title": "Expert comment | Milburn Report: how Salford’s response to the rise in NEET young people could be a blueprint for other parts of the UK",
+      "text": "Comment from leaders in Salford including City Mayor of Salford Paul Dennett, University of Salford Vice Chancellor Nic Beech and Principal of Salford City College…",
+      "link": "https://news.salford.gov.uk/news/expert-comment-milburn-report-how-salford-s-response-to-the-rise-in-neet-young-people-could-be-a-blueprint-for-other-parts-of-the-uk/",
+      "date": "2026-11-17T12:00:00.000Z",
+      "source": "Salford City Council"
+    },
     {
       "title": "Help protect adults at risk of abuse and neglect during Safeguarding Adults Week 2026",
       "text": "",
@@ -48,13 +55,6 @@
       "text": "Part 2 of Salford’s Local Plan has been given the green light to move to the next stage when it will go to Full Council for debate and a decision on 18 November.",
       "link": "https://news.salford.gov.uk/news/salford-s-local-plan-gets-green-light-to-move-to-next-stage/",
       "date": "2026-11-10T11:00:00.000Z",
-      "source": "Salford City Council"
-    },
-    {
-      "title": "Salford's history and communities celebrated in new Centenary murals across the city",
-      "text": "Eight colourful new murals celebrating Salford's people, places and history are set to transform locations across the city as part of its 100th birthday celebrations.",
-      "link": "https://news.salford.gov.uk/news/salfords-history-and-communities-celebrated-in-new-centenary-murals-across-the-city/",
-      "date": "2026-11-09T12:00:00.000Z",
       "source": "Salford City Council"
     }
   ],
@@ -125,31 +125,31 @@
       "source": "Salford CVS"
     },
     {
-      "title": "Salford CVS AGM 2026",
+      "title": "Safeguarding Adults Week 2026 - 16th - 22nd November",
       "text": "",
-      "link": "https://www.salfordcvs.co.uk/node/460910",
-      "date": "2026-11-16T15:54:00.000Z",
+      "link": "https://www.salfordcvs.co.uk/node/460912",
+      "date": "2026-11-17T16:30:00.000Z",
       "source": "Salford CVS"
     },
     {
-      "title": "Cold health alert issued for the North West",
+      "title": "Safeguarding Adults Week 2026: “Listen. Learn. Change Together”",
       "text": "",
-      "link": "https://www.salfordcvs.co.uk/coldweather",
-      "date": "2026-11-16T12:16:00.000Z",
-      "source": "Salford CVS"
-    },
-    {
-      "title": "The King’s Award for Voluntary Service: Celebrating Salford CVS Members",
-      "text": "",
-      "link": "https://www.salfordcvs.co.uk/Kingsaward",
-      "date": "2026-11-16T12:04:00.000Z",
+      "link": "https://www.salfordcvs.co.uk/node/460911",
+      "date": "2026-11-17T15:22:00.000Z",
       "source": "Salford CVS"
     },
     {
       "title": "Safeguarding Adults Week 2026 - 16th - 22nd November",
       "text": "",
       "link": "https://www.salfordcvs.co.uk/safeguarding-adults-week-26",
-      "date": "2026-11-16T10:17:00.000Z",
+      "date": "2026-11-17T11:17:00.000Z",
+      "source": "Salford CVS"
+    },
+    {
+      "title": "Salford CVS AGM 2026",
+      "text": "",
+      "link": "https://www.salfordcvs.co.uk/node/460910",
+      "date": "2026-11-16T15:54:00.000Z",
       "source": "Salford CVS"
     }
   ],
@@ -176,13 +176,5 @@
       "source": "GOV.UK"
     }
   ],
-  "warnings": [
-    {
-      "title": "Yellow warning of snow affecting North West England",
-      "text": "Yellow warning of snow affecting North West England: Blackburn with Darwen, Cheshire East, Cumbria, Greater Manchester, Lancashire valid from 0000 Tue 17 Nov to 1100 Tue…",
-      "link": "https://www.metoffice.gov.uk/weather/warnings-and-advice/uk-warnings#?date=2026-11-17&id=401e8bda-a79f-4da4-aba7-73c323e7ac50&referrer=rss",
-      "date": null,
-      "source": "Met Office"
-    }
-  ]
+  "warnings": []
 }
