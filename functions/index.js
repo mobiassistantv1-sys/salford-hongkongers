@@ -22,6 +22,9 @@ const MAX_TRIES = 5;
 /* Printers allowed to pull orders: comma list in functions/.env, e.g. PRINTER_MAC=00:11:62:aa:bb:cc */
 const hex = m => String(m || "").toLowerCase().replace(/[^0-9a-f]/g, "");  /* "00:11:62:37:10:DD" == "00-11-62-37-10-dd" */
 const allowed = mac => !!hex(mac) && String(process.env.PRINTER_MAC || "").split(",").map(hex).includes(hex(mac));
+/* Optional shared key: when PRINTER_KEY is set (GitHub secret), the printer's CloudPRNT URL must end in ?k=<key>.
+   The MAC alone is not a secret (it is printed on the self-test slip). */
+const keyOk = q => !process.env.PRINTER_KEY || (q && q.k) === process.env.PRINTER_KEY;
 
 const hhmm = ms => new Date(ms).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/London" });
 
@@ -155,11 +158,11 @@ exports.cloudprnt = onRequest({ region: REGION, memory: "512MiB", cors: false },
     if (req.method === "POST") {
       const b = req.body || {}; const mac = b.printerMAC;
       await db.ref("ordering/printer/status").set({ mac: mac || "", code: b.statusCode || "", at: Date.now(), ok: allowed(mac) });
-      if (!allowed(mac)) return res.json({ jobReady: false });
+      if (!allowed(mac) || !keyOk(q)) return res.json({ jobReady: false });
       const j = await nextJob();
       return res.json(j ? { jobReady: true, mediaTypes: [STARPRNT, "image/png"], jobToken: j.key } : { jobReady: false });
     }
-    if (!allowed(q.mac)) return res.status(403).send("unknown printer");
+    if (!allowed(q.mac) || !keyOk(q)) return res.status(403).send("unknown printer");
     if (req.method === "DELETE" || (req.method === "GET" && q.delete !== undefined)) {
       let key = q.token; if (!key) { const j = await nextJob(); key = j && j.key; }  /* firmware without token support */
       if (key) await confirm(q.mac, key, q.code);

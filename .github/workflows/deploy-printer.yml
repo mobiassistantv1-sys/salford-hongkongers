@@ -22,7 +22,11 @@ jobs:
       # Slips use the same menu as the website
       - run: cp yauoicafe/order/menu.js functions/menu.js
       # MAC from the self-test print (5 Nov 2026). A repo variable PRINTER_MAC overrides it.
-      - run: echo "PRINTER_MAC=${{ vars.PRINTER_MAC || '00:11:62:37:10:dd' }}" > functions/.env
+      - run: |
+          echo "PRINTER_MAC=${{ vars.PRINTER_MAC || '00:11:62:37:10:dd' }}" > functions/.env
+          if [ -n "$PRINTER_KEY" ]; then echo "PRINTER_KEY=$PRINTER_KEY" >> functions/.env; fi
+        env:
+          PRINTER_KEY: ${{ secrets.PRINTER_KEY }}
       - run: npm ci --no-audit --no-fund
         working-directory: functions
       - run: npm test

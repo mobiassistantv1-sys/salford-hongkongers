@@ -65,7 +65,7 @@ function render(){
   }else{
     const imported=step==="activate";
     h='<h1>'+(imported?'第二步：設定密碼':'第二步：填寫資料')+'</h1>';
-    if(imported)h+='<div class="found">搵到你嘅義工記錄'+(dir&&dir.legacyId?'（編號 '+esc(dir.legacyId)+'）':'')+' ✓<br><span style="font-weight:400">設定密碼之後就可以直接打卡，唔使重新填資料。</span></div>';
+    if(imported)h+='<div class="found">搵到你嘅義工記錄'+(dir&&dir.legacyId?'（編號 '+esc(dir.legacyId)+'）':'')+' ✓<br><span style="font-weight:400">設定密碼之後，SHK 確認係你本人就可以打卡，唔使重新填資料。</span></div>';
     else h+='<p>新義工登記，SHK 批核之後就可以打卡。<span class="small"> New volunteers are approved by SHK before they can check in.</span></p>';
     h+='<form id="f2">';
     if(!imported){
@@ -117,7 +117,7 @@ document.addEventListener("submit",async e=>{
       const linked=(await db.ref("shk/uids/"+uid).get()).val();
       if(!linked)await db.ref("shk/uids/"+uid).set(pid);
       if(imported){
-        await db.ref("shk/people/"+pid).update(Object.assign({uid,claimedAt:now},V.email?{email:V.email}:{}));
+        await db.ref("shk/people/"+pid).update(Object.assign({uid,claimedAt:now,status:"pending"},V.email?{email:V.email}:{}));  /* an admin confirms it is really them */
         await db.ref("shk/directory/"+pid+"/claimed").set(true);
       }else{
         await db.ref("shk/directory/"+pid).set({gen:0,claimed:true});

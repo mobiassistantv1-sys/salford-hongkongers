@@ -8,7 +8,7 @@
           ".write": "auth != null",
           ".validate": "newData.hasChildren(['pineapple', 'cocktail', 'sausage', 'eggtart'])",
           "$k": {
-            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 999 && ((root.child('ordering/roles/' + auth.uid).exists() || (root.child('shk/uids/' + auth.uid).exists() && root.child('shk/people/' + root.child('shk/uids/' + auth.uid).val() + '/status').val() === 'active' && root.child('shk/people/' + root.child('shk/uids/' + auth.uid).val() + '/roles/volunteer').val() === true)) || (data.exists() && newData.val() <= data.val()))"
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 999 && ((root.child('ordering/roles/' + auth.uid).exists() || (root.child('shk/uids/' + auth.uid).exists() && root.child('shk/people/' + root.child('shk/uids/' + auth.uid).val() + '/status').val() === 'active' && root.child('shk/people/' + root.child('shk/uids/' + auth.uid).val() + '/roles/volunteer').val() === true)) || (data.exists() && newData.val() <= data.val() && newData.val() >= data.val() - 20))"
           }
         }
       },
@@ -31,7 +31,7 @@
         "$day": {
           "$oid": {
             ".write": "auth != null && ((root.child('ordering/roles/' + auth.uid).exists() || (root.child('shk/uids/' + auth.uid).exists() && root.child('shk/people/' + root.child('shk/uids/' + auth.uid).val() + '/status').val() === 'active' && root.child('shk/people/' + root.child('shk/uids/' + auth.uid).val() + '/roles/volunteer').val() === true)) || !data.exists())",
-            ".validate": "(root.child('ordering/roles/' + auth.uid).exists() || (root.child('shk/uids/' + auth.uid).exists() && root.child('shk/people/' + root.child('shk/uids/' + auth.uid).val() + '/status').val() === 'active' && root.child('shk/people/' + root.child('shk/uids/' + auth.uid).val() + '/roles/volunteer').val() === true)) || (newData.child('code').isString() && newData.child('k').isString() && root.child('ordering/qrTokens/' + newData.child('code').val()).val() === newData.child('k').val() && newData.child('status').val() === 'new' && newData.child('lines').exists() && !newData.child('paid').exists())"
+            ".validate": "newData.child('table').isString() && newData.child('table').val().matches(/^(T[0-9]{1,2}|W[0-9]{2,4})$/) && ((root.child('ordering/roles/' + auth.uid).exists() || (root.child('shk/uids/' + auth.uid).exists() && root.child('shk/people/' + root.child('shk/uids/' + auth.uid).val() + '/status').val() === 'active' && root.child('shk/people/' + root.child('shk/uids/' + auth.uid).val() + '/roles/volunteer').val() === true)) || (newData.child('code').isString() && newData.child('k').isString() && root.child('ordering/qrTokens/' + newData.child('code').val()).val() === newData.child('k').val() && newData.child('status').val() === 'new' && newData.child('lines').exists() && !newData.child('paid').exists()))"
           }
         }
       },
@@ -108,10 +108,10 @@
           ".read": "(auth != null && root.child('shk/admins/' + auth.uid).val() === true) || (auth != null && data.child('uid').val() === auth.uid)",
           ".write": "(auth != null && root.child('shk/admins/' + auth.uid).val() === true) || ((auth != null && root.child('shk/uids/' + auth.uid).val() === $pid) && newData.exists() && (!data.child('uid').exists() || data.child('uid').val() === auth.uid))",
           "uid": {
-            ".validate": "(auth != null && root.child('shk/admins/' + auth.uid).val() === true) || newData.val() === auth.uid"
+            ".validate": "(auth != null && root.child('shk/admins/' + auth.uid).val() === true) || (newData.val() === auth.uid && (data.exists() || newData.parent().child('status').val() === 'pending'))"
           },
           "status": {
-            ".validate": "(auth != null && root.child('shk/admins/' + auth.uid).val() === true) || (data.exists() && newData.val() === data.val()) || (!data.exists() && newData.val() === 'pending')"
+            ".validate": "(auth != null && root.child('shk/admins/' + auth.uid).val() === true) || (data.exists() && newData.val() === data.val()) || (newData.val() === 'pending' && !data.parent().child('uid').exists())"
           },
           "roles": {
             "$r": {
@@ -226,7 +226,7 @@
       }
     },
     "queuePrivate": {
-      ".read": "auth != null && (root.child('ordering/roles/' + auth.uid).exists() || (root.child('shk/uids/' + auth.uid).exists() && root.child('shk/people/' + root.child('shk/uids/' + auth.uid).val() + '/status').val() === 'active' && root.child('shk/people/' + root.child('shk/uids/' + auth.uid).val() + '/roles/volunteer').val() === true))",
+      ".read": "auth != null && root.child('ordering/roles/' + auth.uid).exists()",
       "$k": {
         ".write": "auth != null && (root.child('ordering/roles/' + auth.uid).exists() || (root.child('shk/uids/' + auth.uid).exists() && root.child('shk/people/' + root.child('shk/uids/' + auth.uid).val() + '/status').val() === 'active' && root.child('shk/people/' + root.child('shk/uids/' + auth.uid).val() + '/roles/volunteer').val() === true)) || (auth != null && !data.exists() && root.child('queue/' + $k + '/uid').val() === auth.uid)",
         ".validate": "newData.hasChildren(['name','phone'])",
@@ -278,7 +278,7 @@
         }
       },
       "queuePrivate": {
-        ".read": "auth != null && (root.child('ordering/roles/' + auth.uid).exists() || (root.child('shk/uids/' + auth.uid).exists() && root.child('shk/people/' + root.child('shk/uids/' + auth.uid).val() + '/status').val() === 'active' && root.child('shk/people/' + root.child('shk/uids/' + auth.uid).val() + '/roles/volunteer').val() === true))",
+        ".read": "auth != null && root.child('ordering/roles/' + auth.uid).exists()",
         "$k": {
           ".write": "auth != null && (root.child('ordering/roles/' + auth.uid).exists() || (root.child('shk/uids/' + auth.uid).exists() && root.child('shk/people/' + root.child('shk/uids/' + auth.uid).val() + '/status').val() === 'active' && root.child('shk/people/' + root.child('shk/uids/' + auth.uid).val() + '/roles/volunteer').val() === true)) || (auth != null && !data.exists() && root.child('yauoicafe/queue/' + $k + '/uid').val() === auth.uid)",
           ".validate": "newData.hasChildren(['name','phone'])",
