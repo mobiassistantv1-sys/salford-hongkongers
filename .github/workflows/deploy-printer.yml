@@ -9,6 +9,7 @@ on:
 
 permissions:
   contents: read
+  id-token: write
 
 jobs:
   deploy:
@@ -31,10 +32,11 @@ jobs:
         working-directory: functions
       - run: npm test
         working-directory: functions
+      # Keyless Google sign-in (Workload Identity Federation): the org policy forbids service-account keys.
+      - uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: projects/354774084334/locations/global/workloadIdentityPools/github/providers/salford-hongkongers
+          service_account: github-actions@yauoicafequeue.iam.gserviceaccount.com
       - name: Deploy
-        env:
-          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
         run: |
-          printf '%s' "$FIREBASE_SERVICE_ACCOUNT" > "$RUNNER_TEMP/sa.json"
-          export GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/sa.json"
           npx --yes firebase-tools@13.29.1 deploy --only functions --project yauoicafequeue --non-interactive --force

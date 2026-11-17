@@ -1,13 +1,14 @@
 // Copies prices from Square into Firebase (/ordering/public/prices) so the QR menu
 // always matches Square. Runs from GitHub Actions; secrets never touch the repo.
-// Env: SQUARE_ACCESS_TOKEN, FIREBASE_SERVICE_ACCOUNT (JSON), FIREBASE_DB_URL
+// Env: SQUARE_ACCESS_TOKEN; Google sign-in from the workflow (keyless) or FIREBASE_SERVICE_ACCOUNT (JSON); FIREBASE_DB_URL optional
 import fs from "node:fs";
 import vm from "node:vm";
 import admin from "firebase-admin";
 
-const { SQUARE_ACCESS_TOKEN, FIREBASE_SERVICE_ACCOUNT, FIREBASE_DB_URL } = process.env;
-if (!SQUARE_ACCESS_TOKEN || !FIREBASE_SERVICE_ACCOUNT || !FIREBASE_DB_URL) {
-  console.error("Missing SQUARE_ACCESS_TOKEN, FIREBASE_SERVICE_ACCOUNT or FIREBASE_DB_URL");
+const { SQUARE_ACCESS_TOKEN, FIREBASE_SERVICE_ACCOUNT } = process.env;
+const FIREBASE_DB_URL = process.env.FIREBASE_DB_URL || "https://yauoicafequeue-default-rtdb.europe-west1.firebasedatabase.app";
+if (!SQUARE_ACCESS_TOKEN) {
+  console.error("Missing SQUARE_ACCESS_TOKEN");
   process.exit(1);
 }
 
@@ -40,7 +41,7 @@ for (const obj of objects) {
 }
 for (const [sq, targets] of wanted) for (const t of targets) if ((t.kind === "item" ? items : mods)[t.key] == null) missing.push(t.key + " (" + sq + ")");
 
-admin.initializeApp({ credential: admin.credential.cert(JSON.parse(FIREBASE_SERVICE_ACCOUNT)), databaseURL: FIREBASE_DB_URL });
+admin.initializeApp({ credential: FIREBASE_SERVICE_ACCOUNT ? admin.credential.cert(JSON.parse(FIREBASE_SERVICE_ACCOUNT)) : admin.credential.applicationDefault(), databaseURL: FIREBASE_DB_URL });
 await admin.database().ref("ordering/public/prices").set({ items, mods, syncedAt: Date.now(), missing });
 console.log(`Synced ${Object.keys(items).length} item prices and ${Object.keys(mods).length} modifier prices.`);
 if (missing.length) console.warn("No price in Square for:", missing.join(", "));
