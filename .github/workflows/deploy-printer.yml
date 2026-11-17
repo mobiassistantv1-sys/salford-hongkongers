@@ -39,4 +39,4 @@ jobs:
           service_account: github-actions@yauoicafequeue.iam.gserviceaccount.com
       - name: Deploy
         run: |
-          npx --yes firebase-tools@13.29.1 deploy --only functions --project yauoicafequeue --non-interactive --force
+          npx --yes firebase-tools@15.36.0 deploy --only functions --project yauoicafequeue --non-interactive --force
