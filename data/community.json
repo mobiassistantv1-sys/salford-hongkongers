@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-18T19:22:13.816Z",
+  "updated": "2026-11-19T19:27:34.067Z",
   "council": [
     {
       "title": "Local plan for new homes and greener neighbourhoods to shape Salford’s future",
@@ -19,6 +19,13 @@
       "title": "Help protect adults at risk of abuse and neglect during Safeguarding Adults Week 2026",
       "text": "",
       "link": "https://news.salford.gov.uk/news/help-protect-adults-at-risk-of-abuse-and-neglect-during-safeguarding-adults-week-2026/",
+      "date": "2026-11-16T12:00:00.000Z",
+      "source": "Salford City Council"
+    },
+    {
+      "title": "Salford schoolchildren to get hands-on experience of construction careers at new skills centre",
+      "text": "More than 100 schoolchildren across Salford are set to get a taste of working in the construction industry as part of a new interactive experience designed to help young…",
+      "link": "https://news.salford.gov.uk/news/salford-schoolchildren-to-get-hands-on-experience-of-construction-careers-at-new-skills-centre/",
       "date": "2026-11-16T12:00:00.000Z",
       "source": "Salford City Council"
     },
@@ -48,13 +55,6 @@
       "text": "Councillors and council officers have been out and about in Claremont today, looking at local issues that matter to people.",
       "link": "https://news.salford.gov.uk/news/out-and-about-in-claremont/",
       "date": "2026-11-10T13:40:00.000Z",
-      "source": "Salford City Council"
-    },
-    {
-      "title": "Major milestone for Eccles as town centre Masterplan Vision is approved",
-      "text": "Salford City Council’s Cabinet has approved the Eccles town centre Masterplan Vision, marking a major step forward for the regeneration of the town.",
-      "link": "https://news.salford.gov.uk/news/major-milestone-for-eccles-as-town-centre-masterplan-vision-is-approved/",
-      "date": "2026-11-10T12:30:00.000Z",
       "source": "Salford City Council"
     }
   ],
@@ -118,10 +118,17 @@
   ],
   "cvs": [
     {
-      "title": "Are you emergency ready? - Be Ready campaign",
+      "title": "Volunteering at World Aids Day Vigil 2026",
       "text": "",
-      "link": "https://www.salfordcvs.co.uk/BeReady",
-      "date": "2026-11-23T17:05:00.000Z",
+      "link": "https://www.salfordcvs.co.uk/WADvol",
+      "date": "2026-11-19T09:19:00.000Z",
+      "source": "Salford CVS"
+    },
+    {
+      "title": "GM Live Well Citizen's Assembly learning",
+      "text": "",
+      "link": "https://www.salfordcvs.co.uk/LiveWellAssembly",
+      "date": "2026-11-19T08:59:00.000Z",
       "source": "Salford CVS"
     },
     {
@@ -143,13 +150,6 @@
       "text": "",
       "link": "https://www.salfordcvs.co.uk/node/460911",
       "date": "2026-11-17T15:22:00.000Z",
-      "source": "Salford CVS"
-    },
-    {
-      "title": "Safeguarding Adults Week 2026 - 16th - 22nd November",
-      "text": "",
-      "link": "https://www.salfordcvs.co.uk/safeguarding-adults-week-26",
-      "date": "2026-11-17T11:17:00.000Z",
       "source": "Salford CVS"
     }
   ],
