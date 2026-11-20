@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-19T19:27:34.067Z",
+  "updated": "2026-11-20T19:03:49.918Z",
   "council": [
     {
       "title": "Local plan for new homes and greener neighbourhoods to shape Salford’s future",
@@ -60,6 +60,13 @@
   ],
   "events": [
     {
+      "title": "Salford Creative Health Network Meeting",
+      "text": "Next year, we’re planning a major Salford Creative Health Showcase to celebrate the breadth and impact of creative health activity across the city. Join us at Ordsall…",
+      "link": "https://salfordcommunityleisure.co.uk/event/schn-meeting-dec26/",
+      "date": "2026-11-20T09:57:59Z",
+      "source": "Salford Community Leisure"
+    },
+    {
       "title": "Flecky Bennett: Ordsall Hall Experience: Nightmares Before Christmas",
       "text": "Join your ghost host Flecky Bennett for a one-of-a-kind performance at Ordsall Hall!",
       "link": "https://ordsallhall.com/event/flecky-bennett-christmas26/",
@@ -107,16 +114,23 @@
       "link": "https://salfordmuseum.com/event/young-shoots-social-club/",
       "date": "2026-10-29T12:14:25Z",
       "source": "Salford Museum & Art Gallery"
-    },
-    {
-      "title": "Musical Christmas Piano Performance",
-      "text": "Have you ever noticed the grand piano on our mezzanine overlooking the café? Ever wanted to hear it? This is your opportunity!",
-      "link": "https://salfordmuseum.com/event/christmas-piano-performance/",
-      "date": "2026-10-21T15:08:39Z",
-      "source": "Salford Museum & Art Gallery"
     }
   ],
   "cvs": [
+    {
+      "title": "Answer Cancer exhibition and project celebration",
+      "text": "",
+      "link": "https://www.salfordcvs.co.uk/AC-exhibition",
+      "date": "2026-11-20T10:13:00.000Z",
+      "source": "Salford CVS"
+    },
+    {
+      "title": "GM4Women2028 celebrates £19,818 National Lottery funding to strengthen work for women and girls across Greater Manchester",
+      "text": "",
+      "link": "https://www.salfordcvs.co.uk/GM4Women",
+      "date": "2026-11-20T09:51:00.000Z",
+      "source": "Salford CVS"
+    },
     {
       "title": "Volunteering at World Aids Day Vigil 2026",
       "text": "",
@@ -136,20 +150,6 @@
       "text": "",
       "link": "https://www.salfordcvs.co.uk/ScoutsKAVwinner",
       "date": "2026-11-18T13:17:00.000Z",
-      "source": "Salford CVS"
-    },
-    {
-      "title": "Safeguarding Adults Week 2026 - 16th - 22nd November",
-      "text": "",
-      "link": "https://www.salfordcvs.co.uk/node/460912",
-      "date": "2026-11-17T16:30:00.000Z",
-      "source": "Salford CVS"
-    },
-    {
-      "title": "Safeguarding Adults Week 2026: “Listen. Learn. Change Together”",
-      "text": "",
-      "link": "https://www.salfordcvs.co.uk/node/460911",
-      "date": "2026-11-17T15:22:00.000Z",
       "source": "Salford CVS"
     }
   ],
