@@ -1,6 +1,20 @@
 {
-  "updated": "2026-11-22T18:26:38.698Z",
+  "updated": "2026-11-23T22:34:04.392Z",
   "council": [
+    {
+      "title": "MediaCity unveils line-up of artists and immersive experiences for BEYOND Festival",
+      "text": "The free festival will open up MediaCity's spaces to an evening of immersive experiences, experimental art, live music and creative discovery.",
+      "link": "https://news.salford.gov.uk/news/mediacity-unveils-line-up-of-artists-and-immersive-experiences-for-beyond-festival/",
+      "date": "2026-11-23T12:00:00.000Z",
+      "source": "Salford City Council"
+    },
+    {
+      "title": "Salford schoolchildren to get hands-on experience of construction careers at new skills centre",
+      "text": "More than 100 schoolchildren across Salford are set to get a taste of working in the construction industry as part of a new interactive experience designed to help young…",
+      "link": "https://news.salford.gov.uk/news/salford-schoolchildren-to-get-hands-on-experience-of-construction-careers-at-new-skills-centre/",
+      "date": "2026-11-19T12:00:00.000Z",
+      "source": "Salford City Council"
+    },
     {
       "title": "Local plan for new homes and greener neighbourhoods to shape Salford’s future",
       "text": "Salford City Council is progressing an ambitious 20-year strategy blueprint for the city's future.",
@@ -19,13 +33,6 @@
       "title": "Help protect adults at risk of abuse and neglect during Safeguarding Adults Week 2026",
       "text": "",
       "link": "https://news.salford.gov.uk/news/help-protect-adults-at-risk-of-abuse-and-neglect-during-safeguarding-adults-week-2026/",
-      "date": "2026-11-16T12:00:00.000Z",
-      "source": "Salford City Council"
-    },
-    {
-      "title": "Salford schoolchildren to get hands-on experience of construction careers at new skills centre",
-      "text": "More than 100 schoolchildren across Salford are set to get a taste of working in the construction industry as part of a new interactive experience designed to help young…",
-      "link": "https://news.salford.gov.uk/news/salford-schoolchildren-to-get-hands-on-experience-of-construction-careers-at-new-skills-centre/",
       "date": "2026-11-16T12:00:00.000Z",
       "source": "Salford City Council"
     },
@@ -49,74 +56,39 @@
       "link": "https://news.salford.gov.uk/news/little-hulton-nursery-transformed-and-more-local-send-places-created-for-families/",
       "date": "2026-11-12T12:00:00.000Z",
       "source": "Salford City Council"
-    },
-    {
-      "title": "Councillors and officers out and about in Claremont",
-      "text": "Councillors and council officers have been out and about in Claremont today, looking at local issues that matter to people.",
-      "link": "https://news.salford.gov.uk/news/out-and-about-in-claremont/",
-      "date": "2026-11-10T13:40:00.000Z",
-      "source": "Salford City Council"
     }
   ],
   "events": [
     {
-      "title": "Salford Creative Health Network Meeting",
-      "text": "Next year, we’re planning a major Salford Creative Health Showcase to celebrate the breadth and impact of creative health activity across the city. Join us at Ordsall…",
-      "link": "https://salfordcommunityleisure.co.uk/event/schn-meeting-dec26/",
-      "date": "2026-11-20T09:57:59Z",
-      "source": "Salford Community Leisure"
-    },
-    {
-      "title": "Flecky Bennett: Ordsall Hall Experience: Nightmares Before Christmas",
-      "text": "Join your ghost host Flecky Bennett for a one-of-a-kind performance at Ordsall Hall!",
-      "link": "https://ordsallhall.com/event/flecky-bennett-christmas26/",
-      "date": "2026-11-04T11:18:54Z",
-      "source": "Salford Community Leisure"
-    },
-    {
-      "title": "In Conversation: Yan Wang Preston & Emilia Terracciano",
-      "text": "Join Yan Wang Preston and Emilia Terracciano for this intimate afterhours discussion about our latest East Wing exhibition Memory Keepers.",
-      "link": "https://salfordmuseum.com/event/in-conversation-yan-wang-preston/",
-      "date": "2026-11-04T11:00:20Z",
+      "title": "Exhibition Opening: Edge of the City by Chris Cyprus",
+      "text": "Join us for the opening of Edge of the City by Chris Cyprus.",
+      "link": "https://salfordmuseum.com/event/exhibition-opening-chris-cyprus/",
+      "date": "2026-11-23T16:14:31Z",
       "source": "Salford Museum & Art Gallery"
     },
     {
-      "title": "Intuitive Mark Making Workshop with Jessica Brodigan",
-      "text": "Join artist Jessica Brodigan, whose latest exhibition The Theatrics of Nature is on display in our Park Gallery, for this expressive drawing and mark-making workshop.",
-      "link": "https://salfordmuseum.com/event/intuitive-mark-making/",
-      "date": "2026-11-04T10:52:00Z",
+      "title": "The Patron, The Gallerist & The Artist",
+      "text": "In the next exhibition of our Exploring the Collection series, we present the stories of three influential women in the early 20th century northern art scene.",
+      "link": "https://salfordmuseum.com/event/the-patron-the-gallerist-the-artist/",
+      "date": "2026-11-23T15:58:51Z",
       "source": "Salford Museum & Art Gallery"
     },
     {
-      "title": "Soccer Stars",
-      "text": "Come along to our football coaching sessions, Soccer Stars!",
-      "link": "https://salfordcommunityleisure.co.uk/event/soccer-stars-65/",
-      "date": "2026-11-03T15:02:28Z",
-      "source": "Salford Community Leisure"
-    },
-    {
-      "title": "Assembling into Being",
-      "text": "A participatory art project developed with members of Ordsall Community Arts Centre.",
-      "link": "https://salfordmuseum.com/event/assembling-into-being/",
-      "date": "2026-11-03T13:32:38Z",
-      "source": "Salford Museum & Art Gallery"
-    },
-    {
-      "title": "Here We Stand by Steven Speed",
-      "text": "Steven Speed presents a mix of portraiture and landscape photography focusing on areas in and around Salford.",
-      "link": "https://salfordmuseum.com/event/here-we-stand/",
-      "date": "2026-10-29T12:32:17Z",
-      "source": "Salford Museum & Art Gallery"
-    },
-    {
-      "title": "Young Shoots Social Club by Liz Lock and Salford Youth Service",
-      "text": "Young Shoots Social Club was a year-long project led by socially-engaged photographer Liz Lock with Salford Youth Service. Around 50 young people aged 11-18 took part…",
-      "link": "https://salfordmuseum.com/event/young-shoots-social-club/",
-      "date": "2026-10-29T12:14:25Z",
+      "title": "Gallery Babies",
+      "text": "Come along to our gentle sensory sessions for pre-walking babies and their carers.",
+      "link": "https://salfordmuseum.com/event/gallery-babies-14/",
+      "date": "2026-11-23T12:22:13Z",
       "source": "Salford Museum & Art Gallery"
     }
   ],
   "cvs": [
+    {
+      "title": "Salford CVS Impact Report 2026",
+      "text": "",
+      "link": "https://www.salfordcvs.co.uk/node/460924",
+      "date": "2026-11-23T16:19:00.000Z",
+      "source": "Salford CVS"
+    },
     {
       "title": "Answer Cancer exhibition and project celebration",
       "text": "",
@@ -143,13 +115,6 @@
       "text": "",
       "link": "https://www.salfordcvs.co.uk/LiveWellAssembly",
       "date": "2026-11-19T08:59:00.000Z",
-      "source": "Salford CVS"
-    },
-    {
-      "title": "100th Salford Scout Group has been awarded The King’s Award for Voluntary Service",
-      "text": "",
-      "link": "https://www.salfordcvs.co.uk/ScoutsKAVwinner",
-      "date": "2026-11-18T13:17:00.000Z",
       "source": "Salford CVS"
     }
   ],
