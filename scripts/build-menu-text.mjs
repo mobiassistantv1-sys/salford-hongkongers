@@ -1,7 +1,8 @@
 // Writes a plain-text (crawlable) copy of the café menu into yauoicafe/menu/index.html,
 // between the menu-text markers, so search engines and AI tools can read names, prices and allergens.
 // Source of truth: yauoicafe/order/menu.js (items, allergens) + Firebase /ordering/public (Square prices, renamed items).
-// If the live prices can't be read, the file is left unchanged (never publish fallback prices by mistake).
+// If Firebase can't be reached, the file is left unchanged. If it has no Square prices, the menu.js prices are used,
+// which is exactly what the live menu and QR ordering pages charge in that case.
 import { readFileSync, writeFileSync } from "node:fs";
 import vm from "node:vm";
 
@@ -17,7 +18,8 @@ try {
   const r = await fetch(Y.FIREBASE.databaseURL + "/ordering/public.json");
   if (!r.ok) throw new Error("HTTP " + r.status);
   P = (await r.json()) || {};
-  if (!P.prices || !P.prices.items) throw new Error("no prices in /ordering/public");
+  // No Square sync yet: use the same fallback prices the live menu and ordering pages show (menu.js `p`).
+  if (!P.prices || !P.prices.items) console.log("No Square prices in /ordering/public; using menu.js prices, same as the live site");
 } catch (e) {
   console.log("Live prices unavailable, menu text not changed:", e.message);
   process.exit(0);
@@ -53,7 +55,7 @@ for (const c of Y.CATS) {
 const block = `${START}
 <section class="menu-text" aria-labelledby="mt-h">
 <h2 id="mt-h">全部餐牌（文字版）Full menu (text)</h2>
-<p>價錢以 Square 為準，供應視乎當日。Prices from our till; availability varies by day. 是日特別麵包每日更新 Daily special buns change each day.</p>
+<p>價錢同落單系統一致，供應視乎當日。Prices match our ordering system; availability varies by day. 是日特別麵包每日更新 Daily special buns change each day.</p>
 ${rows.join("\n")}
 </section>
 ${END}`;
