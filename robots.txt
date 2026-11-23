@@ -1,0 +1,16 @@
+# Salford Hongkongers CIC — search engines and AI search crawlers are welcome on public pages.
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /staff/
+Disallow: /queue/
+Disallow: /order/
+Disallow: /qr/
+Disallow: /yauoicafe/staff/
+Disallow: /yauoicafe/queue/
+Disallow: /yauoicafe/order/
+Disallow: /yauoicafe/qr/
+Disallow: /volunteer/me/
+Disallow: /deploy/
+
+Sitemap: https://salfordhongkongers.co.uk/sitemap.xml

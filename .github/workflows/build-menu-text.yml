@@ -1,0 +1,37 @@
+name: Build plain-text menu
+
+# Keeps the crawlable text menu on /yauoicafe/menu/ in step with menu.js and Square prices.
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [main]
+    paths: ["yauoicafe/order/menu.js", "scripts/build-menu-text.mjs", ".github/workflows/build-menu-text.yml"]
+  schedule:
+    # 06:05 UTC Friday–Sunday, before opening (prices sync from Square during the day)
+    - cron: "5 6 * * 5,6,0"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-menu-text
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: node scripts/build-menu-text.mjs
+      - name: Commit if changed
+        run: |
+          if git diff --quiet -- yauoicafe/menu/index.html; then echo "no change"; exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898699+github-actions[bot]@users.noreply.github.com"
+          git add yauoicafe/menu/index.html
+          git commit -m "Update plain-text café menu"
+          git push
