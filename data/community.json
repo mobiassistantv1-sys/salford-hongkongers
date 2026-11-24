@@ -1,6 +1,20 @@
 {
-  "updated": "2026-11-23T22:34:04.392Z",
+  "updated": "2026-11-24T21:05:49.991Z",
   "council": [
+    {
+      "title": "Christmas comes early to Eccles as the town hosts first ever Christmas artisan market",
+      "text": "On Sunday 29 November, fifty artisan stalls will spring up in Eccles with everything Christmas wishes are made of.",
+      "link": "https://news.salford.gov.uk/news/christmas-comes-early-to-eccles-as-the-town-hosts-first-ever-christmas-artisan-market/",
+      "date": "2026-11-24T12:00:00.000Z",
+      "source": "Salford City Council"
+    },
+    {
+      "title": "Communities take the lead in shaping £40 million investment in Salford neighbourhoods",
+      "text": "Pendleton, and Brookhouse and Peel Green are set to benefit from up to £20 million each over the next ten years through the Pride in Place programme.",
+      "link": "https://news.salford.gov.uk/news/communities-take-the-lead-in-shaping-40-million-investment-in-salford-neighbourhoods/",
+      "date": "2026-11-24T11:00:00.000Z",
+      "source": "Salford City Council"
+    },
     {
       "title": "MediaCity unveils line-up of artists and immersive experiences for BEYOND Festival",
       "text": "The free festival will open up MediaCity's spaces to an evening of immersive experiences, experimental art, live music and creative discovery.",
@@ -42,23 +56,16 @@
       "link": "https://news.salford.gov.uk/news/spotlight-on-walkden-south-ward-walk-highlights-local-investment/",
       "date": "2026-11-16T12:00:00.000Z",
       "source": "Salford City Council"
-    },
-    {
-      "title": "From Star Wars to Salford: Hollywood film veteran appointed to attract more TV and movie productions to the city",
-      "text": "Jonny Shelton is the new Creative Industries Development Manager at Salford City Council, where he will lead a new Film and TV Office.",
-      "link": "https://news.salford.gov.uk/news/from-star-wars-to-salford-hollywood-film-veteran-appointed-to-attract-more-tv-and-movie-productions-to-the-city/",
-      "date": "2026-11-16T09:00:00.000Z",
-      "source": "Salford City Council"
-    },
-    {
-      "title": "Little Hulton Nursery transformed and more local SEND places created for families",
-      "text": "Children and families in Little Hulton are benefiting from a major investment to improve nursery facilities and expanded specialist support closer to home.",
-      "link": "https://news.salford.gov.uk/news/little-hulton-nursery-transformed-and-more-local-send-places-created-for-families/",
-      "date": "2026-11-12T12:00:00.000Z",
-      "source": "Salford City Council"
     }
   ],
   "events": [
+    {
+      "title": "Little Penguin’s First Christmas",
+      "text": "Filled with puppetry, original music and sensory delights to stimulate and captivate, this show is a perfect first theatrical experience for your little one.",
+      "link": "https://salfordcommunityleisure.co.uk/event/little-penguins-first-christmas/",
+      "date": "2026-11-24T11:03:41Z",
+      "source": "Salford Community Leisure"
+    },
     {
       "title": "Exhibition Opening: Edge of the City by Chris Cyprus",
       "text": "Join us for the opening of Edge of the City by Chris Cyprus.",
