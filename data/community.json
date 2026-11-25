@@ -1,6 +1,13 @@
 {
-  "updated": "2026-11-24T21:05:49.991Z",
+  "updated": "2026-11-25T20:26:26.079Z",
   "council": [
+    {
+      "title": "Children take over the Council Chamber for Salford's first ever Children's Council",
+      "text": "Children from across Salford attend Council Chamber today for the city's first ever Children's Council to talk about the issues that matter and help shape future…",
+      "link": "https://news.salford.gov.uk/news/children-take-over-the-council-chamber-for-salfords-first-ever-childrens-council/",
+      "date": "2026-11-25T01:30:00.000Z",
+      "source": "Salford City Council"
+    },
     {
       "title": "Christmas comes early to Eccles as the town hosts first ever Christmas artisan market",
       "text": "On Sunday 29 November, fifty artisan stalls will spring up in Eccles with everything Christmas wishes are made of.",
@@ -49,79 +56,72 @@
       "link": "https://news.salford.gov.uk/news/help-protect-adults-at-risk-of-abuse-and-neglect-during-safeguarding-adults-week-2026/",
       "date": "2026-11-16T12:00:00.000Z",
       "source": "Salford City Council"
-    },
-    {
-      "title": "Spotlight on Walkden South: Ward Walk Highlights Local Investment",
-      "text": "",
-      "link": "https://news.salford.gov.uk/news/spotlight-on-walkden-south-ward-walk-highlights-local-investment/",
-      "date": "2026-11-16T12:00:00.000Z",
-      "source": "Salford City Council"
     }
   ],
   "events": [
     {
-      "title": "Little Penguin’s First Christmas",
-      "text": "Filled with puppetry, original music and sensory delights to stimulate and captivate, this show is a perfect first theatrical experience for your little one.",
-      "link": "https://salfordcommunityleisure.co.uk/event/little-penguins-first-christmas/",
-      "date": "2026-11-24T11:03:41Z",
+      "title": "Festive Crafts",
+      "text": "Get ready for a crafty and creative session in the lead up to Christmas!",
+      "link": "https://salfordcommunityleisure.co.uk/event/festive-crafts-worsley/",
+      "date": "2026-11-25T13:02:11Z",
       "source": "Salford Community Leisure"
     },
     {
       "title": "Exhibition Opening: Edge of the City by Chris Cyprus",
       "text": "Join us for the opening of Edge of the City by Chris Cyprus.",
       "link": "https://salfordmuseum.com/event/exhibition-opening-chris-cyprus/",
-      "date": "2026-11-23T16:14:31Z",
+      "date": "2026-11-23T16:14:30Z",
       "source": "Salford Museum & Art Gallery"
     },
     {
       "title": "The Patron, The Gallerist & The Artist",
       "text": "In the next exhibition of our Exploring the Collection series, we present the stories of three influential women in the early 20th century northern art scene.",
       "link": "https://salfordmuseum.com/event/the-patron-the-gallerist-the-artist/",
-      "date": "2026-11-23T15:58:51Z",
+      "date": "2026-11-23T15:58:49Z",
       "source": "Salford Museum & Art Gallery"
     },
     {
       "title": "Gallery Babies",
       "text": "Come along to our gentle sensory sessions for pre-walking babies and their carers.",
       "link": "https://salfordmuseum.com/event/gallery-babies-14/",
-      "date": "2026-11-23T12:22:13Z",
+      "date": "2026-11-23T12:22:06Z",
       "source": "Salford Museum & Art Gallery"
     }
   ],
   "cvs": [
     {
+      "title": "Launch of the Greater Manchester State of the Sector Report",
+      "text": "",
+      "link": "https://www.salfordcvs.co.uk/SOTSlaunch",
+      "date": "2026-11-25T17:48:00.000Z",
+      "source": "Salford CVS"
+    },
+    {
+      "title": "Salford State of the VCSE Sector report",
+      "text": "",
+      "link": "https://www.salfordcvs.co.uk/SalfordSOTS",
+      "date": "2026-11-25T16:52:00.000Z",
+      "source": "Salford CVS"
+    },
+    {
+      "title": "Communities take the lead in shaping £40 million investment in Salford neighbourhoods",
+      "text": "",
+      "link": "https://www.salfordcvs.co.uk/PIPnews",
+      "date": "2026-11-25T12:57:00.000Z",
+      "source": "Salford CVS"
+    },
+    {
+      "title": "Greater Manchester Mayor's letter to our sector - help needed",
+      "text": "",
+      "link": "https://www.salfordcvs.co.uk/GMMayorletter",
+      "date": "2026-11-25T12:05:00.000Z",
+      "source": "Salford CVS"
+    },
+    {
       "title": "Salford CVS Impact Report 2026",
       "text": "",
       "link": "https://www.salfordcvs.co.uk/node/460924",
       "date": "2026-11-23T16:19:00.000Z",
-      "source": "Salford CVS"
-    },
-    {
-      "title": "Answer Cancer exhibition and project celebration",
-      "text": "",
-      "link": "https://www.salfordcvs.co.uk/AC-exhibition",
-      "date": "2026-11-20T10:13:00.000Z",
-      "source": "Salford CVS"
-    },
-    {
-      "title": "GM4Women2028 celebrates £19,818 National Lottery funding to strengthen work for women and girls across Greater Manchester",
-      "text": "",
-      "link": "https://www.salfordcvs.co.uk/GM4Women",
-      "date": "2026-11-20T09:51:00.000Z",
-      "source": "Salford CVS"
-    },
-    {
-      "title": "Volunteering at World Aids Day Vigil 2026",
-      "text": "",
-      "link": "https://www.salfordcvs.co.uk/WADvol",
-      "date": "2026-11-19T09:19:00.000Z",
-      "source": "Salford CVS"
-    },
-    {
-      "title": "GM Live Well Citizen's Assembly learning",
-      "text": "",
-      "link": "https://www.salfordcvs.co.uk/LiveWellAssembly",
-      "date": "2026-11-19T08:59:00.000Z",
       "source": "Salford CVS"
     }
   ],
