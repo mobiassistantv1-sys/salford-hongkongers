@@ -49,6 +49,7 @@ textarea{min-height:96px;resize:vertical}
 .social-card p{color:var(--muted);font-size:13.5px;margin-bottom:10px}
 .social-card a{color:var(--magenta);font-weight:700;text-decoration:none;font-size:14px;word-break:break-all}
 @media(max-width:640px){.form-row{grid-template-columns:1fr}.phone-row{flex-direction:column}.phone-row .phone-type{flex:none}}
+.form-privacy{font-size:13px;color:var(--muted,#6E645C);margin:4px 0 12px;line-height:1.55}
 </style>
 </head>
 <body>
@@ -169,6 +170,7 @@ textarea{min-height:96px;resize:vertical}
           <label>備註 Notes</label>
           <textarea name="notes" placeholder="特殊需要、飲食限制或其他補充（選填）" data-en-ph="Access needs, dietary requirements or anything else (optional)"></textarea>
         </div>
+        <p class="form-privacy" data-en-html="We only use these details to organise this event and contact you about it. Only the Salford Hongkongers CIC volunteers handling it can see them; they are kept in Google Sheets and deleted within two years after the event. We never sell or share them. See our <a href=&quot;/privacy/&quot;>Privacy Policy</a>.">你嘅資料只會用嚟安排呢個活動同聯絡你，只有負責嘅 Salford Hongkongers CIC 義工睇到，存喺 Google 表格，活動完咗之後兩年內刪除，唔會賣或交畀第三方。詳情見<a href="/privacy/">私隱政策</a>。</p>
         <button type="submit" class="btn-primary">提交登記 Register</button>
       </form>
     </div>
@@ -217,6 +219,7 @@ textarea{min-height:96px;resize:vertical}
           <label data-en-html="Details <span class=&quot;req&quot;>*</span>">詳細內容 <span class="req">*</span></label>
           <textarea name="message" required placeholder="請詳細描述你的意見或查詢" data-en-ph="Tell us more" style="min-height:130px;"></textarea>
         </div>
+        <p class="form-privacy" data-en-html="We only use these details to reply to this enquiry. Only the Salford Hongkongers CIC volunteers handling it can see them; they are kept in Google Sheets and deleted within two years after we have dealt with it. We never sell or share them. See our <a href=&quot;/privacy/&quot;>Privacy Policy</a>.">你嘅資料只會用嚟回覆呢個查詢，只有負責嘅 Salford Hongkongers CIC 義工睇到，存喺 Google 表格，處理完之後兩年內刪除，唔會賣或交畀第三方。詳情見<a href="/privacy/">私隱政策</a>。</p>
         <button type="submit" class="btn-primary">提交 Submit</button>
       </form>
     </div>
@@ -275,6 +278,7 @@ textarea{min-height:96px;resize:vertical}
           <label data-en="Website (optional)">機構網站（選填）</label>
           <input type="url" name="website" placeholder="https://">
         </div>
+        <p class="form-privacy" data-en-html="We only use these details to reply to this enquiry. Only the Salford Hongkongers CIC volunteers handling it can see them; they are kept in Google Sheets and deleted within two years after we have dealt with it. We never sell or share them. See our <a href=&quot;/privacy/&quot;>Privacy Policy</a>.">你嘅資料只會用嚟回覆呢個查詢，只有負責嘅 Salford Hongkongers CIC 義工睇到，存喺 Google 表格，處理完之後兩年內刪除，唔會賣或交畀第三方。詳情見<a href="/privacy/">私隱政策</a>。</p>
         <button type="submit" class="btn-primary" data-en="Send enquiry">提交查詢</button>
       </form>
     </div>
@@ -309,6 +313,7 @@ textarea{min-height:96px;resize:vertical}
         <p><a href="/info/" data-en="Community info">社區資訊</a></p>
         <p><a href="/forms.html" data-en="Enquiries / partnerships">查詢 / 合作</a></p>
         <p><a href="/privacy/" data-en="Privacy policy">私隱政策</a></p>
+        <p><a href="/policies/" data-en="Safeguarding &amp; safety policies">保護及安全政策</a></p>
       </div>
       <div>
         <h4 data-en="Follow us">追蹤我們</h4>
