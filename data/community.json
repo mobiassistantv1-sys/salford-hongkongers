@@ -1,9 +1,16 @@
 {
-  "updated": "2026-11-25T20:26:26.079Z",
+  "updated": "2026-11-26T20:05:51.344Z",
   "council": [
     {
-      "title": "Children take over the Council Chamber for Salford's first ever Children's Council",
-      "text": "Children from across Salford attend Council Chamber today for the city's first ever Children's Council to talk about the issues that matter and help shape future…",
+      "title": "Free festive parking returns to Salford this Christmas",
+      "text": "Salford City Council brings back free parking at seven of its car parks throughout the city on three Saturdays in December.",
+      "link": "https://news.salford.gov.uk/news/free-festive-parking-returns-to-salford-this-christmas/",
+      "date": "2026-11-26T11:00:00.000Z",
+      "source": "Salford City Council"
+    },
+    {
+      "title": "Children take over the council chamber for Salford's first ever Children's Council",
+      "text": "Children from across Salford attend council chamber today for the city's first ever Children's Council to talk about the issues that matter and help shape future…",
       "link": "https://news.salford.gov.uk/news/children-take-over-the-council-chamber-for-salfords-first-ever-childrens-council/",
       "date": "2026-11-25T01:30:00.000Z",
       "source": "Salford City Council"
@@ -49,13 +56,6 @@
       "link": "https://news.salford.gov.uk/news/expert-comment-milburn-report-how-salford-s-response-to-the-rise-in-neet-young-people-could-be-a-blueprint-for-other-parts-of-the-uk/",
       "date": "2026-11-17T12:00:00.000Z",
       "source": "Salford City Council"
-    },
-    {
-      "title": "Help protect adults at risk of abuse and neglect during Safeguarding Adults Week 2026",
-      "text": "",
-      "link": "https://news.salford.gov.uk/news/help-protect-adults-at-risk-of-abuse-and-neglect-during-safeguarding-adults-week-2026/",
-      "date": "2026-11-16T12:00:00.000Z",
-      "source": "Salford City Council"
     }
   ],
   "events": [
@@ -90,6 +90,13 @@
   ],
   "cvs": [
     {
+      "title": "State of the VCSE Sector 2026",
+      "text": "",
+      "link": "https://www.salfordcvs.co.uk/node/460935",
+      "date": "2026-11-26T14:45:00.000Z",
+      "source": "Salford CVS"
+    },
+    {
       "title": "Launch of the Greater Manchester State of the Sector Report",
       "text": "",
       "link": "https://www.salfordcvs.co.uk/SOTSlaunch",
@@ -115,13 +122,6 @@
       "text": "",
       "link": "https://www.salfordcvs.co.uk/GMMayorletter",
       "date": "2026-11-25T12:05:00.000Z",
-      "source": "Salford CVS"
-    },
-    {
-      "title": "Salford CVS Impact Report 2026",
-      "text": "",
-      "link": "https://www.salfordcvs.co.uk/node/460924",
-      "date": "2026-11-23T16:19:00.000Z",
       "source": "Salford CVS"
     }
   ],
