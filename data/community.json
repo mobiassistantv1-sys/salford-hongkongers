@@ -1,6 +1,13 @@
 {
-  "updated": "2026-11-26T20:05:51.344Z",
+  "updated": "2026-11-27T19:53:36.791Z",
   "council": [
+    {
+      "title": "The powerful story of a city told through the words of its people",
+      "text": "New Centenary poem and film capture the heart of Salford through the real words, memories and experiences of its residents.",
+      "link": "https://news.salford.gov.uk/news/the-powerful-story-of-a-city-told-through-the-words-of-its-people/",
+      "date": "2026-11-27T11:00:00.000Z",
+      "source": "Salford City Council"
+    },
     {
       "title": "Free festive parking returns to Salford this Christmas",
       "text": "Salford City Council brings back free parking at seven of its car parks throughout the city on three Saturdays in December.",
@@ -49,16 +56,30 @@
       "link": "https://news.salford.gov.uk/news/local-plan-for-new-homes-and-greener-neighbourhoods-to-shape-salford-s-future/",
       "date": "2026-11-18T12:00:00.000Z",
       "source": "Salford City Council"
-    },
-    {
-      "title": "Expert comment | Milburn Report: how Salford’s response to the rise in NEET young people could be a blueprint for other parts of the UK",
-      "text": "Comment from leaders in Salford including City Mayor of Salford Paul Dennett, University of Salford Vice Chancellor Nic Beech and Principal of Salford City College…",
-      "link": "https://news.salford.gov.uk/news/expert-comment-milburn-report-how-salford-s-response-to-the-rise-in-neet-young-people-could-be-a-blueprint-for-other-parts-of-the-uk/",
-      "date": "2026-11-17T12:00:00.000Z",
-      "source": "Salford City Council"
     }
   ],
   "events": [
+    {
+      "title": "Boothstown Christmas Carol Service",
+      "text": "Join us at the Boothstown Christmas Carol Service!",
+      "link": "https://salfordcommunityleisure.co.uk/event/boothstown-christmas-carol-service/",
+      "date": "2026-11-27T14:26:35Z",
+      "source": "Salford Community Leisure"
+    },
+    {
+      "title": "Christmas Jamboree",
+      "text": "Start the festive season with a bang at Walkden Library!",
+      "link": "https://salfordcommunityleisure.co.uk/event/christmas-jamboree/",
+      "date": "2026-11-27T12:58:13Z",
+      "source": "Salford Community Leisure"
+    },
+    {
+      "title": "Christmas Concert",
+      "text": "Celebrate the spirit of the season with our friends at Pendleton school of theatre for a magical night of songs and merriment and explore the fantastic ‘Where Are They…",
+      "link": "https://salfordcommunityleisure.co.uk/event/christmas-concert/",
+      "date": "2026-11-27T12:54:04Z",
+      "source": "Salford Community Leisure"
+    },
     {
       "title": "Festive Crafts",
       "text": "Get ready for a crafty and creative session in the lead up to Christmas!",
